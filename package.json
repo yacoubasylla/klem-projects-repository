@@ -1,0 +1,29 @@
+{
+
+  "name": "klem-technologies-monorepo",
+  "private": true,
+  "description": "Monorepo global pour KLEM Technologies & Services",
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "create-adr": "./scripts/create-adr.sh",
+    "check": "turbo run lint build"
+
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "latest",
+    "eslint": "latest",
+    "typescript": "latest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

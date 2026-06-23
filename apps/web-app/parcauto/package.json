@@ -1,0 +1,20 @@
+{
+  "name": "@klem/parcauto-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "@klem/ui": "workspace:*",
+    "@klem/utils": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}

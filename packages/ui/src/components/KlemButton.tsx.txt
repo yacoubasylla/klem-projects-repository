@@ -1,0 +1,29 @@
+// packages/ui/src/components/KlemButton.tsx
+import React from 'react';
+
+interface KlemButtonProps {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+}
+
+export const KlemButton: React.FC<KlemButtonProps> = ({ 
+  label, 
+  onClick, 
+  variant = 'primary' 
+}) => {
+  const styles = {
+    padding: '10px 20px',
+    backgroundColor: variant === 'primary' ? '#0070f3' : '#666',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer'
+  };
+
+  return (
+    <button style={styles} onClick={onClick}>
+      {label}
+    </button>
+  );
+};

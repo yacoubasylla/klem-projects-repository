@@ -1,0 +1,21 @@
+# Node / Frontend
+node_modules/
+.dist/
+.env
+.env.local
+
+# Java / Backend
+target/
+.gradle/
+build/
+*.class
+
+# IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,4 @@
+# pnpm-workspace.yaml à la racine
+packages:
+  - 'apps/*'
+  - 'packages/*'
