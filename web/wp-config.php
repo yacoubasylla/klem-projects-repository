@@ -34,14 +34,11 @@ define('NONCE_SALT',       'klem_dev_nonce_salt_a_remplacer');
 
 $table_prefix = 'klem_';
 
-// === SMTP — Brevo (ex-Sendinblue) ============================================
-// Clé SMTP Brevo : https://app.brevo.com/settings/keys/smtp
-define('KLEM_SMTP_HOST',      'smtp-relay.brevo.com');
-define('KLEM_SMTP_PORT',      587);
-define('KLEM_SMTP_USER',      'VOTRE_EMAIL_BREVO@example.com');   // login Brevo
-define('KLEM_SMTP_PASS',      'VOTRE_CLE_SMTP_BREVO');            // clé SMTP (≠ mot de passe compte)
-define('KLEM_SMTP_FROM',      'contact@klem.tech');
-define('KLEM_SMTP_FROM_NAME', 'KLEM Technologies & Services');
+// === EMAIL — API REST Brevo ==================================================
+// Les valeurs sont lues depuis les variables d'environnement (fichier .env).
+define('KLEM_BREVO_API_KEY',  getenv('KLEM_BREVO_API_KEY')  ?: '');
+define('KLEM_SMTP_FROM',      getenv('KLEM_SMTP_FROM')      ?: 'contact@klem.tech');
+define('KLEM_SMTP_FROM_NAME', getenv('KLEM_SMTP_FROM_NAME') ?: 'KLEM Technologies & Services');
 
 define('WP_DEBUG',         true);
 define('WP_DEBUG_LOG',     true);

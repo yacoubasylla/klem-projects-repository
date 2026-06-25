@@ -23,6 +23,8 @@ services:
     restart: always
     depends_on:
       - db
+    env_file:
+      - .env
     ports:
       - "8080:80"
     volumes:
