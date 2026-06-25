@@ -7,12 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        'klem-blue':   '#0B192C',
-        'klem-orange': '#FF6500',
+        'klem-blue':   '#16212E',   // encre
+        'klem-orange': '#FF6500',   // CTA / boutons
+        'klem-red':    '#E2241B',   // symbole KlemMark
+        'klem-slate':  '#5A6B7B',   // signature / textes secondaires
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        logo: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        // Verdana est une police système — aucun import Google Fonts requis
+        logo: ['Verdana', 'Tahoma', "'DejaVu Sans'", 'Geneva', 'sans-serif'],
       },
     },
   },

@@ -16,13 +16,7 @@ function klem_theme_setup(): void {
 add_action('after_setup_theme', 'klem_theme_setup');
 
 function klem_enqueue_assets(): void {
-    // Fonte Space Grotesk — lettrage du logo (weights 600 & 700)
-    wp_enqueue_style(
-        'klem-fonts',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap',
-        [],
-        null
-    );
+    // Verdana est une police système — aucun import externe requis.
     $theme_uri = get_template_directory_uri();
     $theme_dir = get_template_directory();
     $manifest  = $theme_dir . '/dist/.vite/manifest.json';

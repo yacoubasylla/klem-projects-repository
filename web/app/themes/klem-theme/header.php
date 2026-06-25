@@ -12,18 +12,16 @@
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-6">
 
         <!-- Logo -->
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-3 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
-            <!-- Marque 4 losanges -->
-            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
-                <rect x="4.6" y="3.6" width="12.8" height="12.8" rx="2" fill="#FF6500" transform="rotate(45 11 10)"/>
-                <rect x="30.6" y="3.6" width="12.8" height="12.8" rx="2" fill="#0B192C" transform="rotate(45 37 10)"/>
-                <rect x="4.6" y="29.6" width="12.8" height="12.8" rx="2" fill="#0B192C" fill-opacity="0.55" transform="rotate(45 11 36)"/>
-                <rect x="30.6" y="29.6" width="12.8" height="12.8" rx="2" fill="#FF6500" fill-opacity="0.35" transform="rotate(45 37 36)"/>
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-4 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
+            <!-- KlemMark — 2 chevrons rouges -->
+            <svg viewBox="0 0 100 100" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
+                <polygon points="0,0 27.6,0 46,50 27.6,100 0,100 18.4,50" fill="#E2241B"/>
+                <polygon points="54,0 81.6,0 100,50 81.6,100 54,100 72.4,50" fill="#E2241B"/>
             </svg>
-            <!-- Lettrage -->
-            <div class="flex flex-col leading-none">
-                <span class="font-logo font-bold text-2xl tracking-tight text-klem-blue group-hover:text-klem-orange transition-colors duration-200 leading-none">KLEM</span>
-                <span class="font-logo font-semibold text-[8.5px] tracking-[0.2em] text-gray-400 uppercase leading-none mt-[5px]"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
+            <!-- Wordmark -->
+            <div class="flex flex-col leading-none gap-[5px]">
+                <span class="font-logo font-bold text-[26px] tracking-[0.5px] leading-none bg-gradient-to-b from-[#F07A1E] to-[#8A3C12] bg-clip-text text-transparent">KLEM</span>
+                <span class="font-logo font-bold text-[9px] tracking-[1.2px] text-klem-slate uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
             </div>
         </a>
 
