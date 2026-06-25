@@ -5,13 +5,23 @@
 
 ---
 
+## [DEC-006] 2026-06-25 — Secrets dans `.env`, lus via `getenv()` dans `wp-config.php`
+
+**ARD :** —  
+**Contexte :** GitHub Push Protection a bloqué le push contenant la clé API Brevo committée en clair dans `wp-config.php`.  
+**Décision :** Aucun secret ne réside dans le dépôt Git. Les credentials sont stockés dans `.env` (ignoré par `.gitignore`), injectés dans le conteneur Docker via `env_file: .env`, et lus dans `wp-config.php` via `getenv()`. Un fichier `.env.example` est commité comme template documenté.  
+**Impact :** `wp-config.php`, `docker-compose.yml`, `.gitignore`, `.env` (non versionné), `.env.example`  
+**Règle à suivre :** Toute nouvelle variable sensible (clé API, mot de passe) doit suivre ce même schéma — jamais en dur dans le code.
+
+---
+
 ## [DEC-005] 2026-06-25 — Envoi d'emails : API REST Brevo plutôt que SMTP
 
 **ARD :** À créer (ADR-005) lors de l'implémentation  
 **Contexte :** Le SMTP Brevo (port 587) est bloqué depuis le conteneur Docker local (restriction FAI/réseau). La clé SMTP `xsmtpsib-...` est en place mais inutilisable en local.  
 **Décision :** Basculer sur l'API REST Brevo (`https://api.brevo.com/v3/smtp/email`, port 443) via `wp_remote_post()` dans le mu-plugin. Contourne définitivement les blocages SMTP, fonctionne en local et en production.  
 **Impact :** `web/app/mu-plugins/klem-smtp.php` (à réécrire), `web/wp-config.php` (remplacer constantes SMTP par `KLEM_BREVO_API_KEY`)  
-**Statut :** ⏳ Reporté — en attente de la clé API Brevo (`xkeysib-...`)
+**Statut :** ✅ Implémenté — Session 04 (2026-06-25). Test ENVOI OK.
 
 ---
 

@@ -4,6 +4,46 @@
 
 ---
 
+## Session 04 — 2026-06-25
+
+**Objectif :** Implémenter l'envoi d'emails via API REST Brevo et sécuriser les secrets hors du dépôt Git.
+
+### Tâches réalisées
+
+#### 1. Réécriture du mu-plugin en API REST (`web/app/mu-plugins/klem-smtp.php` v2)
+- Remplacement du hook `phpmailer_init` par le filtre `pre_wp_mail` (court-circuite PHPMailer entièrement)
+- `wp_remote_post()` vers `https://api.brevo.com/v3/smtp/email` (port 443 — aucun blocage réseau)
+- Gestion automatique HTML vs texte brut, extraction `Reply-To` depuis les headers
+- Fallback propre : si `KLEM_BREVO_API_KEY` absent → PHPMailer reprend la main
+- Erreurs propagées via le hook `wp_mail_failed`
+
+#### 2. Gestion des secrets via `.env`
+- Premier push bloqué par GitHub Push Protection (clé API Brevo détectée en clair dans `wp-config.php`)
+- Correction : secrets déplacés dans `.env` (non commité, listé dans `.gitignore`)
+- `wp-config.php` : constantes lues via `getenv()` — aucune valeur sensible en dur
+- `.env.example` créé et commité comme template de documentation
+- `docker-compose.yml` : ajout de `env_file: .env` pour injecter les variables dans le conteneur
+
+#### 3. Test d'envoi réel
+- Email de test envoyé à `ciyasyl@gmail.com` avec succès : **ENVOI OK ✓**
+- Objet : `[TEST] KLEM Brevo API REST`
+
+### État du projet en clôture
+- Formulaire de contact 100 % opérationnel (AJAX → WordPress → Brevo API REST → email livré)
+- Aucun secret dans le dépôt Git
+- Architecture secrets : `.env` local + `env_file` Docker + `getenv()` dans PHP
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `web/app/mu-plugins/klem-smtp.php` | Réécrit v2 (SMTP → API REST) |
+| `web/wp-config.php` | Secrets remplacés par `getenv()` |
+| `docker-compose.yml` | Ajout `env_file: .env` |
+| `.env` | Créé (non commité — secrets réels) |
+| `.env.example` | Créé (commité — template documenté) |
+
+---
+
 ## Session 03 — 2026-06-25
 
 **Objectif :** Configurer l'envoi d'emails du formulaire de contact via SMTP Brevo.
