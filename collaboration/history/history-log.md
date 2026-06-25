@@ -4,6 +4,48 @@
 
 ---
 
+## Session 03 — 2026-06-25
+
+**Objectif :** Configurer l'envoi d'emails du formulaire de contact via SMTP Brevo.
+
+### Tâches réalisées
+
+#### 1. Création du mu-plugin SMTP (`web/app/mu-plugins/klem-smtp.php`)
+- Hook `phpmailer_init` pour configurer PHPMailer avec Brevo (smtp-relay.brevo.com:587, STARTTLS)
+- Filtres `wp_mail_from` / `wp_mail_from_name` pour l'expéditeur `contact@klem.tech`
+- Chargement automatique sans activation manuelle (mu-plugin)
+
+#### 2. Ajout des constantes SMTP dans `wp-config.php`
+- Bloc `KLEM_SMTP_*` : host, port, user, pass, from, from_name
+- Credentials Brevo renseignés (ciyasyl@gmail.com + clé SMTP `xsmtpsib-...`)
+
+#### 3. Diagnostic — ports SMTP bloqués en local
+- Test d'envoi via `wp_mail()` : ÉCHEC — `Could not connect to SMTP host`
+- Cause identifiée : ports 25, 465, 587 tous bloqués en sortie depuis le conteneur Docker (restriction FAI / réseau local habituelle)
+- L'accès internet général fonctionne (port 443 OK)
+
+#### 4. Décision : basculer sur l'API REST Brevo
+- L'API HTTP de Brevo (port 443) contourne le blocage SMTP
+- Nécessite une clé API `xkeysib-...` (différente de la clé SMTP)
+- **Reporté à la prochaine session** — l'utilisateur génèrera la clé API Brevo
+
+### État du projet en clôture
+- Mu-plugin SMTP en place, configuration correcte pour la production
+- Envoi local non fonctionnel (blocage réseau) → à résoudre via API REST Brevo
+- `wp-config.php` contient les credentials SMTP Brevo (à remplacer par clé API lors de la prochaine session)
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `web/app/mu-plugins/klem-smtp.php` | Créé |
+| `web/wp-config.php` | Modifié (bloc KLEM_SMTP_* ajouté + credentials renseignés) |
+
+### Prochaine étape
+- Générer une clé API Brevo (`xkeysib-...`) sur app.brevo.com → SMTP & API → API Keys
+- Remplacer le mu-plugin SMTP par une implémentation via `wp_remote_post()` sur l'API REST Brevo
+
+---
+
 ## Session 02 — 2026-06-25
 
 **Objectif :** Compléter la page d'accueil avec les sections manquantes (`#clients`, `#contact`) et rendre le formulaire fonctionnel.

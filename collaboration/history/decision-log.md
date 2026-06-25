@@ -5,6 +5,16 @@
 
 ---
 
+## [DEC-005] 2026-06-25 — Envoi d'emails : API REST Brevo plutôt que SMTP
+
+**ARD :** À créer (ADR-005) lors de l'implémentation  
+**Contexte :** Le SMTP Brevo (port 587) est bloqué depuis le conteneur Docker local (restriction FAI/réseau). La clé SMTP `xsmtpsib-...` est en place mais inutilisable en local.  
+**Décision :** Basculer sur l'API REST Brevo (`https://api.brevo.com/v3/smtp/email`, port 443) via `wp_remote_post()` dans le mu-plugin. Contourne définitivement les blocages SMTP, fonctionne en local et en production.  
+**Impact :** `web/app/mu-plugins/klem-smtp.php` (à réécrire), `web/wp-config.php` (remplacer constantes SMTP par `KLEM_BREVO_API_KEY`)  
+**Statut :** ⏳ Reporté — en attente de la clé API Brevo (`xkeysib-...`)
+
+---
+
 ## [DEC-004] 2026-06-25 — Formulaire de contact via AJAX natif WordPress
 
 **ARD :** [ADR-003](../doc/ard/ADR-003-formulaire-contact-ajax-natif.md)  
