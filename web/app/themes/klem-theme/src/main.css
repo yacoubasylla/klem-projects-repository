@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+}
+
+/* ─── Header fixé — prioritaire sur tout conflit WordPress ──────────────── */
+#site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: #ffffff;
+}
+
+/* Compensation barre d'administration WordPress (utilisateurs connectés) */
+.admin-bar #site-header {
+    top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    .admin-bar #site-header {
+        top: 46px;
+    }
+}
+
+/* Ombre progressive au scroll (ajoutée via JS) */
+#site-header.scrolled {
+    box-shadow: 0 1px 12px 0 rgba(11, 25, 44, 0.10);
+}
+
+/* Animations d'entrée déclenchées au scroll */
+[data-animate] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+
+[data-animate].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-animate],
+    [data-animate].is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

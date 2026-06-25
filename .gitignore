@@ -1,0 +1,35 @@
+# ── Dépendances ──────────────────────────────────────────────────────────────
+vendor/
+node_modules/
+web/app/themes/klem-theme/node_modules/
+
+# ── Assets compilés (générés par pnpm build) ─────────────────────────────────
+web/app/themes/klem-theme/dist/
+
+# ── WordPress core (géré par Composer) ───────────────────────────────────────
+web/wp/
+
+# ── Environnement & secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Backup ───────────────────────────────────────────────────────────────────
+web_bkp/
+
+# ── Uploads WordPress ────────────────────────────────────────────────────────
+web/app/uploads/
+
+# ── Système ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Turbo cache ──────────────────────────────────────────────────────────────
+.turbo/
