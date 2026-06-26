@@ -5,6 +5,42 @@
 
 ---
 
+## [DEC-016] 2026-06-26 — Hero : grille 2 colonnes contenue vs panneau absolu bord-à-bord
+
+**Contexte :** Le panneau droit du hero était `absolute inset-0 w-[49%]` — il s'étendait jusqu'au bord du viewport, empêchant d'avoir des marges visibles comme sur le site de référence veone.net.
+**Décision :** Remplacement par une grille CSS `grid-cols-2` contenue dans `max-w-6xl mx-auto`. L'image droite est une colonne normale avec `clip-path` diagonal appliqué sur l'élément lui-même, et `lg:-ml-6` pour combler le gap.
+**Impact :** `template-parts/home/hero.php`
+**Résultat :** Marges gauche/droite visibles, image contenue, layout identique au modèle veone.
+
+---
+
+## [DEC-015] 2026-06-26 — Réduction typographie + container max-w-6xl
+
+**Contexte :** Les polices étaient trop grandes sur tous les breakpoints (H1 hero à 72px desktop). Le container `max-w-7xl` (1280px) avec peu de padding donnait une impression d'étirement.
+**Décision :** Réduction d'un step Tailwind sur tous les titres (H1 hero : `text-7xl` → `text-5xl` desktop ; H2 sections : `text-5xl` → `text-3xl`). Container `max-w-7xl` → `max-w-6xl` (1152px) avec padding responsive `px-4 sm:px-6 lg:px-8`.
+**Impact :** Tous les template-parts + `header.php`
+
+---
+
+## [DEC-014] 2026-06-26 — Inclure `dist/` dans Git pour hébergement mutualisé
+
+**Contexte :** Sur Hostinger (hébergement mutualisé), Node.js n'est pas disponible — `pnpm build` est impossible côté serveur. `dist/` était dans `.gitignore`, donc le `manifest.json` était absent du serveur, empêchant le chargement CSS/JS.
+**Décision :** Décommenter `dist/` du `.gitignore` et commiter les assets compilés. Le build se fait en local avant chaque push.
+**Règle à suivre :** Toujours lancer `pnpm build` avant `git push` pour que les assets soient à jour sur le dépôt.
+**Impact :** `.gitignore`, workflow de déploiement
+
+---
+
+## [DEC-013] 2026-06-26 — Déploiement Hostinger via Git + symlink document root
+
+**Contexte :** Premier déploiement sur le serveur de production `klemtech.net` (Hostinger Business Web Hosting).
+**Décision :** Cloner le dépôt GitHub dans `~/site-klem/`, créer un symlink `~/domains/klemtech.net/public_html` → `~/site-klem/web`. Les mises à jour se font via `git pull` sur le serveur.
+**Credentials DB production :** `DB_NAME=u987520216_KLEM_BD`, `DB_USER=u987520216_KLEM`, host=`localhost`.
+**Impact :** Structure serveur, `.env` production
+**Avantage :** Un seul `git pull` met à jour le site — pas de FTP, pas de rsync manuel.
+
+---
+
 ## [DEC-012] 2026-06-26 — Repositionnement section "Cas Clients" en "Ce qui nous distingue"
 
 **Contexte :** KLEM est en phase de démarrage — afficher de faux témoignages clients (noms d'entreprises fictifs) nuit à la crédibilité.

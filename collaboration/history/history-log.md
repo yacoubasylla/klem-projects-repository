@@ -4,6 +4,67 @@
 
 ---
 
+## Session 08 — 2026-06-26
+
+**Objectif :** Déploiement complet sur Hostinger + ajustements visuels post-déploiement (polices, hero, logo, boutons).
+
+### Tâches réalisées
+
+#### 1. Déploiement production Hostinger
+- **DB** : import `klem_production.sql` → `u987520216_KLEM_BD` (fix : `grep -v '^mysqldump:'` pour filtrer les warnings mélangés dans le dump)
+- **Credentials** : `.env` sur le serveur mis à jour (`DB_NAME=u987520216_KLEM_BD`, `DB_USER=u987520216_KLEM`, `DB_PASSWORD=I@ndI2905`, URLs `https://www.klemtech.net`)
+- **URLs DB** : `UPDATE klem_options SET option_value='https://www.klemtech.net'` sur `siteurl` et `home`
+- **Composer** : `composer install --no-dev --optimize-autoloader` sur le serveur — vendor OK
+- **Document root** : `~/domains/klemtech.net/public_html` → symlink vers `~/site-klem/web` (déjà en place)
+- **PHP** : 8.2.30 — compatible Bedrock ✅
+
+#### 2. Fix critique : assets `dist/` non déployés
+- **Problème** : `dist/` dans `.gitignore` → `manifest.json` absent sur le serveur → CSS/JS non chargés
+- **Solution** : décommenter `dist/` dans `.gitignore`, commiter les assets compilés
+- Site s'affichait en HTML brut (sans styles) avant ce fix
+
+#### 3. Refonte hero — grille 2 colonnes contenue
+- Passage de panneau droit `absolute` bord-à-bord à une grille CSS 2 colonnes dans `max-w-6xl`
+- Image droite avec `clip-path` diagonal contenu dans le container (style veone.net)
+- Réduction gap + extension image gauche (`-ml-6`) pour supprimer l'espace blanc entre texte et image
+
+#### 4. Ajustements typographiques et layout
+- Hero H1 : `text-7xl` → `text-5xl` (desktop)
+- Section H2 : `text-4xl/5xl` → `text-2xl/3xl` sur toutes les sections
+- Container : `max-w-7xl` → `max-w-6xl` + padding responsive `px-4 sm:px-6 lg:px-8`
+- Logo chevron : `width="44" height="36"` → `width="32" height="26"`
+- Logo KLEM wordmark : `text-[38px]` → `text-[26px]` (desktop)
+
+#### 5. Hero — 4 cartes métriques avec animation ping
+- Passage de 3 cartes staggerées à 4 cartes (ajout "Apps Sur-Mesure" — point bleu)
+- Animation `animate-ping` (effet radar) remplace `animate-pulse` — délais décalés 0 / 0.3s / 0.6s / 0.9s
+- Positionnement absolu libre : haut-gauche, haut-droite, centre-gauche, bas-droite
+- Transparence augmentée : `bg-white/10` → `bg-white/5`, `border-white/20` → `border-white/15`
+
+#### 6. Boutons et numéro de téléphone
+- Boutons : `justify-center` + `px-5 py-2` + `text-sm` (texte centré, taille réduite)
+- Numéro reformaté : `+225 0758892477` → `(+225) 07 58 89 24 77`
+- Numéro : `font-extrabold text-sm` → `font-medium text-xs`
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `.gitignore` | `dist/` décommenté — assets committés pour hébergement mutualisé |
+| `header.php` | Chevron réduit, KLEM wordmark réduit, bouton centré, numéro reformaté |
+| `template-parts/home/hero.php` | Restructuration grille 2 col, 4 cartes, ping animation, boutons |
+| `template-parts/home/services.php` | Container max-w-6xl + H2 réduit |
+| `template-parts/home/about.php` | Container max-w-6xl + H2 réduit |
+| `template-parts/home/clients.php` | Container max-w-6xl + H2 réduit |
+| `template-parts/home/contact.php` | Container max-w-6xl + H2 réduit |
+| `dist/` (assets compilés) | 8 builds successifs committés avec les changements visuels |
+
+### État du projet en clôture
+- Site en production sur `https://www.klemtech.net` — fonctionnel ✅
+- Design ajusté : proportions veone-style, polices calibrées, hero contenu dans son container
+- Workflow de déploiement établi : `pnpm build` → `git push` → `git pull` sur le serveur
+
+---
+
 ## Session 07 — 2026-06-26
 
 **Objectif :** Finaliser les coordonnées, redesign section services, repositionnement honnête "Cas Clients", logo et responsive.
