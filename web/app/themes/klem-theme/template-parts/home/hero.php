@@ -4,40 +4,8 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center py-8 lg:py-24">
 
-            <!-- Colonne gauche : texte -->
-            <div class="order-2 lg:order-1">
-                <p class="text-klem-orange font-bold tracking-widest text-xs uppercase mb-6">
-                    <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
-                </p>
-
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-klem-blue leading-tight mb-6">
-                    <?php esc_html_e('Maîtrisez votre', 'klem-theme'); ?><br>
-                    <?php esc_html_e('Souveraineté', 'klem-theme'); ?><br>
-                    <?php esc_html_e('Numérique', 'klem-theme'); ?>
-                </h1>
-
-                <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10">
-                    <?php esc_html_e('Confiez-nous votre transformation digitale et concentrez-vous sur la croissance de votre organisation.', 'klem-theme'); ?>
-                </p>
-
-                <div class="flex flex-wrap gap-4">
-                    <a
-                        href="#services"
-                        class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2.5 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-200"
-                    >
-                        <?php esc_html_e('Nos services', 'klem-theme'); ?>
-                    </a>
-                    <a
-                        href="#about"
-                        class="inline-flex items-center justify-center border border-gray-300 text-gray-700 font-semibold px-5 py-2.5 rounded-lg text-sm hover:border-klem-orange hover:text-klem-orange transition-all duration-200"
-                    >
-                        <?php esc_html_e('Notre histoire', 'klem-theme'); ?>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Colonne droite : panneau image avec découpe et cartes -->
-            <div class="order-1 lg:order-2 block relative rounded-2xl overflow-hidden min-h-[240px] lg:min-h-[420px] lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
+            <!-- IMAGE EN PREMIER dans le HTML → s'affiche EN HAUT sur mobile, à DROITE sur desktop via lg:col-start-2 -->
+            <div class="lg:col-start-2 lg:row-start-1 relative rounded-2xl overflow-hidden h-[260px] lg:h-auto lg:min-h-[420px] lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B;"
                  aria-hidden="true">
 
@@ -102,6 +70,38 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
                     </div>
 
+                </div>
+            </div>
+
+            <!-- TEXTE EN SECOND dans le HTML → s'affiche EN BAS sur mobile, à GAUCHE sur desktop via lg:col-start-1 -->
+            <div class="lg:col-start-1 lg:row-start-1">
+                <p class="text-klem-orange font-bold tracking-widest text-xs uppercase mb-6">
+                    <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
+                </p>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-klem-blue leading-tight mb-6">
+                    <?php esc_html_e('Maîtrisez votre', 'klem-theme'); ?><br>
+                    <?php esc_html_e('Souveraineté', 'klem-theme'); ?><br>
+                    <?php esc_html_e('Numérique', 'klem-theme'); ?>
+                </h1>
+
+                <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10">
+                    <?php esc_html_e('Confiez-nous votre transformation digitale et concentrez-vous sur la croissance de votre organisation.', 'klem-theme'); ?>
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <a
+                        href="#services"
+                        class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2.5 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-200"
+                    >
+                        <?php esc_html_e('Nos services', 'klem-theme'); ?>
+                    </a>
+                    <a
+                        href="#about"
+                        class="inline-flex items-center justify-center border border-gray-300 text-gray-700 font-semibold px-5 py-2.5 rounded-lg text-sm hover:border-klem-orange hover:text-klem-orange transition-all duration-200"
+                    >
+                        <?php esc_html_e('Notre histoire', 'klem-theme'); ?>
+                    </a>
                 </div>
             </div>
 
