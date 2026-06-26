@@ -1,13 +1,13 @@
 <section id="about" class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             <!-- Colonne gauche : texte -->
             <div>
                 <p class="text-klem-orange font-semibold tracking-widest text-sm uppercase mb-3">
                     <?php esc_html_e('À Propos', 'klem-theme'); ?>
                 </p>
-                <h2 class="text-4xl font-bold text-klem-blue leading-tight mb-6">
+                <h2 class="text-2xl lg:text-3xl font-bold text-klem-blue leading-tight mb-6">
                     <?php esc_html_e('Partenaire Stratégique de votre Croissance', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-600 leading-relaxed mb-4">

@@ -1,5 +1,5 @@
 <section id="contact" class="py-24 lg:py-32 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
             <!-- Colonne gauche : informations -->
@@ -7,7 +7,7 @@
                 <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-orange/10 rounded-full">
                     <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
                 </span>
-                <h2 class="text-4xl lg:text-5xl font-extrabold text-klem-blue leading-tight mb-5">
+                <h2 class="text-2xl lg:text-3xl font-extrabold text-klem-blue leading-tight mb-5">
                     <?php esc_html_e('Parlons de votre', 'klem-theme'); ?><br>
                     <?php esc_html_e('prochain projet', 'klem-theme'); ?>
                 </h2>

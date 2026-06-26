@@ -4,8 +4,8 @@
     <div class="relative overflow-hidden">
 
         <!-- Contenu texte (gauche) -->
-        <div class="relative z-10 max-w-7xl mx-auto px-6">
-            <div class="flex items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[620px] pt-20 pb-8">
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center min-h-[420px] sm:min-h-[480px] lg:min-h-[540px] pt-16 pb-8">
                 <div class="w-full lg:w-[54%] py-8 sm:py-10 lg:py-16 lg:pr-12">
 
                     <!-- Pastille supérieure -->
@@ -14,7 +14,7 @@
                     </p>
 
                     <!-- H1 massif style veone -->
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-klem-blue leading-tight mb-6">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-klem-blue leading-tight mb-6">
                         <?php esc_html_e('Maîtrisez votre', 'klem-theme'); ?><br>
                         <?php esc_html_e('Souveraineté', 'klem-theme'); ?><br>
                         <?php esc_html_e('Numérique', 'klem-theme'); ?>
@@ -95,12 +95,12 @@
 
     <!-- Bande de statistiques (style veone.net) -->
     <div class="border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
 
                 <div class="border-l-2 border-klem-blue pl-6">
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-4xl font-extrabold text-klem-blue leading-none">5+</span>
+                        <span class="text-3xl font-extrabold text-klem-blue leading-none">5+</span>
                         <span class="text-lg font-bold text-klem-blue"><?php esc_html_e('Ans', 'klem-theme'); ?></span>
                     </div>
                     <p class="text-klem-orange text-sm font-semibold"><?php esc_html_e("d'expertise prouvée", 'klem-theme'); ?></p>
@@ -108,7 +108,7 @@
 
                 <div class="border-l-2 border-klem-blue pl-6">
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-4xl font-extrabold text-klem-blue leading-none">30+</span>
+                        <span class="text-3xl font-extrabold text-klem-blue leading-none">30+</span>
                         <span class="text-lg font-bold text-klem-blue"><?php esc_html_e('Projets', 'klem-theme'); ?></span>
                     </div>
                     <p class="text-klem-orange text-sm font-semibold"><?php esc_html_e('livrés avec succès', 'klem-theme'); ?></p>
@@ -116,7 +116,7 @@
 
                 <div class="border-l-2 border-klem-blue pl-6">
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-4xl font-extrabold text-klem-blue leading-none">4</span>
+                        <span class="text-3xl font-extrabold text-klem-blue leading-none">4</span>
                         <span class="text-lg font-bold text-klem-blue"><?php esc_html_e('Piliers', 'klem-theme'); ?></span>
                     </div>
                     <p class="text-klem-orange text-sm font-semibold"><?php esc_html_e("d'expertise couverts", 'klem-theme'); ?></p>
@@ -124,7 +124,7 @@
 
                 <div class="border-l-2 border-klem-blue pl-6">
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-4xl font-extrabold text-klem-blue leading-none">100%</span>
+                        <span class="text-3xl font-extrabold text-klem-blue leading-none">100%</span>
                     </div>
                     <p class="text-klem-orange text-sm font-semibold"><?php esc_html_e('Sur-mesure, sans compromis', 'klem-theme'); ?></p>
                 </div>
