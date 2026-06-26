@@ -80,7 +80,7 @@
                     <span aria-hidden="true" class="text-klem-orange font-bold">→</span>
                 </a>
                 <p class="text-klem-blue font-extrabold text-sm leading-none">
-                    <?php esc_html_e('+229 XX XX XX XX', 'klem-theme'); ?>
+                    <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                 </p>
             </div>
 
@@ -146,7 +146,7 @@
             ?>
             <div class="pt-4 mt-3 border-t border-gray-100 space-y-2">
                 <p class="text-klem-blue font-extrabold text-sm px-3">
-                    <?php esc_html_e('+229 XX XX XX XX', 'klem-theme'); ?>
+                    <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                 </p>
                 <a href="#contact" class="block bg-klem-orange text-white font-bold text-center px-5 py-3 rounded-lg text-sm hover:brightness-110 transition-all">
                     <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>

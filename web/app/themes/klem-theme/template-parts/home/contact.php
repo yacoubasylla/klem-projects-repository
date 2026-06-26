@@ -28,8 +28,9 @@
                         <div>
                             <p class="font-semibold text-klem-blue text-sm mb-0.5"><?php esc_html_e('Adresse', 'klem-theme'); ?></p>
                             <p class="text-gray-500 text-sm leading-relaxed">
-                                <?php esc_html_e('Cotonou, Bénin', 'klem-theme'); ?><br>
-                                <?php esc_html_e('Afrique de l\'Ouest', 'klem-theme'); ?>
+                                <?php esc_html_e('Treichville Arras 1, Abidjan', 'klem-theme'); ?><br>
+                                <?php esc_html_e('Côte d\'Ivoire', 'klem-theme'); ?><br>
+                                <span class="text-xs text-gray-400"><?php esc_html_e('(près de la banque BICICI)', 'klem-theme'); ?></span>
                             </p>
                         </div>
                     </li>
@@ -42,8 +43,8 @@
                         </div>
                         <div>
                             <p class="font-semibold text-klem-blue text-sm mb-0.5"><?php esc_html_e('Téléphone', 'klem-theme'); ?></p>
-                            <a href="tel:+22900000000" class="text-gray-500 text-sm hover:text-klem-orange transition-colors">
-                                <?php esc_html_e('+229 XX XX XX XX', 'klem-theme'); ?>
+                            <a href="tel:+2250758892477" class="text-gray-500 text-sm hover:text-klem-orange transition-colors">
+                                <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                             </a>
                         </div>
                     </li>
@@ -56,8 +57,8 @@
                         </div>
                         <div>
                             <p class="font-semibold text-klem-blue text-sm mb-0.5"><?php esc_html_e('E-mail', 'klem-theme'); ?></p>
-                            <a href="mailto:contact@klem.tech" class="text-gray-500 text-sm hover:text-klem-orange transition-colors">
-                                <?php esc_html_e('contact@klem.tech', 'klem-theme'); ?>
+                            <a href="mailto:infos@klemtech.net" class="text-gray-500 text-sm hover:text-klem-orange transition-colors">
+                                <?php esc_html_e('infos@klemtech.net', 'klem-theme'); ?>
                             </a>
                         </div>
                     </li>
