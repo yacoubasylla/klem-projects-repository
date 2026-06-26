@@ -15,8 +15,18 @@ function klem_theme_setup(): void {
 }
 add_action('after_setup_theme', 'klem_theme_setup');
 
+function klem_enqueue_fonts(): void {
+    wp_enqueue_style(
+        'klem-fonts',
+        'https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap',
+        [],
+        null
+    );
+}
+add_action('wp_enqueue_scripts', 'klem_enqueue_fonts');
+
 function klem_enqueue_assets(): void {
-    // Verdana est une police système — aucun import externe requis.
+    // Archivo chargée via klem_enqueue_fonts()
     $theme_uri = get_template_directory_uri();
     $theme_dir = get_template_directory();
     $manifest  = $theme_dir . '/dist/.vite/manifest.json';

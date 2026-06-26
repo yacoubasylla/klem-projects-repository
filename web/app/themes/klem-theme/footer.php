@@ -39,49 +39,25 @@
             <!-- Col 1 : Logo + description + réseaux sociaux (4 colonnes larges) -->
             <div class="lg:col-span-4">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-3 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
-                    <!-- KlemMark — Neural Brain 3D (fond sombre) -->
-                    <svg viewBox="0 0 48 48" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
-                        <defs>
-                            <radialGradient id="kmf-sp" cx="36%" cy="28%" r="70%">
-                                <stop offset="0%"   stop-color="#FF7060"/>
-                                <stop offset="38%"  stop-color="#E42313"/>
-                                <stop offset="100%" stop-color="#6E0A04"/>
-                            </radialGradient>
-                            <radialGradient id="kmf-hl" cx="28%" cy="22%" r="44%">
-                                <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
-                                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-                            </radialGradient>
-                            <filter id="kmf-sh" x="-25%" y="-25%" width="150%" height="150%">
-                                <feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#000000" flood-opacity="0.55"/>
-                            </filter>
-                        </defs>
-                        <circle cx="24" cy="24" r="22" fill="url(#kmf-sp)" filter="url(#kmf-sh)"/>
-                        <g stroke="white" stroke-linecap="round" fill="none">
-                            <line x1="24" y1="9"  x2="12" y2="19" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="24" y1="9"  x2="36" y2="19" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="12" y1="19" x2="14" y2="31" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="36" y1="19" x2="34" y2="31" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="14" y1="31" x2="24" y2="40" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="34" y1="31" x2="24" y2="40" stroke-width="1.3" opacity="0.72"/>
-                            <line x1="12" y1="19" x2="36" y2="19" stroke-width="1.0" opacity="0.48"/>
-                            <line x1="14" y1="31" x2="34" y2="31" stroke-width="1.0" opacity="0.48"/>
-                            <line x1="12" y1="19" x2="34" y2="31" stroke-width="0.9" opacity="0.36"/>
-                            <line x1="36" y1="19" x2="14" y2="31" stroke-width="0.9" opacity="0.36"/>
+                    <!-- ChevronMark — double chevron 3D (fond sombre) -->
+                    <svg viewBox="0 0 54 44" width="34" height="28" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; overflow:visible; flex-shrink:0;">
+                        <g fill="#A5130A">
+                            <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z" transform="translate(1.4,1.7)"/>
+                            <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z" transform="translate(1.4,1.7)"/>
                         </g>
-                        <g fill="white">
-                            <circle cx="24" cy="9"  r="2.5"/>
-                            <circle cx="12" cy="19" r="2.5"/>
-                            <circle cx="36" cy="19" r="2.5"/>
-                            <circle cx="14" cy="31" r="2.5"/>
-                            <circle cx="34" cy="31" r="2.5"/>
-                            <circle cx="24" cy="40" r="2.5"/>
+                        <g fill="#E42313">
+                            <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z"/>
+                            <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z"/>
                         </g>
-                        <ellipse cx="17" cy="14" rx="8.5" ry="5.5" fill="url(#kmf-hl)" transform="rotate(-30 17 14)"/>
+                        <g fill="#F0654F">
+                            <path d="M6 0 L18 0 L19.5 2.2 L7.5 2.2 Z"/>
+                            <path d="M23 0 L35 0 L36.5 2.2 L24.5 2.2 Z"/>
+                        </g>
                     </svg>
                     <!-- Wordmark -->
-                    <div class="flex flex-col leading-none gap-[4px]">
-                        <span class="font-logo font-bold text-[18px] tracking-[0.5px] leading-none text-white group-hover:text-klem-orange transition-colors duration-200"><?php esc_html_e('KLEM', 'klem-theme'); ?></span>
-                        <span class="font-logo font-bold text-[7px] tracking-[1.2px] text-white/40 uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
+                    <div class="flex flex-col leading-none gap-[6px]">
+                        <span class="font-logo font-extrabold text-[28px] tracking-[-0.02em] leading-none text-white group-hover:text-klem-red transition-colors duration-200"><?php esc_html_e('KLEM', 'klem-theme'); ?></span>
+                        <span class="font-logo font-semibold text-[6px] tracking-[0.23em] text-[#c3c9d6] uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
                     </div>
                 </a>
                 <p class="text-white/50 text-sm leading-relaxed mb-7 max-w-xs">
