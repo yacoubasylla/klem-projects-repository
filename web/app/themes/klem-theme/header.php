@@ -79,7 +79,7 @@
                     <?php esc_html_e('Support Client', 'klem-theme'); ?>
                     <span aria-hidden="true" class="text-klem-orange font-bold">→</span>
                 </a>
-                <p class="text-klem-blue font-extrabold text-sm leading-none">
+                <p class="text-klem-blue font-medium text-xs leading-none">
                     <?php esc_html_e('+225 07-58-89-24-77', 'klem-theme'); ?>
                 </p>
             </div>
