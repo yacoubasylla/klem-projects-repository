@@ -15,8 +15,8 @@
                 <!-- Halo orange -->
                 <div class="absolute -top-16 right-0 w-64 h-64 rounded-full bg-klem-orange/25 blur-3xl"></div>
 
-                <!-- Cartes métriques — positionnement absolu décalé -->
-                <div class="absolute inset-0">
+                <!-- Cartes métriques — masquées sur mobile (trop serrées), visibles desktop uniquement -->
+                <div class="absolute inset-0 hidden lg:block">
 
                     <!-- Carte 1 : Pipeline Big Data — haut gauche -->
                     <div class="absolute top-[10%] left-[14%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
