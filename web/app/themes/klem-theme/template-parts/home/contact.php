@@ -151,7 +151,7 @@
                                     id="klem-phone"
                                     name="klem_phone"
                                     autocomplete="tel"
-                                    placeholder="<?php esc_attr_e('+229 XX XX XX XX', 'klem-theme'); ?>"
+                                    placeholder="<?php esc_attr_e('+225 XX XX XX XX', 'klem-theme'); ?>"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors"
                                 >
                             </div>

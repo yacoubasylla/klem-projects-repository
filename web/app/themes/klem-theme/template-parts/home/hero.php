@@ -5,8 +5,8 @@
 
         <!-- Contenu texte (gauche) -->
         <div class="relative z-10 max-w-7xl mx-auto px-6">
-            <div class="flex items-center min-h-[600px] lg:min-h-[620px] pt-20 pb-8">
-                <div class="w-full lg:w-[54%] py-10 lg:py-16 lg:pr-12">
+            <div class="flex items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[620px] pt-20 pb-8">
+                <div class="w-full lg:w-[54%] py-8 sm:py-10 lg:py-16 lg:pr-12">
 
                     <!-- Pastille supérieure -->
                     <p class="text-klem-orange font-bold tracking-widest text-xs uppercase mb-8">

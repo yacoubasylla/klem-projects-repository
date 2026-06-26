@@ -12,9 +12,9 @@
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-6">
 
         <!-- Logo -->
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-4 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-2 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
             <!-- ChevronMark — double chevron 3D -->
-            <svg viewBox="0 0 54 44" width="44" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; overflow:visible; flex-shrink:0;">
+            <svg viewBox="0 0 54 44" width="44" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" class="block overflow-visible flex-shrink-0 -mt-2">
                 <g fill="#A5130A">
                     <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z" transform="translate(1.4,1.7)"/>
                     <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z" transform="translate(1.4,1.7)"/>
@@ -30,7 +30,7 @@
             </svg>
             <!-- Wordmark -->
             <div class="flex flex-col leading-none gap-[8px]">
-                <span class="font-logo font-extrabold text-[38px] tracking-[-0.02em] leading-none text-klem-blue">KLEM</span>
+                <span class="font-logo font-extrabold text-[24px] sm:text-[32px] lg:text-[38px] tracking-[-0.02em] leading-none text-klem-blue">KLEM</span>
                 <span class="font-logo font-semibold text-[8px] tracking-[0.23em] text-klem-blue uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
             </div>
         </a>
@@ -49,7 +49,7 @@
                         ['label' => 'Accueil',     'href' => '#',         'active' => true],
                         ['label' => 'Services',    'href' => '#services', 'active' => false],
                         ['label' => 'À Propos',    'href' => '#about',    'active' => false],
-                        ['label' => 'Cas Clients', 'href' => '#clients',  'active' => false],
+                        ['label' => 'Notre Différence', 'href' => '#clients',  'active' => false],
                         ['label' => 'Contact',     'href' => '#contact',  'active' => false],
                     ];
                     echo '<ul class="flex items-center gap-9">';

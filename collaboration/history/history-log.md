@@ -4,6 +4,55 @@
 
 ---
 
+## Session 07 — 2026-06-26
+
+**Objectif :** Finaliser les coordonnées, redesign section services, repositionnement honnête "Cas Clients", logo et responsive.
+
+### Tâches réalisées
+
+#### 1. Finalisation coordonnées officielles KLEM
+- `footer.php` : copyright `Copyright © KLEM 2026 – Tous droits réservés.`, liens légaux `Termes et conditions` + `Politique de confidentialité` (suppression CGU/Mentions légales)
+- `header.php` : téléphone `+225 0758892477` (format sans espaces)
+- `contact.php` : placeholder téléphone `+225 XX XX XX XX`
+
+#### 2. Section Services — redesign complet (2 itérations)
+- **v1** : remplacement des photos sombres par 4 illustrations SVG inline (circuit data, browser code, réseau, rack)
+- **v2 (final)** : inspiration modèle de référence — layout icône illustrée + texte, fond blanc, sans cartes encadrées
+  - 4 icônes SVG 2 couleurs strictes (`#13294B` + `#E42313`) : cylindre DB, moniteur `</>`, camion GPS, rack serveur
+  - Grille 4 cols avec trait supérieur rouge au hover, numéro + titre + desc + lien
+
+#### 3. Section "Cas Clients" → "Ce qui nous distingue"
+- Remplacement des 3 faux témoignages clients (noms entreprises fictifs) par 3 piliers différenciateurs
+- Piliers : Expertise Technique / Rigueur & Transparence / Ancrage Africain
+- Icônes rouge dans badge, badge thématique en bas de chaque carte
+- Label navigation : `Cas Clients` → `Notre Différence`
+
+#### 4. Logo — espacement et position du chevron
+- `gap-4` → `gap-2` sur le conteneur logo (rapprochement chevron/wordmark)
+- Chevron : `class="-mt-2"` (légère remontée pour aligner visuellement avec "KLEM")
+- KLEM wordmark : `text-[24px] sm:text-[32px] lg:text-[38px]` (responsive)
+
+#### 5. Responsive
+- Hero : `min-h-[480px] sm:min-h-[560px] lg:min-h-[620px]` (adapté mobile)
+- Padding hero : `py-8 sm:py-10 lg:py-16` (respiration mobile)
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `header.php` | Logo gap + chevron `-mt-2` + KLEM responsive + menu "Notre Différence" + tel format |
+| `footer.php` | Copyright 2026, liens légaux, coordonnées complètes, site web |
+| `template-parts/home/contact.php` | Coordonnées + placeholder tel |
+| `template-parts/home/services.php` | Redesign complet — icônes 2 couleurs |
+| `template-parts/home/clients.php` | "Ce qui nous distingue" — 3 piliers sans faux clients |
+| `template-parts/home/hero.php` | Responsive min-h + padding |
+
+### État du projet en clôture
+- Site visuellement complet, coordonnées à jour, aucun faux client affiché
+- Responsive amélioré (mobile, tablette, desktop)
+- Prêt pour déploiement Vercel
+
+---
+
 ## Session 06 — 2026-06-26
 
 **Objectif :** Intégrer le logo officiel KLEM depuis Claude Design, harmoniser les couleurs de la charte graphique, centrer les cartes du hero.

@@ -5,6 +5,32 @@
 
 ---
 
+## [DEC-012] 2026-06-26 — Repositionnement section "Cas Clients" en "Ce qui nous distingue"
+
+**Contexte :** KLEM est en phase de démarrage — afficher de faux témoignages clients (noms d'entreprises fictifs) nuit à la crédibilité.
+**Décision :** Remplacer la section témoignages par 3 piliers différenciateurs (Expertise Technique / Rigueur & Transparence / Ancrage Africain). Navigation renommée "Notre Différence".
+**Impact :** `template-parts/home/clients.php`, `header.php`
+**Résultat :** Positionnement honnête adapté au stade de l'entreprise.
+
+---
+
+## [DEC-011] 2026-06-26 — Section Services : layout icône illustrée + texte (vs bandeaux photo)
+
+**Contexte :** Les bandeaux photo sombres puis SVG multi-couleurs donnaient un rendu brouillon. L'utilisateur a fourni un modèle de référence à 4 colonnes icon+texte sur fond blanc.
+**Décision :** Refonte en icônes SVG illustrées (72×72, palette `#13294B`+`#E42313` uniquement), grille ouverte sans cartes encadrées, trait rouge au hover.
+**Impact :** `template-parts/home/services.php`
+**Résultat :** Rendu professionnel, cohérent, zéro dépendance image externe.
+
+---
+
+## [DEC-010] 2026-06-26 — Logo ChevronMark : espacement et position responsive
+
+**Contexte :** L'espace `gap-4` entre chevron et wordmark "KLEM" était trop large ; le chevron apparaissait trop bas par rapport au texte.
+**Décision :** `gap-4` → `gap-2`, ajout `class="-mt-2"` sur le SVG (remontée visuelle de 8px), KLEM responsive `text-[24px] sm:text-[32px] lg:text-[38px]`.
+**Impact :** `header.php`
+
+---
+
 ## [DEC-009] 2026-06-26 — Centrage des cartes métriques hero via flex layout
 
 **ARD :** —  
