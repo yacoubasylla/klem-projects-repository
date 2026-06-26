@@ -2,7 +2,7 @@
 
     <!-- Bloc hero : grille 2 colonnes contenue dans le container -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[500px] py-16 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center min-h-[500px] py-16 lg:py-24">
 
             <!-- Colonne gauche : texte -->
             <div>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Colonne droite : panneau image avec découpe et cartes -->
-            <div class="hidden lg:block relative rounded-2xl overflow-hidden min-h-[420px] bg-klem-blue bg-cover bg-center"
+            <div class="hidden lg:block relative rounded-2xl overflow-hidden min-h-[420px] lg:-ml-6 bg-klem-blue bg-cover bg-center"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>');
                         clip-path: polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%);"
                  aria-hidden="true">
