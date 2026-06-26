@@ -13,14 +13,48 @@
 
         <!-- Logo -->
         <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-4 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
-            <!-- KlemMark — 2 chevrons rouges -->
-            <svg viewBox="0 0 100 100" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
-                <polygon points="0,0 27.6,0 46,50 27.6,100 0,100 18.4,50" fill="#E2241B"/>
-                <polygon points="54,0 81.6,0 100,50 81.6,100 54,100 72.4,50" fill="#E2241B"/>
+            <!-- KlemMark — Neural Brain 3D -->
+            <svg viewBox="0 0 48 48" width="48" height="48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
+                <defs>
+                    <radialGradient id="kmh-sp" cx="36%" cy="28%" r="70%">
+                        <stop offset="0%"   stop-color="#FFAA5E"/>
+                        <stop offset="38%"  stop-color="#E5391E"/>
+                        <stop offset="100%" stop-color="#6A0F08"/>
+                    </radialGradient>
+                    <radialGradient id="kmh-hl" cx="28%" cy="22%" r="44%">
+                        <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                    <filter id="kmh-sh" x="-25%" y="-25%" width="150%" height="150%">
+                        <feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#1A0504" flood-opacity="0.38"/>
+                    </filter>
+                </defs>
+                <circle cx="24" cy="24" r="22" fill="url(#kmh-sp)" filter="url(#kmh-sh)"/>
+                <g stroke="white" stroke-linecap="round" fill="none">
+                    <line x1="24" y1="9"  x2="12" y2="19" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="24" y1="9"  x2="36" y2="19" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="12" y1="19" x2="14" y2="31" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="36" y1="19" x2="34" y2="31" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="14" y1="31" x2="24" y2="40" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="34" y1="31" x2="24" y2="40" stroke-width="1.3" opacity="0.72"/>
+                    <line x1="12" y1="19" x2="36" y2="19" stroke-width="1.0" opacity="0.48"/>
+                    <line x1="14" y1="31" x2="34" y2="31" stroke-width="1.0" opacity="0.48"/>
+                    <line x1="12" y1="19" x2="34" y2="31" stroke-width="0.9" opacity="0.36"/>
+                    <line x1="36" y1="19" x2="14" y2="31" stroke-width="0.9" opacity="0.36"/>
+                </g>
+                <g fill="white">
+                    <circle cx="24" cy="9"  r="2.5"/>
+                    <circle cx="12" cy="19" r="2.5"/>
+                    <circle cx="36" cy="19" r="2.5"/>
+                    <circle cx="14" cy="31" r="2.5"/>
+                    <circle cx="34" cy="31" r="2.5"/>
+                    <circle cx="24" cy="40" r="2.5"/>
+                </g>
+                <ellipse cx="17" cy="14" rx="8.5" ry="5.5" fill="url(#kmh-hl)" transform="rotate(-30 17 14)"/>
             </svg>
             <!-- Wordmark -->
             <div class="flex flex-col leading-none gap-[5px]">
-                <span class="font-logo font-bold text-[26px] tracking-[0.5px] leading-none bg-gradient-to-b from-[#F07A1E] to-[#8A3C12] bg-clip-text text-transparent">KLEM</span>
+                <span class="font-logo font-bold text-[26px] tracking-[0.5px] leading-none text-klem-blue">KLEM</span>
                 <span class="font-logo font-bold text-[9px] tracking-[1.2px] text-klem-slate uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
             </div>
         </a>
