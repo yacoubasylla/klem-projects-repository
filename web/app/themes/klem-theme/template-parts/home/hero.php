@@ -15,11 +15,37 @@
                 <!-- Halo orange -->
                 <div class="absolute -top-16 right-0 w-64 h-64 rounded-full bg-klem-orange/25 blur-3xl"></div>
 
-                <!-- Cartes métriques — masquées sur mobile (trop serrées), visibles desktop uniquement -->
+                <!-- Mobile : 2 cartes visibles, cachées sur desktop -->
+                <div class="absolute inset-0 lg:hidden">
+                    <div class="absolute top-[8%] left-[4%] w-40 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3 shadow-xl">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="relative flex h-2 w-2 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-klem-orange"></span>
+                            </span>
+                            <span class="text-white/60 text-[9px] font-bold uppercase tracking-wider">Pipeline Big Data</span>
+                        </div>
+                        <p class="text-white font-extrabold text-lg leading-none">4.2M</p>
+                        <p class="text-white/40 text-[10px] mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
+                    </div>
+                    <div class="absolute bottom-[8%] right-[4%] w-40 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3 shadow-xl">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="relative flex h-2 w-2 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
+                            </span>
+                            <span class="text-white/60 text-[9px] font-bold uppercase tracking-wider"><?php esc_html_e('Apps Sur-Mesure', 'klem-theme'); ?></span>
+                        </div>
+                        <p class="text-white font-extrabold text-lg leading-none">18+</p>
+                        <p class="text-white/40 text-[10px] mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
+                    </div>
+                </div>
+
+                <!-- Desktop : 4 cartes en diagonale, cachées sur mobile -->
                 <div class="absolute inset-0 hidden lg:block">
 
-                    <!-- Carte 1 : Pipeline Big Data — haut gauche -->
-                    <div class="absolute top-[7%] left-[8%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 1 : haut gauche -->
+                    <div class="absolute top-[5%] left-[5%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
@@ -31,8 +57,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 2 : Apps Sur-Mesure — milieu droit -->
-                    <div class="absolute top-[28%] right-[4%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 2 : haut droit (décalée) -->
+                    <div class="absolute top-[15%] right-[3%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
@@ -44,8 +70,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 3 : FleetControl — bas gauche -->
-                    <div class="absolute top-[55%] left-[8%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 3 : bas gauche -->
+                    <div class="absolute top-[62%] left-[5%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
@@ -57,8 +83,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 4 : Disponibilité — bas droit -->
-                    <div class="absolute bottom-[7%] right-[4%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 4 : bas droit -->
+                    <div class="absolute bottom-[5%] right-[3%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.9s"></span>
