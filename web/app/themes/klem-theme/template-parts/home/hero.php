@@ -1,107 +1,16 @@
 <section class="bg-white">
 
-    <!-- Bloc hero : grille 2 colonnes contenue dans le container -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center py-8 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 py-8 lg:py-24">
 
-            <!-- IMAGE EN PREMIER dans le HTML → s'affiche EN HAUT sur mobile, à DROITE sur desktop via lg:col-start-2 -->
-            <div data-hero-panel
-                 class="lg:col-start-2 lg:row-start-1 relative rounded-2xl overflow-hidden lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
+            <!-- IMAGE : en premier dans le HTML → haut sur mobile, droite sur desktop -->
+            <div class="lg:col-start-2 lg:row-start-1 lg:self-stretch rounded-2xl overflow-hidden bg-cover bg-center lg:[clip-path:polygon(20%_0%,100%_0%,100%_100%,0%_100%)] lg:-ml-6"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B; min-height: 260px;"
                  aria-hidden="true">
-
-                <!-- Overlay sombre -->
-                <div class="absolute inset-0" style="background-color:rgba(19,41,75,0.65);"></div>
-
-                <!-- Halo orange -->
-                <div class="absolute -top-16 right-0 w-64 h-64 rounded-full bg-klem-orange/25 blur-3xl"></div>
-
-                <!-- Mobile : 2 cartes visibles, cachées sur desktop -->
-                <div class="absolute inset-0 lg:hidden">
-                    <div class="absolute w-40 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3 shadow-xl" style="top:8%;left:4%;">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="relative flex h-2 w-2 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-klem-orange"></span>
-                            </span>
-                            <span class="text-white/60 text-[9px] font-bold uppercase tracking-wider">Pipeline Big Data</span>
-                        </div>
-                        <p class="text-white font-extrabold text-lg leading-none">4.2M</p>
-                        <p class="text-white/40 text-[10px] mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
-                    </div>
-                    <div class="absolute w-40 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3 shadow-xl" style="bottom:8%;right:4%;">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="relative flex h-2 w-2 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
-                            </span>
-                            <span class="text-white/60 text-[9px] font-bold uppercase tracking-wider"><?php esc_html_e('Apps Sur-Mesure', 'klem-theme'); ?></span>
-                        </div>
-                        <p class="text-white font-extrabold text-lg leading-none">18+</p>
-                        <p class="text-white/40 text-[10px] mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
-                    </div>
-                </div>
-
-                <!-- Desktop : 4 cartes en diagonale, cachées sur mobile -->
-                <div class="absolute inset-0 hidden lg:block">
-
-                    <!-- Carte 1 : rangée haute, gauche -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:8%;left:5%;">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-klem-orange"></span>
-                            </span>
-                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider">Pipeline Big Data</span>
-                        </div>
-                        <p class="text-white font-extrabold text-xl leading-none">4.2M</p>
-                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
-                    </div>
-
-                    <!-- Carte 2 : rangée haute, droite (légèrement décalée) -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:16%;right:3%;">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400"></span>
-                            </span>
-                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Apps Sur-Mesure', 'klem-theme'); ?></span>
-                        </div>
-                        <p class="text-white font-extrabold text-xl leading-none">18+</p>
-                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
-                    </div>
-
-                    <!-- Carte 3 : rangée basse, gauche -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:60%;left:5%;">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                            </span>
-                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider">FleetControl</span>
-                        </div>
-                        <p class="text-white font-extrabold text-xl leading-none">124</p>
-                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
-                    </div>
-
-                    <!-- Carte 4 : rangée basse, droite (légèrement décalée) -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:70%;right:3%;">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.9s"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                            </span>
-                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Disponibilité', 'klem-theme'); ?></span>
-                        </div>
-                        <p class="text-white font-extrabold text-xl leading-none">99.97%</p>
-                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
-                    </div>
-
-                </div>
             </div>
 
-            <!-- TEXTE EN SECOND dans le HTML → s'affiche EN BAS sur mobile, à GAUCHE sur desktop via lg:col-start-1 -->
-            <div class="lg:col-start-1 lg:row-start-1">
+            <!-- TEXTE : en second dans le HTML → bas sur mobile, gauche sur desktop -->
+            <div class="lg:col-start-1 lg:row-start-1 flex flex-col justify-center">
                 <p class="text-klem-orange font-bold tracking-widest text-xs uppercase mb-6">
                     <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
                 </p>

@@ -1,15 +1,5 @@
 import './main.css';
 
-// ─── Hauteur du panneau hero selon l'écran ──────────────────────────────────
-const heroPanel = document.querySelector('[data-hero-panel]');
-if (heroPanel) {
-    const setHeroHeight = () => {
-        heroPanel.style.minHeight = window.innerWidth >= 1024 ? '460px' : '260px';
-    };
-    setHeroHeight();
-    window.addEventListener('resize', setHeroHeight, { passive: true });
-}
-
 // ─── Menu mobile ────────────────────────────────────────────────────────────
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
