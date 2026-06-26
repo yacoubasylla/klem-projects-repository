@@ -57,7 +57,7 @@
             <div class="absolute -top-24 right-0 w-80 h-80 rounded-full bg-klem-orange/25 blur-3xl"></div>
 
             <!-- Cartes métriques — centrées dans la zone visible (après le clip diagonal) -->
-            <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 pl-[18%] pr-8">
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 pl-[18%] pr-[12%]">
 
                 <!-- Carte 1 : Pipeline Big Data (légèrement à gauche) -->
                 <div class="w-52 self-start bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Carte 2 : FleetControl (décalée à droite pour le rythme visuel) -->
-                <div class="w-56 self-end bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
+                <div class="w-56 self-end mr-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
                     <div class="flex items-center gap-2 mb-3">
                         <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
                         <span class="text-white/70 text-xs font-bold uppercase tracking-wider">FleetControl</span>
