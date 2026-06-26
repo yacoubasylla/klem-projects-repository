@@ -43,9 +43,9 @@
                     <svg viewBox="0 0 48 48" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
                         <defs>
                             <radialGradient id="kmf-sp" cx="36%" cy="28%" r="70%">
-                                <stop offset="0%"   stop-color="#FFAA5E"/>
-                                <stop offset="38%"  stop-color="#E5391E"/>
-                                <stop offset="100%" stop-color="#6A0F08"/>
+                                <stop offset="0%"   stop-color="#FF7060"/>
+                                <stop offset="38%"  stop-color="#E42313"/>
+                                <stop offset="100%" stop-color="#6E0A04"/>
                             </radialGradient>
                             <radialGradient id="kmf-hl" cx="28%" cy="22%" r="44%">
                                 <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>

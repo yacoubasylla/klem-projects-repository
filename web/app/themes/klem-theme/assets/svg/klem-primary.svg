@@ -1,19 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
   <defs>
     <radialGradient id="sp" cx="36%" cy="28%" r="70%">
-      <stop offset="0%"   stop-color="#FFAA5E"/>
-      <stop offset="38%"  stop-color="#E5391E"/>
-      <stop offset="100%" stop-color="#6A0F08"/>
+      <stop offset="0%"   stop-color="#FF7060"/>
+      <stop offset="38%"  stop-color="#E42313"/>
+      <stop offset="100%" stop-color="#6E0A04"/>
     </radialGradient>
     <radialGradient id="hl" cx="28%" cy="22%" r="44%">
       <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </radialGradient>
     <filter id="sh" x="-25%" y="-25%" width="150%" height="150%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#1A0504" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#1A0404" flood-opacity="0.38"/>
     </filter>
   </defs>
-  <!-- Mark (48x48 centred vertically in 64px) -->
   <g transform="translate(8,8)">
     <circle cx="24" cy="24" r="22" fill="url(#sp)" filter="url(#sh)"/>
     <g stroke="white" stroke-linecap="round" fill="none">
@@ -38,7 +37,6 @@
     </g>
     <ellipse cx="17" cy="14" rx="8.5" ry="5.5" fill="url(#hl)" transform="rotate(-30 17 14)"/>
   </g>
-  <!-- Wordmark -->
-  <text x="72" y="38" font-family="Verdana, Tahoma, 'DejaVu Sans', Geneva, sans-serif" font-weight="700" font-size="32" letter-spacing="0.5" fill="#16212E">KLEM</text>
-  <text x="73" y="54" font-family="Verdana, Tahoma, 'DejaVu Sans', Geneva, sans-serif" font-weight="700" font-size="9" letter-spacing="1.2" fill="#5A6B7B">TECHNOLOGIES &amp; SERVICES</text>
+  <text x="72" y="38" font-family="Verdana, Tahoma, 'DejaVu Sans', Geneva, sans-serif" font-weight="700" font-size="32" letter-spacing="0.5" fill="#271C70">KLEM</text>
+  <text x="73" y="54" font-family="Verdana, Tahoma, 'DejaVu Sans', Geneva, sans-serif" font-weight="700" font-size="9" letter-spacing="1.2" fill="#6B7280">TECHNOLOGIES &amp; SERVICES</text>
 </svg>

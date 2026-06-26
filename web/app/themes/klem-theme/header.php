@@ -17,16 +17,16 @@
             <svg viewBox="0 0 48 48" width="48" height="48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="flex-shrink-0">
                 <defs>
                     <radialGradient id="kmh-sp" cx="36%" cy="28%" r="70%">
-                        <stop offset="0%"   stop-color="#FFAA5E"/>
-                        <stop offset="38%"  stop-color="#E5391E"/>
-                        <stop offset="100%" stop-color="#6A0F08"/>
+                        <stop offset="0%"   stop-color="#FF7060"/>
+                        <stop offset="38%"  stop-color="#E42313"/>
+                        <stop offset="100%" stop-color="#6E0A04"/>
                     </radialGradient>
                     <radialGradient id="kmh-hl" cx="28%" cy="22%" r="44%">
                         <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
                         <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                     </radialGradient>
                     <filter id="kmh-sh" x="-25%" y="-25%" width="150%" height="150%">
-                        <feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#1A0504" flood-opacity="0.38"/>
+                        <feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#1A0404" flood-opacity="0.40"/>
                     </filter>
                 </defs>
                 <circle cx="24" cy="24" r="22" fill="url(#kmh-sp)" filter="url(#kmh-sh)"/>
