@@ -3,8 +3,8 @@ vendor/
 node_modules/
 web/app/themes/klem-theme/node_modules/
 
-# ── Assets compilés (générés par pnpm build) ─────────────────────────────────
-web/app/themes/klem-theme/dist/
+# ── Assets compilés — committés pour hébergement mutualisé (pas de Node.js serveur) ──
+# web/app/themes/klem-theme/dist/
 
 # ── WordPress core (géré par Composer) ───────────────────────────────────────
 web/wp/
