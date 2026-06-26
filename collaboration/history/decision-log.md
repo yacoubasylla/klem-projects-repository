@@ -5,6 +5,31 @@
 
 ---
 
+## [DEC-019] 2026-06-26 — Hero cards : inline style systématique pour résistance au cache Hostinger
+
+**Contexte :** LiteSpeed Cache Hostinger sert l'ancien CSS (`main-ApUCz-B4.css`) aux visiteurs anonymes même après `git pull`. Les classes Tailwind arbitraires (`top-[8%]`, `bg-white/10`, `min-h-[260px]`) absentes du vieux fichier CSS ne s'appliquent pas, causant des positions incorrectes, des cartes invisibles ou chevauchées.
+**Décision :** Toutes les valeurs de position (`top`, `bottom`, `left`, `right`), les dimensions (`width`, `min-height`) et les styles visuels des cartes (`background-color`, `border`) sont en **inline style** plutôt qu'en classes Tailwind arbitraires. Seuls les utilitaires de base garantis dans tout build CSS (`absolute`, `hidden`, `lg:block`, `rounded-2xl`, `backdrop-blur-md`) peuvent rester en classes.
+**Impact :** `template-parts/home/hero.php`
+**Règle à suivre :** Tant que l'hébergement est sur Hostinger LiteSpeed, tout positionnement précis va en inline style.
+
+---
+
+## [DEC-018] 2026-06-26 — Hero mobile : 2 cartes (Card 1 + Card 3) plutôt que 3
+
+**Contexte :** Panneau image mobile `min-height: 260px`. 3 cartes × ~85px = 255px minimum, laissant 5px de gap — chevauchement systématique sur petit écran.
+**Décision :** Card 2 (Apps Sur-Mesure, milieu-droit) masquée sur mobile via `hidden lg:block`. Card 1 (Pipeline Big Data, `top:8%`) + Card 3 (Disponibilité, `bottom:8%`) couvrent les extremités — gap calculé ≈ 48px, zéro chevauchement. Desktop : 3 cartes maintenues.
+**Impact :** `template-parts/home/hero.php`
+
+---
+
+## [DEC-017] 2026-06-26 — Hero : design propre sans overlay sombre ni cartes superposées
+
+**Contexte :** Après plusieurs itérations (4 cartes, 2 cartes mobile, cartes qui se chevauchent, overlay opaque), l'utilisateur a fourni une image de référence (site extérieur) montrant un hero 2 colonnes avec photo nette, découpe diagonale, aucune carte flottante.
+**Décision :** Suppression de l'overlay sombre `rgba(19,41,75,0.65)`, du halo orange et des 4 cartes. Remplacement par 3 cartes en zigzag transparentes (`rgba(255,255,255,0.06)`) avec overlay léger `rgba(10,20,45,0.45)`. Clip-path diagonal porté à `polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)`. Image : `lg:self-stretch` — hauteur déterminée par le grid, pas par JS.
+**Impact :** `template-parts/home/hero.php`, `src/main.js`
+
+---
+
 ## [DEC-016] 2026-06-26 — Hero : grille 2 colonnes contenue vs panneau absolu bord-à-bord
 
 **Contexte :** Le panneau droit du hero était `absolute inset-0 w-[49%]` — il s'étendait jusqu'au bord du viewport, empêchant d'avoir des marges visibles comme sur le site de référence veone.net.

@@ -4,6 +4,70 @@
 
 ---
 
+## Session 09 — 2026-06-26
+
+**Objectif :** Résoudre le chevauchement des cartes hero (mobile + desktop), adopter un design hero propre (référence image #60), réduire l'espace entre Services et À Propos.
+
+### Tâches réalisées
+
+#### 1. Refonte hero — suppression overlay/cartes → design "propre"
+- Suppression overlay sombre `rgba(19,41,75,0.65)`, cartes flottantes (4 cartes) et halo orange
+- Clip-path diagonal porté de `8%` à `20%` (plus prononcé, fidèle à la référence image fournie)
+- Image : `lg:self-stretch` — s'étire à la hauteur naturelle de la colonne texte via CSS Grid
+- Mobile : `min-height: 260px` conservé en inline style
+- Suppression du JS `data-hero-panel` (gestion min-height dynamique devenue inutile)
+
+#### 2. Ajout de 3 cartes métriques repositionnées
+- Zigzag : Card 1 haut-gauche (`top:8%;left:26%`) · Card 2 milieu-droit (`top:40%;right:5%`) · Card 3 bas-gauche (`bottom:8%;left:12%`)
+- Overlay léger réintroduit `rgba(10,20,45,0.45)` pour lisibilité des cartes
+- Toutes les positions et transparences des cartes en **inline style** (résistance au cache LiteSpeed Hostinger)
+- Fond cartes : `rgba(255,255,255,0.06)` · Bordure : `rgba(255,255,255,0.14)`
+
+#### 3. Fix débordement carte 1 (clip-path)
+- Card 1 à `left:8%` était clippée par le clip-path diagonal (visible à 20% en haut)
+- Correction : `left:8%` → `left:26%` (marge de 6% au-delà de la frontière diagonale)
+- Card 3 : `left:8%` → `left:12%` pour dégager les coins arrondis `rounded-2xl` sur mobile
+
+#### 4. Gestion responsive des cartes (mobile vs desktop)
+- **Problème** : 3 cartes × ~85px dans un panneau de 260px → chevauchement inévitable sur petit écran
+- **Solution** : Card 2 (Apps Sur-Mesure) masquée sur mobile (`hidden lg:block`)
+- **Mobile** : Card 1 (top 8%) + Card 3 (bottom 8%) → gap calculé ≈ 48px, zéro chevauchement
+- **Desktop** : 3 cartes visibles
+
+#### 5. Réduction espace entre sections Services et À Propos
+- Espace excessif (~300px) identifié par capture d'écran annotée par l'utilisateur
+- Section Services : `py-24 lg:py-32` → `pt-16 pb-10 lg:pt-24 lg:pb-14`
+- Bloc CTA Services : `mt-20 pt-16` → `mt-12 pt-8`
+- Section À Propos : `py-24` → `pt-12 pb-16`
+- Espace résiduel : ~90px (raisonnable)
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/hero.php` | Refonte complète : suppression 4 cartes/overlay → 3 cartes inline-style, clip-path 20%, self-stretch |
+| `src/main.js` | Suppression JS `data-hero-panel` min-height |
+| `template-parts/home/services.php` | Réduction padding bas + CTA padding |
+| `template-parts/home/about.php` | Réduction padding haut |
+| `dist/` | 6 builds successifs committés |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `59616c0` | redesign(hero): image propre sans cartes, style référence |
+| `c1d4bee` | feat(hero): 3 cartes en zigzag (positions inline style) |
+| `f25107a` | fix(hero): correction débordement carte 1 + transparence augmentée |
+| `e21d6b2` | fix(spacing): réduction espace Services → À Propos |
+| `71489d2` | fix(hero/mobile): masquer cartes 2 et 3 sur mobile |
+| `30c1d42` | feat(hero/mobile): afficher 2 cartes sur mobile |
+
+### État du projet en clôture
+- Hero desktop : image propre clip-path 20°, 3 cartes zigzag, overlay léger, hauteur auto via grid
+- Hero mobile : 2 cartes (Pipeline Big Data + Disponibilité), zéro chevauchement
+- Inter-sections : espacement naturel, plus de vide excessif entre Services et À Propos
+- Toutes les valeurs critiques (positions, couleurs) en inline style — résistance au cache Hostinger
+
+---
+
 ## Session 08 — 2026-06-26
 
 **Objectif :** Déploiement complet sur Hostinger + ajustements visuels post-déploiement (polices, hero, logo, boutons).
