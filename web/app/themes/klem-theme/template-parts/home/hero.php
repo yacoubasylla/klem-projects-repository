@@ -23,13 +23,13 @@
                 <div class="flex flex-wrap gap-4">
                     <a
                         href="#services"
-                        class="inline-flex items-center gap-2 bg-klem-orange text-white font-bold px-7 py-3.5 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-200"
+                        class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2.5 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-200"
                     >
                         <?php esc_html_e('Nos services', 'klem-theme'); ?>
                     </a>
                     <a
                         href="#about"
-                        class="inline-flex items-center gap-2 border border-gray-300 text-gray-700 font-semibold px-7 py-3.5 rounded-lg text-sm hover:border-klem-orange hover:text-klem-orange transition-all duration-200"
+                        class="inline-flex items-center justify-center border border-gray-300 text-gray-700 font-semibold px-5 py-2.5 rounded-lg text-sm hover:border-klem-orange hover:text-klem-orange transition-all duration-200"
                     >
                         <?php esc_html_e('Notre histoire', 'klem-theme'); ?>
                     </a>

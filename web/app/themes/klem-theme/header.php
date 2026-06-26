@@ -90,7 +90,7 @@
             <!-- Bouton CTA principal -->
             <a
                 href="#contact"
-                class="inline-flex items-center gap-1.5 bg-klem-orange text-white font-bold px-6 py-3 rounded-lg text-base hover:brightness-110 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
+                class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
             >
                 <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
             </a>
