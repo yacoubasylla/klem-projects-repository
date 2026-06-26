@@ -11,7 +11,7 @@
                  aria-hidden="true">
 
                 <!-- Overlay sombre -->
-                <div class="absolute inset-0 bg-klem-blue/65"></div>
+                <div class="absolute inset-0" style="background-color:rgba(19,41,75,0.65);"></div>
 
                 <!-- Halo orange -->
                 <div class="absolute -top-16 right-0 w-64 h-64 rounded-full bg-klem-orange/25 blur-3xl"></div>
@@ -45,8 +45,8 @@
                 <!-- Desktop : 4 cartes en diagonale, cachées sur mobile -->
                 <div class="absolute inset-0 hidden lg:block">
 
-                    <!-- Carte 1 : haut gauche -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:3%;left:5%;">
+                    <!-- Carte 1 : rangée haute, gauche -->
+                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:8%;left:5%;">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
@@ -58,8 +58,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 2 : haut droit (décalée) -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:18%;right:3%;">
+                    <!-- Carte 2 : rangée haute, droite (légèrement décalée) -->
+                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:16%;right:3%;">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
@@ -71,8 +71,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 3 : bas gauche -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:55%;left:5%;">
+                    <!-- Carte 3 : rangée basse, gauche -->
+                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:60%;left:5%;">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
@@ -84,8 +84,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 4 : bas droit -->
-                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="bottom:3%;right:3%;">
+                    <!-- Carte 4 : rangée basse, droite (légèrement décalée) -->
+                    <div class="absolute w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl" style="top:70%;right:3%;">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.9s"></span>

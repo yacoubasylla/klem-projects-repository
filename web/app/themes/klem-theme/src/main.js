@@ -4,7 +4,7 @@ import './main.css';
 const heroPanel = document.querySelector('[data-hero-panel]');
 if (heroPanel) {
     const setHeroHeight = () => {
-        heroPanel.style.minHeight = window.innerWidth >= 1024 ? '520px' : '260px';
+        heroPanel.style.minHeight = window.innerWidth >= 1024 ? '460px' : '260px';
     };
     setHeroHeight();
     window.addEventListener('resize', setHeroHeight, { passive: true });
