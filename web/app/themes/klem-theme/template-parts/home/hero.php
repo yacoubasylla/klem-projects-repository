@@ -5,7 +5,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center py-8 lg:py-24">
 
             <!-- IMAGE EN PREMIER dans le HTML → s'affiche EN HAUT sur mobile, à DROITE sur desktop via lg:col-start-2 -->
-            <div class="lg:col-start-2 lg:row-start-1 relative rounded-2xl overflow-hidden lg:min-h-[420px] lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
+            <div class="lg:col-start-2 lg:row-start-1 relative rounded-2xl overflow-hidden lg:min-h-[500px] lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B; min-height: 260px;"
                  aria-hidden="true">
 
@@ -19,7 +19,7 @@
                 <div class="absolute inset-0 hidden lg:block">
 
                     <!-- Carte 1 : Pipeline Big Data — haut gauche -->
-                    <div class="absolute top-[10%] left-[14%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <div class="absolute top-[7%] left-[8%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
@@ -31,8 +31,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 2 : Apps Sur-Mesure — haut droit (décalée vers le bas) -->
-                    <div class="absolute top-[22%] right-[6%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 2 : Apps Sur-Mesure — milieu droit -->
+                    <div class="absolute top-[28%] right-[4%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
@@ -44,8 +44,8 @@
                         <p class="text-white/40 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
                     </div>
 
-                    <!-- Carte 3 : FleetControl — centre gauche -->
-                    <div class="absolute top-[50%] left-[18%] -translate-y-1/2 w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <!-- Carte 3 : FleetControl — bas gauche -->
+                    <div class="absolute top-[55%] left-[8%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
@@ -58,7 +58,7 @@
                     </div>
 
                     <!-- Carte 4 : Disponibilité — bas droit -->
-                    <div class="absolute bottom-[10%] right-[6%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                    <div class="absolute bottom-[7%] right-[4%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.9s"></span>
