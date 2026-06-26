@@ -24,8 +24,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 2 : Apps Sur-Mesure — milieu droit -->
-                <div class="absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl" style="top:40%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);">
+                <!-- Carte 2 : Apps Sur-Mesure — milieu droit (desktop only) -->
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl" style="top:40%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
@@ -37,8 +37,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 3 : Disponibilité — bas gauche -->
-                <div class="absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl" style="bottom:8%;left:12%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);">
+                <!-- Carte 3 : Disponibilité — bas gauche (desktop only) -->
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl" style="bottom:8%;left:12%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
