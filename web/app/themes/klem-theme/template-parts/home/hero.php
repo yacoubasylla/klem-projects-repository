@@ -37,9 +37,8 @@
             </div>
 
             <!-- Colonne droite : panneau image avec découpe et cartes -->
-            <div class="order-1 lg:order-2 block relative rounded-2xl overflow-hidden min-h-[240px] lg:min-h-[420px] lg:-ml-6 bg-klem-blue bg-cover bg-center"
-                 style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>');
-                        clip-path: polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%);"
+            <div class="order-1 lg:order-2 block relative rounded-2xl overflow-hidden min-h-[240px] lg:min-h-[420px] lg:-ml-6 bg-cover bg-center lg:[clip-path:polygon(8%_0%,100%_0%,100%_100%,0%_100%)]"
+                 style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B;"
                  aria-hidden="true">
 
                 <!-- Overlay sombre -->
