@@ -56,35 +56,39 @@
             <!-- Halo orange en haut à droite -->
             <div class="absolute -top-24 right-0 w-80 h-80 rounded-full bg-klem-orange/25 blur-3xl"></div>
 
-            <!-- Cartes métriques flottantes -->
-            <!-- Carte 1 : Pipeline Big Data -->
-            <div class="absolute top-16 left-[22%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-52 shadow-xl">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-klem-orange animate-pulse flex-shrink-0"></span>
-                    <span class="text-white/70 text-xs font-bold uppercase tracking-wider">Pipeline Big Data</span>
-                </div>
-                <p class="text-white font-extrabold text-3xl leading-none">4.2M</p>
-                <p class="text-white/50 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
-            </div>
+            <!-- Cartes métriques — centrées dans la zone visible (après le clip diagonal) -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 pl-[18%] pr-8">
 
-            <!-- Carte 2 : FleetControl -->
-            <div class="absolute top-1/2 -translate-y-1/2 right-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-56 shadow-xl">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
-                    <span class="text-white/70 text-xs font-bold uppercase tracking-wider">FleetControl</span>
+                <!-- Carte 1 : Pipeline Big Data (légèrement à gauche) -->
+                <div class="w-52 self-start bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-klem-orange animate-pulse flex-shrink-0"></span>
+                        <span class="text-white/70 text-xs font-bold uppercase tracking-wider">Pipeline Big Data</span>
+                    </div>
+                    <p class="text-white font-extrabold text-3xl leading-none">4.2M</p>
+                    <p class="text-white/50 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                 </div>
-                <p class="text-white font-extrabold text-3xl leading-none">124</p>
-                <p class="text-white/50 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
-            </div>
 
-            <!-- Carte 3 : Disponibilité -->
-            <div class="absolute bottom-20 left-[28%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-52 shadow-xl">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-green-400 flex-shrink-0"></span>
-                    <span class="text-white/70 text-xs font-bold uppercase tracking-wider"><?php esc_html_e('Disponibilité', 'klem-theme'); ?></span>
+                <!-- Carte 2 : FleetControl (décalée à droite pour le rythme visuel) -->
+                <div class="w-56 self-end bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
+                        <span class="text-white/70 text-xs font-bold uppercase tracking-wider">FleetControl</span>
+                    </div>
+                    <p class="text-white font-extrabold text-3xl leading-none">124</p>
+                    <p class="text-white/50 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
                 </div>
-                <p class="text-white font-extrabold text-3xl leading-none">99.97%</p>
-                <p class="text-white/50 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
+
+                <!-- Carte 3 : Disponibilité (légèrement à gauche, symétrique avec carte 1) -->
+                <div class="w-52 self-start ml-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-green-400 flex-shrink-0"></span>
+                        <span class="text-white/70 text-xs font-bold uppercase tracking-wider"><?php esc_html_e('Disponibilité', 'klem-theme'); ?></span>
+                    </div>
+                    <p class="text-white font-extrabold text-3xl leading-none">99.97%</p>
+                    <p class="text-white/50 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
+                </div>
+
             </div>
         </div>
     </div>
