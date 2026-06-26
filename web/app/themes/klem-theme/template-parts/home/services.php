@@ -1,4 +1,4 @@
-<section id="services" class="py-24 lg:py-32 bg-white">
+<section id="services" class="pt-16 pb-10 lg:pt-24 lg:pb-14 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
         <!-- En-tête de section -->
@@ -191,7 +191,7 @@
         </div>
 
         <!-- CTA bas de section -->
-        <div class="mt-20 text-center border-t border-gray-100 pt-16" data-animate data-delay="500">
+        <div class="mt-12 text-center border-t border-gray-100 pt-8" data-animate data-delay="500">
             <p class="text-gray-500 mb-6 text-base">
                 <?php esc_html_e('Votre défi ne rentre dans aucune case ? Construisons ensemble une solution inédite.', 'klem-theme'); ?>
             </p>
