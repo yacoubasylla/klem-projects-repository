@@ -5,6 +5,36 @@
 
 ---
 
+## [DEC-009] 2026-06-26 — Centrage des cartes métriques hero via flex layout
+
+**ARD :** —  
+**Contexte :** Les cartes flottantes (Pipeline Big Data, FleetControl, Disponibilité) étaient positionnées en `absolute` avec `left-[22%]` et `left-[28%]`, les plaçant contre le bord diagonal du clip-path — résultat visuellement déséquilibré.  
+**Décision :** Remplacement par un container `absolute inset-0 flex flex-col justify-center gap-5 pl-[18%]`. Chaque carte utilise `self-start` ou `self-end` pour créer un zigzag lisible. Le `pl-[18%]` dégage le clip-path diagonal (qui coupe les 10% du haut).  
+**Impact :** `template-parts/home/hero.php`  
+**Résultat :** Groupe de cartes verticalement centré, contenu visible sans clip.
+
+---
+
+## [DEC-008] 2026-06-26 — Logo officiel KLEM : ChevronMark 3D + Archivo
+
+**ARD :** [ADR-005](../doc/ard/ADR-005-logo-chevronmark-archivo.md)  
+**Contexte :** Le client a fourni la charte graphique via Claude Design (projet `a2cd3486` — `KLEM Logo - Chevron.dc.html`). Le logo définitif utilise un double chevron 3D et la police Archivo.  
+**Décision :** Adopter le ChevronMark (viewBox `54×44`, 3 couches : ombre `#A5130A`, face `#E42313`, bevel `#F0654F`) et la typographie Archivo 800 (`tracking: -0.02em`) + Archivo 600 pour la tagline (`uppercase`, `tracking: 0.23em`). Couleur bleue officielle du design : `#13294B`.  
+**Impact :** `header.php`, `footer.php`, `tailwind.config.js`, `functions.php`, tous les SVG assets  
+**Remplace :** DEC-007 (logo 4 losanges), logo KlemMark 2 chevrons plats (Session 05), logo sphère neurale (itération Session 06)
+
+---
+
+## [DEC-007] 2026-06-25 — Charte couleurs KLEM officielle
+
+**ARD :** —  
+**Contexte :** Le client a communiqué les codes couleur officiels KLEM : BLEU `#271C70` / ROUGE `#E42313`. L'ancien bleu `#16212E` (navy sombre) et l'orange `#FF6500` (hérité de l'amorçage) ne correspondent pas à la charte.  
+**Décision :** Mettre à jour `tailwind.config.js` : `klem-blue → #13294B` (couleur du logo design, affine le `#271C70` client), `klem-red → #E42313`, `klem-orange → #E42313` (alias rouge — aucun orange dans la charte KLEM).  
+**Impact :** Tout le site via les classes Tailwind — hero, CTA, sections sombres, footer, navigation  
+**Résultat :** Site entièrement en charte `#13294B` (bleu) + `#E42313` (rouge).
+
+---
+
 ## [DEC-006] 2026-06-25 — Secrets dans `.env`, lus via `getenv()` dans `wp-config.php`
 
 **ARD :** —  

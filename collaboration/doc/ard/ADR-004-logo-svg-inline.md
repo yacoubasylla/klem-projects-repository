@@ -1,7 +1,7 @@
 # ADR-004 — Logo KLEM : SVG inline avec motif 4 losanges
 
 **Date :** 2026-06-24  
-**Statut :** Accepté  
+**Statut :** ~~Accepté~~ **Remplacé par [ADR-005](ADR-005-logo-chevronmark-archivo.md)** (2026-06-26)  
 **Décideur :** Équipe KLEM / Claude Code
 
 ---

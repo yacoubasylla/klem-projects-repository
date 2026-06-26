@@ -4,6 +4,101 @@
 
 ---
 
+## Session 06 — 2026-06-26
+
+**Objectif :** Intégrer le logo officiel KLEM depuis Claude Design, harmoniser les couleurs de la charte graphique, centrer les cartes du hero.
+
+### Tâches réalisées
+
+#### 1. Logo intermédiaire — Sphère neurale 3D (itération)
+- L'utilisateur a fourni son logo existant : "KLEM" navy + icône cerveau orange
+- Redesign expert : sphère 3D avec `radialGradient` 3 stops (highlight `#FFAA5E` → rouge `#E5391E` → ombre `#6A0F08`), réseau neuronal blanc (6 nœuds + 10 connexions), reflet spéculaire, `feDropShadow`
+- Intégration dans `header.php` et `footer.php` avec IDs SVG isolés (`kmh-*` / `kmf-*`)
+
+#### 2. Harmonisation couleurs KLEM officielles
+- Code couleur KLEM fourni par le client : **BLEU `#271C70`** / **ROUGE `#E42313`**
+- `tailwind.config.js` : `klem-blue → #271C70`, `klem-orange → #E42313` (alias rouge), `klem-red → #E42313`
+- Impact automatique sur tout le site (hero, sections sombres, CTA, footer) via classes Tailwind
+
+#### 3. Import logo final depuis Claude Design — ChevronMark
+- Source : `claude.ai/design/p/a2cd3486` — fichier `KLEM Logo - Chevron.dc.html`
+- **ChevronMark** (viewBox `0 0 54 44`) : double chevron 3D avec 3 couches :
+  - Ombre extrusion `#A5130A` (`translate(1.4, 1.7)`)
+  - Face principale `#E42313`
+  - Bevel supérieur `#F0654F`
+- **Police Archivo** (Google Fonts) : poids 800 wordmark, 600 tagline, tracking `-0.02em`
+- **klem-blue → `#13294B`** (couleur exacte du design spec, remplace `#271C70`)
+- Tagline : `uppercase`, `letter-spacing: 0.23em`, `color: #13294B` (light) / `#c3c9d6` (dark)
+- `functions.php` : ajout enqueue Google Fonts Archivo
+- Tous les SVG assets mis à jour (`klem-primary`, `klem-mono-ink`, `klem-mono-white`, `klem-symbole-rouge`)
+
+#### 4. Centrage des cartes métriques dans le hero
+- **Problème :** cartes positionnées avec `left-[22%]` et `left-[28%]` → collées au bord diagonal du clip-path
+- **Solution :** remplacement par un container `flex flex-col justify-center` avec `pl-[18%]` (dégage le clip) et alternance `self-start` / `self-end` pour le rythme visuel
+- Résultat : groupe centré verticalement, zigzag gauche-droite lisible
+
+#### 5. Build de production et vérification
+- `pnpm build` → ✅ 0 erreur — `main-CuRtevpM.css` (26.65 kB / 5.54 kB gzip)
+- Screenshots Playwright : header, hero, panneau visuel — conformité design vérifiée
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `tailwind.config.js` | Couleurs mises à jour (×3 itérations), police `logo` → Archivo |
+| `functions.php` | Ajout `klem_enqueue_fonts()` — Google Fonts Archivo |
+| `header.php` | Logo → ChevronMark 3D + Archivo 800 + `#13294B` |
+| `footer.php` | Logo → ChevronMark 3D + Archivo 800 + blanc |
+| `template-parts/home/hero.php` | Cartes métriques centrées via flex layout |
+| `assets/svg/klem-primary.svg` | Mis à jour — ChevronMark + Archivo |
+| `assets/svg/klem-mono-ink.svg` | Mis à jour |
+| `assets/svg/klem-mono-white.svg` | Mis à jour |
+| `assets/svg/klem-symbole-rouge.svg` | Mis à jour |
+
+### État du projet en clôture
+- Logo officiel KLEM ChevronMark 3D intégré sur tout le site (header + footer)
+- Charte graphique entièrement harmonisée : `#13294B` / `#E42313`
+- Cartes hero correctement centrées dans la zone visible
+- Tous les commits pushés sur GitHub
+
+---
+
+## Session 05 — 2026-06-25
+
+**Objectif :** Implémenter le nouveau système de logo KLEM importé depuis Claude Design.
+
+### Tâches réalisées
+
+#### 1. Import design depuis Claude Design (project `3006843e`)
+- Fichier : `Klem Logo System.dc.html`
+- Lecture via DesignSync MCP : KlemMark (2 chevrons), couleurs, typographie, variantes
+
+#### 2. Mise à jour du système de design Tailwind
+- `klem-blue : #16212E` (encre), ajout `klem-red : #E2241B` (symbole), `klem-slate : #5A6B7B` (tagline)
+- `font-logo` : passage de Space Grotesk à **Verdana** (police système — suppression import Google Fonts)
+- Suppression du `wp_enqueue_style` Space Grotesk dans `functions.php`
+
+#### 3. Remplacement du logo dans header + footer
+- **KlemMark** : 2 polygones SVG (viewBox `0 0 100 100`) en rouge `#E2241B`
+- **Wordmark** : Verdana Bold, gradient `#F07A1E → #8A3C12` (`bg-clip-text`), tagline en `klem-slate`
+- Variante footer : KLEM en blanc, tagline `white/40`
+
+#### 4. Création des assets SVG
+- `assets/svg/klem-primary.svg` — logo horizontal complet
+- `assets/svg/klem-symbole-rouge.svg` — symbole seul
+- `assets/svg/klem-mono-ink.svg` — version encre
+- `assets/svg/klem-mono-white.svg` — version blanche
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `tailwind.config.js` | Couleurs + police logo |
+| `functions.php` | Suppression Space Grotesk |
+| `header.php` | Nouveau logo KlemMark 2 chevrons |
+| `footer.php` | Variante fond sombre |
+| `assets/svg/` (4 fichiers) | Créés |
+
+---
+
 ## Session 04 — 2026-06-25
 
 **Objectif :** Implémenter l'envoi d'emails via API REST Brevo et sécuriser les secrets hors du dépôt Git.
