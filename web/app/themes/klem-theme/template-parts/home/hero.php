@@ -48,63 +48,61 @@
                 <!-- Halo orange -->
                 <div class="absolute -top-16 right-0 w-64 h-64 rounded-full bg-klem-orange/25 blur-3xl"></div>
 
-                <!-- Cartes métriques — grille 2×2 -->
-                <div class="absolute inset-0 flex items-center justify-center p-10 pl-16">
-                    <div class="grid grid-cols-2 gap-5 w-full">
+                <!-- Cartes métriques — positionnement absolu décalé -->
+                <div class="absolute inset-0">
 
-                        <!-- Carte 1 : Pipeline Big Data — point rouge -->
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-klem-orange"></span>
-                                </span>
-                                <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider">Pipeline Big Data</span>
-                            </div>
-                            <p class="text-white font-extrabold text-xl leading-none">4.2M</p>
-                            <p class="text-white/50 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
+                    <!-- Carte 1 : Pipeline Big Data — haut gauche -->
+                    <div class="absolute top-[10%] left-[14%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-klem-orange"></span>
+                            </span>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider">Pipeline Big Data</span>
                         </div>
-
-                        <!-- Carte 2 : Applications Sur-Mesure — point bleu -->
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400"></span>
-                                </span>
-                                <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Apps Sur-Mesure', 'klem-theme'); ?></span>
-                            </div>
-                            <p class="text-white font-extrabold text-xl leading-none">18+</p>
-                            <p class="text-white/50 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
-                        </div>
-
-                        <!-- Carte 3 : FleetControl — point vert -->
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                                </span>
-                                <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider">FleetControl</span>
-                            </div>
-                            <p class="text-white font-extrabold text-xl leading-none">124</p>
-                            <p class="text-white/50 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
-                        </div>
-
-                        <!-- Carte 4 : Disponibilité — point vert -->
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.5s"></span>
-                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                                </span>
-                                <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Disponibilité', 'klem-theme'); ?></span>
-                            </div>
-                            <p class="text-white font-extrabold text-xl leading-none">99.97%</p>
-                            <p class="text-white/50 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
-                        </div>
-
+                        <p class="text-white font-extrabold text-xl leading-none">4.2M</p>
+                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('événements / jour', 'klem-theme'); ?></p>
                     </div>
+
+                    <!-- Carte 2 : Apps Sur-Mesure — haut droit (décalée vers le bas) -->
+                    <div class="absolute top-[22%] right-[6%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400"></span>
+                            </span>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Apps Sur-Mesure', 'klem-theme'); ?></span>
+                        </div>
+                        <p class="text-white font-extrabold text-xl leading-none">18+</p>
+                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('solutions déployées', 'klem-theme'); ?></p>
+                    </div>
+
+                    <!-- Carte 3 : FleetControl — centre gauche -->
+                    <div class="absolute top-[50%] left-[18%] -translate-y-1/2 w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
+                            </span>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider">FleetControl</span>
+                        </div>
+                        <p class="text-white font-extrabold text-xl leading-none">124</p>
+                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('véhicules en temps réel', 'klem-theme'); ?></p>
+                    </div>
+
+                    <!-- Carte 4 : Disponibilité — bas droit -->
+                    <div class="absolute bottom-[10%] right-[6%] w-44 bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 shadow-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.9s"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
+                            </span>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Disponibilité', 'klem-theme'); ?></span>
+                        </div>
+                        <p class="text-white font-extrabold text-xl leading-none">99.97%</p>
+                        <p class="text-white/40 text-xs mt-1"><?php esc_html_e('uptime infrastructure', 'klem-theme'); ?></p>
+                    </div>
+
                 </div>
             </div>
 
