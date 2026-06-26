@@ -2,10 +2,10 @@
 
     <!-- Bloc hero : grille 2 colonnes contenue dans le container -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center min-h-[500px] py-16 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center py-8 lg:py-24">
 
             <!-- Colonne gauche : texte -->
-            <div>
+            <div class="order-2 lg:order-1">
                 <p class="text-klem-orange font-bold tracking-widest text-xs uppercase mb-6">
                     <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
                 </p>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Colonne droite : panneau image avec découpe et cartes -->
-            <div class="hidden lg:block relative rounded-2xl overflow-hidden min-h-[420px] lg:-ml-6 bg-klem-blue bg-cover bg-center"
+            <div class="order-1 lg:order-2 block relative rounded-2xl overflow-hidden min-h-[240px] lg:min-h-[420px] lg:-ml-6 bg-klem-blue bg-cover bg-center"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>');
                         clip-path: polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%);"
                  aria-hidden="true">
