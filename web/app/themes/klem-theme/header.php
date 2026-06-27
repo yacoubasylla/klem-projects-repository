@@ -129,7 +129,7 @@
                         ['label' => 'Accueil',     'href' => '#'],
                         ['label' => 'Services',    'href' => '#services'],
                         ['label' => 'À Propos',    'href' => '#about'],
-                        ['label' => 'Cas Clients', 'href' => '#clients'],
+                        ['label' => 'Notre Différence', 'href' => '#clients'],
                         ['label' => 'Contact',     'href' => '#contact'],
                     ];
                     echo '<ul class="space-y-1">';
