@@ -4,6 +4,55 @@
 
 ---
 
+## Session 10 — 2026-06-27
+
+**Objectif :** Corrections UI mineures (menu mobile, espacement), debug et résolution du formulaire de contact, configuration email Hostinger.
+
+### Tâches réalisées
+
+#### 1. Fix menu mobile — label "Cas Clients" → "Notre Différence"
+- Le `fallback_cb` du menu mobile dans `header.php` n'avait pas été mis à jour lors du renommage de la section (Session 07)
+- Correction : `['label' => 'Cas Clients']` → `['label' => 'Notre Différence']`
+
+#### 2. Debug et résolution formulaire de contact
+- **Symptôme :** "Une erreur est survenue" à chaque envoi depuis klemtech.net
+- **Diagnostic :** Test direct API Brevo → clé valide. Seul sender vérifié : `ciyasyl@gmail.com`
+- **Cause 1 :** `KLEM_SMTP_FROM=contact@klem.tech` (local) / `infos@klemtech.net` (serveur) — aucun des deux n'est vérifié dans Brevo
+- **Cause 2 :** Clé API corrompue sur le serveur : `xkeysib-xsmtpsib-...` (mélange d'une ancienne clé SMTP avec la clé REST)
+- **Fix code :** `KLEM_SMTP_FROM` → `ciyasyl@gmail.com` dans `.env`, `.env.example`, `wp-config.php` (fallback)
+- **Fix serveur :** deux `sed -i` sur `~/site-klem/.env` pour corriger la clé et le sender
+- **Fix debug :** ajout `error_log()` dans `klem-smtp.php` pour logger clé manquante et erreurs API
+- **Résultat :** ✅ Formulaire opérationnel, email reçu sur `ciyasyl@gmail.com`
+
+#### 3. Guide création adresses email professionnelles
+- Création `infos@klemtech.net` et `ysylla@klemtech.net` via hPanel → Emails → Comptes Email
+- Vérification des adresses comme senders dans Brevo (nécessaire avant de les utiliser comme FROM)
+- Paramètres IMAP/SMTP Hostinger documentés (imap.hostinger.com:993, smtp.hostinger.com:465)
+- Procédure pour connecter les adresses à Gmail (receive + send as)
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `header.php` | Fix label menu mobile "Notre Différence" |
+| `web/wp-config.php` | Fallback `KLEM_SMTP_FROM` → `ciyasyl@gmail.com` |
+| `.env.example` | `KLEM_SMTP_FROM` → `ciyasyl@gmail.com` |
+| `web/app/mu-plugins/klem-smtp.php` | Ajout `error_log()` pour debug clé manquante et erreur API |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `782409a` | fix(nav/mobile): renommer 'Cas Clients' → 'Notre Différence' |
+| `e8edfc9` | fix(email): expéditeur Brevo → ciyasyl@gmail.com |
+| `a7943cd` | debug(email): error_log sur clé manquante et erreur Brevo API |
+
+### État du projet en clôture
+- Formulaire de contact 100% fonctionnel en production
+- Menu mobile cohérent avec le menu desktop
+- Adresses email professionnelles à créer sur hPanel (procédure documentée)
+- Prochain jalon email : vérifier `infos@klemtech.net` dans Brevo et l'utiliser comme sender officiel
+
+---
+
 ## Session 09 — 2026-06-26
 
 **Objectif :** Résoudre le chevauchement des cartes hero (mobile + desktop), adopter un design hero propre (référence image #60), réduire l'espace entre Services et À Propos.

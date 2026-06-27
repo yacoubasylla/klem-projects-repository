@@ -5,6 +5,23 @@
 
 ---
 
+## [DEC-021] 2026-06-27 — Email expéditeur : ciyasyl@gmail.com jusqu'à vérification domaine Brevo
+
+**Contexte :** Brevo exige que l'adresse FROM soit un "sender vérifié" dans le compte. `contact@klem.tech` et `infos@klemtech.net` ne sont pas vérifiés. Seul `ciyasyl@gmail.com` est actif.
+**Décision :** Utiliser `ciyasyl@gmail.com` comme sender temporaire. Dès que `infos@klemtech.net` est créé sur Hostinger et vérifié dans Brevo, mettre à jour `KLEM_SMTP_FROM` dans le `.env` serveur et relancer.
+**Impact :** `.env`, `.env.example`, `web/wp-config.php` (fallback), `~/site-klem/.env` sur Hostinger
+**Prochaine action :** Créer `infos@klemtech.net` via hPanel → vérifier dans Brevo → `sed -i` sur le `.env` serveur.
+
+---
+
+## [DEC-020] 2026-06-27 — Clé API Brevo : REST (`xkeysib-`) uniquement, pas SMTP (`xsmtpsib-`)
+
+**Contexte :** La clé sur le serveur Hostinger était corrompue : `xkeysib-xsmtpsib-6cd2722d...` — une ancienne clé SMTP avait été mélangée avec la clé REST, rendant les deux inutilisables.
+**Décision :** Seule la clé REST API (`xkeysib-...`) est utilisée dans `klem-smtp.php` (via `wp_remote_post` sur `api.brevo.com/v3/smtp/email`). Ne jamais mélanger les deux formats. En cas de doute, régénérer une nouvelle clé REST sur app.brevo.com → Settings → API Keys.
+**Impact :** `web/app/mu-plugins/klem-smtp.php`, `.env` serveur
+
+---
+
 ## [DEC-019] 2026-06-26 — Hero cards : inline style systématique pour résistance au cache Hostinger
 
 **Contexte :** LiteSpeed Cache Hostinger sert l'ancien CSS (`main-ApUCz-B4.css`) aux visiteurs anonymes même après `git pull`. Les classes Tailwind arbitraires (`top-[8%]`, `bg-white/10`, `min-h-[260px]`) absentes du vieux fichier CSS ne s'appliquent pas, causant des positions incorrectes, des cartes invisibles ou chevauchées.
