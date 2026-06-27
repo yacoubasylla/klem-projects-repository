@@ -86,7 +86,7 @@ function klem_handle_contact(): void {
         wp_send_json_error(['message' => __('Adresse e-mail invalide.', 'klem-theme')], 422);
     }
 
-    $to      = get_option('admin_email');
+    $to = ['infos@klemtech.net', 'yacouba.sylla@klemtech.net', 'ciyasyl@gmail.com'];
     $headers = [
         'Content-Type: text/plain; charset=UTF-8',
         sprintf('Reply-To: %s <%s>', $name, $email),
