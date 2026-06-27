@@ -17,6 +17,7 @@ if (!defined('ABSPATH')) {
  */
 add_filter('pre_wp_mail', static function ($return, array $atts): bool {
     if (!defined('KLEM_BREVO_API_KEY') || !KLEM_BREVO_API_KEY) {
+        error_log('[KLEM Mailer] KLEM_BREVO_API_KEY manquante ou vide — vérifier le .env serveur');
         return false; // pas de clé → laisser PHPMailer gérer (fallback)
     }
 
@@ -93,9 +94,11 @@ add_filter('pre_wp_mail', static function ($return, array $atts): bool {
     $code = wp_remote_retrieve_response_code($response);
 
     if ($code < 200 || $code >= 300) {
+        $body_err = wp_remote_retrieve_body($response);
+        error_log(sprintf('[KLEM Mailer] Brevo API erreur %d : %s', $code, $body_err));
         do_action('wp_mail_failed', new WP_Error(
             'klem_brevo_error',
-            sprintf('Brevo API error %d : %s', $code, wp_remote_retrieve_body($response))
+            sprintf('Brevo API error %d : %s', $code, $body_err)
         ));
         return false;
     }
