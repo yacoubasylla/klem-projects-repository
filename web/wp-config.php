@@ -61,7 +61,7 @@ $table_prefix = 'klem_';
 
 // ── Email — API REST Brevo ────────────────────────────────────────────────────
 define('KLEM_BREVO_API_KEY',  getenv('KLEM_BREVO_API_KEY')  ?: '');
-define('KLEM_SMTP_FROM',      getenv('KLEM_SMTP_FROM')      ?: 'ciyasyl@gmail.com');
+define('KLEM_SMTP_FROM',      getenv('KLEM_SMTP_FROM')      ?: 'infos@klemtech.net');
 define('KLEM_SMTP_FROM_NAME', getenv('KLEM_SMTP_FROM_NAME') ?: 'KLEM Technologies & Services');
 
 // ── Debug ─────────────────────────────────────────────────────────────────────
