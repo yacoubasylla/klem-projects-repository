@@ -24,19 +24,31 @@
 - **Fix debug :** ajout `error_log()` dans `klem-smtp.php` pour logger clé manquante et erreurs API
 - **Résultat :** ✅ Formulaire opérationnel, email reçu sur `ciyasyl@gmail.com`
 
-#### 3. Guide création adresses email professionnelles
-- Création `infos@klemtech.net` et `ysylla@klemtech.net` via hPanel → Emails → Comptes Email
-- Vérification des adresses comme senders dans Brevo (nécessaire avant de les utiliser comme FROM)
-- Paramètres IMAP/SMTP Hostinger documentés (imap.hostinger.com:993, smtp.hostinger.com:465)
-- Procédure pour connecter les adresses à Gmail (receive + send as)
+#### 3. Création des adresses email professionnelles
+- Souscription au plan **Free Business Email** Hostinger (gratuit 12 mois, 1 GB/boîte, 5 boîtes)
+- Création de `infos@klemtech.net` et `yacouba.sylla@klemtech.net` via hPanel → Sites web → klemtech.net → "Configurer un email gratuit"
+- Les deux boîtes sont actives avec webmail Hostinger
+
+#### 4. Vérification `infos@klemtech.net` comme sender Brevo
+- Ajout du sender via API Brevo (`POST /v3/senders`) → email de vérification reçu dans la boîte `infos@klemtech.net`
+- Code OTP `406813` saisi manuellement sur app.brevo.com → sender activé ✅
+- Avertissements notés : DKIM "Par défaut" (non bloquant) + DMARC "rua manquante" (à configurer)
+- SPF `klemtech.net` : `v=spf1 include:_spf.mail.hostinger.com ~all` — à compléter avec `include:spf.brevo.com`
+
+#### 5. Sender formulaire → `infos@klemtech.net` + 3 destinataires
+- `KLEM_SMTP_FROM` mis à jour : `ciyasyl@gmail.com` → `infos@klemtech.net` dans `.env`, `.env.example`, `wp-config.php`
+- Formulaire de contact : destinataire unique `get_option('admin_email')` → tableau de 3 adresses
+  - `infos@klemtech.net`, `yacouba.sylla@klemtech.net`, `ciyasyl@gmail.com`
+- ✅ Confirmé fonctionnel en production
 
 ### Fichiers modifiés
 | Fichier | Action |
 |---|---|
 | `header.php` | Fix label menu mobile "Notre Différence" |
-| `web/wp-config.php` | Fallback `KLEM_SMTP_FROM` → `ciyasyl@gmail.com` |
-| `.env.example` | `KLEM_SMTP_FROM` → `ciyasyl@gmail.com` |
+| `web/wp-config.php` | Fallback `KLEM_SMTP_FROM` → `infos@klemtech.net` |
+| `.env.example` | `KLEM_SMTP_FROM` → `infos@klemtech.net` |
 | `web/app/mu-plugins/klem-smtp.php` | Ajout `error_log()` pour debug clé manquante et erreur API |
+| `web/app/themes/klem-theme/functions.php` | Formulaire → 3 destinataires (tableau) |
 
 ### Commits de la session
 | Hash | Description |
@@ -44,12 +56,14 @@
 | `782409a` | fix(nav/mobile): renommer 'Cas Clients' → 'Notre Différence' |
 | `e8edfc9` | fix(email): expéditeur Brevo → ciyasyl@gmail.com |
 | `a7943cd` | debug(email): error_log sur clé manquante et erreur Brevo API |
+| `a8b70fc` | fix(email): sender officiel → infos@klemtech.net |
+| `edb5068` | feat(email): formulaire de contact → 3 destinataires |
 
 ### État du projet en clôture
-- Formulaire de contact 100% fonctionnel en production
+- Formulaire de contact ✅ : envoie depuis `infos@klemtech.net` vers 3 boîtes simultanément
+- Boîtes email professionnelles actives : `infos@klemtech.net` + `yacouba.sylla@klemtech.net`
 - Menu mobile cohérent avec le menu desktop
-- Adresses email professionnelles à créer sur hPanel (procédure documentée)
-- Prochain jalon email : vérifier `infos@klemtech.net` dans Brevo et l'utiliser comme sender officiel
+- **Améliorations email à prévoir :** DKIM personnalisé + SPF Brevo + DMARC rua
 
 ---
 

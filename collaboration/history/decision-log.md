@@ -5,12 +5,21 @@
 
 ---
 
-## [DEC-021] 2026-06-27 — Email expéditeur : ciyasyl@gmail.com jusqu'à vérification domaine Brevo
+## [DEC-022] 2026-06-27 — Formulaire de contact : 3 destinataires fixes plutôt que admin_email
 
-**Contexte :** Brevo exige que l'adresse FROM soit un "sender vérifié" dans le compte. `contact@klem.tech` et `infos@klemtech.net` ne sont pas vérifiés. Seul `ciyasyl@gmail.com` est actif.
-**Décision :** Utiliser `ciyasyl@gmail.com` comme sender temporaire. Dès que `infos@klemtech.net` est créé sur Hostinger et vérifié dans Brevo, mettre à jour `KLEM_SMTP_FROM` dans le `.env` serveur et relancer.
-**Impact :** `.env`, `.env.example`, `web/wp-config.php` (fallback), `~/site-klem/.env` sur Hostinger
-**Prochaine action :** Créer `infos@klemtech.net` via hPanel → vérifier dans Brevo → `sed -i` sur le `.env` serveur.
+**Contexte :** Le formulaire envoyait uniquement à `get_option('admin_email')`. Le client veut recevoir les demandes sur 3 boîtes : email pro, email personnel KLEM et Gmail de backup.
+**Décision :** Tableau statique `['infos@klemtech.net', 'yacouba.sylla@klemtech.net', 'ciyasyl@gmail.com']` comme `$to` dans `wp_mail()`. Pas de configuration dynamique via l'admin WordPress — les destinataires sont des constantes métier.
+**Impact :** `web/app/themes/klem-theme/functions.php`
+**Règle :** Toute modification des destinataires se fait directement dans ce tableau dans `functions.php`.
+
+---
+
+## [DEC-021] 2026-06-27 — Email expéditeur officiel : infos@klemtech.net (vérifié Brevo)
+
+**Contexte :** `ciyasyl@gmail.com` était un sender temporaire. `infos@klemtech.net` a été créé sur Hostinger et vérifié dans Brevo (OTP 406813).
+**Décision :** `KLEM_SMTP_FROM=infos@klemtech.net` dans `.env`, `.env.example` et fallback `wp-config.php`. Le formulaire de contact envoie désormais depuis cette adresse professionnelle.
+**Impact :** `.env`, `.env.example`, `web/wp-config.php`, `~/site-klem/.env` sur Hostinger
+**À faire (délivrabilité) :** Ajouter `include:spf.brevo.com` au TXT SPF + configurer DKIM personnalisé + DMARC `rua`.
 
 ---
 
