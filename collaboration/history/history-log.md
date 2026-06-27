@@ -4,6 +4,29 @@
 
 ---
 
+## Session 11 — 2026-06-27
+
+**Objectif :** Test end-to-end du formulaire de contact en production après configuration DKIM/SPF/DMARC.
+
+### Tâches réalisées
+
+#### 1. Test automatisé du formulaire via curl
+- Récupération du nonce WordPress depuis `https://www.klemtech.net/` (valeur : `d0b950c71a`)
+- Soumission POST sur `admin-ajax.php` avec action `klem_contact`, tous les champs remplis
+- Réponse : `{"success":true,"data":{"message":"Votre message a bien été envoyé..."}}` ✅
+
+#### 2. Validation réception sur les 3 boîtes
+- ✅ `infos@klemtech.net` — reçu
+- ✅ `yacouba.sylla@klemtech.net` — reçu
+- ✅ `ciyasyl@gmail.com` — reçu
+
+### État du projet en clôture
+- Configuration email KLEM **100% opérationnelle** en production
+- Formulaire → 3 destinataires, signé DKIM, conforme SPF + DMARC
+- Délivrabilité maximale confirmée par test réel
+
+---
+
 ## Session 10 — 2026-06-27
 
 **Objectif :** Corrections UI mineures (menu mobile, espacement), debug et résolution du formulaire de contact, configuration email Hostinger.
