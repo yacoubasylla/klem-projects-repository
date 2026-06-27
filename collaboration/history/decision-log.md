@@ -5,6 +5,20 @@
 
 ---
 
+## [DEC-023] 2026-06-27 — Authentification domaine Brevo : DKIM + SPF + DMARC sur klemtech.net
+
+**Contexte :** Après activation du sender `infos@klemtech.net`, Brevo signalait DKIM "Par défaut" et DMARC "rua manquante" — risque de délivrabilité réduite (spam).
+**Décision :** Configuration complète des enregistrements DNS d'authentification email sur `klemtech.net` :
+- SPF étendu : `include:spf.brevo.com` ajouté à l'enregistrement existant Hostinger
+- DKIM : 2 enregistrements CNAME Brevo (`brevo1._domainkey`, `brevo2._domainkey`)
+- DMARC : `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com` (mode monitoring, non-rejet)
+- Code vérification Brevo : TXT `brevo-code:54ba159c10b0deab8dd7851ddaf47571`
+**Résultat :** Domaine authentifié le 2026-06-27 — tous les emails KLEM sont désormais signés DKIM et conformes SPF + DMARC.
+**Impact :** Zone DNS Hostinger (hPanel), compte Brevo
+**Règle :** Si la clé API Brevo est régénérée, relancer `PUT /v3/senders/domains/klemtech.net/authenticate` pour maintenir l'authentification.
+
+---
+
 ## [DEC-022] 2026-06-27 — Formulaire de contact : 3 destinataires fixes plutôt que admin_email
 
 **Contexte :** Le formulaire envoyait uniquement à `get_option('admin_email')`. Le client veut recevoir les demandes sur 3 boîtes : email pro, email personnel KLEM et Gmail de backup.

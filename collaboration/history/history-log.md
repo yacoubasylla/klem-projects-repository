@@ -59,11 +59,24 @@
 | `a8b70fc` | fix(email): sender officiel → infos@klemtech.net |
 | `edb5068` | feat(email): formulaire de contact → 3 destinataires |
 
+#### 6. Configuration DKIM / SPF / DMARC — authentification domaine Brevo
+- Récupération des enregistrements DNS via API Brevo (`GET /v3/senders/domains/klemtech.net`)
+- Ajout dans hPanel → Zone DNS → klemtech.net :
+  - **SPF** (édition existant) : ajout de `include:spf.brevo.com`
+  - **DKIM1** CNAME : `brevo1._domainkey` → `b1.klemtech-net.dkim.brevo.com`
+  - **DKIM2** CNAME : `brevo2._domainkey` → `b2.klemtech-net.dkim.brevo.com`
+  - **Code Brevo** TXT `@` : `brevo-code:54ba159c10b0deab8dd7851ddaf47571`
+  - **DMARC** TXT `_dmarc` : `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com`
+- Problèmes résolus en cours de route : doublon DMARC (ajout au lieu d'édition), propagation DNS (~15 min)
+- Authentification finale : `PUT /v3/senders/domains/klemtech.net/authenticate` → **succès** ✅
+- Résultat : emails signés DKIM, conformes SPF + DMARC → délivrabilité maximale
+
 ### État du projet en clôture
 - Formulaire de contact ✅ : envoie depuis `infos@klemtech.net` vers 3 boîtes simultanément
 - Boîtes email professionnelles actives : `infos@klemtech.net` + `yacouba.sylla@klemtech.net`
+- Domaine `klemtech.net` authentifié Brevo (DKIM + SPF + DMARC) ✅
 - Menu mobile cohérent avec le menu desktop
-- **Améliorations email à prévoir :** DKIM personnalisé + SPF Brevo + DMARC rua
+- Délivrabilité email : maximale — emails signés, conformes aux standards anti-spam
 
 ---
 
