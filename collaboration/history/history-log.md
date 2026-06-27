@@ -77,6 +77,7 @@
 - Domaine `klemtech.net` authentifié Brevo (DKIM + SPF + DMARC) ✅
 - Menu mobile cohérent avec le menu desktop
 - Délivrabilité email : maximale — emails signés, conformes aux standards anti-spam
+- **Note :** DKIM opère au niveau domaine — `yacouba.sylla@klemtech.net` est couvert par les mêmes enregistrements que `infos@klemtech.net`, aucune config supplémentaire nécessaire
 
 ---
 
