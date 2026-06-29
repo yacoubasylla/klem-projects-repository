@@ -4,6 +4,45 @@
 
 ---
 
+## Session 12 — 2026-06-29
+
+**Objectif :** Intégrer les comptes et pages réseaux sociaux dans le footer du site (LinkedIn, X/Twitter, GitHub).
+
+### Tâches réalisées
+
+#### 1. Lien LinkedIn → page entreprise KLEM Technologies & Services
+- URL fournie par l'utilisateur (dashboard admin) : `https://www.linkedin.com/company/130474992/admin/dashboard/`
+- URL publique utilisée : `https://www.linkedin.com/company/130474992/`
+- Attributs ajoutés : `target="_blank" rel="noopener noreferrer"`
+- Commit : `5b77dca`
+
+#### 2. Lien X/Twitter → @KLEMTechnology
+- URL : `https://x.com/KLEMTechnology`
+- Commit : `fc9cceb`
+
+#### 3. Lien GitHub → dépôt klem-opensource
+- URL fournie avec `.git` → nettoyée : `https://github.com/yacoubasylla/klem-opensource`
+- Commit : `52e6f0c`
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `web/app/themes/klem-theme/footer.php` | 3 liens sociaux : `#` → URLs réelles (LinkedIn, X, GitHub) |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `5b77dca` | feat(footer): lien LinkedIn → page KLEM Technologies & Services |
+| `fc9cceb` | feat(footer): lien X/Twitter → @KLEMTechnology |
+| `52e6f0c` | feat(footer): lien GitHub → klem-opensource |
+
+### État du projet en clôture
+- Footer : 4 icônes sociales toutes actives (LinkedIn, X, Facebook, GitHub)
+- Facebook : intégré en session précédente (commit `76b440d`)
+- Présence sociale KLEM entièrement wired dans le site
+
+---
+
 ## Session 11 — 2026-06-27
 
 **Objectif :** Test end-to-end du formulaire de contact en production après configuration DKIM/SPF/DMARC.

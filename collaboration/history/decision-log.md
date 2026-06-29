@@ -5,6 +5,19 @@
 
 ---
 
+## [DEC-024] 2026-06-29 — Réseaux sociaux : URLs directes en dur dans footer.php
+
+**Contexte :** Les 4 icônes sociales du footer pointaient vers `#`. Les comptes LinkedIn, X/Twitter, Facebook et GitHub ont été créés et leurs URLs intégrées.
+**Décision :** URLs stockées directement dans `footer.php` (pas de champ WordPress admin). Ce sont des constantes métier qui changent rarement.
+- LinkedIn : `https://www.linkedin.com/company/130474992/`
+- X/Twitter : `https://x.com/KLEMTechnology`
+- Facebook : `https://www.facebook.com/profile.php?id=61591353966112`
+- GitHub : `https://github.com/yacoubasylla/klem-opensource`
+**Impact :** `web/app/themes/klem-theme/footer.php`
+**Note :** LinkedIn et Facebook ont des URLs numériques (pas encore de slug personnalisé). À mettre à jour si un nom d'utilisateur propre est défini sur chaque plateforme.
+
+---
+
 ## [DEC-023] 2026-06-27 — Authentification domaine Brevo : DKIM + SPF + DMARC sur klemtech.net
 
 **Contexte :** Après activation du sender `infos@klemtech.net`, Brevo signalait DKIM "Par défaut" et DMARC "rua manquante" — risque de délivrabilité réduite (spam).
