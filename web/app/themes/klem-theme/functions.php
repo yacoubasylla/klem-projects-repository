@@ -109,9 +109,10 @@ add_action('wp_ajax_klem_contact',        'klem_handle_contact');
 add_action('wp_ajax_nopriv_klem_contact', 'klem_handle_contact');
 
 function klem_add_favicon(): void {
-    $svg = esc_url(get_template_directory_uri() . '/assets/favicon.svg');
-    printf('<link rel="icon" type="image/svg+xml" href="%s">' . "\n", $svg);
-    printf('<link rel="shortcut icon" href="%s">' . "\n", $svg);
+    $uri = get_template_directory_uri();
+    printf('<link rel="icon" type="image/png" sizes="32x32" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));
+    printf('<link rel="icon" type="image/svg+xml" href="%s">' . "\n", esc_url($uri . '/assets/favicon.svg'));
+    printf('<link rel="shortcut icon" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));
 }
 add_action('wp_head', 'klem_add_favicon', 1);
 
