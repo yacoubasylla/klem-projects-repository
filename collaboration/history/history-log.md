@@ -4,6 +4,62 @@
 
 ---
 
+## Session 13 — 2026-06-30
+
+**Objectif :** Mettre à jour le logo et le favicon du site depuis le kit branding Facebook (Claude Design).
+
+### Tâches réalisées
+
+#### 1. Import du kit branding depuis Claude Design
+- Projet : `https://claude.ai/design/p/52ce0b76-7710-4ae2-bdbe-f2da776d54fa`
+- Fichier lu : `KLEM Facebook Branding.dc.html`
+- Contenu : 3 couvertures Facebook, 3 photos de profil, favicons (16 à 512px), logos PNG, flyers de lancement
+
+#### 2. Nouveau logo — chevrons plats (header + footer)
+- **Avant :** ChevronMark 3D (3 couches SVG : ombre `#A5130A`, face `#E42313`, bevel `#F0654F`)
+- **Après :** 2 polygones SVG plats rouge `#E42313` — fidèles au style du kit branding
+  - Forme : `clip-path polygon(0 0,55% 0,100% 50%,55% 100%,0 100%,45% 50%)` convertie en points SVG
+  - Premier chevron : `0,0 22,0 40,28 22,56 0,56 18,28`
+  - Second chevron (décalé) : `25,0 47,0 65,28 47,56 25,56 43,28`
+  - ViewBox : `0 0 65 56`
+- Mis à jour dans `header.php` (width=32, height=28) et `footer.php` (width=34, height=29)
+- Commit : `320e63f`
+
+#### 3. Nouveau favicon SVG — carré marine + chevrons plats
+- Fond : carré `#13294B` avec `rx=12` (coins arrondis)
+- Chevrons plats rouges `#E42313` centrés — lisibles à 16px
+- ViewBox carré `64×64` pour onglet navigateur
+- Commit : `85bec29`
+
+#### 4. Favicon PNG 32×32 — depuis les assets Claude Design
+- Récupéré via DesignSync MCP : `Facebook KLEM/Favicon/favicon-32.png`
+- Décodé depuis base64 → `assets/favicon-32.png` (711 octets, PNG 32×32 RGBA)
+- `functions.php` mis à jour : PNG en priorité (`rel="icon" type="image/png" sizes="32x32"`), SVG en fallback
+- Commit : `ba2c5d0`
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `web/app/themes/klem-theme/header.php` | Logo — chevrons plats (viewBox 65×56, 2 polygones) |
+| `web/app/themes/klem-theme/footer.php` | Logo — même mise à jour |
+| `web/app/themes/klem-theme/assets/favicon.svg` | Favicon SVG — carré marine 64×64 + chevrons plats |
+| `web/app/themes/klem-theme/assets/favicon-32.png` | Ajouté — PNG officiel 32×32 du kit branding |
+| `web/app/themes/klem-theme/functions.php` | favicon : PNG en priorité + SVG en fallback |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `320e63f` | feat(logo): chevron plat (Facebook branding) — remplace le 3D bevel |
+| `85bec29` | feat(favicon): carré marine + chevrons plats rouges (Facebook branding) |
+| `ba2c5d0` | feat(favicon): PNG 32×32 depuis le kit branding Claude Design |
+
+### État du projet en clôture
+- Logo header + footer : design plat cohérent avec le kit Facebook
+- Favicon : PNG 32×32 officiel + SVG fallback — lisible dans tous les navigateurs
+- Kit branding complet disponible sur Claude Design (couvertures, profils, flyers, logos)
+
+---
+
 ## Session 12 — 2026-06-29
 
 **Objectif :** Intégrer les comptes et pages réseaux sociaux dans le footer du site (LinkedIn, X/Twitter, GitHub).

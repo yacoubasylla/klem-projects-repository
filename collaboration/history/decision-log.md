@@ -5,6 +5,24 @@
 
 ---
 
+## [DEC-026] 2026-06-30 — Favicon : PNG 32×32 en priorité, SVG en fallback
+
+**Contexte :** Le favicon SVG existait mais certains navigateurs (notamment Safari et anciens Chrome) mettent en cache l'icône aggressivement ou ne supportent pas bien les SVG favicon. Le kit branding fournit un PNG 32×32 officiel.
+**Décision :** Servir le PNG `favicon-32.png` en `type="image/png" sizes="32x32"` en premier, puis le SVG en fallback. Les navigateurs modernes préfèrent SVG, les autres tombent sur le PNG.
+**Impact :** `web/app/themes/klem-theme/functions.php`, `web/app/themes/klem-theme/assets/favicon-32.png`
+**Règle :** Pour mettre à jour le favicon, remplacer `favicon-32.png` et/ou `favicon.svg` dans `assets/`. Pas de changement PHP nécessaire.
+
+---
+
+## [DEC-025] 2026-06-30 — Logo : chevrons plats SVG plutôt que ChevronMark 3D
+
+**Contexte :** Le kit branding Facebook (Claude Design) utilise des chevrons plats 2 couleurs uniquement (`#E42313` rouge, sans bevel ni ombre). L'ancien logo 3D (3 couches SVG : ombre `#A5130A`, face `#E42313`, bevel `#F0654F`) ne correspondait plus à la charte officielle.
+**Décision :** Remplacer par 2 polygones SVG plats dérivés du `clip-path:polygon(0 0,55% 0,100% 50%,55% 100%,0 100%,45% 50%)` du kit. ViewBox `0 0 65 56`. Suppression totale des groupes bevel/ombre.
+**Impact :** `header.php`, `footer.php`, `assets/favicon.svg`
+**Avantage :** Cohérence parfaite entre logo site, favicon et kit branding Facebook/LinkedIn/X.
+
+---
+
 ## [DEC-024] 2026-06-29 — Réseaux sociaux : URLs directes en dur dans footer.php
 
 **Contexte :** Les 4 icônes sociales du footer pointaient vers `#`. Les comptes LinkedIn, X/Twitter, Facebook et GitHub ont été créés et leurs URLs intégrées.
