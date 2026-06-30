@@ -95,6 +95,19 @@
                     >
                         <?php wp_nonce_field('klem_contact_nonce', 'klem_nonce'); ?>
 
+                        <?php
+                        // Honeypot + jeton horodaté signé
+                        $ts    = time();
+                        $token = wp_hash($ts . 'klem_contact_token');
+                        ?>
+                        <!-- Honeypot : invisible pour les humains, rempli par les bots -->
+                        <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                            <label for="klem_website">Website (leave blank)</label>
+                            <input type="text" id="klem_website" name="klem_website" tabindex="-1" autocomplete="off" value="">
+                        </div>
+                        <input type="hidden" name="klem_ts"    value="<?php echo esc_attr((string)$ts); ?>">
+                        <input type="hidden" name="klem_token" value="<?php echo esc_attr($token); ?>">
+
                         <!-- Ligne 1 : Nom + Société -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>

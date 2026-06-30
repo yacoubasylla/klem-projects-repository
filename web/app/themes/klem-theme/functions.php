@@ -71,6 +71,28 @@ function klem_handle_contact(): void {
         wp_send_json_error(['message' => __('Requête non autorisée.', 'klem-theme')], 403);
     }
 
+    // ── Anti-spam 1 : honeypot ────────────────────────────────────────────────
+    if (!empty($_POST['klem_website'])) {
+        wp_send_json_error(['message' => __('Votre message a bien été envoyé. Nous vous répondons sous 24 h.', 'klem-theme')]);
+    }
+
+    // ── Anti-spam 2 : jeton horodaté (soumission < 3 s = bot) ────────────────
+    $ts    = (int) sanitize_text_field(wp_unslash($_POST['klem_ts']    ?? '0'));
+    $token = sanitize_text_field(wp_unslash($_POST['klem_token'] ?? ''));
+    $elapsed = time() - $ts;
+    if ($elapsed < 3 || $elapsed > 3600 || !hash_equals(wp_hash($ts . 'klem_contact_token'), $token)) {
+        wp_send_json_error(['message' => __('Votre message a bien été envoyé. Nous vous répondons sous 24 h.', 'klem-theme')]);
+    }
+
+    // ── Anti-spam 3 : limite de débit — max 3 envois / IP / heure ─────────────
+    $ip  = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? ''));
+    $key = 'klem_rate_' . md5($ip);
+    $hits = (int) get_transient($key);
+    if ($hits >= 3) {
+        wp_send_json_error(['message' => __('Trop de tentatives. Merci de réessayer dans une heure.', 'klem-theme')], 429);
+    }
+    set_transient($key, $hits + 1, HOUR_IN_SECONDS);
+
     $name    = sanitize_text_field(wp_unslash($_POST['klem_name']    ?? ''));
     $company = sanitize_text_field(wp_unslash($_POST['klem_company'] ?? ''));
     $email   = sanitize_email(wp_unslash($_POST['klem_email']        ?? ''));
