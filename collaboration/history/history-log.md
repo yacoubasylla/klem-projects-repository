@@ -4,6 +4,53 @@
 
 ---
 
+## Session 14 — 2026-06-30
+
+**Objectif :** Sécuriser le formulaire de contact contre le spam (suite à un message de prospection automatisé reçu via le formulaire).
+
+### Contexte
+- Réception d'un email spam via le formulaire : "Maxton / Sample Holdings" — prospection commerciale type cold email envoyée via Brevo mass mailing
+- Le formulaire n'avait aucune protection anti-bot → n'importe quel script pouvait inonder les 3 boîtes
+
+### Tâches réalisées
+
+#### 1. Honeypot anti-bot
+- Champ `klem_website` invisible pour les humains (inline style : `position:absolute;left:-9999px;width:1px;height:1px`)
+- `tabindex="-1"`, `autocomplete="off"` pour éviter que les navigateurs humains le remplissent
+- Si le champ contient une valeur → faux succès retourné au bot (pas d'email envoyé)
+
+#### 2. Vérification temporelle + jeton signé
+- À l'affichage du formulaire : timestamp `klem_ts` + token `wp_hash($ts . 'klem_contact_token')` injectés en champs cachés
+- Côté serveur : rejet si soumission < 3 secondes (bot rapide) ou > 1 heure (token périmé)
+- Rejet si le token est falsifié (`hash_equals` avec la clé secrète WordPress)
+
+#### 3. Rate limiting par IP
+- Max 3 envois par adresse IP par heure
+- Stocké via `set_transient('klem_rate_' . md5($ip), $count, HOUR_IN_SECONDS)`
+- Erreur 429 après dépassement : "Trop de tentatives. Merci de réessayer dans une heure."
+
+#### 4. Stratégie silencieuse contre les bots
+- Les bots (honeypot rempli ou token invalide) reçoivent un **faux succès** identique au vrai message de confirmation
+- Évite qu'ils détectent le blocage et adaptent leur stratégie
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/contact.php` | Ajout honeypot + champs cachés `klem_ts` / `klem_token` |
+| `web/app/themes/klem-theme/functions.php` | Ajout des 3 validations anti-spam avant traitement |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `d649e26` | feat(security): protection anti-spam formulaire (honeypot + temps + rate limit) |
+
+### État du projet en clôture
+- Formulaire de contact protégé contre les soumissions automatisées
+- Aucun impact visuel pour les vrais visiteurs
+- Les bots sont silencieusement bloqués sans feedback exploitable
+
+---
+
 ## Session 13 — 2026-06-30
 
 **Objectif :** Mettre à jour le logo et le favicon du site depuis le kit branding Facebook (Claude Design).

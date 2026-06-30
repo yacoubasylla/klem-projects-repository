@@ -5,6 +5,19 @@
 
 ---
 
+## [DEC-027] 2026-06-30 — Anti-spam : honeypot + jeton signé + rate limit (sans CAPTCHA)
+
+**Contexte :** Réception d'un email de prospection automatisée via le formulaire de contact (bot remplissant tous les champs visibles). Le formulaire n'avait aucune protection anti-bot.
+**Décision :** Triple protection sans CAPTCHA (pas de friction pour les vrais visiteurs) :
+1. **Honeypot** : champ `klem_website` caché — rejet silencieux si rempli
+2. **Jeton horodaté signé** : `wp_hash($ts . 'klem_contact_token')` — rejet si < 3 s ou > 1 h ou token falsifié
+3. **Rate limiting IP** : max 3 envois/heure via WordPress Transients
+- Les bots bloqués reçoivent un **faux succès** pour ne pas révéler le mécanisme de détection.
+**Impact :** `template-parts/home/contact.php`, `functions.php`
+**Règle :** Si le spam persiste malgré ces protections, envisager reCAPTCHA v3 (invisible) ou Cloudflare Turnstile.
+
+---
+
 ## [DEC-026] 2026-06-30 — Favicon : PNG 32×32 en priorité, SVG en fallback
 
 **Contexte :** Le favicon SVG existait mais certains navigateurs (notamment Safari et anciens Chrome) mettent en cache l'icône aggressivement ou ne supportent pas bien les SVG favicon. Le kit branding fournit un PNG 32×32 officiel.
