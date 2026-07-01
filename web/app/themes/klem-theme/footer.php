@@ -133,7 +133,7 @@
                 <ul class="space-y-3">
                     <?php
                     $saas_links = [
-                        ['label' => 'FleetControl SaaS',      'href' => '#'],
+                        ['label' => 'FleetControl',           'href' => '#'],
                         ['label' => 'Cantine Connect (démo)', 'href' => 'https://cantine-connect-swart.vercel.app/login', 'external' => true],
                     ];
                     foreach ($saas_links as $link) :
