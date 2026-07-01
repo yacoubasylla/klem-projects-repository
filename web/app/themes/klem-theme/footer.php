@@ -116,10 +116,27 @@
                         ['label' => 'Applications Sur-Mesure',         'href' => '#services'],
                         ['label' => 'Intégration ERP & FleetControl',  'href' => '#services'],
                         ['label' => 'Matériel IT & Infrastructure',    'href' => '#services'],
-                        ['label' => 'FleetControl SaaS',               'href' => '#'],
-                        ['label' => 'Cantine Connect (démo)',          'href' => 'https://cantine-connect-swart.vercel.app/login', 'external' => true],
                     ];
                     foreach ($service_links as $link) :
+                    ?>
+                    <li>
+                        <a href="<?php echo esc_url($link['href']); ?>" class="text-white/50 hover:text-klem-orange transition-colors duration-150 text-sm">
+                            <?php echo esc_html($link['label']); ?>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <p class="text-white/30 font-bold text-[10px] uppercase tracking-widest mt-6 mb-3">
+                    <?php esc_html_e('Nos Solutions SaaS', 'klem-theme'); ?>
+                </p>
+                <ul class="space-y-3">
+                    <?php
+                    $saas_links = [
+                        ['label' => 'FleetControl SaaS',      'href' => '#'],
+                        ['label' => 'Cantine Connect (démo)', 'href' => 'https://cantine-connect-swart.vercel.app/login', 'external' => true],
+                    ];
+                    foreach ($saas_links as $link) :
                         $is_external = !empty($link['external']);
                     ?>
                     <li>
