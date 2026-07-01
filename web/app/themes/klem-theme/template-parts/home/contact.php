@@ -185,6 +185,7 @@
                                 <option value="data"><?php esc_html_e('Ingénierie des Données', 'klem-theme'); ?></option>
                                 <option value="apps"><?php esc_html_e('Application Sur-Mesure', 'klem-theme'); ?></option>
                                 <option value="erp"><?php esc_html_e('Intégration ERP / FleetControl', 'klem-theme'); ?></option>
+                                <option value="cantine"><?php esc_html_e('Cantine Connect', 'klem-theme'); ?></option>
                                 <option value="hardware"><?php esc_html_e('Matériel IT & Infrastructure', 'klem-theme'); ?></option>
                                 <option value="other"><?php esc_html_e('Autre demande', 'klem-theme'); ?></option>
                             </select>

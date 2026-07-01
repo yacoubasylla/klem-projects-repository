@@ -128,7 +128,7 @@
             [
                 'num'      => '02',
                 'title'    => 'Applications Sur-Mesure',
-                'desc'     => "Développement d'applications web et mobiles d'envergure, ERP et logiciels métiers haute performance, 100 % adaptés à vos processus et à votre ambition.",
+                'desc'     => "Développement d'applications web et mobiles d'envergure — comme Cantine Connect, notre solution de gestion des paiements et de contrôle d'accès pour la restauration scolaire — ERP et logiciels métiers haute performance, 100 % adaptés à vos processus et à votre ambition.",
                 'delay'    => '200',
                 'icon_svg' => $icon_apps,
             ],

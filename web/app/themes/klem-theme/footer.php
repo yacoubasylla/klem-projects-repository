@@ -117,11 +117,17 @@
                         ['label' => 'Intégration ERP & FleetControl',  'href' => '#services'],
                         ['label' => 'Matériel IT & Infrastructure',    'href' => '#services'],
                         ['label' => 'FleetControl SaaS',               'href' => '#'],
+                        ['label' => 'Cantine Connect (démo)',          'href' => 'https://cantine-connect-swart.vercel.app/login', 'external' => true],
                     ];
                     foreach ($service_links as $link) :
+                        $is_external = !empty($link['external']);
                     ?>
                     <li>
-                        <a href="<?php echo esc_url($link['href']); ?>" class="text-white/50 hover:text-klem-orange transition-colors duration-150 text-sm">
+                        <a
+                            href="<?php echo esc_url($link['href']); ?>"
+                            class="text-white/50 hover:text-klem-orange transition-colors duration-150 text-sm"
+                            <?php echo $is_external ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>
+                        >
                             <?php echo esc_html($link['label']); ?>
                         </a>
                     </li>
