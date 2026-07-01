@@ -5,6 +5,18 @@
 
 ---
 
+## [DEC-028] 2026-07-01 — Cantine Connect intégré selon le schéma FleetControl (pas de CPT dédié)
+
+**Contexte :** Nouveau produit du client (gestion des paiements et contrôle d'accès cantine scolaire), disponible en test sur `https://cantine-connect-swart.vercel.app/login`. Le client a demandé de l'intégrer "comme FleetControl", sans changer la structure du site.
+**Décision :** Reproduire exactement le schéma FleetControl — nom du produit en dur dans 3 tableaux PHP existants, aucun CPT/ACF/JSON créé :
+1. `services.php` : mention dans la description du pilier "Applications Sur-Mesure"
+2. `footer.php` : lien réel vers la démo dans `$service_links`, avec `target="_blank"` (contrairement au placeholder `#` de FleetControl, qui n'a pas de démo publique)
+3. `contact.php` : nouvelle option dans le select "Sujet" du formulaire
+**Impact :** `template-parts/home/services.php`, `footer.php`, `template-parts/home/contact.php`
+**Règle :** Pour tout futur produit à afficher "comme FleetControl/Cantine Connect", suivre ce même triptyque de 3 fichiers plutôt que créer une infrastructure de données dédiée — cohérent avec le style actuel du thème (pas de CPT produits).
+
+---
+
 ## [DEC-027] 2026-06-30 — Anti-spam : honeypot + jeton signé + rate limit (sans CAPTCHA)
 
 **Contexte :** Réception d'un email de prospection automatisée via le formulaire de contact (bot remplissant tous les champs visibles). Le formulaire n'avait aucune protection anti-bot.

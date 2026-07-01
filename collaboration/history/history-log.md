@@ -4,6 +4,40 @@
 
 ---
 
+## Session 15 — 2026-07-01
+
+**Objectif :** Intégrer Cantine Connect (solution digitale de gestion des paiements et de contrôle d'accès cantine scolaire) parmi les produits présentés sur le site, en suivant le même schéma d'intégration que FleetControl.
+
+### Contexte
+- Nouveau produit déployé sur URL de test Vercel : `https://cantine-connect-swart.vercel.app/login`
+- FleetControl n'a jamais eu de fichier de données/CPT dédié : son nom est simplement inséré en dur dans 3 tableaux PHP (`services.php`, `footer.php`, `contact.php`) — le même schéma a été reproduit pour Cantine Connect
+- Contrainte explicite du client : ne pas modifier la structure du site (pas de nouvelle section, pas de 5ᵉ pilier)
+
+### Tâches réalisées
+
+#### 1. Mention dans le pilier "Applications Sur-Mesure"
+- `template-parts/home/services.php` — description du pilier 02 enrichie pour nommer Cantine Connect (gestion des paiements + contrôle d'accès pour la restauration scolaire)
+
+#### 2. Lien réel vers la démo dans le footer
+- `footer.php` — nouvelle entrée `Cantine Connect (démo)` dans `$service_links`, pointant vers l'URL Vercel réelle (contrairement au placeholder `#` de "FleetControl SaaS")
+- Ajout d'une clé `external` optionnelle sur les entrées du tableau + rendu conditionnel de `target="_blank" rel="noopener noreferrer"` dans la boucle `foreach`, sans casser les liens internes existants
+
+#### 3. Option dans le formulaire de contact
+- `template-parts/home/contact.php` — nouvelle `<option value="cantine">Cantine Connect</option>` dans le `<select id="klem-subject">`
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/services.php` | Description pilier "Applications Sur-Mesure" enrichie (mention Cantine Connect) |
+| `footer.php` | Lien démo Cantine Connect ajouté à `$service_links` + support lien externe dans la boucle |
+| `template-parts/home/contact.php` | Nouvelle option "Cantine Connect" dans le select Sujet |
+
+### État du projet en clôture
+- `pnpm build` exécuté sans erreur (Vite + Tailwind recompilés)
+- Aucune structure de fichier/section modifiée, conformément à la demande
+
+---
+
 ## Session 14 — 2026-06-30
 
 **Objectif :** Sécuriser le formulaire de contact contre le spam (suite à un message de prospection automatisé reçu via le formulaire).
