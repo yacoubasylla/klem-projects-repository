@@ -69,18 +69,23 @@ function ToggleRow({ config, meta, onToggle, saving }) {
   const isSaving  = saving === config.cle
 
   return (
-    <Paper variant="outlined" sx={{ p: 2.5, mb: 2 }}>
-      <Stack direction="row" alignItems="flex-start" justifyContent="space-between" spacing={2}>
-        <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ flex: 1 }}>
-          <Avatar sx={{ bgcolor: enabled ? 'primary.light' : 'action.hover', color: enabled ? 'primary.dark' : 'text.secondary', mt: 0.25 }}>
+    <Paper variant="outlined" sx={{ p: { xs: 1.5, sm: 2.5 }, mb: 2 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'flex-start' }}
+        justifyContent="space-between"
+        spacing={2}
+      >
+        <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ flex: 1, minWidth: 0 }}>
+          <Avatar sx={{ bgcolor: enabled ? 'primary.light' : 'action.hover', color: enabled ? 'primary.dark' : 'text.secondary', mt: 0.25, flexShrink: 0 }}>
             {meta.icon}
           </Avatar>
-          <Box>
-            <Stack direction="row" alignItems="center" spacing={1} mb={0.25}>
+          <Box sx={{ minWidth: 0 }}>
+            <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1} mb={0.25}>
               <Typography variant="subtitle1" fontWeight={600}>{meta.label}</Typography>
               <Chip label={meta.category} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.65rem' }} />
             </Stack>
-            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 520 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, wordBreak: 'break-word' }}>
               {meta.description}
             </Typography>
             <Typography variant="caption" color="text.disabled" sx={{ mt: 0.75, display: 'block' }}>
@@ -91,7 +96,7 @@ function ToggleRow({ config, meta, onToggle, saving }) {
             </Typography>
           </Box>
         </Stack>
-        <Stack alignItems="center" spacing={0.25} sx={{ flexShrink: 0 }}>
+        <Stack direction={{ xs: 'row', sm: 'column' }} alignItems="center" justifyContent={{ xs: 'flex-end', sm: 'flex-start' }} spacing={{ xs: 1.5, sm: 0.25 }} sx={{ flexShrink: 0 }}>
           {isSaving
             ? <CircularProgress size={22} sx={{ my: 0.5 }} />
             : <Switch checked={enabled} onChange={() => onToggle(config.cle, config.valeur)} color="primary" />
@@ -117,33 +122,34 @@ function TextRow({ config, meta, onSave }) {
   }
 
   return (
-    <Paper variant="outlined" sx={{ p: 2.5, mb: 2 }}>
+    <Paper variant="outlined" sx={{ p: { xs: 1.5, sm: 2.5 }, mb: 2 }}>
       <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25 }}>
+        <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25, flexShrink: 0 }}>
           {meta.icon}
         </Avatar>
-        <Box sx={{ flex: 1 }}>
-          <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1} mb={0.5}>
             <Typography variant="subtitle1" fontWeight={600}>{meta.label}</Typography>
             <Chip label={meta.category} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.65rem' }} />
           </Stack>
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 520, mb: 1.5 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, mb: 1.5, wordBreak: 'break-word' }}>
             {meta.description}
           </Typography>
-          <Stack direction="row" spacing={1.5} alignItems="center">
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }}>
             <TextField
               size="small"
               type={meta.type === 'number' ? 'number' : 'text'}
               placeholder={meta.placeholder ?? ''}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              sx={{ minWidth: 300 }}
+              sx={{ width: { xs: '100%', sm: 300 } }}
             />
             <Button
               variant="contained"
               size="small"
               disabled={!dirty || saving}
               onClick={handleSave}
+              sx={{ alignSelf: { xs: 'flex-end', sm: 'center' } }}
             >
               {saving ? <CircularProgress size={16} color="inherit" /> : 'Enregistrer'}
             </Button>
@@ -226,14 +232,14 @@ export default function ConfigurationPage() {
             const config = getConfig('MODE_PAIEMENT')
             if (!config) return null
             return (
-              <Paper variant="outlined" sx={{ p: 2.5, mb: 2 }}>
+              <Paper variant="outlined" sx={{ p: { xs: 1.5, sm: 2.5 }, mb: 2 }}>
                 <Stack direction="row" spacing={2} alignItems="flex-start">
-                  <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25 }}>
+                  <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25, flexShrink: 0 }}>
                     <AccountBalanceWalletIcon />
                   </Avatar>
-                  <Box sx={{ flex: 1 }}>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography variant="subtitle1" fontWeight={600} mb={0.5}>Mode d'accès cantine</Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 520, mb: 1.5 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, mb: 1.5, wordBreak: 'break-word' }}>
                       En mode <strong>Abonnement</strong>, l'élève accède librement après paiement annuel.
                       En mode <strong>Crédits</strong>, son solde est débité à chaque repas selon le tarif unitaire défini ci-dessous.
                     </Typography>
@@ -242,7 +248,7 @@ export default function ConfigurationPage() {
                       size="small"
                       value={config.valeur}
                       onChange={(e) => handleSaveText('MODE_PAIEMENT', e.target.value)}
-                      sx={{ minWidth: 360 }}
+                      sx={{ width: { xs: '100%', sm: 360 } }}
                     >
                       {MODE_PAIEMENT_OPTIONS.map((o) => (
                         <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
@@ -277,13 +283,13 @@ export default function ConfigurationPage() {
                 <Box key={cle}>
                   <TextRow config={config} meta={meta} onSave={handleSaveText} />
                   {config.valeur && (
-                    <Paper variant="outlined" sx={{ p: 1.5, mb: 2, display: 'inline-block' }}>
+                    <Paper variant="outlined" sx={{ p: 1.5, mb: 2, display: 'inline-block', maxWidth: '100%' }}>
                       <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>Aperçu</Typography>
                       <Box
                         component="img"
                         src={config.valeur}
                         alt="Fond de connexion"
-                        sx={{ height: 120, borderRadius: 1, objectFit: 'cover', display: 'block' }}
+                        sx={{ height: 120, maxWidth: '100%', borderRadius: 1, objectFit: 'cover', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none' }}
                       />
                     </Paper>
