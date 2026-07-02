@@ -11,4 +11,8 @@ public interface ClasseRepository extends JpaRepository<Classe, Long> {
     List<Classe> findByEtablissementAndAnnee(Long etablissementId, String anneeScolaire);
 
     List<Classe> findByNiveauId(Long niveauId);
+
+    boolean existsByNiveauId(Long niveauId);
+
+    boolean existsByNiveau_EtablissementId(Long etablissementId);
 }

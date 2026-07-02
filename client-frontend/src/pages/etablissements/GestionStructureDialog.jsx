@@ -313,10 +313,11 @@ export default function GestionStructureDialog({ open, onClose, etablissement })
   }
 
   const handleDeleteNiveau = async (niveau) => {
-    const msg = niveau.classes.length > 0
-      ? `Supprimer le niveau "${niveau.libelle}" et ses ${niveau.classes.length} classe(s) ?`
-      : `Supprimer le niveau "${niveau.libelle}" ?`
-    if (!window.confirm(msg)) return
+    if (niveau.classes.length > 0) {
+      alert(`Impossible de supprimer "${niveau.libelle}" : supprimez d'abord ses ${niveau.classes.length} classe(s).`)
+      return
+    }
+    if (!window.confirm(`Supprimer le niveau "${niveau.libelle}" ?`)) return
     try {
       await etablissementService.supprimerNiveau(niveau.id)
       await chargerNiveaux()

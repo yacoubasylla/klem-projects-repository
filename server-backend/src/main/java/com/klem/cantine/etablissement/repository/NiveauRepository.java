@@ -7,4 +7,6 @@ import java.util.List;
 public interface NiveauRepository extends JpaRepository<Niveau, Long> {
 
     List<Niveau> findByEtablissementIdOrderByOrdre(Long etablissementId);
+
+    boolean existsByEtablissementId(Long etablissementId);
 }

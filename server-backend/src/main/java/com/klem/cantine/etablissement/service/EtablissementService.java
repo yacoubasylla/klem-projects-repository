@@ -2,6 +2,7 @@ package com.klem.cantine.etablissement.service;
 
 import com.klem.cantine.actionlog.annotation.Traceable;
 import com.klem.cantine.actionlog.entity.TypeAction;
+import com.klem.cantine.eleve.repository.EleveRepository;
 import com.klem.cantine.etablissement.dto.*;
 import com.klem.cantine.etablissement.entity.Classe;
 import com.klem.cantine.etablissement.entity.Etablissement;
@@ -23,6 +24,7 @@ public class EtablissementService {
     private final EtablissementRepository etablissementRepository;
     private final NiveauRepository niveauRepository;
     private final ClasseRepository classeRepository;
+    private final EleveRepository eleveRepository;
 
     @Traceable(action = TypeAction.CREATE, entite = "Etablissement")
     @Transactional
@@ -87,6 +89,15 @@ public class EtablissementService {
     public void supprimer(Long id) {
         Etablissement e = etablissementRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Établissement introuvable : " + id));
+        if (niveauRepository.existsByEtablissementId(id)) {
+            throw new IllegalStateException("Impossible de supprimer : cet établissement a des niveaux associés.");
+        }
+        if (classeRepository.existsByNiveau_EtablissementId(id)) {
+            throw new IllegalStateException("Impossible de supprimer : cet établissement a des classes associées.");
+        }
+        if (eleveRepository.existsByEtablissementIdAndActifTrue(id)) {
+            throw new IllegalStateException("Impossible de supprimer : cet établissement a des élèves associés.");
+        }
         e.setActif(false);
         etablissementRepository.save(e);
     }
@@ -109,6 +120,9 @@ public class EtablissementService {
     public void supprimerNiveau(Long niveauId) {
         if (!niveauRepository.existsById(niveauId)) {
             throw new EntityNotFoundException("Niveau introuvable : " + niveauId);
+        }
+        if (classeRepository.existsByNiveauId(niveauId)) {
+            throw new IllegalStateException("Impossible de supprimer : ce niveau a des classes associées.");
         }
         niveauRepository.deleteById(niveauId);
     }
@@ -138,6 +152,9 @@ public class EtablissementService {
     public void supprimerClasse(Long classeId) {
         if (!classeRepository.existsById(classeId)) {
             throw new EntityNotFoundException("Classe introuvable : " + classeId);
+        }
+        if (eleveRepository.existsByClasseIdAndActifTrue(classeId)) {
+            throw new IllegalStateException("Impossible de supprimer : cette classe a des élèves associés.");
         }
         classeRepository.deleteById(classeId);
     }

@@ -64,6 +64,10 @@ public interface EleveRepository extends JpaRepository<Eleve, Long> {
 
     boolean existsByMatricule(String matricule);
 
+    boolean existsByEtablissementIdAndActifTrue(Long etablissementId);
+
+    boolean existsByClasseIdAndActifTrue(Long classeId);
+
     long countByActifTrue();
 
     long countByStatutAccesAndActifTrue(StatutAcces statut);

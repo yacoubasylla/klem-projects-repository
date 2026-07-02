@@ -32,6 +32,7 @@ export default function EtablissementsPage() {
   // dialog suppression
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState(null)
 
   // gestion structure
   const [structureEtab, setStructureEtab] = useState(null)
@@ -81,11 +82,12 @@ export default function EtablissementsPage() {
   const handleDelete = async () => {
     if (!deleteTarget) return
     setDeleting(true)
+    setDeleteError(null)
     try {
       await supprimer(deleteTarget.id)
       setDeleteTarget(null)
     } catch (e) {
-      setDeleteTarget(null)
+      setDeleteError(e.message)
     } finally {
       setDeleting(false)
     }
@@ -125,7 +127,7 @@ export default function EtablissementsPage() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Supprimer">
-                          <IconButton size="small" color="error" onClick={() => setDeleteTarget(etab)}>
+                          <IconButton size="small" color="error" onClick={() => { setDeleteTarget(etab); setDeleteError(null) }}>
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -195,9 +197,10 @@ export default function EtablissementsPage() {
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
         <DialogTitle>Supprimer l'établissement ?</DialogTitle>
         <DialogContent>
+          {deleteError && <Alert severity="error" sx={{ mb: 2 }}>{deleteError}</Alert>}
           <Typography>
             Voulez-vous vraiment supprimer <strong>{deleteTarget?.nom}</strong> ?
-            Cette action désactivera l'établissement et toutes ses classes.
+            Cette action est impossible tant que l'établissement a des niveaux, classes ou élèves associés.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
