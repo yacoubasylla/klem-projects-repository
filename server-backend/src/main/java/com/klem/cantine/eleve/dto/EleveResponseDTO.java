@@ -3,6 +3,7 @@ package com.klem.cantine.eleve.dto;
 import com.klem.cantine.eleve.entity.Eleve;
 import com.klem.cantine.eleve.entity.RegimeAlimentaire;
 import com.klem.cantine.eleve.entity.StatutAcces;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public record EleveResponseDTO(
     LocalDate dateFinGrace,
     Boolean estBoursier,
     RegimeAlimentaire regimeAlimentaire,
+    BigDecimal solde,
     String parentNom,
     String parentTelephone,
     String parentEmail,
@@ -48,6 +50,7 @@ public record EleveResponseDTO(
             e.getDateFinGrace(),
             e.getEstBoursier(),
             e.getRegimeAlimentaire(),
+            e.getSolde(),
             e.getParentNom(),
             e.getParentTelephone(),
             e.getParentEmail(),

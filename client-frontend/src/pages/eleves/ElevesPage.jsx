@@ -19,22 +19,31 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useEleves } from '../../hooks/useEleves'
 import { useEtablissements } from '../../hooks/useEtablissements'
 import { useAuth } from '../../hooks/useAuth'
+import { useConfigValeur } from '../../hooks/useConfig'
 import StatutBadge from '../../components/StatutBadge'
 import SuccessSnackbar from '../../components/SuccessSnackbar'
 import EleveFormDialog from './EleveFormDialog'
 
+const formatSolde = (val) =>
+  new Intl.NumberFormat('fr-FR', { style: 'decimal' }).format(val ?? 0) + ' XOF'
+
 // ── Export CSV ────────────────────────────────────────────────────────────────
 
-function exportCsv(eleves) {
+function exportCsv(eleves, isCredits) {
   const header = ['Matricule', 'Nom', 'Prénom', 'Établissement', 'Classe', 'Statut']
-  const rows = eleves.map((e) => [
-    e.matricule ?? '',
-    e.nom ?? '',
-    e.prenom ?? '',
-    e.etablissementNom ?? '',
-    e.classeLibelle ?? '',
-    e.statutAcces ?? '',
-  ])
+  if (isCredits) header.push('Solde')
+  const rows = eleves.map((e) => {
+    const row = [
+      e.matricule ?? '',
+      e.nom ?? '',
+      e.prenom ?? '',
+      e.etablissementNom ?? '',
+      e.classeLibelle ?? '',
+      e.statutAcces ?? '',
+    ]
+    if (isCredits) row.push(e.solde ?? 0)
+    return row
+  })
   const csv = [header, ...rows].map((r) => r.map((c) => `"${c}"`).join(';')).join('\n')
   const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
@@ -101,6 +110,9 @@ export default function ElevesPage() {
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
 
+  const { valeur: modePaiement } = useConfigValeur('MODE_PAIEMENT', 'ABONNEMENT')
+  const isCredits = modePaiement === 'CREDITS'
+
   const { etablissements } = useEtablissements()
   const {
     eleves, total, page, setPage, rowsPerPage, setRowsPerPage,
@@ -152,7 +164,7 @@ export default function ElevesPage() {
                 variant="outlined"
                 startIcon={<FileDownloadIcon />}
                 disabled={eleves.length === 0}
-                onClick={() => exportCsv(eleves)}
+                onClick={() => exportCsv(eleves, isCredits)}
               >
                 CSV
               </Button>
@@ -218,19 +230,20 @@ export default function ElevesPage() {
               <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Établissement</TableCell>
               <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Classe</TableCell>
               <TableCell>Statut</TableCell>
+              {isCredits && <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }} align="right">Solde</TableCell>}
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={isCredits ? 7 : 6} align="center" sx={{ py: 4 }}>
                   <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
             ) : eleves.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                <TableCell colSpan={isCredits ? 7 : 6} align="center" sx={{ py: 4, color: 'text.secondary' }}>
                   Aucun élève trouvé
                 </TableCell>
               </TableRow>
@@ -253,6 +266,11 @@ export default function ElevesPage() {
                     <Typography variant="body2">{eleve.classeLibelle}</Typography>
                   </TableCell>
                   <TableCell><StatutBadge statut={eleve.statutAcces} /></TableCell>
+                  {isCredits && (
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }} align="right">
+                      <Typography variant="body2" fontFamily="monospace">{formatSolde(eleve.solde)}</Typography>
+                    </TableCell>
+                  )}
                   <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
                     <Tooltip title="Afficher le QR Code">
                       <IconButton size="small" onClick={() => setQrEleve(eleve)}>
