@@ -18,6 +18,8 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
 
     Page<TransactionPaiement> findByEleveId(Long eleveId, Pageable pageable);
 
+    boolean existsByEleveId(Long eleveId);
+
     Page<TransactionPaiement> findByStatut(StatutPaiement statut, Pageable pageable);
 
     // Requêtes natives — voir ADR-007 : Hibernate 6 + PostgreSQL échouent à inférer le type

@@ -21,6 +21,8 @@ public interface PassageRefectoireRepository
     boolean existsByEleveIdAndDatePassageAndResultat(
             Long eleveId, LocalDate datePassage, ResultatScan resultat);
 
+    boolean existsByEleveId(Long eleveId);
+
     // Comptage rapide pour le dashboard
     long countByDatePassageAndResultat(LocalDate date, ResultatScan resultat);
 

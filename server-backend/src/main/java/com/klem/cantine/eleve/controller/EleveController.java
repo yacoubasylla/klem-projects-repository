@@ -63,4 +63,11 @@ public class EleveController {
         eleveService.supprimer(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}/permanent")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> supprimerDefinitivement(@PathVariable Long id) {
+        eleveService.supprimerDefinitivement(id);
+        return ResponseEntity.noContent().build();
+    }
 }

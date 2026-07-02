@@ -9,6 +9,8 @@ import com.klem.cantine.etablissement.entity.Classe;
 import com.klem.cantine.etablissement.entity.Etablissement;
 import com.klem.cantine.etablissement.repository.ClasseRepository;
 import com.klem.cantine.etablissement.repository.EtablissementRepository;
+import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
+import com.klem.cantine.scan.repository.PassageRefectoireRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +35,8 @@ class EleveServiceTest {
     @Mock private EleveRepository eleveRepository;
     @Mock private EtablissementRepository etablissementRepository;
     @Mock private ClasseRepository classeRepository;
+    @Mock private TransactionPaiementRepository transactionPaiementRepository;
+    @Mock private PassageRefectoireRepository passageRefectoireRepository;
     @InjectMocks private EleveService eleveService;
 
     // ── Helpers ───────────────────────────────────────────────
@@ -111,6 +116,45 @@ class EleveServiceTest {
         eleveService.supprimer(5L);
 
         verify(eleveRepository).save(argThat(e -> Boolean.FALSE.equals(e.getActif())));
+    }
+
+    // ── Tests supprimerDefinitivement ─────────────────────────
+
+    @Test
+    void supprimerDefinitivement_refuseSiPaiementsAssocies() {
+        Eleve eleve = eleveComplet(7L, "MAT-007", StatutAcces.AUTORISE);
+        when(eleveRepository.findById(7L)).thenReturn(Optional.of(eleve));
+        when(transactionPaiementRepository.existsByEleveId(7L)).thenReturn(true);
+
+        assertThatThrownBy(() -> eleveService.supprimerDefinitivement(7L))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(eleveRepository, never()).delete(any());
+    }
+
+    @Test
+    void supprimerDefinitivement_refuseSiPassagesAssocies() {
+        Eleve eleve = eleveComplet(8L, "MAT-008", StatutAcces.AUTORISE);
+        when(eleveRepository.findById(8L)).thenReturn(Optional.of(eleve));
+        when(transactionPaiementRepository.existsByEleveId(8L)).thenReturn(false);
+        when(passageRefectoireRepository.existsByEleveId(8L)).thenReturn(true);
+
+        assertThatThrownBy(() -> eleveService.supprimerDefinitivement(8L))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(eleveRepository, never()).delete(any());
+    }
+
+    @Test
+    void supprimerDefinitivement_autoriseSiAucunPaiementNiPassage() {
+        Eleve eleve = eleveComplet(9L, "MAT-009", StatutAcces.AUTORISE);
+        when(eleveRepository.findById(9L)).thenReturn(Optional.of(eleve));
+        when(transactionPaiementRepository.existsByEleveId(9L)).thenReturn(false);
+        when(passageRefectoireRepository.existsByEleveId(9L)).thenReturn(false);
+
+        eleveService.supprimerDefinitivement(9L);
+
+        verify(eleveRepository).delete(eleve);
     }
 
     // ── Tests changerStatut ───────────────────────────────────

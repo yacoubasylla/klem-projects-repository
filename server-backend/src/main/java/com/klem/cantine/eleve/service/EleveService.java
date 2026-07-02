@@ -10,6 +10,8 @@ import com.klem.cantine.eleve.entity.StatutAcces;
 import com.klem.cantine.eleve.repository.EleveRepository;
 import com.klem.cantine.etablissement.repository.ClasseRepository;
 import com.klem.cantine.etablissement.repository.EtablissementRepository;
+import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
+import com.klem.cantine.scan.repository.PassageRefectoireRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ public class EleveService {
     private final EleveRepository eleveRepository;
     private final EtablissementRepository etablissementRepository;
     private final ClasseRepository classeRepository;
+    private final TransactionPaiementRepository transactionPaiementRepository;
+    private final PassageRefectoireRepository passageRefectoireRepository;
 
     public Page<EleveResponseDTO> lister(Long etablissementId, Long classeId, StatutAcces statut, String search, Pageable pageable) {
         String statutStr = statut != null ? statut.name() : null;
@@ -118,5 +122,19 @@ public class EleveService {
                 .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + id));
         eleve.setActif(false);
         eleveRepository.save(eleve);
+    }
+
+    @Traceable(action = TypeAction.DELETE, entite = "Eleve")
+    @Transactional
+    public void supprimerDefinitivement(Long id) {
+        Eleve eleve = eleveRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + id));
+        if (transactionPaiementRepository.existsByEleveId(id)) {
+            throw new IllegalStateException("Impossible de supprimer : cet élève a des paiements associés.");
+        }
+        if (passageRefectoireRepository.existsByEleveId(id)) {
+            throw new IllegalStateException("Impossible de supprimer : cet élève a des passages au réfectoire associés.");
+        }
+        eleveRepository.delete(eleve);
     }
 }

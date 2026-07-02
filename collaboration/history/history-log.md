@@ -871,3 +871,19 @@
   - `server-backend/.../etablissement/service/EtablissementServiceTest.java` — 8 cas couvrant les 3 nouvelles règles de blocage et leurs 3 chemins de succès correspondants
 - **Description :** Aucune migration nécessaire ; les vérifications utilisent des `exists` dérivés (comptage indexé, pas de chargement d'entités). Le code de statut 409 CONFLICT était déjà géré génériquement par le `GlobalExceptionHandler` (`IllegalStateException`), aucune nouvelle classe d'exception nécessaire.
 - **Tests validés :** `./mvnw test` (35/35, dont les 8 nouveaux `EtablissementServiceTest`) ✅ ; `npm run build` ✅ · lint sans régression (erreurs préexistantes non liées confirmées via `git diff`) ; vérification bout-en-bout en local : suppression d'un établissement avec niveaux → `409` + message clair (confirmé aussi visuellement dans le dialogue Playwright, l'erreur qui était auparavant avalée s'affiche maintenant) ; suppression d'un niveau avec classes → `409` ; suppression d'une classe avec élève actif → `409` ; création d'un établissement/niveau/classe vides puis suppression dans l'ordre (classe → niveau → établissement) → `200` à chaque étape, confirmant que le chemin nominal n'est pas cassé.
+
+---
+
+### [2026-07-02] - Suppression Définitive d'un Élève Bloquée si Paiements/Passages Associés
+- **Statut :** Livré / Opérationnel
+- **Contexte :** Précision de l'utilisateur sur la règle élève, suite à la clarification précédente (désactivation libre conservée) : une vraie suppression définitive doit rester possible pour un élève sans historique, mais doit être bloquée s'il a des paiements liés. Cette capacité n'existait pas du tout — le seul endpoint existant (`DELETE /eleves/{id}`) fait une désactivation (soft-delete), jamais une suppression réelle. Reproduction du modèle déjà en place pour `Utilisateur` (`DELETE /{id}` = désactiver, `DELETE /{id}/permanent` = supprimer définitivement).
+- **Décision (validée avec l'utilisateur) :** Ajout du endpoint de suppression définitive côté backend uniquement pour l'instant — pas de nouveau bouton sur la page Élèves (le bouton « Supprimer » actuel continue de désactiver, comportement inchangé).
+- **Fichiers Modifiés :**
+  - `server-backend/.../paiement/repository/TransactionPaiementRepository.java` — `existsByEleveId`
+  - `server-backend/.../scan/repository/PassageRefectoireRepository.java` — `existsByEleveId`
+  - `server-backend/.../eleve/service/EleveService.java` — nouvelle méthode `supprimerDefinitivement(id)` : `IllegalStateException` (409) si des paiements OU des passages réfectoire sont associés, sinon `eleveRepository.delete(eleve)` (suppression réelle, contrairement à `supprimer()` qui reste un soft-delete inchangé)
+  - `server-backend/.../eleve/controller/EleveController.java` — `DELETE /api/v1/eleves/{id}/permanent` (ADMIN)
+- **Fichiers Créés :**
+  - 3 nouveaux cas dans `EleveServiceTest.java` : refus si paiements associés, refus si passages associés, succès (suppression réelle vérifiée) si aucun des deux
+- **Description :** Le contrôle couvre aussi les passages réfectoire (pas seulement les paiements comme littéralement demandé) car `passages_refectoire.eleve_id` est une FK `NOT NULL` sans `ON DELETE CASCADE` — sans ce contrôle, la suppression définitive d'un élève scanné au moins une fois (cas quasi systématique en usage réel) aurait échoué avec une violation de contrainte brute (500) au lieu d'un message clair.
+- **Tests validés :** `./mvnw test` (38/38, dont les 3 nouveaux cas) ✅ ; vérification bout-en-bout en local : élève réel avec paiements → `DELETE /eleves/1/permanent` → `409` « paiements associés » ; élève de test frais (aucun paiement/passage) → désactivation (`DELETE /eleves/{id}`) toujours `204` sans restriction, puis suppression définitive (`DELETE /eleves/{id}/permanent`) → `204`, ligne confirmée absente de la table `eleves` en base (suppression réelle, pas juste `actif=false`).
