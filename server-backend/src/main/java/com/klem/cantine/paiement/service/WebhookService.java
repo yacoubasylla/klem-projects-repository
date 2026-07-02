@@ -101,23 +101,32 @@ public class WebhookService {
 
         // Mise à jour statut élève uniquement si paiement accepté
         if (accepte) {
-            var eleve = transaction.getEleve();
-            eleve.setStatutAcces(StatutAcces.AUTORISE);
-
-            // Crédit du solde en mode CREDITS
-            if ("CREDITS".equalsIgnoreCase(configurationService.getValeur("MODE_PAIEMENT"))) {
-                BigDecimal montant = transaction.getMontant() != null
-                        ? transaction.getMontant() : BigDecimal.ZERO;
-                eleve.setSolde(eleve.getSolde().add(montant));
-                log.info("Solde élève {} crédité de {} FCFA → nouveau solde {}",
-                        eleve.getId(), montant, eleve.getSolde());
-            }
-
-            eleveRepository.save(eleve);
-            log.info("Élève {} → AUTORISE après paiement accepté", eleve.getId());
-            notificationService.notifierPaiementAccepte(eleve,
-                    transaction.getMontant() != null ? transaction.getMontant() : BigDecimal.ZERO);
+            appliquerPaiementAccepte(transaction);
         }
+    }
+
+    /**
+     * Applique à l'élève les effets d'un paiement accepté (statut AUTORISE, crédit du
+     * solde en mode CREDITS, notification) — partagé entre les webhooks et la
+     * confirmation manuelle d'un paiement (PaiementService.modifier).
+     */
+    void appliquerPaiementAccepte(TransactionPaiement transaction) {
+        var eleve = transaction.getEleve();
+        eleve.setStatutAcces(StatutAcces.AUTORISE);
+
+        // Crédit du solde en mode CREDITS
+        if ("CREDITS".equalsIgnoreCase(configurationService.getValeur("MODE_PAIEMENT"))) {
+            BigDecimal montant = transaction.getMontant() != null
+                    ? transaction.getMontant() : BigDecimal.ZERO;
+            eleve.setSolde(eleve.getSolde().add(montant));
+            log.info("Solde élève {} crédité de {} FCFA → nouveau solde {}",
+                    eleve.getId(), montant, eleve.getSolde());
+        }
+
+        eleveRepository.save(eleve);
+        log.info("Élève {} → AUTORISE après paiement accepté", eleve.getId());
+        notificationService.notifierPaiementAccepte(eleve,
+                transaction.getMontant() != null ? transaction.getMontant() : BigDecimal.ZERO);
     }
 
     // ── Vérification signature CinetPay ───────────────────────────────────────

@@ -36,6 +36,7 @@ public class PaiementService {
     private final EleveRepository eleveRepository;
     private final ParentRepository parentRepository;
     private final PaiementProperties paiementProperties;
+    private final WebhookService webhookService;
 
     @Traceable(action = TypeAction.CREATE, entite = "TransactionPaiement")
     @Transactional
@@ -107,11 +108,19 @@ public class PaiementService {
     public PaiementResponseDTO modifier(Long id, ModifierPaiementRequestDTO dto) {
         TransactionPaiement t = transactionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction introuvable : " + id));
+        StatutPaiement ancienStatut = t.getStatut();
         if (dto.statut() != null) t.setStatut(dto.statut());
         if (dto.montant() != null) t.setMontant(dto.montant());
         if (dto.operateur() != null) t.setOperateur(dto.operateur());
         if (dto.telephonePayeur() != null) t.setTelephonePayeur(dto.telephonePayeur());
-        return PaiementResponseDTO.from(transactionRepository.save(t));
+        TransactionPaiement saved = transactionRepository.save(t);
+
+        // Confirmation manuelle (ex. paiement en espèces) : mêmes effets qu'un webhook accepté
+        if (saved.getStatut() == StatutPaiement.ACCEPTE && ancienStatut != StatutPaiement.ACCEPTE) {
+            webhookService.appliquerPaiementAccepte(saved);
+        }
+
+        return PaiementResponseDTO.from(saved);
     }
 
     @Traceable(action = TypeAction.DELETE, entite = "TransactionPaiement")
