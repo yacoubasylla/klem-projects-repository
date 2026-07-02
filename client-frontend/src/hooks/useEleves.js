@@ -44,6 +44,12 @@ export function useEleves(filtres = {}) {
     return updated
   }
 
+  const changerStatut = async (id, statut) => {
+    const updated = await eleveService.changerStatut(id, statut)
+    charger()
+    return updated
+  }
+
   const supprimer = async (id) => {
     await eleveService.supprimer(id)
     charger()
@@ -55,7 +61,7 @@ export function useEleves(filtres = {}) {
     page, setPage,
     rowsPerPage, setRowsPerPage,
     loading, error,
-    creer, modifier, supprimer,
+    creer, modifier, changerStatut, supprimer,
     recharger: charger,
   }
 }

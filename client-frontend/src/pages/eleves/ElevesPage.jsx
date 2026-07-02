@@ -104,7 +104,7 @@ export default function ElevesPage() {
   const { etablissements } = useEtablissements()
   const {
     eleves, total, page, setPage, rowsPerPage, setRowsPerPage,
-    loading, error, creer, modifier, supprimer, recharger,
+    loading, error, creer, modifier, changerStatut, supprimer, recharger,
   } = useEleves(filtres)
 
   const setFiltre = (name, value) =>
@@ -115,10 +115,18 @@ export default function ElevesPage() {
 
   const handleSuccess = async (payload) => {
     if (eleveToEdit) {
-      await modifier(eleveToEdit.id, payload)
+      const { statutAcces, ...dto } = payload
+      await modifier(eleveToEdit.id, dto)
+      if (statutAcces && statutAcces !== eleveToEdit.statutAcces) {
+        await changerStatut(eleveToEdit.id, statutAcces)
+      }
       setSuccessMsg('Élève modifié avec succès')
     } else {
-      await creer(payload)
+      const { statutAcces, ...dto } = payload
+      const created = await creer(dto)
+      if (statutAcces && statutAcces !== 'EN_ATTENTE_PAIEMENT') {
+        await changerStatut(created.id, statutAcces)
+      }
       setSuccessMsg('Élève créé avec succès')
     }
   }
