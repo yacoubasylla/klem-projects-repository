@@ -30,5 +30,19 @@ Ouvre le fichier `collaboration/history/history-LOG.md` et injecte **tout en hau
 
 ---
 
-## Étape 4 : Validation
-Une fois le fichier `collaboration/history/history-LOG.md` mis à jour, montre-moi le bloc textuel exact que tu as inséré pour confirmation finale avant commit et push[cite: 4, 15].
+## Étape 4 : Mise à jour des autres fichiers de gouvernance
+En plus du journal de bord, mets à jour — **si possible et nécessaire seulement** (ne modifie pas un fichier sans raison réelle liée au travail de la session) — les fichiers suivants :
+- **`README.md`** : si la vision macro, la stack ou les objectifs ont changé.
+- **`CLAUDE.md`** : si une nouvelle commande, une nouvelle règle de code ou une nouvelle contrainte d'architecture a été introduite durant la session.
+- **`collaboration/context/CONTEXT.md`** : si le périmètre stratégique ou les contraintes métier ont évolué.
+- **`collaboration/history/decision-log.md`** et **`collaboration/history/adr/`** : si une nouvelle décision architecturale a été prise (nouvelle bibliothèque, changement de modèle de données, nouveau flux réseau) — crée le fichier ADR correspondant si besoin.
+- **Tout autre fichier `.md`** du projet directement concerné par le changement livré durant la session.
+
+## Étape 5 : Validation
+Une fois les fichiers mis à jour, montre-moi le bloc textuel exact que tu as inséré/modifié pour confirmation finale avant commit et push[cite: 4, 15].
+
+## Étape 6 : Commit, Push et Déploiement
+Une fois la confirmation obtenue :
+1. Committe l'ensemble des changements de documentation (et de code le cas échéant) avec un message de commit conventionnel clair.
+2. Pousse (`git push`) sur la branche `main` du dépôt GitHub.
+3. Vérifie que le déploiement (backend Railway et/ou frontend Vercel selon les fichiers modifiés) se déclenche automatiquement et aboutit (statut « Online » / healthcheck OK), puis confirme-le-moi.

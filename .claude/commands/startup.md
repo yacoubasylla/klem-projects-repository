@@ -20,6 +20,8 @@ Quand je lance `/startup` au début d'une session, exécute la séquence de lect
 8. **`skills/SKILLS-TECHNICAL.md`** (Matrice des compétences techniques : MUI Tabs, requêtes JPA Fetch Join, filtres JWT et aspects AOP)[cite: 10].
 9. **`collaboration/history/history-log.md`** (Journal de bord chronologique pour savoir exactement où s'est arrêtée la dernière session)[cite: 3].
 10. **`collaboration/history/decision-log.md`** (Registre des décisions architecturales - ADR - pour ne pas enfreindre les choix techniques validés)[cite: 2].
+11. **`collaboration/history/adr/*.md`** (Chaque Architecture Decision Record individuel — contexte, alternatives et conséquences de chaque décision actée).
+12. **Tous les autres fichiers `.md` du projet** (documentation complémentaire éventuelle non listée ci-dessus : guides, notes techniques, README de sous-dossiers).
 
 ## Instructions de traitement
 - Utilise tes outils système pour lire le contenu de ces fichiers documentaires.
