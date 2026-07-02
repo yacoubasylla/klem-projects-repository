@@ -1,18 +1,20 @@
+import { safeStorage } from './safeStorage'
+
 const CACHE_KEY = 'cc_scan_cache'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 export const cacheOfflineService = {
   sauvegarder(data) {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, savedAt: Date.now() }))
+    safeStorage.setItem(CACHE_KEY, JSON.stringify({ data, savedAt: Date.now() }))
   },
 
   charger() {
     try {
-      const stored = localStorage.getItem(CACHE_KEY)
+      const stored = safeStorage.getItem(CACHE_KEY)
       if (!stored) return null
       const { data, savedAt } = JSON.parse(stored)
       if (Date.now() - savedAt > CACHE_TTL_MS) {
-        localStorage.removeItem(CACHE_KEY)
+        safeStorage.removeItem(CACHE_KEY)
         return null
       }
       return { data, savedAt }
@@ -52,6 +54,6 @@ export const cacheOfflineService = {
   },
 
   supprimer() {
-    localStorage.removeItem(CACHE_KEY)
+    safeStorage.removeItem(CACHE_KEY)
   },
 }
