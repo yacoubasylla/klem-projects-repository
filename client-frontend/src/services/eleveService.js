@@ -20,4 +20,7 @@ export const eleveService = {
 
   supprimer: (id) =>
     apiClient.delete(`/eleves/${id}`).then((r) => r.data),
+
+  supprimerDefinitivement: (id) =>
+    apiClient.delete(`/eleves/${id}/permanent`).then((r) => r.data),
 };

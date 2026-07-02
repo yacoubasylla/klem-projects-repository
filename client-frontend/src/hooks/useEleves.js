@@ -55,13 +55,18 @@ export function useEleves(filtres = {}) {
     charger()
   }
 
+  const supprimerDefinitivement = async (id) => {
+    await eleveService.supprimerDefinitivement(id)
+    charger()
+  }
+
   return {
     eleves: data.content,
     total: data.totalElements,
     page, setPage,
     rowsPerPage, setRowsPerPage,
     loading, error,
-    creer, modifier, changerStatut, supprimer,
+    creer, modifier, changerStatut, supprimer, supprimerDefinitivement,
     recharger: charger,
   }
 }

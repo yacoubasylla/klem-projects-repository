@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Box, Typography, Button, Stack, TextField, MenuItem,
+  Box, Typography, Button, Stack, TextField, MenuItem, Menu,
   Table, TableHead, TableBody, TableRow, TableCell,
   TablePagination, TableContainer, Paper,
   IconButton, CircularProgress, Alert, Tooltip,
@@ -9,12 +9,14 @@ import {
 import AddIcon    from '@mui/icons-material/Add'
 import EditIcon   from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import PrintIcon  from '@mui/icons-material/Print'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import PeopleIcon from '@mui/icons-material/People'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEleves } from '../../hooks/useEleves'
 import { useEtablissements } from '../../hooks/useEtablissements'
@@ -92,6 +94,51 @@ function QrCodeDialog({ eleve, onClose }) {
   )
 }
 
+function ConfirmSupprimerDefinitivementDialog({ eleve, onClose, onConfirm }) {
+  const [submitting, setSubmitting] = useState(false)
+  const [err, setErr] = useState(null)
+
+  const handleConfirm = async () => {
+    setSubmitting(true)
+    setErr(null)
+    try {
+      await onConfirm(eleve.id)
+      onClose()
+    } catch (e) {
+      setErr(e.response?.data?.message ?? e.message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <Dialog open={!!eleve} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle sx={{ color: 'error.main' }}>Supprimer définitivement</DialogTitle>
+      <DialogContent>
+        <Typography variant="body2" mb={1}>
+          Vous allez supprimer <strong>{eleve?.prenom} {eleve?.nom}</strong> ({eleve?.matricule}).
+        </Typography>
+        <Alert severity="warning" sx={{ mt: 1 }}>
+          Cette action est irréversible et impossible si l'élève a des paiements ou des passages au réfectoire associés.
+        </Alert>
+        {err && <Alert severity="error" sx={{ mt: 1 }}>{err}</Alert>}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} disabled={submitting}>Annuler</Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleConfirm}
+          disabled={submitting}
+          startIcon={submitting ? <CircularProgress size={16} color="inherit" /> : <DeleteForeverIcon />}
+        >
+          Supprimer définitivement
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 const STATUTS_FILTRE = [
   { value: '', label: 'Tous les statuts' },
   { value: 'AUTORISE', label: 'Autorisé' },
@@ -106,6 +153,9 @@ export default function ElevesPage() {
   const [eleveToEdit, setEleveToEdit] = useState(null)
   const [qrEleve,    setQrEleve]    = useState(null)
   const [successMsg, setSuccessMsg] = useState('')
+  const [eleveToDeleteDefinitivement, setEleveToDeleteDefinitivement] = useState(null)
+  const [menuAnchor, setMenuAnchor] = useState(null)
+  const [menuEleve,  setMenuEleve]  = useState(null)
 
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
@@ -116,8 +166,11 @@ export default function ElevesPage() {
   const { etablissements } = useEtablissements()
   const {
     eleves, total, page, setPage, rowsPerPage, setRowsPerPage,
-    loading, error, creer, modifier, changerStatut, supprimer, recharger,
+    loading, error, creer, modifier, changerStatut, supprimer, supprimerDefinitivement, recharger,
   } = useEleves(filtres)
+
+  const openMenu  = (e, eleve) => { setMenuAnchor(e.currentTarget); setMenuEleve(eleve) }
+  const closeMenu = () => { setMenuAnchor(null); setMenuEleve(null) }
 
   const setFiltre = (name, value) =>
     setFiltres((prev) => ({ ...prev, [name]: value }))
@@ -284,9 +337,24 @@ export default function ElevesPage() {
                             <EditIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Supprimer">
-                          <IconButton size="small" color="error" onClick={() => handleDelete(eleve.id, eleve.nom, eleve.prenom)}>
-                            <DeleteIcon fontSize="small" />
+
+                        {/* Désactiver + Supprimer définitivement — repliés en menu sous sm pour éviter le débordement */}
+                        <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                          <Tooltip title="Désactiver (n'efface rien, l'élève disparaît de la liste)">
+                            <IconButton size="small" color="warning" onClick={() => handleDelete(eleve.id, eleve.nom, eleve.prenom)}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Supprimer définitivement">
+                            <IconButton size="small" color="error" onClick={() => setEleveToDeleteDefinitivement(eleve)}>
+                              <DeleteForeverIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+
+                        <Tooltip title="Plus d'actions">
+                          <IconButton size="small" onClick={(e) => openMenu(e, eleve)} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
+                            <MoreVertIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       </>
@@ -320,6 +388,27 @@ export default function ElevesPage() {
       />
 
       <QrCodeDialog eleve={qrEleve} onClose={() => setQrEleve(null)} />
+
+      {eleveToDeleteDefinitivement && (
+        <ConfirmSupprimerDefinitivementDialog
+          eleve={eleveToDeleteDefinitivement}
+          onClose={() => setEleveToDeleteDefinitivement(null)}
+          onConfirm={supprimerDefinitivement}
+        />
+      )}
+
+      {/* Menu compact (mobile) — Désactiver + Supprimer définitivement */}
+      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+        <MenuItem onClick={() => { handleDelete(menuEleve.id, menuEleve.nom, menuEleve.prenom); closeMenu() }}>
+          <DeleteIcon fontSize="small" sx={{ mr: 1 }} /> Désactiver
+        </MenuItem>
+        <MenuItem
+          sx={{ color: 'error.main' }}
+          onClick={() => { setEleveToDeleteDefinitivement(menuEleve); closeMenu() }}
+        >
+          <DeleteForeverIcon fontSize="small" sx={{ mr: 1 }} /> Supprimer définitivement
+        </MenuItem>
+      </Menu>
 
       <SuccessSnackbar open={Boolean(successMsg)} message={successMsg} onClose={() => setSuccessMsg('')} />
     </Box>

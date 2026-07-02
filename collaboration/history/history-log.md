@@ -887,3 +887,26 @@
   - 3 nouveaux cas dans `EleveServiceTest.java` : refus si paiements associés, refus si passages associés, succès (suppression réelle vérifiée) si aucun des deux
 - **Description :** Le contrôle couvre aussi les passages réfectoire (pas seulement les paiements comme littéralement demandé) car `passages_refectoire.eleve_id` est une FK `NOT NULL` sans `ON DELETE CASCADE` — sans ce contrôle, la suppression définitive d'un élève scanné au moins une fois (cas quasi systématique en usage réel) aurait échoué avec une violation de contrainte brute (500) au lieu d'un message clair.
 - **Tests validés :** `./mvnw test` (38/38, dont les 3 nouveaux cas) ✅ ; vérification bout-en-bout en local : élève réel avec paiements → `DELETE /eleves/1/permanent` → `409` « paiements associés » ; élève de test frais (aucun paiement/passage) → désactivation (`DELETE /eleves/{id}`) toujours `204` sans restriction, puis suppression définitive (`DELETE /eleves/{id}/permanent`) → `204`, ligne confirmée absente de la table `eleves` en base (suppression réelle, pas juste `actif=false`).
+
+---
+
+### [2026-07-02] - UI : Bouton « Supprimer Définitivement » sur la Page Élèves
+- **Statut :** Livré / Opérationnel
+- **Contexte :** Suite à l'ajout de l'endpoint backend `DELETE /eleves/{id}/permanent`, l'utilisateur demande d'exposer aussi l'action côté UI, en laissant le choix de conception au développeur. Reprise du modèle déjà en place sur la page Utilisateurs (icônes distinctes désactiver/supprimer + repli en menu kebab sur mobile) pour rester cohérent avec le reste de l'application.
+- **Fichiers Modifiés :**
+  - `client-frontend/src/services/eleveService.js` — `supprimerDefinitivement(id)`
+  - `client-frontend/src/hooks/useEleves.js` — action `supprimerDefinitivement` exposée par le hook
+  - `client-frontend/src/pages/eleves/ElevesPage.jsx` — nouvelle icône rouge « Supprimer définitivement » (`DeleteForeverIcon`) à côté de l'icône orange existante « Désactiver » (`DeleteIcon`, tooltip clarifié) ; nouveau `ConfirmSupprimerDefinitivementDialog` affichant l'erreur serveur inline (409 si paiements/passages associés) au lieu d'un `alert()` brut ; les deux actions se replient dans un menu kebab (`MoreVertIcon`) sous `sm` pour ne pas réintroduire de débordement horizontal
+- **Description :** Comportement inchangé pour « Désactiver » (toujours libre) ; la nouvelle action est réservée aux ADMIN, cohérente avec la restriction déjà appliquée côté backend.
+- **Tests validés :** `npm run build` ✅ · lint sans régression ; vérification Playwright bout-en-bout : élève avec paiements → dialogue affiche l'erreur serveur exacte ; élève neuf sans historique → suppression définitive réussie, ligne disparaît de la liste (confirmée absente en base) ; mobile 375px → aucun débordement (343=343), menu kebab affiche « Désactiver » et « Supprimer définitivement ».
+
+---
+
+### [2026-07-02] - Responsive : Page Configuration (Cartes Fonctionnalités/Paiements/Apparence)
+- **Statut :** Livré / Opérationnel
+- **Signalement :** Capture d'écran utilisateur montrant les cartes de la page Configuration (Mode d'accès cantine, Tarif par repas, Image de fond) débordant horizontalement, texte tronqué en plein mot, barre de défilement horizontale visible.
+- **Diagnostic :** Les `TextField`/`Select` de ces cartes utilisaient des `minWidth` fixes en pixels (300 pour les champs texte, 360 pour le sélecteur de mode de paiement) au lieu de valeurs responsives. Un `minWidth` fixe sur un enfant flex l'empêche de rétrécir sous cette valeur, forçant toute la ligne (icône + contenu) à dépasser la largeur de l'écran sur mobile/tablette — les `Box` de contenu n'avaient pas non plus `minWidth: 0`, aggravant le problème (comportement par défaut des enfants flex qui refusent de rétrécir sous la taille de leur contenu).
+- **Fichiers Modifiés :**
+  - `client-frontend/src/pages/configuration/ConfigurationPage.jsx` — `ToggleRow`, `TextRow` et le bloc « Mode d'accès cantine » : `minWidth` fixes remplacés par des largeurs responsives (`width: { xs: '100%', sm: 300|360 }`) ; ajout de `minWidth: 0` sur les `Box` de contenu ; `Stack` interne (champ + bouton) empilée en colonne sous `sm` ; description `Typography` avec `wordBreak: 'break-word'` et `maxWidth` responsive ; aperçu de l'image de fond plafonné à `maxWidth: '100%'` pour ne pas déborder avec une image très large
+- **Description :** Comportement desktop inchangé (vérifié par capture à 1280px) ; sur mobile, les champs passent en pleine largeur et le bouton « Enregistrer » se place sous le champ plutôt qu'à côté.
+- **Tests validés :** `npm run build` ✅ · lint sans régression ; vérification Playwright à 375px/600px/1280px : `document.documentElement.scrollWidth === clientWidth` à chaque largeur (aucun débordement) ; reproduction avec une vraie URL d'image de fond (aperçu affiché) → toujours aucun débordement à 375px.
