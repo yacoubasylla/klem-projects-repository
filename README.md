@@ -139,12 +139,13 @@ Chaque compte requiert un numéro de cellulaire unique (colonne `telephone`, obl
 |--------|--------|-------------|
 | 🏫 Établissements | ✅ Livré | CRUD établissements, niveaux, classes (masqué au rôle PARENT) |
 | 👨‍🎓 Élèves | ✅ Livré | CRUD + formulaire 3 onglets + QR Code + pagination + recherche + export CSV (masqué au rôle PARENT) |
-| 💳 Paiements | ✅ Livré | Transactions Mobile Money + webhooks CinetPay + recherche + export CSV (PARENT limité à ses enfants) |
+| 💳 Paiements | ✅ Livré | Transactions Mobile Money + webhooks CinetPay + recherche + filtres date/opérateur + export CSV (PARENT limité à ses enfants) |
 | 📷 Scan Réfectoire | ✅ Livré | Validation QR Code temps réel + cache offline 24h (masqué au rôle PARENT) |
 | 📋 Historique | ✅ Livré | Passages filtrés (date, établissement, résultat) + export CSV (PARENT limité à ses enfants) |
 | 📊 Dashboard | ✅ Livré | KPIs globaux + tendance 7 jours + statistiques paiements |
-| 👥 Utilisateurs | ✅ Livré | CRUD complet (ADMIN) + téléphone obligatoire/unique + protection dernier admin |
-| 👨‍👩‍👧 Parents | ✅ Livré | Rattachement compte PARENT ↔ élèves, recherche par numéro/nom/matricule (ADMIN) |
+| 🖨️ Rapports | 🔄 v1 exploratoire | États financiers/statistiques, paiements, passages — export PDF/Excel (GESTIONNAIRE/CAISSIER/ADMIN) |
+| 👥 Utilisateurs | ✅ Livré | CRUD complet (ADMIN) + recherche (email/nom/prénom/téléphone) + filtres rôle/statut/date de création + téléphone obligatoire/unique + protection dernier admin |
+| 👨‍👩‍👧 Parents | ✅ Livré | Rattachement compte PARENT ↔ élèves (ADMIN), recherche par email sur la liste, sélection assistée par numéro/nom/matricule dans le formulaire |
 | ⚙️ Configuration | ✅ Livré | Paramètres tarifs et période de grâce |
 | 🎨 Thèmes UI | ✅ Livré | 3 thèmes switchables persistés en localStorage |
 

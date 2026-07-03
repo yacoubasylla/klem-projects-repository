@@ -13,6 +13,7 @@ import RestaurantIcon     from '@mui/icons-material/Restaurant'
 import PaymentsIcon       from '@mui/icons-material/Payments'
 import QrCodeScannerIcon  from '@mui/icons-material/QrCodeScanner'
 import HistoryIcon        from '@mui/icons-material/History'
+import AssessmentIcon     from '@mui/icons-material/Assessment'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import TuneIcon           from '@mui/icons-material/Tune'
 import LogoutIcon         from '@mui/icons-material/Logout'
@@ -33,6 +34,7 @@ const NAV_ITEMS = [
   { label: 'Paiements',       icon: <PaymentsIcon />,       path: '/paiements',      roles: null },
   { label: 'Scan Réfectoire', icon: <QrCodeScannerIcon />,  path: '/scan',           roles: STAFF_ROLES },
   { label: 'Historique',      icon: <HistoryIcon />,        path: '/passages',       roles: null },
+  { label: 'Rapports',        icon: <AssessmentIcon />,     path: '/rapports',       roles: STAFF_ROLES },
   { label: 'Utilisateurs',    icon: <ManageAccountsIcon />, path: '/utilisateurs',   roles: ['ADMIN'] },
   { label: 'Parents',         icon: <FamilyRestroomIcon />, path: '/parents',        roles: ['ADMIN'] },
   { label: 'Configuration',   icon: <TuneIcon />,           path: '/configuration',  roles: ['ADMIN'] },

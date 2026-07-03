@@ -1,6 +1,6 @@
 # Cahier de Recette — Cantine Connect
 
-> Scénarios de validation fonctionnelle (UAT), organisés par module. Statut au 2026-07-01.
+> Scénarios de validation fonctionnelle (UAT), organisés par module. Statut au 2026-07-03.
 > Complète `collaboration/ROADMAP.md` (tests techniques par endpoint) avec une vue orientée métier/parcours utilisateur.
 
 **Légende** : ✅ Validé · 🔲 À valider
@@ -77,6 +77,7 @@
 | 6.2 | Recherche sur un terme absent de la base | 0 résultat, message « Aucune transaction » | ✅ |
 | 6.3 | Combiner recherche élève + filtre statut | Résultats correctement combinés | ✅ |
 | 6.4 | Cliquer sur « CSV » avec des résultats affichés | Fichier `paiements_AAAA-MM-JJ.csv` téléchargé (date, élève, opérateur, montant, téléphone, statut, référence) | ✅ |
+| 6.5 | Filtrer par plage de dates (Date début/fin) et par opérateur, seuls ou combinés au statut/recherche élève (2026-07-03) | Résultats correctement combinés côté serveur | ✅ |
 
 ---
 
@@ -89,12 +90,48 @@
 
 ---
 
-## 8. Non-régression
+## 8. Rapports — v1 exploratoire (2026-07-03)
 
 | # | Scénario | Résultat attendu | Statut |
 |---|----------|-------------------|--------|
-| 8.1 | Suite de tests backend (`./mvnw test`) | 24/24 tests passent | ✅ |
-| 8.2 | Build frontend (`npm run build`) | Compile sans erreur | ✅ |
-| 8.3 | Lint frontend (`npx eslint src/`) | Aucune nouvelle erreur par rapport à la base de référence | ✅ |
-| 8.4 | Compte ADMIN peut toujours gérer Établissements, Élèves, Scan, Utilisateurs, Parents, Configuration sans restriction | Accès complet conservé | ✅ |
-| 8.5 | Comptes GESTIONNAIRE et CAISSIER conservent l'accès à Établissements, Élèves, Scan, Paiements, Passages | Accès complet conservé (seuls Utilisateurs/Parents/Configuration restent ADMIN uniquement) | ✅ |
+| 8.1 | GESTIONNAIRE, CAISSIER et ADMIN → menu « Rapports » visible et accessible | ✅ |
+| 8.2 | PARENT → menu « Rapports » absent, navigation directe vers `/rapports` → redirection `/dashboard` | ✅ |
+| 8.3 | Choisir une période, cliquer « Générer le rapport » → onglets Résumé/Paiements/Passages peuplés | ✅ |
+| 8.4 | Onglet Résumé : montant encaissé, compteurs par statut de paiement, compteurs par résultat de passage, taux d'accès | ✅ |
+| 8.5 | « Exporter Excel » → fichier `rapport_<dateDebut>_<dateFin>.xlsx` téléchargé, 3 feuilles, données vérifiées | ✅ |
+| 8.6 | « Imprimer / PDF » sur chaque onglet → `window.print()` déclenché | ✅ |
+| 8.7 | Filtre Établissement → restreint uniquement les passages du rapport | ✅ |
+
+---
+
+## 9. Utilisateurs — recherche et filtres (2026-07-03)
+
+| # | Scénario | Résultat attendu | Statut |
+|---|----------|-------------------|--------|
+| 9.1 | Rechercher un compte par email | Liste filtrée côté serveur | ✅ |
+| 9.2 | Filtrer par rôle | Liste restreinte au rôle sélectionné | ✅ |
+| 9.3 | Filtrer par statut (Actif/Inactif) | Liste restreinte au statut sélectionné | ✅ |
+| 9.4 | Filtrer par plage de dates de création (Créé depuis/jusqu'au) | Liste restreinte à la plage | ✅ |
+| 9.5 | Combiner recherche + rôle + statut + dates | Filtres cumulés correctement côté serveur | ✅ |
+| 9.6 | Sélecteur de compte parent (page Parents) ne propose toujours que des comptes PARENT actifs | Comportement inchangé après le refactoring du filtre rôle | ✅ |
+
+---
+
+## 10. Parents — recherche par email (2026-07-03)
+
+| # | Scénario | Résultat attendu | Statut |
+|---|----------|-------------------|--------|
+| 10.1 | Rechercher un compte parent par email exact ou partiel | Liste filtrée côté serveur | ✅ |
+| 10.2 | Recherche sur un email absent de la base | 0 résultat, message « Aucun compte parent enregistré » | ✅ |
+
+---
+
+## 11. Non-régression
+
+| # | Scénario | Résultat attendu | Statut |
+|---|----------|-------------------|--------|
+| 11.1 | Suite de tests backend (`./mvnw test`) | 38/38 tests passent | ✅ |
+| 11.2 | Build frontend (`npm run build`) | Compile sans erreur | ✅ |
+| 11.3 | Lint frontend (`npx eslint src/`) | Aucune nouvelle erreur par rapport à la base de référence | ✅ |
+| 11.4 | Compte ADMIN peut toujours gérer Établissements, Élèves, Scan, Utilisateurs, Parents, Configuration sans restriction | Accès complet conservé | ✅ |
+| 11.5 | Comptes GESTIONNAIRE et CAISSIER conservent l'accès à Établissements, Élèves, Scan, Paiements, Passages | Accès complet conservé (seuls Utilisateurs/Parents/Configuration restent ADMIN uniquement) | ✅ |

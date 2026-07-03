@@ -945,3 +945,21 @@
   - `pages/parents/ParentsPage.jsx` — champ « Recherche par email parent »
 - **Effet de bord corrigé (régression évitée) :** le filtrage par rôle sur `GET /utilisateurs` masquait auparavant silencieusement les comptes inactifs (`u.actif = true` codé en dur dans l'ancienne requête). Le sélecteur de compte PARENT du formulaire de la page Parents (`utilisateurService.lister({ role: 'PARENT', ... })`) s'appuyait sur ce comportement implicite pour ne proposer que des comptes actifs — corrigé en passant désormais `actif: true` explicitement depuis `ParentsPage.jsx`, pour ne pas dépendre d'un effet de bord caché dans le repository.
 - **Tests validés :** `./mvnw test` (38/38, aucune régression) ✅ · `npm run build` ✅ · lint sans régression (mêmes erreurs pré-existantes `react-hooks/set-state-in-effect`, aucune nouvelle) ; vérification Playwright bout-en-bout (dev server + backend local) : recherche email + rôle + statut + date cumulés → requêtes réseau `GET /utilisateurs?search=...&role=CAISSIER&actif=true&dateDebut=...` confirmées, résultat filtré correct ; recherche email parent avec et sans correspondance (compte de test créé/supprimé en DB dev) → liste filtrée correctement dans les deux cas.
+
+---
+
+### [2026-07-03] - Feat : Module Rapports (v1 exploratoire) — États Financiers/Statistiques, Paiements, Passages — Export PDF/Excel
+
+- **Statut :** Livré / Opérationnel — première version explicitement exploratoire, destinée à recueillir des retours avant évolution avec le client
+- **Contexte :** Demande d'un module de reporting réservé à GESTIONNAIRE/CAISSIER pour imprimer en PDF ou Excel des états financiers/statistiques, l'état des passages et l'état des paiements. Décisions de cadrage validées avec l'utilisateur : accès étendu à ADMIN (cohérent avec Paiements/Scan/Historique, déjà ouverts aux 3 rôles staff) ; génération 100% côté navigateur pour cette v1 (aucune nouvelle dépendance backend) — voir ADR-016.
+- **Fichiers Créés :**
+  - `client-frontend/src/hooks/useRapports.js` — récupère « toutes » les pages de `GET /paiements` et `GET /passages` sur la période choisie (garde-fou 50 pages / 10 000 lignes), calcule les agrégats (montant encaissé, compteurs par statut/résultat, taux d'accès) côté client
+  - `client-frontend/src/services/rapportExportService.js` — export Excel via `exceljs` (3 feuilles : Résumé, Paiements, Passages)
+  - `client-frontend/src/pages/rapports/RapportsPage.jsx` — filtres (dates + établissement), 3 onglets (Résumé / Paiements / Passages), bouton « Générer le rapport », export Excel global, impression/PDF par onglet via `window.print()` scoppé à une zone imprimable (`GlobalStyles` + classe `.print-area`, même principe que l'impression déjà utilisée pour les QR codes élèves)
+  - `collaboration/history/adr/2026-07-03-module-rapports-generation-navigateur-exceljs.md` (ADR-016)
+- **Fichiers Modifiés :**
+  - `client-frontend/src/App.jsx` — route `/rapports` enveloppée dans `StaffRoute` (bloque uniquement PARENT, comme Établissements/Élèves/Scan)
+  - `client-frontend/src/layouts/MainLayout.jsx` — item de navigation « Rapports » (`AssessmentIcon`, `STAFF_ROLES`)
+  - `client-frontend/package.json` — ajout `exceljs` ; **`xlsx`/SheetJS explicitement écarté** (dernière version publiée sur npm — `0.18.5` — non patchée face à 2 vulnérabilités connues, correctifs SheetJS distribués uniquement via leur CDN propre, hors npm)
+- **Description :** Aucune modification backend — les endpoints `GET /paiements`/`GET /passages` déjà sécurisés (restriction PARENT en place côté service) sont réutilisés tels quels ; le module est simplement bloqué au niveau route/menu pour PARENT. Les statistiques (montant encaissé, taux d'accès, compteurs par statut/résultat) sont recalculées côté client à partir des données récupérées plutôt que par une requête d'agrégation SQL dédiée — suffisant pour la volumétrie pilote.
+- **Tests validés :** `npm run build` ✅ · lint sans nouvelle erreur sur les fichiers créés/modifiés ; vérification Playwright bout-en-bout (dev server + backend local) pour les 4 rôles : GESTIONNAIRE/CAISSIER/ADMIN → accès complet (génération, 3 onglets peuplés, `window.print()` déclenché, export Excel téléchargé et contenu vérifié — 3 feuilles, données exactes) ; PARENT → item de menu absent, navigation directe vers `/rapports` redirigée automatiquement vers `/dashboard`.

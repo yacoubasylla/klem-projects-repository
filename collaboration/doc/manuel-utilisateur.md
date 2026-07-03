@@ -35,11 +35,12 @@ Chaque compte utilisateur doit avoir un **numéro de cellulaire unique** (obliga
 | Paiements — modifier/supprimer | ✅ | ❌ | ❌ | ❌ |
 | Scan Réfectoire | ✅ | ✅ | ✅ | ❌ masqué |
 | Historique des Passages | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
+| Rapports (v1 exploratoire) | ✅ | ✅ | ✅ | ❌ masqué |
 | Utilisateurs | ✅ | ❌ | ❌ | ❌ |
 | Parents (liaison enfants) | ✅ | ❌ | ❌ | ❌ |
 | Configuration | ✅ | ❌ | ❌ | ❌ |
 
-Ces restrictions sont appliquées **côté serveur** (`@PreAuthorize`, filtrage des requêtes en base) — masquer un menu côté navigateur ne suffirait pas à protéger les données ; un parent qui interrogerait directement l'API resterait bloqué.
+Ces restrictions sont appliquées **côté serveur** (`@PreAuthorize`, filtrage des requêtes en base) — masquer un menu côté navigateur ne suffirait pas à protéger les données ; un parent qui interrogerait directement l'API resterait bloqué. *Exception : le module Rapports lui-même n'a pas d'endpoint dédié — il réutilise `GET /paiements`/`GET /passages`, déjà protégés (un PARENT y reste limité à ses enfants) ; seul l'accès à la page `/rapports` est filtré côté navigateur (menu masqué + redirection automatique).*
 
 ---
 
@@ -74,7 +75,7 @@ Vue d'ensemble : nombre d'élèves, répartition par statut d'accès, paiements 
 - **ADMIN / GESTIONNAIRE / CAISSIER** : voient toutes les transactions, peuvent initier un paiement pour n'importe quel élève (recherche par nom/prénom/matricule). L'ADMIN seul peut modifier ou supprimer une transaction.
 - **PARENT** : ne voit que les paiements de ses propres enfants ; le sélecteur d'élève du dialogue « Initier un paiement » ne propose que ses enfants (pas de recherche libre parmi tous les élèves).
 - Opérateurs supportés : Orange Money, MTN Money, Moov Money, Wave.
-- **Recherche** par nom/prénom/matricule de l'élève ; filtres par statut (En attente / Accepté / Refusé / Annulé).
+- **Recherche** par nom/prénom/matricule de l'élève ; filtres par statut (En attente / Accepté / Refusé / Annulé), par plage de dates (Date début/fin) et par opérateur Mobile Money — tous cumulables.
 - **Export CSV** de la page courante.
 - Une tentative d'initier un paiement pour un élève qui n'est pas son enfant est refusée par le serveur (403).
 
@@ -103,19 +104,36 @@ Vue d'ensemble : nombre d'élèves, répartition par statut d'accès, paiements 
 - Modification, changement de rôle inline, désactivation/réactivation, suppression définitive.
 - Impossible de désactiver ou supprimer le dernier compte ADMIN du système.
 - Impossible de désactiver/supprimer son propre compte.
+- **Recherche** par email, nom, prénom ou téléphone ; filtres par rôle, statut (Actif/Inactif) et plage de dates de création — tous cumulables.
 
 ---
 
 ## 10. Parents (ADMIN uniquement)
 
 - Associe un compte utilisateur de rôle PARENT à un ou plusieurs élèves.
-- **Sélection du compte parent** : recherche par numéro de cellulaire, nom ou prénom (le compte PARENT doit déjà exister — le créer d'abord dans « Utilisateurs »).
+- **Sélection du compte parent** (dans le formulaire) : recherche par numéro de cellulaire, nom ou prénom (le compte PARENT doit déjà exister — le créer d'abord dans « Utilisateurs »).
 - **Sélection des enfants** : recherche par matricule, nom ou prénom, sélection multiple.
 - Modification des enfants associés, suppression du lien (les élèves eux-mêmes ne sont pas supprimés).
+- **Recherche** sur la liste principale par email du compte parent.
 
 ---
 
-## 11. Configuration (ADMIN uniquement)
+## 11. Rapports (ADMIN / GESTIONNAIRE / CAISSIER) — v1 exploratoire
+
+> Première version, destinée à recueillir des retours avant amélioration avec le client. Non accessible au rôle PARENT.
+
+- Choisir une période (date début/fin) et, optionnellement, un établissement (filtre les passages uniquement), puis cliquer sur **« Générer le rapport »**.
+- Trois onglets une fois le rapport généré :
+  - **Résumé** : montant total encaissé, répartition des paiements par statut, répartition des passages par résultat, taux d'accès.
+  - **Paiements** : liste détaillée des transactions de la période.
+  - **Passages** : liste détaillée des passages réfectoire de la période.
+- **Exporter Excel** : télécharge un classeur `.xlsx` à 3 feuilles (Résumé / Paiements / Passages) couvrant toute la période sélectionnée.
+- **Imprimer / PDF** (par onglet) : ouvre la boîte de dialogue d'impression du navigateur, limitée au contenu de l'onglet actif — utiliser « Enregistrer au format PDF » pour obtenir un fichier PDF.
+- Sur une période très volumineuse, un avertissement s'affiche si le rapport a dû être tronqué (au-delà de 10 000 lignes) : réduire la plage de dates dans ce cas.
+
+---
+
+## 12. Configuration (ADMIN uniquement)
 
 - Activation/désactivation des notifications email et SMS.
 - Activation/désactivation du rafraîchissement automatique du cache hors-ligne (Scan Réfectoire) — activé par défaut.
@@ -124,6 +142,6 @@ Vue d'ensemble : nombre d'élèves, répartition par statut d'accès, paiements 
 
 ---
 
-## 12. Support
+## 13. Support
 
 **KLEM Technologies & Services** — 📞 +225 07 58 89 24 77 · 📧 infos@klemtech.net

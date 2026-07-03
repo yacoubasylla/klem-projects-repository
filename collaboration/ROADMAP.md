@@ -233,6 +233,7 @@
 | 5 | Soumission → transaction créée statut EN_ATTENTE + paymentUrl affiché | ✅ |
 | 6 | paymentUrl cliquable → lien CinetPay checkout dans un onglet | ✅ |
 | 7 | Skeletons MUI pendant chargement, bouton rafraîchir | ✅ |
+| 8 | Filtres Date début/fin + Opérateur cumulables avec statut et recherche élève (2026-07-03) | ✅ |
 
 ---
 
@@ -265,6 +266,7 @@
 | 5 | Désactiver → HTTP 204 → login → 401 UNAUTHORIZED | ✅ |
 | 6 | GESTIONNAIRE accède /utilisateurs → 403 FORBIDDEN | ✅ |
 | 7 | Row "(vous)" + bouton Désactiver désactivé pour l'utilisateur connecté | ✅ |
+| 8 | Bandeau de filtres (recherche email/nom/prénom/téléphone, rôle, statut, date de création) cumulables (2026-07-03) | ✅ |
 
 ---
 
@@ -280,6 +282,7 @@
 | 4 | `GET /api/v1/parents/moi` (PARENT) → retourne son profil + ses enfants | ✅ |
 | 5 | `PUT /api/v1/parents/{id}/enfants` → modifie la liste des enfants associés | ✅ |
 | 6 | Tentative de création sans compte PARENT existant → message explicite | ✅ |
+| 7 | `GET /api/v1/parents?search=` → filtre la liste principale par email du compte parent (2026-07-03) | ✅ |
 
 ---
 
@@ -300,6 +303,22 @@
 
 ---
 
+### 🔄 F-11 · Module Rapports (v1 exploratoire, 2026-07-03)
+**Périmètre :** États financiers/statistiques, paiements, passages — export PDF/Excel, réservé GESTIONNAIRE/CAISSIER/ADMIN
+**Fichiers clés :** `hooks/useRapports.js`, `services/rapportExportService.js`, `pages/rapports/RapportsPage.jsx` — voir ADR-016
+
+| # | Test de validation | Résultat |
+|---|-------------------|----------|
+| 1 | GESTIONNAIRE/CAISSIER/ADMIN → menu « Rapports » visible, accès à `/rapports` | ✅ |
+| 2 | PARENT → item de menu absent, navigation directe vers `/rapports` redirigée `/dashboard` | ✅ |
+| 3 | « Générer le rapport » → onglets Résumé/Paiements/Passages peuplés à partir de la période choisie | ✅ |
+| 4 | Onglet Résumé : montant encaissé, compteurs par statut, taux d'accès corrects | ✅ |
+| 5 | « Exporter Excel » → fichier `.xlsx` téléchargé, 3 feuilles (Résumé/Paiements/Passages), contenu vérifié | ✅ |
+| 6 | « Imprimer / PDF » par onglet → `window.print()` déclenché, zone imprimable isolée du reste de l'UI | ✅ |
+| 7 | Filtre Établissement restreint les passages du rapport | ✅ |
+
+---
+
 ## Récapitulatif de progression
 
 | Module | Backend | Frontend | Priorité |
@@ -316,8 +335,9 @@
 | B-08 / F-08 Utilisateurs | ✅ | ✅ | ✅ Livré |
 | B-09 / F-09 Parents | ✅ | ✅ | ✅ Livré |
 | B-10 / F-10 RBAC PARENT | ✅ | ✅ | ✅ Livré |
+| F-11 Rapports | — | 🔄 | 🔄 v1 exploratoire |
 
-**Avancement global : 18/18 modules livrés (100%) 🎉**
+**Avancement global : 18/18 modules cœur livrés (100%) 🎉 + 1 module exploratoire (Rapports)**
 
 ---
 

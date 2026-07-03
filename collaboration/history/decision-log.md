@@ -139,3 +139,12 @@
 - **Contexte** : Après le correctif ADR-014, la latence restait sévère (12-42s). `railway metrics --json` a montré un CPU quasiment inutilisé (0%) mais une mémoire maximale (1099 Mo) dépassant la limite du conteneur (1024 Mo), avec des P50/P90/P95/P99 HTTP uniformément à ~13,9s — signature d'une pression mémoire extrême, pas d'un problème CPU ou de requêtes. Aucune borne explicite n'existait pour le tas JVM, le Metaspace (croissance non bornée par défaut) ou les piles de threads Tomcat (200 threads × ~1 Mo par défaut).
 - **Alternative envisagée** : Augmenter le plan Railway — décision budgétaire de l'utilisateur, pas un correctif de code ; recommandée comme prochaine étape si la latence persiste après ce tuning.
 - **Fichier ADR** : `adr/2026-07-01-fix-memoire-conteneur-railway.md`
+
+---
+
+### ADR-016 · Module Rapports — Génération Côté Navigateur, `exceljs` au lieu de `xlsx`/SheetJS
+- **Statut** : Accepté — 2026-07-03
+- **Décision** : Première version du module Rapports (GESTIONNAIRE/CAISSIER/ADMIN, exclu pour PARENT) générée entièrement côté navigateur — Excel via `exceljs`, PDF via `window.print()` scoppé à une zone imprimable. Aucun nouvel endpoint backend ; réutilisation de `GET /paiements` et `GET /passages` déjà sécurisés, avec pagination automatique côté client (garde-fou 10 000 lignes).
+- **Contexte** : Aucune infrastructure PDF/Excel n'existait dans le projet. `xlsx` (SheetJS) — bibliothèque JS de référence pour Excel — n'a plus été patché sur le registre npm depuis la version `0.18.5`, qui contient deux vulnérabilités connues sans correctif disponible (Prototype Pollution, ReDoS) ; les versions corrigées de SheetJS ne sont distribuées que via leur propre CDN, hors npm.
+- **Alternative rejetée** : `xlsx`/SheetJS — écarté uniquement pour la raison de sécurité ci-dessus, malgré sa popularité ; génération côté serveur (OpenPDF/Apache POI) — écartée pour cette v1 exploratoire, plus coûteuse à livrer et nécessitant de paramétrer en dates les agrégations aujourd'hui figées sur « aujourd'hui »/« ce mois » dans `DashboardService`.
+- **Fichier ADR** : `adr/2026-07-03-module-rapports-generation-navigateur-exceljs.md`
