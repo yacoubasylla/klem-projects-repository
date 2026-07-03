@@ -910,3 +910,18 @@
   - `client-frontend/src/pages/configuration/ConfigurationPage.jsx` — `ToggleRow`, `TextRow` et le bloc « Mode d'accès cantine » : `minWidth` fixes remplacés par des largeurs responsives (`width: { xs: '100%', sm: 300|360 }`) ; ajout de `minWidth: 0` sur les `Box` de contenu ; `Stack` interne (champ + bouton) empilée en colonne sous `sm` ; description `Typography` avec `wordBreak: 'break-word'` et `maxWidth` responsive ; aperçu de l'image de fond plafonné à `maxWidth: '100%'` pour ne pas déborder avec une image très large
 - **Description :** Comportement desktop inchangé (vérifié par capture à 1280px) ; sur mobile, les champs passent en pleine largeur et le bouton « Enregistrer » se place sous le champ plutôt qu'à côté.
 - **Tests validés :** `npm run build` ✅ · lint sans régression ; vérification Playwright à 375px/600px/1280px : `document.documentElement.scrollWidth === clientWidth` à chaque largeur (aucun débordement) ; reproduction avec une vraie URL d'image de fond (aperçu affiché) → toujours aucun débordement à 375px.
+
+---
+
+### [2026-07-03] - Feat Paiements : Filtres Date et Opérateur dans la Recherche
+
+- **Statut :** Livré / Opérationnel
+- **Contexte :** La page Paiements ne filtrait que par statut (chips) et recherche élève (nom/prénom/matricule) — pas de moyen de restreindre par plage de dates ou par opérateur Mobile Money, contrairement à l'Historique des Passages qui dispose déjà d'un filtre de dates. Filtres appliqués côté serveur (pas seulement sur la page courante) pour rester cohérents avec la pagination.
+- **Fichiers Modifiés (Backend) :**
+  - `paiement/repository/TransactionPaiementRepository.java` — `findAllWithFilters`/`findAllWithFiltersForEleves` étendues avec `operateur` (`CAST(:operateur AS varchar)`, même pattern ADR-007/010/013) et `dateDebut`/`dateFin` (`CAST(:param AS date)`, comparaison sur `t.date_creation` avec borne haute `+ INTERVAL '1 day'` pour inclure la journée de fin)
+  - `paiement/service/PaiementService.java` — `lister()` accepte `OperateurMobileMoney operateur`, `LocalDate dateDebut`, `LocalDate dateFin`, transmis aux deux variantes de requête (chemin normal et chemin restreint PARENT)
+  - `paiement/controller/PaiementController.java` — `GET /paiements` accepte les paramètres optionnels `operateur`, `dateDebut`, `dateFin` (`@DateTimeFormat(iso = DATE)`)
+- **Fichiers Modifiés (Frontend) :**
+  - `pages/paiements/PaiementsPage.jsx` — ajout de deux `TextField type="date"` (Date début/Date fin, mêmes largeurs responsives que Historique des Passages) et d'un `TextField select` Opérateur (réutilise la liste `OPERATEURS` déjà utilisée par le dialogue Initier/Modifier) dans le bandeau de filtres, avant les chips de statut
+- **Description :** Aucune migration nécessaire (colonnes `operateur`/`date_creation` déjà indexées ou natives). Comportement identique au filtre existant : chaque changement remet `page` à 0.
+- **Tests validés :** `./mvnw test` (38/38, aucune régression) ✅ · `npm run build` ✅ · lint sans régression (mêmes 4 problèmes pré-existants, aucun nouveau) ; vérification Playwright bout-en-bout (dev server + backend local) : sélection Opérateur → requête réseau `GET /paiements?operateur=ORANGE_MONEY...` confirmée ; ajout Date début → requête `...&dateDebut=2026-07-01...` confirmée ; combinaison des deux filtres → liste restreinte au résultat attendu.

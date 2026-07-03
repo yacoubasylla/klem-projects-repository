@@ -9,6 +9,7 @@ import com.klem.cantine.paiement.config.PaiementProperties;
 import com.klem.cantine.paiement.dto.InitierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.ModifierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.PaiementResponseDTO;
+import com.klem.cantine.paiement.entity.OperateurMobileMoney;
 import com.klem.cantine.paiement.entity.StatutPaiement;
 import com.klem.cantine.paiement.entity.TransactionPaiement;
 import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
@@ -23,6 +24,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,9 +70,12 @@ public class PaiementService {
         return PaiementResponseDTO.from(transaction, paymentUrl);
     }
 
-    public Page<PaiementResponseDTO> lister(Long eleveId, StatutPaiement statut, String search, Pageable pageable, Utilisateur principal) {
+    public Page<PaiementResponseDTO> lister(Long eleveId, StatutPaiement statut, OperateurMobileMoney operateur,
+                                             LocalDate dateDebut, LocalDate dateFin, String search,
+                                             Pageable pageable, Utilisateur principal) {
         String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
         String statutParam = statut != null ? statut.name() : null;
+        String operateurParam = operateur != null ? operateur.name() : null;
         // Les requêtes natives ci-dessous fixent déjà leur propre ORDER BY (t.date_creation) ;
         // repasser le Sort du Pageable ferait que Spring Data l'ajoute tel quel en SQL
         // (ex. "dateCreation" au lieu de "date_creation") et casse la requête.
@@ -83,10 +88,12 @@ public class PaiementService {
             if (enfantIds.isEmpty()) {
                 return Page.empty(pageable);
             }
-            return transactionRepository.findAllWithFiltersForEleves(enfantIds, eleveId, statutParam, searchParam, unsorted)
+            return transactionRepository.findAllWithFiltersForEleves(
+                            enfantIds, eleveId, statutParam, operateurParam, dateDebut, dateFin, searchParam, unsorted)
                     .map(PaiementResponseDTO::from);
         }
-        return transactionRepository.findAllWithFilters(eleveId, statutParam, searchParam, unsorted)
+        return transactionRepository.findAllWithFilters(
+                        eleveId, statutParam, operateurParam, dateDebut, dateFin, searchParam, unsorted)
                 .map(PaiementResponseDTO::from);
     }
 

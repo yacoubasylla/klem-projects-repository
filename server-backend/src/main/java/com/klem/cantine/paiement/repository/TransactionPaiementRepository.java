@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
             JOIN eleves e ON e.id = t.eleve_id
             WHERE (CAST(:eleveId AS bigint) IS NULL OR e.id = CAST(:eleveId AS bigint))
               AND (CAST(:statut AS varchar) IS NULL OR t.statut = CAST(:statut AS varchar))
+              AND (CAST(:operateur AS varchar) IS NULL OR t.operateur = CAST(:operateur AS varchar))
+              AND (CAST(:dateDebut AS date) IS NULL OR t.date_creation >= CAST(:dateDebut AS date))
+              AND (CAST(:dateFin AS date) IS NULL OR t.date_creation < CAST(:dateFin AS date) + INTERVAL '1 day')
               AND (CAST(:search AS varchar) IS NULL
                    OR LOWER(e.nom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
                    OR LOWER(e.prenom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
@@ -41,6 +45,9 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
             JOIN eleves e ON e.id = t.eleve_id
             WHERE (CAST(:eleveId AS bigint) IS NULL OR e.id = CAST(:eleveId AS bigint))
               AND (CAST(:statut AS varchar) IS NULL OR t.statut = CAST(:statut AS varchar))
+              AND (CAST(:operateur AS varchar) IS NULL OR t.operateur = CAST(:operateur AS varchar))
+              AND (CAST(:dateDebut AS date) IS NULL OR t.date_creation >= CAST(:dateDebut AS date))
+              AND (CAST(:dateFin AS date) IS NULL OR t.date_creation < CAST(:dateFin AS date) + INTERVAL '1 day')
               AND (CAST(:search AS varchar) IS NULL
                    OR LOWER(e.nom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
                    OR LOWER(e.prenom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
@@ -49,7 +56,8 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
            nativeQuery = true)
     Page<TransactionPaiement> findAllWithFilters(
             @Param("eleveId") Long eleveId, @Param("statut") String statut,
-            @Param("search") String search, Pageable pageable);
+            @Param("operateur") String operateur, @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin, @Param("search") String search, Pageable pageable);
 
     @Query(value = """
             SELECT t.* FROM transactions_paiement t
@@ -57,6 +65,9 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
             WHERE e.id IN (:eleveIds)
               AND (CAST(:eleveId AS bigint) IS NULL OR e.id = CAST(:eleveId AS bigint))
               AND (CAST(:statut AS varchar) IS NULL OR t.statut = CAST(:statut AS varchar))
+              AND (CAST(:operateur AS varchar) IS NULL OR t.operateur = CAST(:operateur AS varchar))
+              AND (CAST(:dateDebut AS date) IS NULL OR t.date_creation >= CAST(:dateDebut AS date))
+              AND (CAST(:dateFin AS date) IS NULL OR t.date_creation < CAST(:dateFin AS date) + INTERVAL '1 day')
               AND (CAST(:search AS varchar) IS NULL
                    OR LOWER(e.nom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
                    OR LOWER(e.prenom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
@@ -69,6 +80,9 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
             WHERE e.id IN (:eleveIds)
               AND (CAST(:eleveId AS bigint) IS NULL OR e.id = CAST(:eleveId AS bigint))
               AND (CAST(:statut AS varchar) IS NULL OR t.statut = CAST(:statut AS varchar))
+              AND (CAST(:operateur AS varchar) IS NULL OR t.operateur = CAST(:operateur AS varchar))
+              AND (CAST(:dateDebut AS date) IS NULL OR t.date_creation >= CAST(:dateDebut AS date))
+              AND (CAST(:dateFin AS date) IS NULL OR t.date_creation < CAST(:dateFin AS date) + INTERVAL '1 day')
               AND (CAST(:search AS varchar) IS NULL
                    OR LOWER(e.nom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
                    OR LOWER(e.prenom) LIKE LOWER(CONCAT('%', CAST(:search AS varchar), '%'))
@@ -77,7 +91,9 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
            nativeQuery = true)
     Page<TransactionPaiement> findAllWithFiltersForEleves(
             @Param("eleveIds") List<Long> eleveIds, @Param("eleveId") Long eleveId,
-            @Param("statut") String statut, @Param("search") String search, Pageable pageable);
+            @Param("statut") String statut, @Param("operateur") String operateur,
+            @Param("dateDebut") LocalDate dateDebut, @Param("dateFin") LocalDate dateFin,
+            @Param("search") String search, Pageable pageable);
 
     long countByStatut(StatutPaiement statut);
 

@@ -5,6 +5,7 @@ import com.klem.cantine.common.ApiResponse;
 import com.klem.cantine.paiement.dto.InitierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.ModifierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.PaiementResponseDTO;
+import com.klem.cantine.paiement.entity.OperateurMobileMoney;
 import com.klem.cantine.paiement.entity.StatutPaiement;
 import com.klem.cantine.paiement.service.PaiementService;
 import jakarta.validation.Valid;
@@ -12,11 +13,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/paiements")
@@ -38,10 +42,14 @@ public class PaiementController {
     public ResponseEntity<ApiResponse<Page<PaiementResponseDTO>>> lister(
             @RequestParam(required = false) Long eleveId,
             @RequestParam(required = false) StatutPaiement statut,
+            @RequestParam(required = false) OperateurMobileMoney operateur,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin,
             @RequestParam(required = false) String search,
             @PageableDefault(size = 20, sort = "dateCreation") Pageable pageable,
             @AuthenticationPrincipal Utilisateur principal) {
-        return ResponseEntity.ok(ApiResponse.ok(paiementService.lister(eleveId, statut, search, pageable, principal)));
+        return ResponseEntity.ok(ApiResponse.ok(
+                paiementService.lister(eleveId, statut, operateur, dateDebut, dateFin, search, pageable, principal)));
     }
 
     @GetMapping("/{id}")

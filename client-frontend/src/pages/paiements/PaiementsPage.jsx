@@ -344,8 +344,11 @@ function ModifierDialog({ paiement, onClose, onSubmit }) {
 // ── Page principale ───────────────────────────────────────────────────────────
 
 export default function PaiementsPage() {
-  const [statutFiltre, setStatutFiltre] = useState('')
-  const [searchFiltre, setSearchFiltre] = useState('')
+  const [statutFiltre,    setStatutFiltre]    = useState('')
+  const [operateurFiltre, setOperateurFiltre] = useState('')
+  const [dateDebut,       setDateDebut]       = useState('')
+  const [dateFin,         setDateFin]         = useState('')
+  const [searchFiltre,    setSearchFiltre]    = useState('')
   const [dialogOpen,   setDialogOpen]   = useState(false)
   const [editTarget,   setEditTarget]   = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
@@ -357,6 +360,9 @@ export default function PaiementsPage() {
 
   const filtres = {}
   if (statutFiltre) filtres.statut = statutFiltre
+  if (operateurFiltre) filtres.operateur = operateurFiltre
+  if (dateDebut) filtres.dateDebut = dateDebut
+  if (dateFin) filtres.dateFin = dateFin
   if (searchFiltre.trim()) filtres.search = searchFiltre.trim()
 
   const {
@@ -414,6 +420,46 @@ export default function PaiementsPage() {
             onChange={(e) => { setSearchFiltre(e.target.value); setPage(0) }}
             sx={{ minWidth: { xs: '100%', sm: 220 }, flex: 1 }}
           />
+
+          <TextField
+            label="Date début"
+            type="date"
+            size="small"
+            value={dateDebut}
+            onChange={(e) => { setDateDebut(e.target.value); setPage(0) }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={{ minWidth: { xs: '100%', sm: 160 } }}
+          />
+
+          <TextField
+            label="Date fin"
+            type="date"
+            size="small"
+            value={dateFin}
+            onChange={(e) => { setDateFin(e.target.value); setPage(0) }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={{ minWidth: { xs: '100%', sm: 160 } }}
+          />
+
+          <TextField
+            select
+            label="Opérateur"
+            size="small"
+            value={operateurFiltre}
+            onChange={(e) => { setOperateurFiltre(e.target.value); setPage(0) }}
+            sx={{ minWidth: { xs: '100%', sm: 170 } }}
+          >
+            <MenuItem value="">Tous les opérateurs</MenuItem>
+            {OPERATEURS.map((op) => (
+              <MenuItem key={op.value} value={op.value}>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: op.color }} />
+                  <span>{op.label}</span>
+                </Stack>
+              </MenuItem>
+            ))}
+          </TextField>
+
           <Stack direction="row" spacing={1} flexWrap="wrap">
             {STATUTS.map((s) => (
               <Chip
