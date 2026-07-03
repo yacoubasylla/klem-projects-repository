@@ -963,3 +963,46 @@
   - `client-frontend/package.json` — ajout `exceljs` ; **`xlsx`/SheetJS explicitement écarté** (dernière version publiée sur npm — `0.18.5` — non patchée face à 2 vulnérabilités connues, correctifs SheetJS distribués uniquement via leur CDN propre, hors npm)
 - **Description :** Aucune modification backend — les endpoints `GET /paiements`/`GET /passages` déjà sécurisés (restriction PARENT en place côté service) sont réutilisés tels quels ; le module est simplement bloqué au niveau route/menu pour PARENT. Les statistiques (montant encaissé, taux d'accès, compteurs par statut/résultat) sont recalculées côté client à partir des données récupérées plutôt que par une requête d'agrégation SQL dédiée — suffisant pour la volumétrie pilote.
 - **Tests validés :** `npm run build` ✅ · lint sans nouvelle erreur sur les fichiers créés/modifiés ; vérification Playwright bout-en-bout (dev server + backend local) pour les 4 rôles : GESTIONNAIRE/CAISSIER/ADMIN → accès complet (génération, 3 onglets peuplés, `window.print()` déclenché, export Excel téléchargé et contenu vérifié — 3 feuilles, données exactes) ; PARENT → item de menu absent, navigation directe vers `/rapports` redirigée automatiquement vers `/dashboard`.
+
+---
+
+### [2026-07-03] - Docs : Ajout du Manuel Utilisateur Illustré (user-guide.docx) — Corrections de Rôles
+
+- **Statut :** Livré / Opérationnel
+- **Commit :** `c5564c4`
+- **Contexte :** `collaboration/doc/user-guide.docx` (version illustrée du manuel, captures d'écran réelles intégrées, 14 modules) existait sur le poste de travail depuis une session précédente mais n'avait jamais été commité — détecté en untracked à la reprise de session. Vérifié contre `manuel-utilisateur.md` (source de vérité texte) avant tout commit.
+- **Anomalies trouvées et corrigées dans le `.docx` (édition directe des runs XML via `python-docx`, LibreOffice headless indisponible pour un remplacement fiable multi-run) :**
+  - Modules Établissements, Élèves, Historique des Passages : rôle CAISSIER manquant dans l'encart « Rôles concernés » (n'affichait qu'ADMIN · GESTIONNAIRE).
+  - Module Parents : encart « Rôles concernés » et titre de section affichaient « GESTIONNAIRE » alors que la fonctionnalité est réservée à l'ADMIN (contradiction interne avec le corps du texte du même module, qui mentionne bien « l'administrateur »).
+- **Fichiers Créés :**
+  - `collaboration/doc/user-guide.docx`
+- **Description :** Aucune modification du contenu au-delà des 4 corrections de rôles ci-dessus — mise en page, captures d'écran et structure conservées à l'identique.
+- **Tests validés :** Extraction texte (LibreOffice headless `--convert-to txt`) et relecture croisée avec `manuel-utilisateur.md` avant et après correction ; vérification `python-docx` que les 4 tableaux de rôles concernés reflètent exactement la matrice CUD du `.md`.
+
+---
+
+### [2026-07-03] - Docs : Règle de Mise à Jour Obligatoire du Manuel (CLAUDE.md) + PDF Initial
+
+- **Statut :** Livré / Opérationnel
+- **Commit :** `667ce76`
+- **Contexte :** Demande explicite de l'utilisateur : à chaque livraison de fonctionnalité visible utilisateur, `user-guide.docx` doit être mis à jour (texte + captures si l'IHM change) puis reconverti en PDF, les deux commités et poussés dans la même session.
+- **Fichiers Modifiés :**
+  - `CLAUDE.md` (cantine-connect) — nouvelle règle n°5 sous « Règles Métier & Contraintes Spécifiques au Projet », avec la commande de conversion (`soffice --headless --convert-to pdf ...`) et le rappel de vérifier la cohérence des rôles contre `manuel-utilisateur.md`/`decision-log.md` avant de committer.
+- **Fichiers Créés :**
+  - `collaboration/doc/user-guide.pdf` — pendant PDF initial du `.docx` déjà commité (n'existait pas encore).
+- **Description :** Règle consignée dans `CLAUDE.md` (lu à chaque session via `/startup`) plutôt qu'en mémoire de session, pour qu'elle s'applique de façon durable à toute session future sur ce dépôt, humaine ou IA.
+
+---
+
+### [2026-07-03] - Docs : Réorganisation du Manuel Utilisateur selon l'Ordre du Menu Latéral
+
+- **Statut :** Livré / Opérationnel
+- **Commit :** `dfcf121`
+- **Contexte :** Demande de l'utilisateur : faire correspondre l'ordre de la table des matières et des sections de `user-guide.docx` à l'ordre réel des items du menu latéral (`client-frontend/src/layouts/MainLayout.jsx`) : Dashboard, Établissements, Élèves, Paiements, Scan Réfectoire, Historique, **Rapports**, Utilisateurs, Parents, Configuration.
+- **Diagnostic :** Seul le module Rapports était mal placé — en dernière position (§14) au lieu d'juste après Historique (§9), Rapports ayant été ajouté en fin de document lors de sa livraison plutôt qu'inséré à sa place logique dans le menu. Thèmes et À Propos (hors menu latéral, fonctionnalités globales de l'interface) restent à la fin, après Configuration, comme avant.
+- **Méthode :** Édition structurelle directe de l'arbre XML (`document.xml` via `python-docx`/`lxml`) plutôt qu'une reconversion depuis le Markdown (qui aurait perdu les captures d'écran) : déplacement du bloc de 22 éléments du corps du document (titre + tableau rôles + texte + captures + sous-sections 14.1–14.4) juste après la section Historique, renumérotation en cascade des sections 9→14 impactées (titres et sous-titres, en préservant la mise en forme des runs), et déplacement du seul paragraphe de table des matières concerné (la numérotation « 1. », « 2. »… de la table des matières est un champ de liste Word auto-calculé, pas du texte figé — aucune renumérotation manuelle nécessaire à cet endroit).
+- **Fichiers Modifiés :**
+  - `collaboration/doc/user-guide.docx`
+  - `collaboration/doc/user-guide.pdf` — reconverti à l'identique après réorganisation
+- **Description :** Contenu et captures d'écran strictement inchangés, seule la position et la numérotation du module Rapports (et le décalage en cascade des sections suivantes) ont changé.
+- **Tests validés :** Vérification `python-docx` avant/après : ordre de la table des matières et des titres `Heading 1`/`Heading 2` conforme à l'ordre cible ; nombre d'images intégrées identique (24 avant, 24 après) ; relecture de la numérotation en cascade (9→14) section par section.
