@@ -61,6 +61,11 @@ Toutes les commandes doivent être exécutées dans leurs dossiers respectifs[ci
     *   `feat(students): implement layout-optimized tabs form for pupil creation`[cite: 4]
     *   `fix(payments): correct wave webhook signature verification payload`[cite: 4]
     *   `docs(architecture): update relational schema for access logs`[cite: 4]
+5.  **Manuel Utilisateur (`collaboration/doc/user-guide.docx`) — Mise à jour obligatoire à chaque livraison de fonctionnalité :** Avant de clore toute tâche qui change un comportement visible par l'utilisateur (nouveau module, nouvelle règle métier, nouveau champ/filtre, changement de permission par rôle), le fichier `user-guide.docx` doit être mis à jour puis reconverti en PDF (`collaboration/doc/user-guide.pdf`), les deux fichiers commités et poussés dans la même session :
+    *   Mettre à jour la ou les sections concernées du `.docx` (texte **et** captures d'écran si l'IHM a changé — captures via Playwright headless, cohérentes avec celles déjà en place).
+    *   Vérifier la cohérence des rôles/permissions annoncés dans le document avec le code réel (source de vérité : `collaboration/doc/manuel-utilisateur.md` et `collaboration/history/decision-log.md`) avant de committer.
+    *   Convertir en PDF : `soffice --headless --convert-to pdf --outdir collaboration/doc/ collaboration/doc/user-guide.docx`.
+    *   Commit dédié (`docs(user-guide): ...`) suivi d'un `git push`.
 
 ---
 
