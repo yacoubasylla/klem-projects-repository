@@ -29,8 +29,12 @@ public class ParentService {
     private final UtilisateurRepository utilisateurRepository;
     private final EleveRepository eleveRepository;
 
-    public Page<ParentResponseDTO> lister(Pageable pageable) {
-        return parentRepository.findAllWithDetails(pageable).map(ParentResponseDTO::from);
+    public Page<ParentResponseDTO> lister(String search, Pageable pageable) {
+        String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
+        Page<Parent> resultat = searchParam != null
+                ? parentRepository.findAllWithDetailsBySearch(searchParam, pageable)
+                : parentRepository.findAllWithDetails(pageable);
+        return resultat.map(ParentResponseDTO::from);
     }
 
     public ParentResponseDTO getById(Long id) {

@@ -1,25 +1,29 @@
 import { useState, useEffect, useCallback } from 'react'
 import { parentService } from '../services/parentService'
 
-export function useParents() {
+export function useParents(filtres = {}) {
   const [page, setPage]           = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [data, setData]           = useState({ content: [], totalElements: 0 })
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState(null)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const filtresKey = JSON.stringify(filtres)
+
   const charger = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const result = await parentService.lister({ page, size: rowsPerPage })
+      const result = await parentService.lister({ ...JSON.parse(filtresKey), page, size: rowsPerPage })
       setData(result)
     } catch (e) {
       setError(e.message)
     } finally {
       setLoading(false)
     }
-  }, [page, rowsPerPage])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage, filtresKey])
 
   useEffect(() => { charger() }, [charger])
 

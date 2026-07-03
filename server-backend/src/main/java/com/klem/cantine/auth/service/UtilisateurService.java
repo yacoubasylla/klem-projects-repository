@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,13 +25,11 @@ public class UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<UtilisateurResponseDTO> lister(Role role, String search, Pageable pageable) {
+    public Page<UtilisateurResponseDTO> lister(Role role, Boolean actif, LocalDate dateDebut, LocalDate dateFin,
+                                                String search, Pageable pageable) {
         String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
-        if (role != null) {
-            return utilisateurRepository.findByRoleAndActifTrueWithSearch(role.name(), searchParam, pageable)
-                    .map(UtilisateurResponseDTO::from);
-        }
-        return utilisateurRepository.findAllWithSearch(searchParam, pageable)
+        String roleParam = role != null ? role.name() : null;
+        return utilisateurRepository.findAllFiltered(roleParam, actif, dateDebut, dateFin, searchParam, pageable)
                 .map(UtilisateurResponseDTO::from);
     }
 

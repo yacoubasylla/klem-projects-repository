@@ -925,3 +925,23 @@
   - `pages/paiements/PaiementsPage.jsx` — ajout de deux `TextField type="date"` (Date début/Date fin, mêmes largeurs responsives que Historique des Passages) et d'un `TextField select` Opérateur (réutilise la liste `OPERATEURS` déjà utilisée par le dialogue Initier/Modifier) dans le bandeau de filtres, avant les chips de statut
 - **Description :** Aucune migration nécessaire (colonnes `operateur`/`date_creation` déjà indexées ou natives). Comportement identique au filtre existant : chaque changement remet `page` à 0.
 - **Tests validés :** `./mvnw test` (38/38, aucune régression) ✅ · `npm run build` ✅ · lint sans régression (mêmes 4 problèmes pré-existants, aucun nouveau) ; vérification Playwright bout-en-bout (dev server + backend local) : sélection Opérateur → requête réseau `GET /paiements?operateur=ORANGE_MONEY...` confirmée ; ajout Date début → requête `...&dateDebut=2026-07-01...` confirmée ; combinaison des deux filtres → liste restreinte au résultat attendu.
+
+---
+
+### [2026-07-03] - Feat Utilisateurs/Parents : Zones de Recherche (Email, Rôle, Statut, Date de Création)
+
+- **Statut :** Livré / Opérationnel
+- **Contexte :** Ni la page Utilisateurs ni la page Parents ne disposaient d'un bandeau de recherche/filtre — contrairement aux pages Élèves/Paiements/Historique. Demande explicite : recherche sur Utilisateurs par email/rôle/statut/date de création, et sur Parents par email du compte parent.
+- **Fichiers Modifiés (Backend) :**
+  - `auth/repository/UtilisateurRepository.java` — fusion de `findAllWithSearch`/`findByRoleAndActifTrueWithSearch` en une seule requête native `findAllFiltered(role, actif, dateDebut, dateFin, search)` : chaque critère optionnel suit le pattern `CAST(:param AS ...) IS NULL OR ...` déjà établi (ADR-007/010/013), `search` couvre désormais aussi l'email (auparavant nom/prénom/téléphone uniquement)
+  - `auth/service/UtilisateurService.java` — `lister()` prend `Boolean actif`, `LocalDate dateDebut/dateFin` en plus de `role`/`search`
+  - `auth/controller/UtilisateurController.java` — `GET /utilisateurs` accepte `actif`, `dateDebut`, `dateFin`
+  - `parent/repository/ParentRepository.java` — nouvelle requête JPQL `findAllWithDetailsBySearch(search)` (email du parent), `:search` toujours non-null côté service pour éviter le bug Hibernate 6 sur paramètre JPQL nullable (ADR-007) — pas besoin de passer en requête native ici, un seul filtre non-enum
+  - `parent/service/ParentService.java` — `lister(search, pageable)` bascule entre les deux requêtes selon que `search` est renseigné
+  - `parent/controller/ParentController.java` — `GET /parents` accepte `search`
+- **Fichiers Modifiés (Frontend) :**
+  - `hooks/useUtilisateurs.js`, `hooks/useParents.js` — acceptent désormais un objet `filtres` (même pattern que `usePaiements`/`usePassages`)
+  - `pages/utilisateurs/UtilisateursPage.jsx` — bandeau de filtres (Recherche email/nom/prénom/téléphone, Rôle, Statut Actif/Inactif, Créé depuis/jusqu'au)
+  - `pages/parents/ParentsPage.jsx` — champ « Recherche par email parent »
+- **Effet de bord corrigé (régression évitée) :** le filtrage par rôle sur `GET /utilisateurs` masquait auparavant silencieusement les comptes inactifs (`u.actif = true` codé en dur dans l'ancienne requête). Le sélecteur de compte PARENT du formulaire de la page Parents (`utilisateurService.lister({ role: 'PARENT', ... })`) s'appuyait sur ce comportement implicite pour ne proposer que des comptes actifs — corrigé en passant désormais `actif: true` explicitement depuis `ParentsPage.jsx`, pour ne pas dépendre d'un effet de bord caché dans le repository.
+- **Tests validés :** `./mvnw test` (38/38, aucune régression) ✅ · `npm run build` ✅ · lint sans régression (mêmes erreurs pré-existantes `react-hooks/set-state-in-effect`, aucune nouvelle) ; vérification Playwright bout-en-bout (dev server + backend local) : recherche email + rôle + statut + date cumulés → requêtes réseau `GET /utilisateurs?search=...&role=CAISSIER&actif=true&dateDebut=...` confirmées, résultat filtré correct ; recherche email parent avec et sans correspondance (compte de test créé/supprimé en DB dev) → liste filtrée correctement dans les deux cas.

@@ -1,18 +1,22 @@
 import { useState, useEffect, useCallback } from 'react'
 import { utilisateurService } from '../services/utilisateurService'
 
-export function useUtilisateurs() {
+export function useUtilisateurs(filtres = {}) {
   const [page, setPage]               = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(20)
   const [data, setData]               = useState({ content: [], totalElements: 0 })
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState(null)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const filtresKey = JSON.stringify(filtres)
+
   const charger = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
       const result = await utilisateurService.lister({
+        ...JSON.parse(filtresKey),
         page, size: rowsPerPage, sort: 'nom,asc',
       })
       setData(result)
@@ -21,7 +25,8 @@ export function useUtilisateurs() {
     } finally {
       setLoading(false)
     }
-  }, [page, rowsPerPage])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage, filtresKey])
 
   useEffect(() => { charger() }, [charger])
 

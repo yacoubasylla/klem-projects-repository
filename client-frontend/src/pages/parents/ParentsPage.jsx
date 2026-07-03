@@ -47,7 +47,7 @@ function ParentFormDialog({ open, onClose, onSuccess, editTarget }) {
     let active = true
     const timer = setTimeout(() => {
       setParentLoading(true)
-      utilisateurService.lister({ role: 'PARENT', search: q || undefined, size: 20, sort: 'nom' })
+      utilisateurService.lister({ role: 'PARENT', actif: true, search: q || undefined, size: 20, sort: 'nom' })
         .then((r) => { if (active) setParentOptions(r?.content ?? []) })
         .catch(() => { if (active) setParentOptions([]) })
         .finally(() => { if (active) setParentLoading(false) })
@@ -207,10 +207,14 @@ function ParentFormDialog({ open, onClose, onSuccess, editTarget }) {
 // ── Page principale ───────────────────────────────────────────────────────────
 
 export default function ParentsPage() {
+  const [searchFiltre, setSearchFiltre] = useState('')
+  const filtres = {}
+  if (searchFiltre.trim()) filtres.search = searchFiltre.trim()
+
   const {
     parents, total, page, setPage, rowsPerPage, setRowsPerPage,
     loading, error, creer, modifierEnfants, supprimer,
-  } = useParents()
+  } = useParents(filtres)
 
   const [formOpen, setFormOpen]         = useState(false)
   const [editTarget, setEditTarget]     = useState(null)
@@ -251,6 +255,18 @@ export default function ParentsPage() {
           Ajouter
         </Button>
       </Stack>
+
+      {/* ── Filtre ──────────────────────────────────────── */}
+      <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+        <TextField
+          size="small"
+          label="Recherche par email parent"
+          placeholder="email@exemple.com"
+          value={searchFiltre}
+          onChange={(e) => { setSearchFiltre(e.target.value); setPage(0) }}
+          sx={{ width: { xs: '100%', sm: 320 } }}
+        />
+      </Paper>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 

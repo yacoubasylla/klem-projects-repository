@@ -28,8 +28,9 @@ public class ParentController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<ParentResponseDTO>>> lister(
+            @RequestParam(required = false) String search,
             @PageableDefault(size = 20, sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(parentService.lister(pageable)));
+        return ResponseEntity.ok(ApiResponse.ok(parentService.lister(search, pageable)));
     }
 
     @GetMapping("/{id}")

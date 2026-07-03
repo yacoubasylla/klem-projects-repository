@@ -218,6 +218,12 @@ function ConfirmSupprimerDialog({ utilisateur, onClose, onConfirm }) {
 
 // ── Page principale ───────────────────────────────────────────────────────────
 
+const STATUTS = [
+  { value: '',      label: 'Tous'    },
+  { value: 'true',  label: 'Actif'   },
+  { value: 'false', label: 'Inactif' },
+]
+
 export default function UtilisateursPage() {
   const [creerOpen,     setCreerOpen]     = useState(false)
   const [userToEdit,    setUserToEdit]    = useState(null)
@@ -228,13 +234,26 @@ export default function UtilisateursPage() {
   const [menuUser,      setMenuUser]      = useState(null)
   const { user: currentUser } = useAuth()
 
+  const [searchFiltre, setSearchFiltre] = useState('')
+  const [roleFiltre,   setRoleFiltre]   = useState('')
+  const [statutFiltre, setStatutFiltre] = useState('')
+  const [dateDebut,    setDateDebut]    = useState('')
+  const [dateFin,      setDateFin]      = useState('')
+
   const openMenu  = (e, u) => { setMenuAnchor(e.currentTarget); setMenuUser(u) }
   const closeMenu = () => { setMenuAnchor(null); setMenuUser(null) }
+
+  const filtres = {}
+  if (searchFiltre.trim()) filtres.search = searchFiltre.trim()
+  if (roleFiltre) filtres.role = roleFiltre
+  if (statutFiltre) filtres.actif = statutFiltre
+  if (dateDebut) filtres.dateDebut = dateDebut
+  if (dateFin) filtres.dateFin = dateFin
 
   const {
     utilisateurs, total, page, setPage, rowsPerPage, setRowsPerPage,
     loading, error, creer, modifier, changerRole, desactiver, reactiver, supprimer, recharger,
-  } = useUtilisateurs()
+  } = useUtilisateurs(filtres)
 
   const handleCreerSuccess = async (form) => {
     await creer(form)
@@ -279,6 +298,67 @@ export default function UtilisateursPage() {
           </Button>
         </Stack>
       </Stack>
+
+      {/* ── Filtres ─────────────────────────────────────── */}
+      <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flexWrap="wrap" gap={1.5} alignItems={{ xs: 'stretch', sm: 'center' }}>
+          <TextField
+            size="small"
+            label="Recherche"
+            placeholder="Email, nom, prénom, téléphone…"
+            value={searchFiltre}
+            onChange={(e) => { setSearchFiltre(e.target.value); setPage(0) }}
+            sx={{ minWidth: { xs: '100%', sm: 220 }, flex: 1 }}
+          />
+
+          <TextField
+            select
+            label="Rôle"
+            size="small"
+            value={roleFiltre}
+            onChange={(e) => { setRoleFiltre(e.target.value); setPage(0) }}
+            sx={{ minWidth: { xs: '100%', sm: 170 } }}
+          >
+            <MenuItem value="">Tous les rôles</MenuItem>
+            {ROLES.map((r) => (
+              <MenuItem key={r} value={r}>{ROLE_CONFIG[r].label}</MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            select
+            label="Statut"
+            size="small"
+            value={statutFiltre}
+            onChange={(e) => { setStatutFiltre(e.target.value); setPage(0) }}
+            sx={{ minWidth: { xs: '100%', sm: 140 } }}
+          >
+            {STATUTS.map((s) => (
+              <MenuItem key={s.value} value={s.value}>{s.label}</MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            label="Créé depuis"
+            type="date"
+            size="small"
+            value={dateDebut}
+            onChange={(e) => { setDateDebut(e.target.value); setPage(0) }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={{ minWidth: { xs: '100%', sm: 160 } }}
+          />
+
+          <TextField
+            label="Créé jusqu'au"
+            type="date"
+            size="small"
+            value={dateFin}
+            onChange={(e) => { setDateFin(e.target.value); setPage(0) }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={{ minWidth: { xs: '100%', sm: 160 } }}
+          />
+        </Stack>
+      </Paper>
 
       {(error || actionError) && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setActionError(null)}>
