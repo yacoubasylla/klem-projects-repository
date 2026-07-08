@@ -148,3 +148,122 @@ function klem_disable_emoji(): void {
     remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
 }
 add_action('init', 'klem_disable_emoji');
+
+/**
+ * ── SEO : titre, meta description, canonical, Open Graph, Twitter Card, JSON-LD ──
+ * Le site est mono-page (front-page.php) : les balises sont volontairement
+ * centrées sur la page d'accueil, seul point d'entrée indexable aujourd'hui.
+ */
+
+function klem_seo_description(): string {
+    return __(
+        "KLEM Technologies & Services, intégrateur numérique basé à Abidjan : ingénierie Big Data, applications sur-mesure, ERP et infrastructures IT pour l'Afrique de l'Ouest.",
+        'klem-theme'
+    );
+}
+
+function klem_seo_title(string $title): string {
+    if (is_front_page()) {
+        return __(
+            "KLEM Technologies & Services | Intégrateur Numérique à Abidjan – Big Data, ERP & Développement Sur-Mesure",
+            'klem-theme'
+        );
+    }
+    return $title;
+}
+add_filter('pre_get_document_title', 'klem_seo_title');
+
+// Déclaration de langue correcte : contenu 100 % français (corrige lang="en-US" par défaut)
+add_filter('language_attributes', function (): string {
+    return 'lang="fr-FR"';
+});
+
+function klem_seo_meta_tags(): void {
+    if (!is_front_page()) {
+        return;
+    }
+
+    $description = klem_seo_description();
+    $url         = home_url('/');
+    $site_name   = 'KLEM Technologies & Services';
+    $theme_uri   = get_template_directory_uri();
+    $image       = $theme_uri . '/assets/images/services/service-big-data.jpg';
+
+    printf('<meta name="description" content="%s">' . "\n", esc_attr($description));
+    printf('<link rel="canonical" href="%s">' . "\n", esc_url($url));
+
+    printf('<meta property="og:type" content="website">' . "\n");
+    printf('<meta property="og:site_name" content="%s">' . "\n", esc_attr($site_name));
+    printf('<meta property="og:locale" content="fr_FR">' . "\n");
+    printf('<meta property="og:url" content="%s">' . "\n", esc_url($url));
+    printf('<meta property="og:title" content="%s">' . "\n", esc_attr($site_name . ' – Intégrateur Numérique Abidjan, Côte d\'Ivoire'));
+    printf('<meta property="og:description" content="%s">' . "\n", esc_attr($description));
+    printf('<meta property="og:image" content="%s">' . "\n", esc_url($image));
+    printf('<meta property="og:image:width" content="800">' . "\n");
+    printf('<meta property="og:image:height" content="460">' . "\n");
+
+    printf('<meta name="twitter:card" content="summary_large_image">' . "\n");
+    printf('<meta name="twitter:title" content="%s">' . "\n", esc_attr($site_name . ' – Intégrateur Numérique Abidjan, Côte d\'Ivoire'));
+    printf('<meta name="twitter:description" content="%s">' . "\n", esc_attr($description));
+    printf('<meta name="twitter:image" content="%s">' . "\n", esc_url($image));
+}
+add_action('wp_head', 'klem_seo_meta_tags', 2);
+
+function klem_seo_structured_data(): void {
+    if (!is_front_page()) {
+        return;
+    }
+
+    $theme_uri = get_template_directory_uri();
+
+    $data = [
+        '@context'     => 'https://schema.org',
+        '@type'        => 'ProfessionalService',
+        'name'         => 'KLEM Technologies & Services',
+        'alternateName' => 'KLEM',
+        'url'          => home_url('/'),
+        'logo'         => $theme_uri . '/assets/svg/klem-primary.svg',
+        'image'        => $theme_uri . '/assets/images/services/service-big-data.jpg',
+        'description'  => klem_seo_description(),
+        'telephone'    => '+225 07 58 89 24 77',
+        'email'        => 'infos@klemtech.net',
+        'address'      => [
+            '@type'           => 'PostalAddress',
+            'streetAddress'   => 'Treichville Arras 1',
+            'addressLocality' => 'Abidjan',
+            'addressCountry'  => 'CI',
+        ],
+        'areaServed'   => ["Côte d'Ivoire", 'Afrique de l\'Ouest', 'Afrique'],
+        'sameAs'       => [
+            'https://www.linkedin.com/company/130474992/',
+            'https://x.com/KLEMTechnology',
+            'https://www.facebook.com/profile.php?id=61591353966112',
+            'https://github.com/yacoubasylla/klem-opensource',
+        ],
+        'openingHoursSpecification' => [
+            [
+                '@type'    => 'OpeningHoursSpecification',
+                'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                'opens'    => '08:00',
+                'closes'   => '18:00',
+            ],
+            [
+                '@type'    => 'OpeningHoursSpecification',
+                'dayOfWeek' => ['Saturday'],
+                'opens'    => '09:00',
+                'closes'   => '13:00',
+            ],
+        ],
+        'knowsAbout'   => [
+            'Ingénierie des données (Big Data)',
+            'Intégration ERP',
+            "Développement d'applications sur-mesure",
+            'Infrastructures IT',
+            'Gestion de flotte (FleetControl)',
+            'Gestion de restauration scolaire (Cantine Connect)',
+        ],
+    ];
+
+    echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+}
+add_action('wp_head', 'klem_seo_structured_data', 3);
