@@ -38,16 +38,16 @@
 
             <!-- Col 1 : Logo + description + réseaux sociaux (4 colonnes larges) -->
             <div class="lg:col-span-4">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-3 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-2 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
                     <!-- ChevronMark — double chevron 3D (fond sombre) -->
-                    <svg viewBox="0 0 65 56" width="34" height="29" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; flex-shrink:0;">
+                    <svg viewBox="0 0 65 56" width="29" height="25" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; flex-shrink:0;">
                         <polygon points="0,0 22,0 40,28 22,56 0,56 18,28" fill="#E42313"/>
                         <polygon points="25,0 47,0 65,28 47,56 25,56 43,28" fill="#E42313"/>
                     </svg>
                     <!-- Wordmark -->
-                    <div class="flex flex-col leading-none gap-[6px]">
+                    <div class="flex flex-col leading-none gap-[2px]">
                         <span class="font-logo font-extrabold text-[28px] tracking-[-0.02em] leading-none text-white group-hover:text-klem-red transition-colors duration-200"><?php esc_html_e('KLEM', 'klem-theme'); ?></span>
-                        <span class="font-logo font-semibold text-[6px] tracking-[0.23em] text-[#c3c9d6] uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
+                        <span class="font-logo font-semibold text-[6px] tracking-[0.2em] text-[#c3c9d6] uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
                     </div>
                 </a>
                 <p class="text-white/50 text-sm leading-relaxed mb-7 max-w-xs">

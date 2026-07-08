@@ -12,16 +12,16 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
 
         <!-- Logo -->
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-2 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-1.5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
             <!-- ChevronMark — double chevron plat -->
-            <svg viewBox="0 0 65 56" width="32" height="28" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" class="block flex-shrink-0 -mt-1">
+            <svg viewBox="0 0 65 56" width="27" height="23" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" class="block flex-shrink-0">
                 <polygon points="0,0 22,0 40,28 22,56 0,56 18,28" fill="#E42313"/>
                 <polygon points="25,0 47,0 65,28 47,56 25,56 43,28" fill="#E42313"/>
             </svg>
             <!-- Wordmark -->
-            <div class="flex flex-col leading-none gap-[8px]">
+            <div class="flex flex-col leading-none gap-[2px]">
                 <span class="font-logo font-extrabold text-[18px] sm:text-[22px] lg:text-[26px] tracking-[-0.02em] leading-none text-klem-blue">KLEM</span>
-                <span class="font-logo font-semibold text-[8px] tracking-[0.23em] text-klem-blue uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
+                <span class="font-logo font-semibold text-[8px] tracking-[0.2em] text-klem-blue uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
             </div>
         </a>
 

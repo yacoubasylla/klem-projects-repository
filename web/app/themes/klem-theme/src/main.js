@@ -1,5 +1,7 @@
 import './main.css';
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // ─── Menu mobile ────────────────────────────────────────────────────────────
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -92,9 +94,67 @@ if (contactForm && window.klemAjax) {
     });
 }
 
-// ─── Animations d'entrée au scroll (IntersectionObserver) ───────────────────
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ─── Cartes "Secteurs ciblés" → pré-remplissage du formulaire de contact ────
+const sectorLinks  = document.querySelectorAll('[data-sector]');
+const messageField = document.getElementById('klem-message');
 
+if (sectorLinks.length > 0 && messageField) {
+    sectorLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+            const sector  = link.dataset.sector;
+            const isUntouched = messageField.value.trim() === '' || messageField.dataset.klemPrefilled === 'true';
+
+            if (isUntouched) {
+                messageField.value = sector === 'Autre secteur'
+                    ? "Bonjour, je vous contacte au sujet d'un projet dans un secteur qui n'est pas listé sur votre site. "
+                    : `Bonjour, je vous contacte au sujet d'un projet dans le secteur ${sector}. `;
+                messageField.dataset.klemPrefilled = 'true';
+            }
+
+            window.setTimeout(() => messageField.focus({ preventScroll: true }), prefersReducedMotion ? 0 : 600);
+        });
+    });
+}
+
+// ─── Compteurs animés (statistiques du hero) ─────────────────────────────────
+const counters = document.querySelectorAll('[data-count-target]');
+
+if (counters.length > 0) {
+    if (prefersReducedMotion) {
+        counters.forEach((el) => {
+            el.textContent = el.dataset.countTarget + (el.dataset.countSuffix ?? '');
+        });
+    } else {
+        const countObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+
+                    const el       = entry.target;
+                    const target   = parseFloat(el.dataset.countTarget);
+                    const suffix   = el.dataset.countSuffix ?? '';
+                    const decimals = parseInt(el.dataset.countDecimals ?? '0', 10);
+                    const duration = 1400;
+                    const start    = performance.now();
+
+                    const step = (now) => {
+                        const progress = Math.min((now - start) / duration, 1);
+                        const eased    = 1 - Math.pow(1 - progress, 3);
+                        el.textContent = (target * eased).toFixed(decimals) + suffix;
+                        if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                    countObserver.unobserve(el);
+                });
+            },
+            { threshold: 0.4 }
+        );
+
+        counters.forEach((el) => countObserver.observe(el));
+    }
+}
+
+// ─── Animations d'entrée au scroll (IntersectionObserver) ───────────────────
 if (prefersReducedMotion) {
     document.querySelectorAll('[data-animate]').forEach((el) => {
         el.classList.add('is-visible');
