@@ -130,6 +130,74 @@ function klem_handle_contact(): void {
 add_action('wp_ajax_klem_contact',        'klem_handle_contact');
 add_action('wp_ajax_nopriv_klem_contact', 'klem_handle_contact');
 
+/**
+ * ── Actualités : catégories + page hub ──────────────────────────────────
+ * Crée automatiquement (une seule fois, de façon idempotente) les 3
+ * catégories utilisées par le hub Actualités ainsi que la page qui
+ * l'affiche, pour que le lien de menu fonctionne dès l'activation du
+ * thème sans intervention manuelle en base de données.
+ */
+
+function klem_actualites_categories(): array {
+    return [
+        'blog'       => 'Blog',
+        'actus'      => 'Actualités',
+        'evenements' => 'Événements',
+    ];
+}
+
+function klem_bootstrap_actualites(): void {
+    foreach (klem_actualites_categories() as $slug => $name) {
+        if (!term_exists($slug, 'category')) {
+            wp_insert_term($name, 'category', ['slug' => $slug]);
+        }
+    }
+
+    if (!get_page_by_path('actualites')) {
+        $page_id = wp_insert_post([
+            'post_title'   => __('Actualités', 'klem-theme'),
+            'post_name'    => 'actualites',
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_content' => '',
+        ]);
+
+        if ($page_id && !is_wp_error($page_id)) {
+            update_post_meta($page_id, '_wp_page_template', 'page-actualites.php');
+        }
+    }
+}
+add_action('init', 'klem_bootstrap_actualites', 20);
+
+function klem_actualites_url(): string {
+    $page = get_page_by_path('actualites');
+    return $page ? get_permalink($page) : home_url('/');
+}
+
+/**
+ * Retourne le badge (nom + couleur) de la catégorie Actualités d'un article,
+ * ou null si l'article n'appartient à aucune des 3 catégories du hub.
+ */
+function klem_actualites_badge(int $post_id): ?array {
+    $colors = [
+        'blog'       => 'bg-blue-600',
+        'actus'      => 'bg-klem-blue',
+        'evenements' => 'bg-klem-red',
+    ];
+
+    foreach (klem_actualites_categories() as $slug => $name) {
+        if (has_category($slug, $post_id)) {
+            return [
+                'slug'  => $slug,
+                'name'  => $name,
+                'color' => $colors[$slug],
+            ];
+        }
+    }
+
+    return null;
+}
+
 function klem_add_favicon(): void {
     $uri = get_template_directory_uri();
     printf('<link rel="icon" type="image/png" sizes="32x32" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));

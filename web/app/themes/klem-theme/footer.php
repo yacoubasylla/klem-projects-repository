@@ -87,7 +87,7 @@
                 <ul class="space-y-3">
                     <?php
                     $company_links = [
-                        ['label' => 'À Propos',    'href' => '#about'],
+                        ['label' => 'À propos',    'href' => '#about'],
                         ['label' => 'Notre équipe', 'href' => '#'],
                         ['label' => 'Cas clients',  'href' => '#'],
                         ['label' => 'Carrières',    'href' => '#'],

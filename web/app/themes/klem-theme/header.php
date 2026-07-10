@@ -38,8 +38,9 @@
                     $items = [
                         ['label' => 'Accueil',     'href' => '#',         'active' => true],
                         ['label' => 'Services',    'href' => '#services', 'active' => false],
-                        ['label' => 'À Propos',    'href' => '#about',    'active' => false],
-                        ['label' => 'Notre Différence', 'href' => '#clients',  'active' => false],
+                        ['label' => 'À propos',    'href' => '#about',    'active' => false],
+                        ['label' => 'Notre différence', 'href' => '#clients',  'active' => false],
+                        ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => false],
                         ['label' => 'Contact',     'href' => '#contact',  'active' => false],
                     ];
                     echo '<ul class="flex items-center gap-9">';
@@ -118,8 +119,9 @@
                     $items = [
                         ['label' => 'Accueil',     'href' => '#'],
                         ['label' => 'Services',    'href' => '#services'],
-                        ['label' => 'À Propos',    'href' => '#about'],
-                        ['label' => 'Notre Différence', 'href' => '#clients'],
+                        ['label' => 'À propos',    'href' => '#about'],
+                        ['label' => 'Notre différence', 'href' => '#clients'],
+                        ['label' => 'Actualités',  'href' => klem_actualites_url()],
                         ['label' => 'Contact',     'href' => '#contact'],
                     ];
                     echo '<ul class="space-y-1">';
