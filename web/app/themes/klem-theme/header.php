@@ -31,8 +31,8 @@
             wp_nav_menu([
                 'theme_location' => 'primary',
                 'container'      => false,
-                'menu_class'     => 'flex items-center gap-9',
-                'link_before'    => '<span class="text-gray-700 hover:text-klem-orange transition-colors duration-150 text-base font-medium">',
+                'menu_class'     => 'flex items-center gap-7 whitespace-nowrap',
+                'link_before'    => '<span class="text-gray-700 hover:text-klem-orange transition-colors duration-150 text-base font-medium whitespace-nowrap">',
                 'link_after'     => '</span>',
                 'fallback_cb'    => static function (): void {
                     $items = [
@@ -43,11 +43,11 @@
                         ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => false],
                         ['label' => 'Contact',     'href' => '#contact',  'active' => false],
                     ];
-                    echo '<ul class="flex items-center gap-9">';
+                    echo '<ul class="flex items-center gap-7 whitespace-nowrap">';
                     foreach ($items as $item) {
                         $cls = $item['active']
-                            ? 'text-klem-orange font-semibold text-base'
-                            : 'text-gray-700 hover:text-klem-orange transition-colors duration-150 text-base font-medium';
+                            ? 'text-klem-orange font-semibold text-base whitespace-nowrap'
+                            : 'text-gray-700 hover:text-klem-orange transition-colors duration-150 text-base font-medium whitespace-nowrap';
                         printf(
                             '<li><a href="%s" class="%s">%s</a></li>',
                             esc_url($item['href']),
