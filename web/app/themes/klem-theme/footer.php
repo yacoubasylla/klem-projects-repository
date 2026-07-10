@@ -18,7 +18,7 @@
             </p>
         </div>
         <a
-            href="#contact"
+            href="<?php echo esc_url(klem_home_anchor('#contact')); ?>"
             class="flex-shrink-0 inline-flex items-center gap-2 bg-klem-orange text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 hover:-translate-y-0.5 transition-all duration-200 text-base whitespace-nowrap"
         >
             <?php esc_html_e('Lancer mon projet', 'klem-theme'); ?>
@@ -87,11 +87,11 @@
                 <ul class="space-y-3">
                     <?php
                     $company_links = [
-                        ['label' => 'À propos',    'href' => '#about'],
+                        ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
                         ['label' => 'Notre équipe', 'href' => '#'],
                         ['label' => 'Cas clients',  'href' => '#'],
                         ['label' => 'Carrières',    'href' => '#'],
-                        ['label' => 'Contact',      'href' => '#contact'],
+                        ['label' => 'Contact',      'href' => klem_home_anchor('#contact')],
                     ];
                     foreach ($company_links as $link) :
                     ?>
@@ -112,10 +112,10 @@
                 <ul class="space-y-3">
                     <?php
                     $service_links = [
-                        ['label' => 'Ingénierie des Données',         'href' => '#services'],
-                        ['label' => 'Applications Sur-Mesure',         'href' => '#services'],
-                        ['label' => 'Intégration ERP & FleetControl',  'href' => '#services'],
-                        ['label' => 'Matériel IT & Infrastructure',    'href' => '#services'],
+                        ['label' => 'Ingénierie des Données',         'href' => klem_home_anchor('#services')],
+                        ['label' => 'Applications Sur-Mesure',         'href' => klem_home_anchor('#services')],
+                        ['label' => 'Intégration ERP & FleetControl',  'href' => klem_home_anchor('#services')],
+                        ['label' => 'Matériel IT & Infrastructure',    'href' => klem_home_anchor('#services')],
                     ];
                     foreach ($service_links as $link) :
                     ?>

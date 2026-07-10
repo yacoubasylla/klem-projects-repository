@@ -198,6 +198,15 @@ function klem_actualites_url(): string {
 }
 
 /**
+ * URL vers une ancre des sections de la page d'accueil (front-page.php).
+ * Toujours préfixée par home_url() pour fonctionner depuis n'importe quelle
+ * page du site (Actualités, article...), pas seulement depuis l'accueil.
+ */
+function klem_home_anchor(string $anchor = ''): string {
+    return home_url('/') . $anchor;
+}
+
+/**
  * Retourne le badge (nom + couleur) de la catégorie Actualités d'un article,
  * ou null si l'article n'appartient à aucune des 3 catégories du hub.
  */

@@ -35,13 +35,14 @@
                 'link_before'    => '<span class="text-gray-700 hover:text-klem-orange transition-colors duration-150 text-base font-medium whitespace-nowrap">',
                 'link_after'     => '</span>',
                 'fallback_cb'    => static function (): void {
+                    $klem_on_actualites = is_page('actualites') || is_singular('post');
                     $items = [
-                        ['label' => 'Accueil',     'href' => '#',         'active' => true],
-                        ['label' => 'Services',    'href' => '#services', 'active' => false],
-                        ['label' => 'À propos',    'href' => '#about',    'active' => false],
-                        ['label' => 'Notre différence', 'href' => '#clients',  'active' => false],
-                        ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => false],
-                        ['label' => 'Contact',     'href' => '#contact',  'active' => false],
+                        ['label' => 'Accueil',     'href' => klem_home_anchor(),          'active' => is_front_page()],
+                        ['label' => 'Services',    'href' => klem_home_anchor('#services'), 'active' => false],
+                        ['label' => 'À propos',    'href' => klem_home_anchor('#about'),    'active' => false],
+                        ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients'), 'active' => false],
+                        ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => $klem_on_actualites],
+                        ['label' => 'Contact',     'href' => klem_home_anchor('#contact'),  'active' => false],
                     ];
                     echo '<ul class="flex items-center gap-7 whitespace-nowrap">';
                     foreach ($items as $item) {
@@ -66,7 +67,7 @@
 
             <!-- Support + numéro (2 lignes bien centrées) -->
             <div class="flex flex-col items-end gap-0.5">
-                <a href="#contact" class="flex items-center gap-1 text-gray-500 text-xs hover:text-klem-orange transition-colors duration-150 font-medium leading-none">
+                <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="flex items-center gap-1 text-gray-500 text-xs hover:text-klem-orange transition-colors duration-150 font-medium leading-none">
                     <?php esc_html_e('Support Client', 'klem-theme'); ?>
                     <span aria-hidden="true" class="text-klem-orange font-bold">→</span>
                 </a>
@@ -80,7 +81,7 @@
 
             <!-- Bouton CTA principal -->
             <a
-                href="#contact"
+                href="<?php echo esc_url(klem_home_anchor('#contact')); ?>"
                 class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
             >
                 <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
@@ -117,12 +118,12 @@
                 'link_after'     => '</span>',
                 'fallback_cb'    => static function (): void {
                     $items = [
-                        ['label' => 'Accueil',     'href' => '#'],
-                        ['label' => 'Services',    'href' => '#services'],
-                        ['label' => 'À propos',    'href' => '#about'],
-                        ['label' => 'Notre différence', 'href' => '#clients'],
+                        ['label' => 'Accueil',     'href' => klem_home_anchor()],
+                        ['label' => 'Services',    'href' => klem_home_anchor('#services')],
+                        ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
+                        ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients')],
                         ['label' => 'Actualités',  'href' => klem_actualites_url()],
-                        ['label' => 'Contact',     'href' => '#contact'],
+                        ['label' => 'Contact',     'href' => klem_home_anchor('#contact')],
                     ];
                     echo '<ul class="space-y-1">';
                     foreach ($items as $item) {
@@ -140,7 +141,7 @@
                 <p class="text-klem-blue font-extrabold text-sm px-3">
                     <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                 </p>
-                <a href="#contact" class="block bg-klem-orange text-white font-bold text-center px-5 py-3 rounded-lg text-sm hover:brightness-110 transition-all">
+                <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="block bg-klem-orange text-white font-bold text-center px-5 py-3 rounded-lg text-sm hover:brightness-110 transition-all">
                     <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
                 </a>
             </div>
