@@ -138,6 +138,29 @@ add_action('wp_ajax_nopriv_klem_contact', 'klem_handle_contact');
  * thème sans intervention manuelle en base de données.
  */
 
+/**
+ * ── Fondations SEO techniques ────────────────────────────────────────────
+ * Corrige, une seule fois et de façon idempotente, deux réglages WordPress
+ * qui pénalisent le référencement s'ils restent sur leur valeur par défaut :
+ * les permaliens « bruts » (?p=123, mauvais pour l'indexation et le partage)
+ * et le nom de site mal casé (utilisé dans toutes les balises <title>).
+ */
+function klem_bootstrap_seo_settings(): void {
+    if (get_option('permalink_structure') === '') {
+        update_option('permalink_structure', '/%postname%/');
+        flush_rewrite_rules();
+    }
+
+    if (html_entity_decode(get_option('blogname'), ENT_QUOTES) === 'Klem Technologies & Services') {
+        update_option('blogname', 'KLEM Technologies & Services');
+    }
+
+    if (get_option('blogdescription') === '') {
+        update_option('blogdescription', "Intégrateur numérique de référence en Afrique de l'Ouest");
+    }
+}
+add_action('init', 'klem_bootstrap_seo_settings', 5);
+
 function klem_actualites_categories(): array {
     return [
         'blog'       => 'Blog',
@@ -219,8 +242,10 @@ add_action('init', 'klem_disable_emoji');
 
 /**
  * ── SEO : titre, meta description, canonical, Open Graph, Twitter Card, JSON-LD ──
- * Le site est mono-page (front-page.php) : les balises sont volontairement
- * centrées sur la page d'accueil, seul point d'entrée indexable aujourd'hui.
+ * Couvre la page d'accueil, le hub Actualités et chaque article individuel
+ * (les seuls points d'entrée indexables du site à ce jour) via un contexte
+ * unique construit par klem_seo_context(), pour éviter de dupliquer la
+ * logique par type de page.
  */
 
 function klem_seo_description(): string {
@@ -230,14 +255,69 @@ function klem_seo_description(): string {
     );
 }
 
-function klem_seo_title(string $title): string {
+/**
+ * Construit le contexte SEO (titre, description, url, image, type) de la
+ * page actuellement affichée, ou null si aucune surcharge ne s'applique
+ * (le thème laisse alors WordPress gérer le titre par défaut).
+ */
+function klem_seo_context(): ?array {
+    $theme_uri     = get_template_directory_uri();
+    $default_image = $theme_uri . '/assets/images/services/service-big-data.jpg';
+    $site_name     = 'KLEM Technologies & Services';
+
     if (is_front_page()) {
-        return __(
-            "KLEM Technologies & Services | Intégrateur Numérique à Abidjan – Big Data, ERP & Développement Sur-Mesure",
-            'klem-theme'
-        );
+        return [
+            'title'       => __("KLEM Technologies & Services | Intégrateur Numérique à Abidjan – Big Data, ERP & Développement Sur-Mesure", 'klem-theme'),
+            'description' => klem_seo_description(),
+            'url'         => home_url('/'),
+            'image'       => $default_image,
+            'type'        => 'website',
+        ];
     }
-    return $title;
+
+    if (is_singular('post')) {
+        $excerpt = get_the_excerpt();
+        $image   = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : $default_image;
+
+        return [
+            'title'       => get_the_title() . ' – ' . $site_name,
+            'description' => $excerpt ? wp_strip_all_tags($excerpt) : klem_seo_description(),
+            'url'         => get_permalink(),
+            'image'       => $image,
+            'type'        => 'article',
+        ];
+    }
+
+    if (is_page('actualites')) {
+        return [
+            'title'       => __('Actualités', 'klem-theme') . ' – ' . $site_name,
+            'description' => __("Blog, actualités et événements de KLEM Technologies & Services : innovations, projets et rendez-vous de l'écosystème numérique ouest-africain.", 'klem-theme'),
+            'url'         => klem_actualites_url(),
+            'image'       => $default_image,
+            'type'        => 'website',
+        ];
+    }
+
+    // Repli générique : toute autre page/article publié(e) reste couvert(e)
+    // (titre + canonical propre) sans dupliquer la balise canonical de coeur.
+    if (is_singular()) {
+        $excerpt = get_the_excerpt();
+
+        return [
+            'title'       => get_the_title() . ' – ' . $site_name,
+            'description' => $excerpt ? wp_strip_all_tags($excerpt) : klem_seo_description(),
+            'url'         => get_permalink(),
+            'image'       => $default_image,
+            'type'        => 'website',
+        ];
+    }
+
+    return null;
+}
+
+function klem_seo_title(string $title): string {
+    $context = klem_seo_context();
+    return $context['title'] ?? $title;
 }
 add_filter('pre_get_document_title', 'klem_seo_title');
 
@@ -246,34 +326,32 @@ add_filter('language_attributes', function (): string {
     return 'lang="fr-FR"';
 });
 
+// La balise canonical est gérée par klem_seo_meta_tags() pour tout le
+// contexte couvert par klem_seo_context() : on retire celle du cœur pour
+// éviter deux <link rel="canonical"> sur une même page.
+remove_action('wp_head', 'rel_canonical');
+
 function klem_seo_meta_tags(): void {
-    if (!is_front_page()) {
+    $context = klem_seo_context();
+    if (!$context) {
         return;
     }
 
-    $description = klem_seo_description();
-    $url         = home_url('/');
-    $site_name   = 'KLEM Technologies & Services';
-    $theme_uri   = get_template_directory_uri();
-    $image       = $theme_uri . '/assets/images/services/service-big-data.jpg';
+    printf('<meta name="description" content="%s">' . "\n", esc_attr($context['description']));
+    printf('<link rel="canonical" href="%s">' . "\n", esc_url($context['url']));
 
-    printf('<meta name="description" content="%s">' . "\n", esc_attr($description));
-    printf('<link rel="canonical" href="%s">' . "\n", esc_url($url));
-
-    printf('<meta property="og:type" content="website">' . "\n");
-    printf('<meta property="og:site_name" content="%s">' . "\n", esc_attr($site_name));
+    printf('<meta property="og:type" content="%s">' . "\n", esc_attr($context['type']));
+    printf('<meta property="og:site_name" content="KLEM Technologies & Services">' . "\n");
     printf('<meta property="og:locale" content="fr_FR">' . "\n");
-    printf('<meta property="og:url" content="%s">' . "\n", esc_url($url));
-    printf('<meta property="og:title" content="%s">' . "\n", esc_attr($site_name . ' – Intégrateur Numérique Abidjan, Côte d\'Ivoire'));
-    printf('<meta property="og:description" content="%s">' . "\n", esc_attr($description));
-    printf('<meta property="og:image" content="%s">' . "\n", esc_url($image));
-    printf('<meta property="og:image:width" content="800">' . "\n");
-    printf('<meta property="og:image:height" content="460">' . "\n");
+    printf('<meta property="og:url" content="%s">' . "\n", esc_url($context['url']));
+    printf('<meta property="og:title" content="%s">' . "\n", esc_attr($context['title']));
+    printf('<meta property="og:description" content="%s">' . "\n", esc_attr($context['description']));
+    printf('<meta property="og:image" content="%s">' . "\n", esc_url($context['image']));
 
     printf('<meta name="twitter:card" content="summary_large_image">' . "\n");
-    printf('<meta name="twitter:title" content="%s">' . "\n", esc_attr($site_name . ' – Intégrateur Numérique Abidjan, Côte d\'Ivoire'));
-    printf('<meta name="twitter:description" content="%s">' . "\n", esc_attr($description));
-    printf('<meta name="twitter:image" content="%s">' . "\n", esc_url($image));
+    printf('<meta name="twitter:title" content="%s">' . "\n", esc_attr($context['title']));
+    printf('<meta name="twitter:description" content="%s">' . "\n", esc_attr($context['description']));
+    printf('<meta name="twitter:image" content="%s">' . "\n", esc_url($context['image']));
 }
 add_action('wp_head', 'klem_seo_meta_tags', 2);
 
@@ -335,3 +413,81 @@ function klem_seo_structured_data(): void {
     echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
 }
 add_action('wp_head', 'klem_seo_structured_data', 3);
+
+/**
+ * JSON-LD Article : améliore l'apparence des articles du hub Actualités
+ * dans les résultats de recherche (image, dates, auteur, fil d'ariane).
+ */
+function klem_seo_article_schema(): void {
+    if (!is_singular('post')) {
+        return;
+    }
+
+    $theme_uri = get_template_directory_uri();
+    $image     = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : ($theme_uri . '/assets/images/services/service-big-data.jpg');
+    $excerpt   = get_the_excerpt();
+    $badge     = klem_actualites_badge(get_the_ID());
+
+    $data = [
+        '@context'         => 'https://schema.org',
+        '@type'            => 'Article',
+        'headline'         => get_the_title(),
+        'description'      => $excerpt ? wp_strip_all_tags($excerpt) : klem_seo_description(),
+        'image'            => [$image],
+        'datePublished'    => get_the_date('c'),
+        'dateModified'     => get_the_modified_date('c'),
+        'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => get_permalink()],
+        'author'           => ['@type' => 'Organization', 'name' => 'KLEM Technologies & Services'],
+        'publisher'        => [
+            '@type' => 'Organization',
+            'name'  => 'KLEM Technologies & Services',
+            'logo'  => ['@type' => 'ImageObject', 'url' => $theme_uri . '/assets/svg/klem-primary.svg'],
+        ],
+    ];
+
+    if ($badge) {
+        $data['articleSection'] = $badge['name'];
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+}
+add_action('wp_head', 'klem_seo_article_schema', 3);
+
+/**
+ * JSON-LD BreadcrumbList : fil d'ariane du hub Actualités et des articles.
+ */
+function klem_seo_breadcrumbs_schema(): void {
+    if (is_singular('post')) {
+        $items = [
+            ['name' => __('Accueil', 'klem-theme'), 'url' => home_url('/')],
+            ['name' => __('Actualités', 'klem-theme'), 'url' => klem_actualites_url()],
+            ['name' => get_the_title(), 'url' => get_permalink()],
+        ];
+    } elseif (is_page('actualites')) {
+        $items = [
+            ['name' => __('Accueil', 'klem-theme'), 'url' => home_url('/')],
+            ['name' => __('Actualités', 'klem-theme'), 'url' => klem_actualites_url()],
+        ];
+    } else {
+        return;
+    }
+
+    $list_items = [];
+    foreach ($items as $position => $item) {
+        $list_items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position + 1,
+            'name'     => $item['name'],
+            'item'     => $item['url'],
+        ];
+    }
+
+    $data = [
+        '@context'        => 'https://schema.org',
+        '@type'           => 'BreadcrumbList',
+        'itemListElement' => $list_items,
+    ];
+
+    echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+}
+add_action('wp_head', 'klem_seo_breadcrumbs_schema', 4);
