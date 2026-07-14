@@ -231,6 +231,88 @@
     </div>
 </footer>
 
+<!-- Widget chatbot (capture de leads) -->
+<div id="klem-chatbot" class="fixed bottom-5 right-5 z-[9998] flex flex-col items-end">
+
+    <!-- Fenêtre de discussion -->
+    <div
+        id="klem-chat-panel"
+        class="hidden mb-4 w-[calc(100vw-2.5rem)] max-w-sm h-[28rem] max-h-[70vh] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden"
+        role="dialog"
+        aria-label="<?php esc_attr_e('Assistant virtuel KLEM', 'klem-theme'); ?>"
+    >
+        <!-- En-tête -->
+        <div class="bg-klem-blue px-4 py-3.5 flex items-center justify-between flex-shrink-0">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-klem-orange flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h.01M12 10.5h.01M16 10.5h.01M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm leading-none"><?php esc_html_e('Assistant KLEM', 'klem-theme'); ?></p>
+                    <p class="text-white/50 text-xs mt-1"><?php esc_html_e('Généralement en ligne', 'klem-theme'); ?></p>
+                </div>
+            </div>
+            <button type="button" id="klem-chat-close" class="text-white/60 hover:text-white transition-colors" aria-label="<?php esc_attr_e('Fermer la discussion', 'klem-theme'); ?>">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="klem-chat-messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-gray-50">
+            <div class="flex justify-start">
+                <p class="max-w-[85%] bg-white border border-gray-100 text-gray-700 text-sm leading-relaxed rounded-2xl rounded-bl-sm px-4 py-2.5 shadow-sm">
+                    <?php esc_html_e("Bonjour ! Bienvenue chez KLEM Technologies & Services. Je suis votre assistant virtuel. Souhaitez-vous découvrir nos solutions ou avez-vous un projet en tête ?", 'klem-theme'); ?>
+                </p>
+            </div>
+        </div>
+
+        <!-- Saisie -->
+        <form id="klem-chat-form" class="flex-shrink-0 border-t border-gray-100 p-3 flex items-center gap-2 bg-white">
+            <input
+                type="text"
+                id="klem-chat-input"
+                autocomplete="off"
+                placeholder="<?php esc_attr_e('Écrivez votre message…', 'klem-theme'); ?>"
+                class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors"
+            >
+            <button
+                type="submit"
+                id="klem-chat-send"
+                class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-klem-orange text-white rounded-xl hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                aria-label="<?php esc_attr_e('Envoyer', 'klem-theme'); ?>"
+            >
+                <svg id="klem-chat-send-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                </svg>
+                <svg id="klem-chat-send-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Bouton bascule -->
+    <button
+        type="button"
+        id="klem-chat-toggle"
+        class="w-14 h-14 rounded-full bg-klem-orange text-white shadow-xl flex items-center justify-center hover:brightness-110 hover:-translate-y-0.5 transition-all duration-200 flex-shrink-0"
+        aria-label="<?php esc_attr_e('Ouvrir la discussion avec l’assistant KLEM', 'klem-theme'); ?>"
+        aria-expanded="false"
+    >
+        <svg id="klem-chat-icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h.01M12 10.5h.01M16 10.5h.01M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+        </svg>
+        <svg id="klem-chat-icon-close" class="hidden w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+</div>
+
 <?php wp_footer(); ?>
 </body>
 </html>

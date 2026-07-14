@@ -116,6 +116,100 @@ if (sectorLinks.length > 0 && messageField) {
     });
 }
 
+// ─── Chatbot (capture de leads via API Anthropic) ────────────────────────────
+const chatToggle    = document.getElementById('klem-chat-toggle');
+const chatClose     = document.getElementById('klem-chat-close');
+const chatPanel     = document.getElementById('klem-chat-panel');
+const chatIconOpen  = document.getElementById('klem-chat-icon-open');
+const chatIconClose = document.getElementById('klem-chat-icon-close');
+const chatMessages  = document.getElementById('klem-chat-messages');
+const chatForm      = document.getElementById('klem-chat-form');
+const chatInput     = document.getElementById('klem-chat-input');
+const chatSend      = document.getElementById('klem-chat-send');
+const chatSendIcon  = document.getElementById('klem-chat-send-icon');
+const chatSendSpinner = document.getElementById('klem-chat-send-spinner');
+
+if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
+    const history = [];
+    let isChatOpen = false;
+    let isSending  = false;
+
+    const setChatOpen = (open) => {
+        isChatOpen = open;
+        chatPanel.classList.toggle('hidden', !open);
+        chatIconOpen.classList.toggle('hidden', open);
+        chatIconClose.classList.toggle('hidden', !open);
+        chatToggle.setAttribute('aria-expanded', String(open));
+        if (open) {
+            window.setTimeout(() => chatInput.focus(), prefersReducedMotion ? 0 : 150);
+        }
+    };
+
+    chatToggle.addEventListener('click', () => setChatOpen(!isChatOpen));
+    chatClose?.addEventListener('click', () => setChatOpen(false));
+
+    const scrollChatToBottom = () => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const appendMessage = (role, text) => {
+        const row = document.createElement('div');
+        row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+
+        const bubble = document.createElement('p');
+        bubble.className = role === 'user'
+            ? 'max-w-[85%] bg-klem-orange text-white text-sm leading-relaxed rounded-2xl rounded-br-sm px-4 py-2.5'
+            : 'max-w-[85%] bg-white border border-gray-100 text-gray-700 text-sm leading-relaxed rounded-2xl rounded-bl-sm px-4 py-2.5 shadow-sm';
+        bubble.textContent = text;
+
+        row.appendChild(bubble);
+        chatMessages.appendChild(row);
+        scrollChatToBottom();
+    };
+
+    const setSending = (sending) => {
+        isSending = sending;
+        chatInput.disabled  = sending;
+        chatSend.disabled   = sending;
+        chatSendIcon.classList.toggle('hidden', sending);
+        chatSendSpinner.classList.toggle('hidden', !sending);
+    };
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const text = chatInput.value.trim();
+        if (!text || isSending) return;
+
+        appendMessage('user', text);
+        history.push({ role: 'user', content: text });
+        chatInput.value = '';
+        setSending(true);
+
+        try {
+            const body = new URLSearchParams();
+            body.append('action', 'klem_chatbot_message');
+            body.append('nonce', window.klemChatbotAjax.nonce);
+            body.append('messages', JSON.stringify(history));
+
+            const res  = await fetch(window.klemChatbotAjax.url, { method: 'POST', body });
+            const json = await res.json();
+
+            if (json.success && json.data?.reply) {
+                appendMessage('assistant', json.data.reply);
+                history.push({ role: 'assistant', content: json.data.reply });
+            } else {
+                appendMessage('assistant', json.data?.message ?? 'Une erreur est survenue. Merci de réessayer.');
+            }
+        } catch {
+            appendMessage('assistant', 'Une erreur réseau est survenue. Merci de réessayer.');
+        } finally {
+            setSending(false);
+            chatInput.focus();
+        }
+    });
+}
+
 // ─── Compteurs animés (statistiques du hero) ─────────────────────────────────
 const counters = document.querySelectorAll('[data-count-target]');
 

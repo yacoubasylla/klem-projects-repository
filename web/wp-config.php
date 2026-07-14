@@ -64,6 +64,10 @@ define('KLEM_BREVO_API_KEY',  getenv('KLEM_BREVO_API_KEY')  ?: '');
 define('KLEM_SMTP_FROM',      getenv('KLEM_SMTP_FROM')      ?: 'infos@klemtech.net');
 define('KLEM_SMTP_FROM_NAME', getenv('KLEM_SMTP_FROM_NAME') ?: 'KLEM Technologies & Services');
 
+// ── Chatbot — API Anthropic (Claude) ───────────────────────────────────────────
+define('KLEM_ANTHROPIC_API_KEY', getenv('KLEM_ANTHROPIC_API_KEY') ?: '');
+define('KLEM_ANTHROPIC_MODEL',   getenv('KLEM_ANTHROPIC_MODEL')   ?: 'claude-opus-4-8');
+
 // ── Debug ─────────────────────────────────────────────────────────────────────
 $_klem_env_name = getenv('WP_ENV') ?: 'development';
 define('WP_DEBUG',         $_klem_env_name !== 'production');

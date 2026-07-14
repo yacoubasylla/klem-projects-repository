@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once get_template_directory() . '/inc/chatbot.php';
+
 function klem_theme_setup(): void {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
