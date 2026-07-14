@@ -608,3 +608,63 @@ function klem_seo_breadcrumbs_schema(): void {
     echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
 }
 add_action('wp_head', 'klem_seo_breadcrumbs_schema', 4);
+
+/**
+ * ── Robots : pages fines / dupliquées exclues de l'index ─────────────────
+ * Résultats de recherche, archives catégorie/auteur/date et pages d'erreur
+ * dupliquent le contenu déjà indexé via le hub /actualites/ et les pages
+ * dédiées — on les garde crawlables (follow) mais hors index pour ne pas
+ * diluer le référencement sur des pages sans valeur propre pour un visiteur
+ * venu des résultats de recherche.
+ */
+function klem_seo_robots(array $robots): array {
+    if (is_search() || is_category() || is_tag() || is_date() || is_author() || is_404()) {
+        $robots['noindex']  = true;
+        $robots['follow']   = true;
+    }
+
+    return $robots;
+}
+add_filter('wp_robots', 'klem_seo_robots');
+
+/**
+ * Alt text de repli : le titre de l'article quand l'image à la une n'a pas
+ * de texte alternatif renseigné dans la médiathèque (sinon <img alt=""> nuit
+ * à l'accessibilité et au référencement image).
+ */
+function klem_default_attachment_alt(array $attr): array {
+    if (empty($attr['alt']) && is_singular()) {
+        $attr['alt'] = get_the_title();
+    }
+
+    return $attr;
+}
+add_filter('wp_get_attachment_image_attributes', 'klem_default_attachment_alt');
+
+/**
+ * ── Durcissement WordPress core ──────────────────────────────────────────
+ * XML-RPC (surface de brute-force/DDoS inutile ici), version WP visible en
+ * clair (facilite le ciblage d'exploits connus), et énumération de comptes
+ * via l'API REST ou l'URL ?author=N.
+ */
+add_filter('xmlrpc_enabled', '__return_false');
+remove_action('wp_head', 'wp_generator');
+add_filter('the_generator', '__return_empty_string');
+
+add_filter('rest_endpoints', function (array $endpoints): array {
+    unset($endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)']);
+    return $endpoints;
+});
+
+add_action('template_redirect', function (): void {
+    if (is_author() && !is_user_logged_in() && get_query_var('author_name') === '' && get_query_var('author') !== '') {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+});
+
+// Message de connexion générique : ne pas révéler si un identifiant existe
+// ou non (empêche l'énumération de comptes via le formulaire wp-login.php).
+add_filter('login_errors', function (): string {
+    return __('Identifiants incorrects.', 'klem-theme');
+});

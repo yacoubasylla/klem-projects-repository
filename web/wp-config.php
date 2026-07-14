@@ -73,7 +73,33 @@ $_klem_env_name = getenv('WP_ENV') ?: 'development';
 define('WP_DEBUG',         $_klem_env_name !== 'production');
 define('WP_DEBUG_LOG',     $_klem_env_name !== 'production');
 define('WP_DEBUG_DISPLAY', false);
+
+// ── Garde-fou production ──────────────────────────────────────────────────────
+// Refuse de démarrer si le .env du serveur est incomplet et que WordPress
+// s'apprêterait à utiliser les valeurs de repli du dépôt (publiques, donc
+// connues de quiconque lit ce fichier) pour signer les cookies d'authentification
+// ou se connecter à la base de données.
+if ($_klem_env_name === 'production') {
+    $_klem_still_default = AUTH_KEY === 'klem_dev_auth_key_a_remplacer'
+        || SECURE_AUTH_KEY === 'klem_dev_secure_auth_key_a_remplacer'
+        || LOGGED_IN_KEY === 'klem_dev_logged_in_key_a_remplacer'
+        || NONCE_KEY === 'klem_dev_nonce_key_a_remplacer'
+        || DB_PASSWORD === 'klem_password';
+
+    if ($_klem_still_default) {
+        http_response_code(500);
+        exit('Configuration serveur incomplète : clés de sécurité ou identifiants de base de données absents du .env de production.');
+    }
+    unset($_klem_still_default);
+}
 unset($_klem_env_name);
+
+// ── Durcissement production ────────────────────────────────────────────────────
+define('DISALLOW_FILE_EDIT', true); // pas d'édition de thème/plugin depuis wp-admin
+define('DISALLOW_FILE_MODS', true); // pas d'installation de plugin/thème depuis wp-admin (cf. CLAUDE.md : ajouts via composer.json uniquement)
+if ((getenv('WP_ENV') ?: 'development') === 'production') {
+    define('FORCE_SSL_ADMIN', true);
+}
 
 if (!defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/wp/');

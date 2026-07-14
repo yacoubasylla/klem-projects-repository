@@ -1,3 +1,27 @@
+# ── En-têtes de sécurité ───────────────────────────────────────────────────
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+</IfModule>
+
+# ── Pas de listing de répertoire ──────────────────────────────────────────
+Options -Indexes
+
+# ── Fichiers sensibles inaccessibles ──────────────────────────────────────
+<FilesMatch "^(wp-config\.php|readme\.html|xmlrpc\.php|\.env.*)$">
+    Require all denied
+</FilesMatch>
+
+# ── Pas d'exécution PHP dans les uploads (protection contre les webshells) ──
+<FilesMatch "\.php$">
+    <If "%{REQUEST_URI} =~ m#^/app/uploads/#">
+        Require all denied
+    </If>
+</FilesMatch>
+
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
