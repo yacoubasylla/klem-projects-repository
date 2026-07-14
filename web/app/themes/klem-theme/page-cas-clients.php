@@ -53,7 +53,7 @@ get_header();
                 <?php esc_html_e('Comment nous aidons nos organisations à réussir leurs projets numériques', 'klem-theme'); ?>
             </h1>
             <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
-                <?php esc_html_e("KLEM est une jeune structure : voici des exemples concrets du type de projets que nous menons, pour illustrer notre approche plutôt que revendiquer un historique.", 'klem-theme'); ?>
+                <?php esc_html_e("Voici des exemples concrets du type de projets que nous menons, pour donner une idée précise de notre expertise plutôt qu'un historique.", 'klem-theme'); ?>
             </p>
         </div>
     </section>
