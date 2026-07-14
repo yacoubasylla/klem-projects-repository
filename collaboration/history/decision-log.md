@@ -5,6 +5,31 @@
 
 ---
 
+## [DEC-033] 2026-07-14 — Actualités : 5 articles réels en catégorie "Blog" unique, pas de nouvelle taxonomie
+
+**Contexte :** Le brief de refonte suggérait 4 catégories Actualités ("Données & IA", "ERP & applications", "Commerce digital", "Secteur public"), différentes des 3 catégories déjà existantes (Blog/Actualités/Événements, cf. Session 12/`klem_bootstrap_actualites()`). Le hub Actualités a une UI de filtre câblée en dur sur exactement ces 3 onglets.
+**Décision :** Garder la taxonomie existante à 3 catégories. Les 5 nouveaux articles de fond (tendances data/IA/commerce digital) sont tous publiés en catégorie **"Blog"** — c'est du contenu éditorial/pédagogique, pas une actualité d'entreprise ni un événement, donc "Blog" est la catégorie correcte dans le schéma existant. Aucune catégorie supplémentaire créée.
+**Impact :** `functions.php` (`klem_bootstrap_seed_articles()`)
+**Règle :** Si le volume d'articles augmente significativement et qu'un besoin réel de sous-catégorisation apparaît, revoir `klem_actualites_categories()` et l'UI de filtre de `page-actualites.php` à ce moment-là plutôt que d'anticiper.
+
+---
+
+## [DEC-032] 2026-07-14 — Refonte positionnement honnête (Hero/About) + page Cas Clients illustrative
+
+**ARD :** [ADR-008](../doc/ard/ADR-008-refonte-positionnement-honnete.md)
+**Contexte :** Brief externe de refonte de contenu (`prompt-renovation.md.md`) + constat que le Hero et l'About affichaient des statistiques d'historique client entièrement inventées, incompatibles avec le statut de jeune structure en prospection.
+**Décision :** Voir ADR-008 pour le détail complet — résumé :
+1. Hero/About : retrait de toute métrique d'historique client fabriquée, remplacée par des faits structurels vrais (délai de réponse, nombre de secteurs, piliers, engagement sur-mesure) ou des objectifs explicitement formulés comme tels.
+2. Nouvelle page `/cas-clients/` (`page-cas-clients.php`) : 3 cas d'usage illustratifs (FleetControl/logistique, Cantine Connect/éducation, data warehouse/commerce) explicitement présentés comme des exemples, sans fausse citation client ni résultat chiffré inventé — choix validé explicitement par l'utilisateur plutôt que de suivre le brief tel quel.
+3. Nouveaux teasers home : `template-parts/home/cas-clients-preview.php` et `template-parts/home/actualites-preview.php`, insérés entre "Notre différence" et "Contact" dans `front-page.php`.
+4. Nav (`header.php`, desktop + mobile) et footer (`footer.php`) : lien "Cas Clients" câblé (le footer avait déjà un placeholder `href="#"` jamais utilisé).
+5. Services : CTA génériques "En savoir plus" (qui n'étaient même pas de vrais liens — un `<span>` stylé) remplacés par des CTA réels par pilier réutilisant le mécanisme `data-sector` déjà câblé en JS pour préremplir le formulaire de contact.
+6. Contact : encadré explicatif du chatbot + bouton "Discuter avec l'assistant" (déclenche `CustomEvent('klem:open-chat')`, écouté dans `main.js`), micro-copy resserrée ("24 h" → "24 à 48h ouvrées", cohérent avec la promesse du chatbot).
+**Impact :** `hero.php`, `about.php`, `services.php`, `contact.php`, `header.php`, `footer.php`, `front-page.php`, `functions.php`, `page-cas-clients.php` (nouveau), `template-parts/home/cas-clients-preview.php` (nouveau), `template-parts/home/actualites-preview.php` (nouveau), `src/main.js`
+**Règle :** Toute future statistique ajoutée au Hero/About doit être vérifiable dès aujourd'hui (pas un historique) tant que KLEM n'a pas de premiers clients réels documentés — voir ADR-008.
+
+---
+
 ## [DEC-031] 2026-07-14 — Chatbot : rendu Markdown minimal côté client (gras + listes)
 
 **Contexte :** Capture d'écran utilisateur montrant une réponse illisible : le modèle renvoie du Markdown (`**gras**`, listes `-`/`1.`) et de vrais sauts de ligne, mais le widget affichait tout en texte brut sur une seule ligne — les bulles utilisaient `textContent` et le CSS par défaut collapse les retours à la ligne.

@@ -41,6 +41,7 @@
                         ['label' => 'Services',    'href' => klem_home_anchor('#services'), 'active' => false],
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about'),    'active' => false],
                         ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients'), 'active' => false],
+                        ['label' => 'Cas Clients', 'href' => klem_cas_clients_url(), 'active' => is_page('cas-clients')],
                         ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => $klem_on_actualites],
                         ['label' => 'Contact',     'href' => klem_home_anchor('#contact'),  'active' => false],
                     ];
@@ -122,6 +123,7 @@
                         ['label' => 'Services',    'href' => klem_home_anchor('#services')],
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
                         ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients')],
+                        ['label' => 'Cas Clients', 'href' => klem_cas_clients_url()],
                         ['label' => 'Actualités',  'href' => klem_actualites_url()],
                         ['label' => 'Contact',     'href' => klem_home_anchor('#contact')],
                     ];

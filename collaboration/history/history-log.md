@@ -4,6 +4,62 @@
 
 ---
 
+## Session 19 — 2026-07-14
+
+**Objectif :** Exécuter un brief de refonte de contenu (`prompt-renovation.md.md`, généré via Perplexity) : rassurer des décideurs B2B alors que KLEM est une jeune structure en prospection active, et publier du contenu réel de fond (data/IA/commerce digital) sur le hub Actualités jusque-là vide.
+
+### Contexte et diagnostic
+- En explorant le code avant d'exécuter le brief (header.php, front-page.php, functions.php, page-actualites.php, hero.php, about.php, services.php, clients.php, contact.php), un problème plus large que le brief lui-même a été identifié : Hero et About affichaient des statistiques d'historique client entièrement inventées ("5+ ans d'expertise", "30+ projets livrés", "96% satisfaction clients", "4,2M événements/jour"...) — incompatibles avec le statut de jeune structure, et non traitées lors du retrait des faux témoignages en DEC-012.
+- Vérification base de données : le hub Actualités ne contenait aucun article réel, seul le post "Hello world!" par défaut de WordPress (1 seul post publié). WP-CLI non disponible dans le conteneur.
+- Deux clarifications obtenues avant exécution (voir DEC-032) : (1) retirer les statistiques inventées plutôt que les garder ou en inventer de nouvelles, (2) présenter les cas clients comme des scénarios illustratifs sans fausse citation ni résultat chiffré fabriqué.
+
+### Tâches réalisées (exécutées en mode plan, plan approuvé avant implémentation)
+
+#### 1. Honnêteté Hero + About
+- Hero : bande de 4 stats et 3 cartes flottantes du panneau visuel réécrites (plus aucune métrique d'historique fabriquée) ; sous-titre et CTA principal resserrés ("Planifier un diagnostic gratuit de 30 min")
+- About : panneau "Performances clés" (barres de %) remplacé par un panneau "Nos engagements" (promesses opérationnelles) ; mini-stats du bas alignées sur les mêmes faits honnêtes que le Hero
+
+#### 2. Nouvelle page Cas Clients
+- `page-cas-clients.php` : 3 cas d'usage illustratifs (FleetControl/logistique, Cantine Connect/éducation, data warehouse/commerce), explicitement présentés comme des exemples
+- `functions.php` : `klem_bootstrap_cas_clients()` + `klem_cas_clients_url()` (mirror exact du patron `klem_bootstrap_actualites()`), branche SEO et breadcrumbs dédiées
+- Nav (desktop + mobile, `header.php`) et footer (`footer.php` — le lien "Cas clients" existait déjà en placeholder `href="#"`, jamais câblé) mis à jour
+- Teaser home : `template-parts/home/cas-clients-preview.php`
+
+#### 3. Contenu réel pour Actualités
+- `functions.php` : `klem_bootstrap_seed_articles()` — 5 articles réels rédigés et publiés de façon idempotente (streaming/temps réel, gouvernance des données, agents IA, cloud-first, commerce omnicanal), tous en catégorie "Blog" existante (pas de nouvelle taxonomie, cf. DEC-033)
+- Teaser home : `template-parts/home/actualites-preview.php` (3 articles récents, filtrés par catégorie pour exclure le post "Hello world!" par défaut)
+
+#### 4. Polish services / contact / chatbot
+- `services.php` : les 4 CTA "En savoir plus" (qui n'étaient même pas de vrais liens — un `<span>` stylé) remplacés par de vrais liens avec CTA spécifique par pilier, réutilisant le mécanisme `data-sector` déjà câblé en JS
+- `contact.php` : encadré "Besoin d'une réponse immédiate ?" expliquant le chatbot + bouton d'ouverture ; micro-copy "24h" → "24 à 48h ouvrées"
+- `main.js` : `CustomEvent('klem:open-chat')` pour permettre à ce nouveau bouton d'ouvrir le widget chatbot déjà existant
+- `front-page.php` : nouvel ordre des sections — `hero → services → about → clients → cas-clients-preview → actualites-preview → contact`
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/hero.php` | Stats + cartes flottantes + sous-titre/CTA honnêtes |
+| `template-parts/home/about.php` | Panneau engagements + mini-stats |
+| `template-parts/home/services.php` | CTA réels par pilier + `data-sector` |
+| `template-parts/home/contact.php` | Encadré chatbot + micro-copy |
+| `template-parts/home/cas-clients-preview.php` | Créé — teaser home |
+| `template-parts/home/actualites-preview.php` | Créé — teaser home |
+| `page-cas-clients.php` | Créé — page complète |
+| `header.php` | +entrée nav "Cas Clients" |
+| `footer.php` | Lien "Cas clients" câblé |
+| `front-page.php` | +2 sections |
+| `functions.php` | +4 fonctions (bootstrap cas-clients, url helper, seed articles, branches SEO/breadcrumbs) |
+| `src/main.js` | +event listener `klem:open-chat` |
+| `collaboration/doc/ard/ADR-008-refonte-positionnement-honnete.md` | Créé |
+
+### État du projet en clôture
+- `php -l` sur tous les fichiers modifiés/créés : ✅
+- `pnpm build` : ✅ sans erreur
+- Vérification locale via `curl` : `grep` confirmant l'absence de toute ancienne statistique fabriquée, page `/cas-clients/` et hub `/actualites/` (5 articles + article individuel `/cloud-first-pme-africaines/`) tous fonctionnels, teasers home présents
+- Changements non committés à la clôture — en attente de confirmation utilisateur avant commit/push
+
+---
+
 ## Session 18 — 2026-07-14
 
 **Objectif :** Corriger l'affichage illisible des réponses du chatbot (Markdown brut sur une seule ligne) et trancher le choix de modèle Anthropic entre Haiku et Sonnet.

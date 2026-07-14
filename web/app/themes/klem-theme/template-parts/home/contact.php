@@ -12,8 +12,30 @@
                     <?php esc_html_e('prochain projet', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-500 text-lg leading-relaxed mb-10">
-                    <?php esc_html_e("Notre équipe répond sous 24 h ouvrables. Décrivez votre défi, nous construirons une réponse sur-mesure.", 'klem-theme'); ?>
+                    <?php esc_html_e("Notre équipe répond sous 24 à 48h ouvrées. Décrivez votre défi, nous construirons une réponse sur-mesure.", 'klem-theme'); ?>
                 </p>
+
+                <!-- Encadré Assistant KLEM -->
+                <div class="flex items-start gap-4 bg-klem-blue/5 border border-klem-blue/10 rounded-2xl p-5 mb-10">
+                    <div class="w-10 h-10 rounded-xl bg-klem-blue flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h.01M12 10.5h.01M16 10.5h.01M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-klem-blue text-sm mb-1"><?php esc_html_e('Besoin d\'une réponse immédiate ?', 'klem-theme'); ?></p>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-2">
+                            <?php esc_html_e('Notre assistant KLEM vous aide à comprendre nos offres, préparer votre projet ou planifier un échange avec un expert.', 'klem-theme'); ?>
+                        </p>
+                        <button
+                            type="button"
+                            id="klem-open-chat-cta"
+                            class="text-sm font-semibold text-klem-orange hover:opacity-80 transition-opacity"
+                        >
+                            <?php esc_html_e('Discuter avec l\'assistant →', 'klem-theme'); ?>
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Blocs de contact -->
                 <ul class="space-y-6">
@@ -221,7 +243,7 @@
                         </button>
 
                         <p class="text-center text-gray-400 text-xs">
-                            <?php esc_html_e('* Champs obligatoires · Réponse sous 24 h ouvrables', 'klem-theme'); ?>
+                            <?php esc_html_e('* Champs obligatoires · Réponse sous 24 à 48h ouvrées', 'klem-theme'); ?>
                         </p>
                     </form>
                 </div>

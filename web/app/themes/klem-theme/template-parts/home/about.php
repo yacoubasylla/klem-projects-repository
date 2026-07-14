@@ -27,33 +27,28 @@
 
                 <!-- Label panneau -->
                 <p class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-7 relative z-10">
-                    <?php esc_html_e('Performances clés', 'klem-theme'); ?>
+                    <?php esc_html_e('Nos engagements', 'klem-theme'); ?>
                 </p>
 
-                <!-- Barres de KPI -->
-                <div class="space-y-5 relative z-10">
+                <!-- Liste d'engagements -->
+                <div class="space-y-4 relative z-10">
 
                     <?php
-                    $kpis = [
-                        ['label' => 'Satisfaction clients',         'value' => 96,   'color' => 'bg-klem-orange'],
-                        ['label' => 'Projets livrés dans les délais', 'value' => 98, 'color' => 'bg-klem-blue'],
-                        ['label' => 'Disponibilité infrastructure',  'value' => 100,  'color' => 'bg-klem-orange'],
-                        ['label' => 'Taux de fidélisation clients',  'value' => 88,   'color' => 'bg-klem-blue'],
+                    $commitments = [
+                        ['icon' => 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z',                                            'label' => 'Réponse sous 24 à 48h ouvrées'],
+                        ['icon' => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',                            'label' => 'Méthodologie agile, jalons clairs'],
+                        ['icon' => 'M3 13.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v6.75c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z', 'label' => 'Reporting transparent à chaque étape'],
+                        ['icon' => 'M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z', 'label' => 'Sécurité et sauvegardes par défaut'],
                     ];
-                    foreach ($kpis as $kpi) :
+                    foreach ($commitments as $item) :
                     ?>
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-semibold text-klem-blue"><?php echo esc_html($kpi['label']); ?></span>
-                            <span class="text-sm font-extrabold text-klem-orange"><?php echo esc_html($kpi['value']); ?>%</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-klem-orange/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-klem-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo esc_attr($item['icon']); ?>"/>
+                            </svg>
                         </div>
-                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                                class="h-full rounded-full w-0 transition-all duration-1000 ease-out <?php echo esc_attr($kpi['color']); ?>"
-                                data-target-width="<?php echo esc_attr((string) $kpi['value']); ?>"
-                                aria-label="<?php echo esc_attr($kpi['value'] . '%'); ?>"
-                            ></div>
-                        </div>
+                        <span class="text-sm font-semibold text-klem-blue"><?php echo esc_html($item['label']); ?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -64,16 +59,16 @@
                 <!-- Mini-chiffres clés -->
                 <div class="grid grid-cols-3 gap-4 relative z-10">
                     <div class="text-center">
-                        <p class="text-3xl font-extrabold text-klem-blue leading-none mb-1">5+</p>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Années', 'klem-theme'); ?></p>
+                        <p class="text-3xl font-extrabold text-klem-blue leading-none mb-1">6</p>
+                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Secteurs', 'klem-theme'); ?></p>
                     </div>
                     <div class="text-center border-x border-gray-100">
-                        <p class="text-3xl font-extrabold text-klem-blue leading-none mb-1">30+</p>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Projets', 'klem-theme'); ?></p>
+                        <p class="text-3xl font-extrabold text-klem-blue leading-none mb-1">4</p>
+                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Piliers', 'klem-theme'); ?></p>
                     </div>
                     <div class="text-center">
-                        <p class="text-3xl font-extrabold text-klem-orange leading-none mb-1">4</p>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Piliers', 'klem-theme'); ?></p>
+                        <p class="text-3xl font-extrabold text-klem-orange leading-none mb-1">100%</p>
+                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide"><?php esc_html_e('Sur-mesure', 'klem-theme'); ?></p>
                     </div>
                 </div>
 

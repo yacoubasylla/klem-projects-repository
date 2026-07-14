@@ -122,6 +122,7 @@
                 'num'      => '01',
                 'title'    => 'Ingénierie des Données',
                 'desc'     => 'Pipelines Big Data, architectures temps réel (Kafka, Spark) et lacs de données pour transformer vos données brutes en avantage stratégique décisif.',
+                'cta'      => 'Planifier un atelier data',
                 'delay'    => '100',
                 'icon_svg' => $icon_data,
             ],
@@ -129,6 +130,7 @@
                 'num'      => '02',
                 'title'    => 'Applications Sur-Mesure',
                 'desc'     => "Développement d'applications web et mobiles d'envergure — comme Cantine Connect, notre solution de gestion des paiements et de contrôle d'accès pour la restauration scolaire — ERP et logiciels métiers haute performance, 100 % adaptés à vos processus et à votre ambition.",
+                'cta'      => 'Discuter de mon application',
                 'delay'    => '200',
                 'icon_svg' => $icon_apps,
             ],
@@ -136,6 +138,7 @@
                 'num'      => '03',
                 'title'    => 'Intégration ERP & FleetControl',
                 'desc'     => "Orchestration de systèmes d'information complexes et déploiement de FleetControl, notre solution de gestion de flotte intelligente pour les opérateurs africains.",
+                'cta'      => 'Demander une démo FleetControl',
                 'delay'    => '300',
                 'icon_svg' => $icon_erp,
             ],
@@ -143,6 +146,7 @@
                 'num'      => '04',
                 'title'    => 'Matériel IT & Infrastructure',
                 'desc'     => "Fourniture et déploiement d'équipements serveurs, réseaux et postes de travail de qualité entreprise pour des infrastructures critiques robustes et évolutives.",
+                'cta'      => 'Obtenir une estimation infra',
                 'delay'    => '400',
                 'icon_svg' => $icon_hardware,
             ],
@@ -177,14 +181,18 @@
                     <?php echo esc_html($service['desc']); ?>
                 </p>
 
-                <!-- Lien -->
+                <!-- CTA spécifique au pilier -->
                 <div class="mt-8">
-                    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-400 group-hover:text-klem-red transition-colors duration-200">
-                        <?php esc_html_e('En savoir plus', 'klem-theme'); ?>
+                    <a
+                        href="#contact"
+                        data-sector="<?php echo esc_attr($service['title']); ?>"
+                        class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-400 group-hover:text-klem-red transition-colors duration-200"
+                    >
+                        <?php echo esc_html($service['cta']); ?>
                         <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                         </svg>
-                    </span>
+                    </a>
                 </div>
             </div>
             <?php endforeach; ?>

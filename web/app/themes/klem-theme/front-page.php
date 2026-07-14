@@ -5,6 +5,8 @@
     <?php get_template_part('template-parts/home/services'); ?>
     <?php get_template_part('template-parts/home/about'); ?>
     <?php get_template_part('template-parts/home/clients'); ?>
+    <?php get_template_part('template-parts/home/cas-clients-preview'); ?>
+    <?php get_template_part('template-parts/home/actualites-preview'); ?>
     <?php get_template_part('template-parts/home/contact'); ?>
 </main>
 

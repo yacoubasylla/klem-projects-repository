@@ -116,6 +116,11 @@ if (sectorLinks.length > 0 && messageField) {
     });
 }
 
+// ─── CTA "Discuter avec l'assistant" (section Contact) → ouvre le chatbot ───
+document.getElementById('klem-open-chat-cta')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('klem:open-chat'));
+});
+
 // ─── Chatbot (capture de leads via API Anthropic) ────────────────────────────
 const chatToggle    = document.getElementById('klem-chat-toggle');
 const chatClose     = document.getElementById('klem-chat-close');
@@ -147,6 +152,10 @@ if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
 
     chatToggle.addEventListener('click', () => setChatOpen(!isChatOpen));
     chatClose?.addEventListener('click', () => setChatOpen(false));
+
+    // Permet à d'autres CTA de la page (ex. encadré de la section Contact)
+    // d'ouvrir le widget sans dépendre de son ID interne.
+    window.addEventListener('klem:open-chat', () => setChatOpen(true));
 
     // Ouverture automatique à l'arrivée du visiteur (une seule fois par session navigateur)
     if (!window.sessionStorage.getItem('klemChatAutoOpened')) {
