@@ -8,6 +8,33 @@
     }
 }
 
+/* Rendu Markdown minimal des réponses du chatbot (voir renderAssistantText en JS) */
+.klem-chat-paragraph {
+    margin: 0;
+}
+
+.klem-chat-paragraph + .klem-chat-paragraph,
+.klem-chat-list + .klem-chat-paragraph,
+.klem-chat-paragraph + .klem-chat-list {
+    margin-top: 0.5rem;
+}
+
+.klem-chat-list {
+    margin: 0.4rem 0 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+ul.klem-chat-list {
+    list-style: disc;
+}
+
+ol.klem-chat-list {
+    list-style: decimal;
+}
+
 /* ─── Header fixé — prioritaire sur tout conflit WordPress ──────────────── */
 #site-header {
     position: fixed;

@@ -5,6 +5,19 @@
 
 ---
 
+## [DEC-031] 2026-07-14 — Chatbot : rendu Markdown minimal côté client (gras + listes)
+
+**Contexte :** Capture d'écran utilisateur montrant une réponse illisible : le modèle renvoie du Markdown (`**gras**`, listes `-`/`1.`) et de vrais sauts de ligne, mais le widget affichait tout en texte brut sur une seule ligne — les bulles utilisaient `textContent` et le CSS par défaut collapse les retours à la ligne.
+**Décision :** Ajout d'un petit rendu Markdown maison dans `src/main.js` (`renderAssistantText`) plutôt qu'une librairie externe :
+1. Le texte brut est **d'abord entièrement échappé** (`escapeHtml`) — aucune balise fournie par le modèle ne peut atteindre le DOM.
+2. Seuls nos propres motifs sont ensuite réintroduits : `**gras**` → `<strong>`, lignes `- `/`* ` → `<ul>`, lignes `1. `/`1)` → `<ol>` (numérotation native CSS, pas de recomptage manuel), le reste → `<p>`.
+3. Les lignes vides **ne referment pas** une liste en cours (sinon une liste à items séparés par une ligne blanche se scindait en plusieurs listes d'un seul item, avec une numérotation qui repartait à 1 à chaque fois).
+4. Les messages de l'utilisateur restent en `textContent` pur (aucun rendu Markdown nécessaire ni souhaitable côté visiteur).
+**Impact :** `web/app/themes/klem-theme/src/main.js`, `web/app/themes/klem-theme/src/main.css` (classes `.klem-chat-paragraph` / `.klem-chat-list` — en CSS pur plutôt qu'en utilitaires Tailwind, car `main.js` n'est pas scanné par le `content` de `tailwind.config.js`)
+**Règle :** Si de nouveaux motifs Markdown doivent être supportés (citations, liens...), les ajouter dans `renderAssistantText` en gardant le principe échappement-d'abord — ne jamais injecter le texte du modèle directement en `innerHTML`.
+
+---
+
 ## [DEC-030] 2026-07-14 — Chatbot : modèle rapide (Haiku 4.5), capture simplifiée, auto-ouverture
 
 **Contexte :** Premier test réel en production → erreur réseau côté visiteur et lenteur perçue. `claude-opus-4-8` (modèle le plus puissant mais le plus lent) combiné à `max_tokens: 1024` dépassait le confort d'attente et risquait le timeout sur hébergement mutualisé. Le client demande en plus un accueil immédiat à l'arrivée sur le site et une capture de coordonnées plus rapide, avec un nouveau jeu de champs (prénom, nom, email, secteur d'activité — téléphone optionnel).

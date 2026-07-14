@@ -160,15 +160,68 @@ if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
+    // Rendu Markdown minimal et sûr pour les réponses de l'assistant : le texte
+    // brut est d'abord entièrement échappé, puis seules nos propres balises
+    // (issues de motifs **gras** / listes à puces / paragraphes) sont injectées
+    // — aucune balise fournie par le modèle ne peut jamais atteindre le DOM.
+    const escapeHtml = (str) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    const renderInline = (line) => line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    const renderAssistantText = (text) => {
+        const lines = escapeHtml(text).split('\n');
+        let html = '';
+        let listTag = null; // 'ul' | 'ol' | null
+
+        const closeList = () => {
+            if (listTag) { html += `</${listTag}>`; listTag = null; }
+        };
+
+        lines.forEach((rawLine) => {
+            const line = rawLine.trim();
+            if (line === '') { return; } // une ligne vide ne referme pas une liste en cours (items séparés par un blanc)
+
+            const bulletMatch = line.match(/^[-*]\s+(.*)/);
+            const numberedMatch = line.match(/^\d+[.)]\s+(.*)/);
+            const targetTag = bulletMatch ? 'ul' : (numberedMatch ? 'ol' : null);
+
+            if (targetTag) {
+                if (listTag !== targetTag) {
+                    closeList();
+                    html += `<${targetTag} class="klem-chat-list">`;
+                    listTag = targetTag;
+                }
+                html += `<li>${renderInline((bulletMatch ?? numberedMatch)[1])}</li>`;
+                return;
+            }
+
+            closeList();
+            html += `<p class="klem-chat-paragraph">${renderInline(line)}</p>`;
+        });
+
+        closeList();
+        return html || escapeHtml(text);
+    };
+
     const appendMessage = (role, text) => {
         const row = document.createElement('div');
         row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
 
-        const bubble = document.createElement('p');
+        const bubble = document.createElement('div');
         bubble.className = role === 'user'
             ? 'max-w-[85%] bg-klem-orange text-white text-sm leading-relaxed rounded-2xl rounded-br-sm px-4 py-2.5'
             : 'max-w-[85%] bg-white border border-gray-100 text-gray-700 text-sm leading-relaxed rounded-2xl rounded-bl-sm px-4 py-2.5 shadow-sm';
-        bubble.textContent = text;
+
+        if (role === 'user') {
+            bubble.textContent = text;
+        } else {
+            bubble.innerHTML = renderAssistantText(text);
+        }
 
         row.appendChild(bubble);
         chatMessages.appendChild(row);

@@ -4,6 +4,37 @@
 
 ---
 
+## Session 18 — 2026-07-14
+
+**Objectif :** Corriger l'affichage illisible des réponses du chatbot (Markdown brut sur une seule ligne) et trancher le choix de modèle Anthropic entre Haiku et Sonnet.
+
+### Contexte
+- Capture d'écran utilisateur : la réponse de l'assistant s'affichait en un seul bloc de texte, avec les astérisques `**...**` et tirets `-` visibles tels quels, aucun retour à la ligne entre les points de la liste
+- Cause : le widget affichait le texte de l'assistant via `textContent`, qui n'exécute aucun rendu Markdown, combiné au comportement par défaut du CSS qui collapse les retours à la ligne
+
+### Décision modèle (Haiku vs Sonnet)
+- L'utilisateur a d'abord demandé à repasser sur `claude-sonnet-5` ("réponses efficaces et non superflues")
+- Recommandation donnée : rester sur **Haiku 4.5** — la tâche est scriptée et courte (accueil, 1 question, extraction structurée via tool use), la concision est déjà imposée par le system prompt (indépendante du modèle), et Haiku règle directement le problème de lenteur/timeout observé en Session 17
+- Décision finale utilisateur : **conserver Haiku 4.5**, réévaluer un autre modèle plus tard si besoin
+
+### Tâches réalisées
+- `src/main.js` : ajout de `renderAssistantText()` — rendu Markdown minimal et sûr (échappement HTML systématique d'abord, puis réinjection de `<strong>`/`<ul>`/`<ol>`/`<p>` uniquement). Les messages utilisateur restent en `textContent` pur.
+- Gestion correcte des listes à puces et numérotées séparées par des lignes vides (ne pas refermer la liste sur une ligne blanche, sinon la numérotation repart à 1 à chaque item)
+- `src/main.css` : classes `.klem-chat-paragraph` / `.klem-chat-list` en CSS pur (pas d'utilitaires Tailwind, car `main.js` n'est pas dans le `content` scanné par `tailwind.config.js`)
+- Vérification : test Node.js autonome de `renderAssistantText()` (liste numérotée continue + tentative d'injection `<script>` correctement échappée), `pnpm build` ✅
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `web/app/themes/klem-theme/src/main.js` | Rendu Markdown minimal (`renderAssistantText`, `renderInline`, `escapeHtml`) |
+| `web/app/themes/klem-theme/src/main.css` | Classes `.klem-chat-paragraph` / `.klem-chat-list` |
+| `.env.example` | Commentaire modèle mis à jour (confirmation Haiku) |
+
+### État du projet en clôture
+- Changements testés en local (build + test Node.js), non committés à la clôture — en attente de confirmation utilisateur
+
+---
+
 ## Session 17 — 2026-07-14
 
 **Objectif :** Corriger la lenteur/erreurs du chatbot signalées lors du premier test réel en production, et accélérer le tunnel de capture de leads (accueil immédiat, coordonnées demandées plus vite, nouveaux champs).
