@@ -34,18 +34,19 @@ function klem_chatbot_tools(): array {
     return [[
         'type'        => 'custom',
         'name'        => 'capture_lead',
-        'description' => "Enregistre le lead une fois que le prénom et nom, l'e-mail et le téléphone du visiteur ont été obtenus (étape 3 du workflow). Le nom de l'entreprise est optionnel. N'appelle cet outil qu'une seule fois, après avoir recueilli ces informations.",
+        'description' => "Enregistre le lead dès que le prénom, le nom, l'e-mail et le secteur d'activité du visiteur ont été obtenus (étape 3 du workflow). Le téléphone n'est capturé que s'il a été spontanément fourni. N'appelle cet outil qu'une seule fois, dès que ces informations sont réunies — n'attends pas d'informations supplémentaires.",
         'strict'      => true,
         'input_schema' => [
             'type'       => 'object',
             'properties' => [
-                'nom_complet' => ['type' => 'string', 'description' => 'Prénom et nom du visiteur'],
-                'email'       => ['type' => 'string', 'description' => "Adresse e-mail du visiteur"],
-                'telephone'   => ['type' => 'string', 'description' => 'Numéro de téléphone du visiteur'],
-                'entreprise'  => ['type' => 'string', 'description' => "Nom de l'entreprise du visiteur, chaîne vide si non fourni"],
-                'besoin'      => ['type' => 'string', 'description' => 'Résumé en une phrase du besoin exprimé par le visiteur'],
+                'prenom'           => ['type' => 'string', 'description' => 'Prénom du visiteur'],
+                'nom'              => ['type' => 'string', 'description' => 'Nom du visiteur'],
+                'email'            => ['type' => 'string', 'description' => "Adresse e-mail du visiteur"],
+                'secteur_activite' => ['type' => 'string', 'description' => "Secteur d'activité du visiteur ou de son entreprise"],
+                'telephone'        => ['type' => 'string', 'description' => 'Numéro de téléphone du visiteur, chaîne vide si non fourni spontanément'],
+                'besoin'           => ['type' => 'string', 'description' => 'Résumé en une phrase du besoin exprimé par le visiteur'],
             ],
-            'required'             => ['nom_complet', 'email', 'telephone', 'entreprise', 'besoin'],
+            'required'             => ['prenom', 'nom', 'email', 'secteur_activite', 'telephone', 'besoin'],
             'additionalProperties' => false,
         ],
     ]];
@@ -89,17 +90,18 @@ function klem_chatbot_sanitize_messages(array $raw): array {
 
 function klem_chatbot_notify_lead(array $lead): void {
     $to = ['infos@klemtech.net', 'yacouba.sylla@klemtech.net', 'ciyasyl@gmail.com'];
+    $nom_complet = trim($lead['prenom'] . ' ' . $lead['nom']);
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
     if (is_email($lead['email'])) {
-        $headers[] = sprintf('Reply-To: %s <%s>', $lead['nom_complet'], $lead['email']);
+        $headers[] = sprintf('Reply-To: %s <%s>', $nom_complet, $lead['email']);
     }
 
     $body = sprintf(
-        "Nom : %s\nSociété : %s\nE-mail : %s\nTéléphone : %s\nBesoin exprimé :\n%s",
-        $lead['nom_complet'],
-        $lead['entreprise'] !== '' ? $lead['entreprise'] : '—',
+        "Nom : %s\nSecteur d'activité : %s\nE-mail : %s\nTéléphone : %s\nBesoin exprimé :\n%s",
+        $nom_complet,
+        $lead['secteur_activite'],
         $lead['email'],
-        $lead['telephone'],
+        $lead['telephone'] !== '' ? $lead['telephone'] : '—',
         $lead['besoin']
     );
 
@@ -135,7 +137,7 @@ function klem_handle_chatbot_message(): void {
     }
 
     $response = wp_remote_post('https://api.anthropic.com/v1/messages', [
-        'timeout' => 25,
+        'timeout' => 30,
         'headers' => [
             'x-api-key'         => KLEM_ANTHROPIC_API_KEY,
             'anthropic-version' => '2023-06-01',
@@ -143,7 +145,7 @@ function klem_handle_chatbot_message(): void {
         ],
         'body' => wp_json_encode([
             'model'      => KLEM_ANTHROPIC_MODEL,
-            'max_tokens' => 1024,
+            'max_tokens' => 400,
             'system'     => klem_chatbot_system_prompt(),
             'tools'      => klem_chatbot_tools(),
             'messages'   => $messages,
@@ -180,14 +182,15 @@ function klem_handle_chatbot_message(): void {
 
     if ($lead_capture !== null) {
         $lead = [
-            'nom_complet' => sanitize_text_field((string) ($lead_capture['nom_complet'] ?? '')),
-            'email'       => sanitize_email((string) ($lead_capture['email'] ?? '')),
-            'telephone'   => sanitize_text_field((string) ($lead_capture['telephone'] ?? '')),
-            'entreprise'  => sanitize_text_field((string) ($lead_capture['entreprise'] ?? '')),
-            'besoin'      => sanitize_textarea_field((string) ($lead_capture['besoin'] ?? '')),
+            'prenom'           => sanitize_text_field((string) ($lead_capture['prenom'] ?? '')),
+            'nom'              => sanitize_text_field((string) ($lead_capture['nom'] ?? '')),
+            'email'            => sanitize_email((string) ($lead_capture['email'] ?? '')),
+            'secteur_activite' => sanitize_text_field((string) ($lead_capture['secteur_activite'] ?? '')),
+            'telephone'        => sanitize_text_field((string) ($lead_capture['telephone'] ?? '')),
+            'besoin'           => sanitize_textarea_field((string) ($lead_capture['besoin'] ?? '')),
         ];
 
-        if ($lead['nom_complet'] !== '' && is_email($lead['email']) && $lead['telephone'] !== '') {
+        if ($lead['prenom'] !== '' && $lead['nom'] !== '' && is_email($lead['email']) && $lead['secteur_activite'] !== '') {
             klem_chatbot_notify_lead($lead);
             wp_send_json_success([
                 'reply'         => __("Merci ! Vos coordonnées ont bien été transmises à notre équipe, qui reviendra vers vous sous 48 heures. Avez-vous une autre question sur nos services en attendant ?", 'klem-theme'),

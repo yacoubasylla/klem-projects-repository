@@ -4,6 +4,106 @@
 
 ---
 
+## Session 17 — 2026-07-14
+
+**Objectif :** Corriger la lenteur/erreurs du chatbot signalées lors du premier test réel en production, et accélérer le tunnel de capture de leads (accueil immédiat, coordonnées demandées plus vite, nouveaux champs).
+
+### Contexte
+- Capture d'écran fournie par l'utilisateur : après "Oui oui", le chatbot répond "Une erreur réseau est survenue" — symptomatique d'un timeout côté API (modèle `claude-opus-4-8`, le plus lent de la gamme, avec `max_tokens: 1024`).
+- Nouvelle exigence produit : accueillir le visiteur dès son arrivée sur le site (pas seulement au clic), et capturer rapidement prénom/nom/email/secteur d'activité (téléphone optionnel), en plus d'enregistrer le besoin.
+
+### Décisions utilisateur (clarifiées avant implémentation)
+1. Téléphone : conservé en **champ optionnel** (jamais demandé activement, capturé seulement si spontanément fourni)
+2. Auto-ouverture du chat : **après ~4 secondes**, une seule fois par session navigateur
+
+### Tâches réalisées
+
+#### 1. Performance — modèle et taille de réponse
+- `KLEM_ANTHROPIC_MODEL` par défaut : `claude-opus-4-8` → `claude-haiku-4-5-20251001` (`wp-config.php`, `.env.example`)
+- `max_tokens` : 1024 → 400 (cohérent avec la consigne "réponses courtes" déjà présente dans le system prompt)
+
+#### 2. Workflow conversationnel accéléré
+- `inc/chatbot-system-prompt.md` : réduit à 3 étapes (accueil+accroche immédiate → 1 seule question de qualification → capture groupée en un seul message), au lieu de 4 étapes avec capture champ par champ
+- `agent-prompt.md` (brouillon racine, non utilisé par le code) resynchronisé avec la version fonctionnelle pour éviter toute divergence
+
+#### 3. Nouveau schéma de capture de leads
+- Tool `capture_lead` (`inc/chatbot.php`) : `nom_complet` + `entreprise` → `prenom` + `nom` + `secteur_activite` ; `telephone` conservé mais optionnel
+- `klem_chatbot_notify_lead()` et la validation dans `klem_handle_chatbot_message()` mis à jour en conséquence
+
+#### 4. Auto-ouverture du widget à l'arrivée du visiteur
+- `src/main.js` : ouverture automatique du panneau 4 s après le chargement de la page, une seule fois par session (`sessionStorage.klemChatAutoOpened`) pour ne pas être intrusif sur les pages suivantes de la même visite
+
+#### 5. Debug — diagnostic de la lenteur observée en local
+- Premier test local après les changements : timeout complet (30 s, `cURL error 28`)
+- **Cause 1 identifiée et corrigée :** l'édition de `chatbot-system-prompt.md` avait involontairement changé ses permissions à `600` (au lieu de `644`) côté conteneur Docker → `file_get_contents` échouait silencieusement (`Permission denied`) et le system prompt partait vide. Corrigé par `chmod 644`.
+- **Cause 2 :** des appels `curl` bruts depuis le conteneur Docker de dev vers `api.anthropic.com` montrent eux-mêmes une latence très variable (1,4 s à 30 s) — confirmé indépendant du code applicatif (WordPress bootstrap mesuré à 0,3 s, hypothèse `Expect: 100-continue` testée et écartée). **Conclusion : réseau sortant du conteneur Docker local instable, sans rapport avec la production.** Le vrai test de performance doit se faire sur `klemtech.net` après déploiement.
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `web/wp-config.php` | Modèle par défaut → Haiku 4.5 |
+| `.env.example` | Modèle recommandé documenté |
+| `web/app/themes/klem-theme/inc/chatbot.php` | `max_tokens` réduit, schéma `capture_lead` révisé, notification email mise à jour |
+| `web/app/themes/klem-theme/inc/chatbot-system-prompt.md` | Workflow 3 étapes, capture groupée |
+| `web/app/themes/klem-theme/src/main.js` | Auto-ouverture du widget (4 s, 1×/session) |
+| `agent-prompt.md` | Resynchronisé avec la version fonctionnelle |
+| `collaboration/doc/ard/ADR-007-chatbot-lead-capture-anthropic.md` | Créé (documente la Session 16 — patron du proxy AJAX chatbot) |
+
+### État du projet en clôture
+- Correctifs testés en local (permission + schéma + capture), mais performance à valider en conditions réelles sur `klemtech.net` — le réseau local n'est pas représentatif
+- Changements non committés à la clôture de cette session — en attente de confirmation utilisateur avant commit/push/déploiement
+- **Rappel opérationnel :** si `KLEM_ANTHROPIC_MODEL` est explicitement défini dans le `.env` de production (Hostinger), il doit être mis à jour manuellement vers `claude-haiku-4-5-20251001` — changer le seul fallback dans `wp-config.php` ne suffit pas
+
+---
+
+## Session 16 — 2026-07-14
+
+**Objectif :** Terminer et mettre en production le chatbot de capture de leads (API Anthropic).
+
+### Contexte
+- Le backend AJAX (`inc/chatbot.php`, `inc/chatbot-system-prompt.md`) et les constantes `.env`/`wp-config.php` avaient déjà été rédigés (session non journalisée), mais aucun widget visiteur n'existait — la fonctionnalité était inutilisable.
+- Note : les commits `bf94181`, `e9655a4`, `a3bed90`, `3ef997f`, `65dbcec` (SEO, hub Actualités, header, sécurité Vite, nav) sont antérieurs à cette session et n'ont pas été journalisés ici — à backfiller si besoin.
+
+### Tâches réalisées
+
+#### 1. Widget chatbot flottant (frontend)
+- `footer.php` : bouton bascule + panneau de discussion (en-tête, liste de messages, formulaire de saisie), stylé avec les classes Tailwind existantes (`klem-blue`, `klem-orange`)
+- `src/main.js` : ouverture/fermeture du panneau, historique de conversation maintenu en mémoire, envoi `fetch()` vers `klemChatbotAjax` (déjà localisé par `inc/chatbot.php`), rendu des bulles (`textContent`, jamais `innerHTML`), état de chargement (spinner) et gestion d'erreur réseau/API
+
+#### 2. Vérification
+- `pnpm build` : ✅ 0 erreur
+- `php -l` sur `footer.php`, `functions.php`, `inc/chatbot.php` : ✅ aucune erreur de syntaxe
+- Test end-to-end réel via `curl` (nonce extrait de la page, POST direct sur `admin-ajax.php`) : réponse Anthropic correcte, cohérente avec le system prompt (étapes accueil/qualification)
+
+#### 3. Debug production — chatbot indisponible (503)
+- **Symptôme :** premier test réel depuis un téléphone → « Le chatbot est momentanément indisponible »
+- **Cause :** `.env` de production (Hostinger, `~/site-klem/.env`, hors dépôt) ne contenait pas encore `KLEM_ANTHROPIC_API_KEY` / `KLEM_ANTHROPIC_MODEL` — comportement voulu du garde-fou dans `inc/chatbot.php` (pas un bug)
+- **Fix :** utilisateur a ajouté la clé directement sur le `.env` serveur (aucun redéploiement nécessaire, `wp-config.php` relit le `.env` à chaque requête)
+- **Validation :** nouveau test `curl` sur `https://www.klemtech.net/wp/wp-admin/admin-ajax.php` → réponse Anthropic correcte, citant les vrais services KLEM (Big Data, Applications Sur-Mesure, ERP/FleetControl, Matériel IT)
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `footer.php` | Widget chatbot flottant (bouton + panneau de discussion) |
+| `src/main.js` | Logique JS du chatbot (ouverture, envoi AJAX, rendu, erreurs) |
+| `web/wp-config.php` | Constantes `KLEM_ANTHROPIC_API_KEY` / `KLEM_ANTHROPIC_MODEL` |
+| `.env.example` | Template documenté pour les 2 nouvelles variables |
+| `web/app/themes/klem-theme/inc/chatbot.php` | Backend AJAX proxy Anthropic (déjà rédigé, committé cette session) |
+| `web/app/themes/klem-theme/inc/chatbot-system-prompt.md` | System prompt du workflow conversationnel (déjà rédigé, committé cette session) |
+| `dist/` | Build recompilé et committé |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `95ef35e` | feat(chatbot): ajoute le widget de capture de leads (API Anthropic) |
+
+### État du projet en clôture
+- Chatbot 100 % opérationnel en production : widget visible, appel API fonctionnel, réponses conformes au system prompt
+- `.env` serveur Hostinger désormais complet : DB, Brevo, Anthropic
+- **Règle établie (demande explicite du client) :** à partir de cette session, `history-log.md`, `decision-log.md` et les ADR concernés doivent être mis à jour à chaque changement significatif, en clôture de tâche
+
+---
+
 ## Session 15 — 2026-07-01
 
 **Objectif :** Intégrer Cantine Connect (solution digitale de gestion des paiements et de contrôle d'accès cantine scolaire) parmi les produits présentés sur le site, en suivant le même schéma d'intégration que FleetControl.

@@ -148,6 +148,14 @@ if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
     chatToggle.addEventListener('click', () => setChatOpen(!isChatOpen));
     chatClose?.addEventListener('click', () => setChatOpen(false));
 
+    // Ouverture automatique à l'arrivée du visiteur (une seule fois par session navigateur)
+    if (!window.sessionStorage.getItem('klemChatAutoOpened')) {
+        window.sessionStorage.setItem('klemChatAutoOpened', '1');
+        window.setTimeout(() => {
+            if (!isChatOpen) setChatOpen(true);
+        }, 4000);
+    }
+
     const scrollChatToBottom = () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     };

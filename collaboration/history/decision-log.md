@@ -5,6 +5,30 @@
 
 ---
 
+## [DEC-030] 2026-07-14 — Chatbot : modèle rapide (Haiku 4.5), capture simplifiée, auto-ouverture
+
+**Contexte :** Premier test réel en production → erreur réseau côté visiteur et lenteur perçue. `claude-opus-4-8` (modèle le plus puissant mais le plus lent) combiné à `max_tokens: 1024` dépassait le confort d'attente et risquait le timeout sur hébergement mutualisé. Le client demande en plus un accueil immédiat à l'arrivée sur le site et une capture de coordonnées plus rapide, avec un nouveau jeu de champs (prénom, nom, email, secteur d'activité — téléphone optionnel).
+**Décision :**
+1. **Modèle** : `KLEM_ANTHROPIC_MODEL` par défaut → `claude-haiku-4-5-20251001` (fallback dans `wp-config.php` + `.env.example`), `max_tokens` 1024 → 400. Le `.env` de production doit être mis à jour manuellement (variable déjà explicite côté serveur).
+2. **Workflow accéléré** (`inc/chatbot-system-prompt.md`) : 1 seule question de qualification maximum avant de basculer sur la capture ; les coordonnées sont demandées **en un seul message groupé** plutôt qu'un champ à la fois.
+3. **Schéma de capture** (`inc/chatbot.php` → tool `capture_lead`) : `nom_complet`/`entreprise` remplacés par `prenom`, `nom`, `secteur_activite` ; `telephone` conservé mais optionnel (jamais demandé activement, capturé seulement si spontanément fourni par le visiteur) — décision utilisateur du 2026-07-14.
+4. **Auto-ouverture** (`src/main.js`) : le panneau s'ouvre automatiquement 4 secondes après le chargement de la page, une seule fois par session navigateur (`sessionStorage`), pour accueillir le visiteur sans attendre un clic — décision utilisateur du 2026-07-14.
+**Impact :** `web/wp-config.php`, `.env.example`, `web/app/themes/klem-theme/inc/chatbot.php`, `web/app/themes/klem-theme/inc/chatbot-system-prompt.md`, `web/app/themes/klem-theme/src/main.js`
+**Diagnostic notable :** en local, le conteneur Docker de dev présente un réseau sortant intermittent vers `api.anthropic.com` (délais de 5 à 30 s sans rapport avec le code — confirmé par des appels `curl` bruts depuis le même conteneur montrant la même variance). Ce n'est pas représentatif de la production (Hostinger) : le vrai test de performance doit se faire après déploiement sur `klemtech.net`, pas en local.
+**Règle :** Si la lenteur persiste après déploiement malgré Haiku 4.5, vérifier en priorité le réseau sortant du serveur Hostinger vers `api.anthropic.com` (latence DNS/connexion) avant de suspecter le modèle ou le code applicatif.
+
+---
+
+## [DEC-029] 2026-07-14 — Chatbot de capture de leads : proxy AJAX natif vers l'API Anthropic
+
+**ARD :** [ADR-007](../doc/ard/ADR-007-chatbot-lead-capture-anthropic.md)
+**Contexte :** Besoin d'un assistant conversationnel pour accueillir les visiteurs, qualifier leur besoin et capturer un lead (nom, email, téléphone) sans plugin lourd. Le backend (`inc/chatbot.php`, `inc/chatbot-system-prompt.md`) avait été rédigé mais aucune interface visiteur n'existait encore.
+**Décision :** Même patron que le formulaire de contact (DEC-004/ADR-003) — action `wp_ajax_nopriv_klem_chatbot_message` en proxy vers `https://api.anthropic.com/v1/messages`. System prompt externalisé en markdown. La capture de lead passe par un tool Anthropic (`capture_lead`) mais l'email de notification et le message de confirmation sont construits côté PHP, jamais laissés au modèle seul. Historique de conversation stateless côté navigateur, assaini et borné (30 messages / 4000 caractères) avant chaque appel API. Rate limiting 40 msg/IP/heure (transients). Ajout du widget flottant dans `footer.php` + `src/main.js`.
+**Impact :** `inc/chatbot.php`, `inc/chatbot-system-prompt.md`, `footer.php`, `src/main.js`, `web/wp-config.php`, `.env.example`
+**Règle :** Le `.env` de production (`~/site-klem/.env` sur Hostinger, hors dépôt — cf. DEC-006/DEC-021) doit contenir `KLEM_ANTHROPIC_API_KEY` et `KLEM_ANTHROPIC_MODEL`, sinon le handler répond 503 « chatbot momentanément indisponible » (comportement voulu, pas un bug).
+
+---
+
 ## [DEC-028] 2026-07-01 — Cantine Connect intégré selon le schéma FleetControl (pas de CPT dédié)
 
 **Contexte :** Nouveau produit du client (gestion des paiements et contrôle d'accès cantine scolaire), disponible en test sur `https://cantine-connect-swart.vercel.app/login`. Le client a demandé de l'intégrer "comme FleetControl", sans changer la structure du site.
