@@ -70,7 +70,8 @@
                 </h1>
 
                 <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10" data-animate data-delay="200">
-                    <?php esc_html_e('Ingénierie des données, applications sur-mesure et intégration ERP : nous concevons vos outils numériques pour l\'Afrique, de la première idée à la mise en production.', 'klem-theme'); ?>
+                    <span class="font-medium text-gray-700"><?php esc_html_e('Ingénierie de données • Applications sur-mesure • Intégration ERP • Infrastructures IT', 'klem-theme'); ?></span>
+                    <?php esc_html_e('Nous concevons vos outils numériques pour l\'Afrique, de la première idée à la mise en production.', 'klem-theme'); ?>
                 </p>
 
                 <div class="flex flex-wrap gap-4" data-animate data-delay="300">
