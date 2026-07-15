@@ -37,10 +37,17 @@
 | `template-parts/home/hero.php` | Baseline réécrite (4 itérations de copy) |
 | `page-cas-clients.php` | +3 cas d'usage, puis -1 (Dispo-Link), contenu allégé, lien contact par carte |
 | `functions.php` | Fallback image ajouté puis retiré (cause réelle identifiée entre-temps) |
-| `.gitignore` | +`ACCESS.md` |
+| `.gitignore` | +`ACCESS.md`, +blocage `.log` |
 | `ACCESS.md` | Créé — non versionné |
-| `collaboration/history/decision-log.md` | +DEC-034, DEC-035, DEC-036 |
+| `web/.htaccess` | Blocage `.log` |
+| `collaboration/history/decision-log.md` | +DEC-034, DEC-035, DEC-036, DEC-037 |
 | Médiathèque production (Hostinger) | +5 images (attachements 12–16), sans changement de code |
+
+### 5. SEO local Afrique/CI + fermeture de 2 fuites d'énumération
+- Voir **DEC-037** pour le détail complet
+- `lang="fr-CI"`, `GeoCoordinates` + meta géo legacy dans le `<head>`
+- Sitemap `users` retiré, archives auteur systématiquement redirigées, rate limiting anti-brute-force sur `wp-login.php`, nettoyage RSD/wlwmanifest/shortlink/X-Pingback
+- `functions.php`
 
 ### Commits de la session
 | Hash | Description |
@@ -51,6 +58,8 @@
 | `487ed78` | feat(cas-clients): ajoute 3 cas d'usage (Clear-Comply, Med-Share, Dispo-Link) |
 | `4292c0f` | feat(cas-clients): ajoute un lien de contact sur chaque carte de cas d'usage |
 | `f70a386` | copy(cas-clients): simplifie le texte de contact sur les cartes de cas d'usage |
+| `b7cc4e5` | docs: journalise la Session 20 + centralise les accès hors dépôt (ACCESS.md) |
+| `19cce16` | feat(seo,security): SEO local Afrique/CI + durcissement complémentaire |
 
 ### État du projet en clôture
 - `php -l` sur tous les fichiers PHP modifiés : ✅

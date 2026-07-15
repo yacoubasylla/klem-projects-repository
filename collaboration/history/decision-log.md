@@ -5,6 +5,19 @@
 
 ---
 
+## [DEC-037] 2026-07-15 — SEO local Afrique/CI + fermeture de 2 fuites d'énumération résiduelles
+
+**Contexte :** Demande explicite d'optimiser le référencement pour la Côte d'Ivoire/l'Afrique et de corriger les vulnérabilités restantes. Le site avait déjà un socle SEO/sécurité solide (DEC antérieurs, commit `219a6d3`), mais deux angles morts identifiés : `lang="fr-FR"` (moins précis que `fr-CI` pour un ciblage régional), aucune coordonnée géographique dans le JSON-LD `ProfessionalService`, et surtout — le sitemap XML natif WordPress (`wp-sitemap-users-*.xml`) et les archives auteur (`/author/<slug>/`) exposaient encore le nom d'utilisateur admin malgré le filtre `rest_endpoints` déjà en place (qui ne couvrait que l'API REST, pas ces deux autres chemins).
+**Décision :**
+1. SEO : `lang="fr-CI"`, `GeoCoordinates` (Treichville, Abidjan — précision commune, pas d'adresse géocodée exacte) dans le JSON-LD, meta géo legacy (`geo.region`, `geo.placename`, `geo.position`, `ICBM`).
+2. Sécurité : provider `users` retiré du sitemap XML (`wp_sitemaps_add_provider`), toute archive auteur redirige désormais vers l'accueil (plus seulement le motif `?author=N`), rate limiting anti-brute-force sur `wp-login.php` (5 échecs / 15 min / IP, transient — même patron que le formulaire de contact), nettoyage RSD/wlwmanifest/shortlink/`X-Pingback` (résidus liés à XML-RPC déjà désactivé), blocage `.log` en `.htaccess`.
+3. **Limite explicitement communiquée à l'utilisateur :** aucune optimisation technique ne garantit un classement ("parmi les plus vus") — cela dépend aussi de contenu, backlinks, avis Google Business Profile, autorité de domaine, etc., hors du périmètre code.
+**Impact :** `functions.php`, `web/.htaccess`
+**Bug corrigé en cours de route :** le premier essai du rate limiter (`add_filter('authenticate', ..., 1, 3)`, priorité 1) ne bloquait rien — `wp_authenticate_username_password` (core, priorité 20) ignore une `WP_Error` déjà présente dès que login/mot de passe sont non vides, donc écrase systématiquement le blocage. Fix : hook à la priorité 30 (après le core), confirmé fonctionnel via les logs Docker (`error_log` temporaire, retiré après validation).
+**Règle à suivre :** Pour bloquer une tentative de connexion via le filtre `authenticate`, toujours hooker à une priorité **postérieure** à 20 (le core WordPress n'honore une erreur préexistante que si les identifiants sont vides).
+
+---
+
 ## [DEC-036] 2026-07-15 — Secret DB déjà exposé publiquement : rotation différée + convention `ACCESS.md` local
 
 **Contexte :** En préparant la sauvegarde des paramètres d'accès (SSH Hostinger, DB, API), constat que `collaboration/history/history-log.md` (Session 08, 2026-06-26) contient en clair le mot de passe DB de production (`DB_PASSWORD=I@ndI2905`) — commité et poussé sur un dépôt GitHub **public**, en contradiction directe avec DEC-006 ("Aucun secret ne réside dans le dépôt Git").
