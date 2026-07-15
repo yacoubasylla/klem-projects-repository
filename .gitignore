@@ -13,6 +13,7 @@ web/wp/
 .env
 .env.*
 !.env.example
+ACCESS.md
 
 # ── Backup & dumps SQL ───────────────────────────────────────────────────────
 web_bkp/

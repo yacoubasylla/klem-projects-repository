@@ -4,6 +4,63 @@
 
 ---
 
+## Session 20 — 2026-07-15
+
+**Objectif :** Ajustements de copy Hero, correction des images manquantes du hub Actualités en production, ajout de 3 cas d'usage R&D à la page Cas Clients, et mise en ordre de la gestion des accès/secrets.
+
+### 1. Hero — baseline réécrite
+- Texte remplacé par "Ingénierie de données • Applications sur-mesure • Intégration ERP • Infrastructures IT : nous concevons vos outils numériques pour l'Afrique, de la première idée à la mise en production.", partie liste en léger gras (`font-medium text-gray-700`), plusieurs itérations de ponctuation (deux-points, retour à la ligne ajouté puis retiré sur demande)
+- `template-parts/home/hero.php`
+
+### 2. Images Actualités manquantes en production
+- Diagnostic : voir **DEC-034**. Cause réelle = médiathèque WordPress non synchronisée (pas un bug de code)
+- Accès SSH Hostinger établi et documenté dans `ACCESS.md` (nouveau, non versionné — voir DEC-036)
+- 5 images extraites du conteneur Docker local (`docker cp`), transférées par `scp`, importées et assignées via `wp media import --post_id=<ID> --featured_image` (wp-cli sur le serveur)
+- Un mécanisme de fallback automatique côté code avait été ajouté puis **retiré** (`functions.php`) une fois la vraie cause identifiée — pas de code résiduel
+
+### 3. Page Cas Clients — 3 nouveaux cas d'usage R&D
+- Contenu source : `business_case.md` de `01_clear_comply`, `06_med_share`, `10_dispo_link` (`klem-labs-repository/projects/`)
+- Ajout initial de Clear-Comply, Med-Share, Dispo-Link — voir **DEC-035** pour la suite :
+  - Dispo-Link retiré (non lancé, statut R&D "Idéation")
+  - Clear-Comply et Med-Share conservés mais texte de solution allégé (retrait des détails de mécanisme technique)
+  - Ajout d'un lien "contactez-nous" sur chaque carte de cas d'usage (texte final : "Pour en savoir plus sur ce projet, contactez-nous.")
+- `page-cas-clients.php`
+
+### 4. Sécurité — secret DB exposé publiquement + convention d'accès
+- Constat : mot de passe DB de production en clair dans `history-log.md` (Session 08), dépôt GitHub public — voir **DEC-036**
+- Décision utilisateur : rotation différée, pas traitée dans cette session
+- `ACCESS.md` créé (racine du dépôt, ajouté à `.gitignore`) pour centraliser localement les paramètres d'accès (SSH, DB, API, comptes) sans jamais les committer
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/hero.php` | Baseline réécrite (4 itérations de copy) |
+| `page-cas-clients.php` | +3 cas d'usage, puis -1 (Dispo-Link), contenu allégé, lien contact par carte |
+| `functions.php` | Fallback image ajouté puis retiré (cause réelle identifiée entre-temps) |
+| `.gitignore` | +`ACCESS.md` |
+| `ACCESS.md` | Créé — non versionné |
+| `collaboration/history/decision-log.md` | +DEC-034, DEC-035, DEC-036 |
+| Médiathèque production (Hostinger) | +5 images (attachements 12–16), sans changement de code |
+
+### Commits de la session
+| Hash | Description |
+|---|---|
+| `07079c6` | copy(hero): reformule la baseline avec les 4 expertises en avant |
+| `beb06de` | copy(hero): ajoute un deux-points et un saut de ligne dans la baseline |
+| `4d84b62` | copy(hero): retire le retour à la ligne après les deux-points |
+| `487ed78` | feat(cas-clients): ajoute 3 cas d'usage (Clear-Comply, Med-Share, Dispo-Link) |
+| `4292c0f` | feat(cas-clients): ajoute un lien de contact sur chaque carte de cas d'usage |
+| `f70a386` | copy(cas-clients): simplifie le texte de contact sur les cartes de cas d'usage |
+
+### État du projet en clôture
+- `php -l` sur tous les fichiers PHP modifiés : ✅
+- `pnpm build` : ✅ sans erreur à chaque étape
+- Vérification locale via `curl` (rendu hero, présence/absence des cas d'usage, lien de contact) : ✅
+- Images de production vérifiées manquantes puis synchronisées avec succès (5/5 imports wp-cli réussis)
+- Déploiement Hostinger du code (dernier `git push`, `f70a386`) : **en attente** — le mécanisme de déploiement serveur (pull git vs copie manuelle) n'a pas encore été confirmé côté production à la clôture de cette session
+
+---
+
 ## Session 19 — 2026-07-14
 
 **Objectif :** Exécuter un brief de refonte de contenu (`prompt-renovation.md.md`, généré via Perplexity) : rassurer des décideurs B2B alors que KLEM est une jeune structure en prospection active, et publier du contenu réel de fond (data/IA/commerce digital) sur le hub Actualités jusque-là vide.

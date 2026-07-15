@@ -5,6 +5,38 @@
 
 ---
 
+## [DEC-036] 2026-07-15 — Secret DB déjà exposé publiquement : rotation différée + convention `ACCESS.md` local
+
+**Contexte :** En préparant la sauvegarde des paramètres d'accès (SSH Hostinger, DB, API), constat que `collaboration/history/history-log.md` (Session 08, 2026-06-26) contient en clair le mot de passe DB de production (`DB_PASSWORD=I@ndI2905`) — commité et poussé sur un dépôt GitHub **public**, en contradiction directe avec DEC-006 ("Aucun secret ne réside dans le dépôt Git").
+**Décision :**
+1. Le mot de passe exposé n'est **pas** changé immédiatement — décision explicite de l'utilisateur (2026-07-15) de traiter ce point plus tard plutôt que dans l'urgence de cette session.
+2. Les paramètres d'accès (host/port/user SSH, chemins serveur, identifiants DB/API) sont désormais centralisés dans `ACCESS.md` à la racine du dépôt — fichier **local, jamais commité** (ajouté à `.gitignore`), conformément à DEC-006. Aucun identifiant réel n'est écrit dans `history-log.md`, `decision-log.md` ou les ADR à partir de cette session.
+**Impact :** `.gitignore` (+`ACCESS.md`), `ACCESS.md` (nouveau, non versionné)
+**Règle à suivre :** Ne plus jamais écrire de secret réel (mot de passe, clé API) dans un fichier `.md` versionné — seulement dans `.env` (secrets applicatifs) ou `ACCESS.md` (accès infrastructure). Avant toute rotation du mot de passe DB de production, prévenir l'utilisateur que l'ancienne valeur reste lisible dans l'historique git tant qu'il n'est pas réécrit (`git filter-repo`/BFG, non fait à ce jour).
+
+---
+
+## [DEC-035] 2026-07-15 — Cas Clients : contenu allégé + retrait des projets non lancés pour protéger la propriété intellectuelle
+
+**Contexte :** Ajout initial de 3 nouveaux cas d'usage (Clear-Comply, Med-Share, Dispo-Link) tirés du portefeuille R&D (`klem-labs-repository/projects/`), avec des descriptions détaillées issues des `business_case.md` respectifs. L'utilisateur a ensuite exprimé une préoccupation légitime : la nécessité de vendre l'image de KLEM ne doit pas se faire au prix d'exposer publiquement le fonctionnement de projets non encore lancés ("on ne doit pas voler mes projets").
+**Décision :**
+1. **Dispo-Link** (statut R&D "Idéation") retiré de la page publique `/cas-clients/` jusqu'à son lancement — contenu conservé dans l'historique git (commit `487ed78`) pour réintégration facile.
+2. **Clear-Comply** et **Med-Share** (statuts "Prototype" et "Idéation") restent affichés mais avec un texte de solution allégé : retrait des détails de mécanisme (ex. standard technique HL7 FHIR, croisement de référentiels tarifaires) — seuls le problème résolu et le bénéfice attendu restent publics.
+3. Chaque carte de cas d'usage affiche désormais un lien "contactez-nous" invitant à échanger directement plutôt que de détailler publiquement le fonctionnement.
+**Impact :** `web/app/themes/klem-theme/page-cas-clients.php`
+**Règle à suivre :** Pour tout futur projet R&D ajouté à la page Cas Clients, décrire le problème/bénéfice sans révéler le mécanisme technique précis ni le modèle économique tant que le projet n'est pas officiellement lancé — et vérifier le statut R&D (`business_case.md` du projet concerné) avant publication.
+
+---
+
+## [DEC-034] 2026-07-15 — Images Actualités manquantes en production : cause = médiathèque non synchronisée, pas un bug de code
+
+**Contexte :** Les 5 articles seed du hub Actualités (`klem_bootstrap_seed_articles()`, DEC-033) affichaient un placeholder générique en production alors que le thème gère correctement le cas `has_post_thumbnail()` (`template-parts/actualites/card.php`). Diagnostic initial erroné : la fonction de seed n'assigne jamais d'image mise en avant. En vérifiant l'environnement Docker local, constat que 5 images dédiées par article existaient déjà (uploadées lors d'une session précédente, 2026-07-14, `app/uploads/2026/07/`) — le vrai problème est que ce contenu de médiathèque (fichiers + métadonnées `_thumbnail_id`) n'avait jamais été transféré vers Hostinger, la médiathèque WordPress n'étant pas versionnée dans Git.
+**Décision :** Ne pas ajouter de mécanisme de fallback automatique côté code (image générique service). À la place, synchronisation manuelle ponctuelle : les 5 fichiers transférés vers le serveur par `scp`, puis importés et assignés comme image mise en avant via `wp media import --post_id=<ID> --featured_image` (wp-cli, disponible sur l'hébergement Hostinger à `/usr/local/bin/wp`).
+**Impact :** Médiathèque de production uniquement (attachements ID 12 à 16) — aucun changement de code.
+**Règle à suivre :** Toute image liée à un post créé par une fonction de seed (`init` hook) doit être synchronisée manuellement vers chaque environnement après upload local — la médiathèque WordPress (`app/uploads/`) n'est pas versionnée (cf. `.gitignore`). Utiliser le patron `scp` + `wp media import --featured_image` établi ici pour les prochains cas similaires.
+
+---
+
 ## [DEC-033] 2026-07-14 — Actualités : 5 articles réels en catégorie "Blog" unique, pas de nouvelle taxonomie
 
 **Contexte :** Le brief de refonte suggérait 4 catégories Actualités ("Données & IA", "ERP & applications", "Commerce digital", "Secteur public"), différentes des 3 catégories déjà existantes (Blog/Actualités/Événements, cf. Session 12/`klem_bootstrap_actualites()`). Le hub Actualités a une UI de filtre câblée en dur sur exactement ces 3 onglets.
