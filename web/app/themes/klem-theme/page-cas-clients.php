@@ -36,6 +36,33 @@ $klem_use_cases = [
         'benefit' => __("Un reporting fiable, rapide à produire, et une vision unifiée de l'activité pour l'équipe dirigeante.", 'klem-theme'),
         'icon'    => 'M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125',
     ],
+    [
+        'sector'  => __('Douane & Commerce International', 'klem-theme'),
+        'title'   => __('Pré-audit automatisé des déclarations douanières avec Clear-Comply', 'klem-theme'),
+        'context' => __("Les commissionnaires en douane traitent chaque jour de nombreuses déclarations, avec un contrôle qualité réalisé manuellement par des agents expérimentés dont la disponibilité est limitée.", 'klem-theme'),
+        'problem' => __("Erreurs de code SH ou de valorisation détectées trop tard, immobilisation de conteneurs, pénalités de redressement et surcoûts de magasinage.", 'klem-theme'),
+        'solution' => __("Déploiement de Clear-Comply : extraction automatique des données documentaires, croisement avec les référentiels tarifaires officiels, et remontée des anomalies avant soumission plutôt qu'après contrôle.", 'klem-theme'),
+        'benefit' => __("Un filtre de pré-contrôle interne qui réduit le risque de redressement, sans remplacer les systèmes de déclaration existants.", 'klem-theme'),
+        'icon'    => 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
+    ],
+    [
+        'sector'  => __('Santé & Interopérabilité', 'klem-theme'),
+        'title'   => __("Réseau d'interopérabilité santé avec Med-Share", 'klem-theme'),
+        'context' => __("Les systèmes d'information des cliniques, hôpitaux et pharmacies restent cloisonnés, sans échange standardisé entre établissements.", 'klem-theme'),
+        'problem' => __("Perte de continuité clinique lors des références inter-établissements, et absence de visibilité inter-pharmacies sur les stocks de médicaments essentiels.", 'klem-theme'),
+        'solution' => __("Déploiement de Med-Share : une couche d'interopérabilité au standard HL7 FHIR entre établissements, avec option de déploiement On-Premise pour répondre aux exigences de souveraineté des données de santé.", 'klem-theme'),
+        'benefit' => __("Un accès plus rapide à l'historique clinique d'un patient référé, et une meilleure anticipation des ruptures de stock pharmaceutique en réseau.", 'klem-theme'),
+        'icon'    => 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z',
+    ],
+    [
+        'sector'  => __('Grand Public & Mise en Relation', 'klem-theme'),
+        'title'   => __('Vérification de disponibilité en temps réel avec Dispo-Link', 'klem-theme'),
+        'context' => __("Trouver une pharmacie disposant réellement d'un médicament, ou un prestataire technique disponible (plombier, électricien...), nécessite souvent plusieurs appels ou déplacements, sans certitude sur le délai.", 'klem-theme'),
+        'problem' => __("Aucun canal ne permet de vérifier une disponibilité réelle avant de se déplacer, ni de comparer prix et délais entre plusieurs offreurs.", 'klem-theme'),
+        'solution' => __("Déploiement de Dispo-Link : l'usager soumet sa demande (ordonnance ou besoin de service), le système la diffuse aux pharmacies ou prestataires partenaires et agrège leurs réponses en temps réel.", 'klem-theme'),
+        'benefit' => __("Une disponibilité vérifiée avant déplacement, et un achat ou une prise de contact en quelques clics plutôt qu'une recherche à l'aveugle.", 'klem-theme'),
+        'icon'    => 'M3.75 13.5 10.5 3l-.75 6.75h9.75L9.75 21l.75-7.5H3.75Z',
+    ],
 ];
 
 get_header();
