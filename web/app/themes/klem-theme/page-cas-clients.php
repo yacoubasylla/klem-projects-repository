@@ -120,8 +120,8 @@ get_header();
 
                 <div class="lg:col-span-12 pt-4 mt-2 border-t border-gray-100">
                     <p class="text-gray-400 text-xs">
-                        <?php esc_html_e('Pour plus de détails sur ce projet, contactez', 'klem-theme'); ?>
-                        <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="text-klem-red font-semibold hover:underline">KLEM Technologies &amp; Services</a>.
+                        <?php esc_html_e('Pour en savoir plus sur ce projet,', 'klem-theme'); ?>
+                        <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="text-klem-red font-semibold hover:underline"><?php esc_html_e('contactez-nous', 'klem-theme'); ?></a>.
                     </p>
                 </div>
             </article>
