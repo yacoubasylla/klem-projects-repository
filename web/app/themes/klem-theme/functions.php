@@ -433,9 +433,11 @@ function klem_seo_title(string $title): string {
 }
 add_filter('pre_get_document_title', 'klem_seo_title');
 
-// Déclaration de langue correcte : contenu 100 % français (corrige lang="en-US" par défaut)
+// Déclaration de langue correcte : français de Côte d'Ivoire (corrige lang="en-US" par
+// défaut, et précise fr-CI plutôt que fr-FR pour un signal de ciblage géographique cohérent
+// avec l'audience ouest-africaine visée).
 add_filter('language_attributes', function (): string {
-    return 'lang="fr-FR"';
+    return 'lang="fr-CI"';
 });
 
 // La balise canonical est gérée par klem_seo_meta_tags() pour tout le
@@ -464,6 +466,13 @@ function klem_seo_meta_tags(): void {
     printf('<meta name="twitter:title" content="%s">' . "\n", esc_attr($context['title']));
     printf('<meta name="twitter:description" content="%s">' . "\n", esc_attr($context['description']));
     printf('<meta name="twitter:image" content="%s">' . "\n", esc_url($context['image']));
+
+    // Meta géo legacy — signal de ciblage local complémentaire au JSON-LD GeoCoordinates
+    // (utilisé par certains annuaires/moteurs, coût nul, aucun risque de conflit).
+    printf('<meta name="geo.region" content="CI">' . "\n");
+    printf('<meta name="geo.placename" content="Abidjan">' . "\n");
+    printf('<meta name="geo.position" content="5.2926;-4.0083">' . "\n");
+    printf('<meta name="ICBM" content="5.2926, -4.0083">' . "\n");
 }
 add_action('wp_head', 'klem_seo_meta_tags', 2);
 
@@ -490,6 +499,14 @@ function klem_seo_structured_data(): void {
             'streetAddress'   => 'Treichville Arras 1',
             'addressLocality' => 'Abidjan',
             'addressCountry'  => 'CI',
+        ],
+        // Coordonnées approximatives de la commune de Treichville, Abidjan (précision
+        // ville/commune, pas d'adresse exacte géocodée) — renforce le signal de recherche
+        // locale (Google Maps / pack local) pour "Abidjan" et "Côte d'Ivoire".
+        'geo'          => [
+            '@type'     => 'GeoCoordinates',
+            'latitude'  => 5.2926,
+            'longitude' => -4.0083,
         ],
         'areaServed'   => ["Côte d'Ivoire", 'Afrique de l\'Ouest', 'Afrique'],
         'sameAs'       => [
@@ -650,14 +667,28 @@ add_filter('wp_get_attachment_image_attributes', 'klem_default_attachment_alt');
 add_filter('xmlrpc_enabled', '__return_false');
 remove_action('wp_head', 'wp_generator');
 add_filter('the_generator', '__return_empty_string');
+remove_action('wp_head', 'rsd_link');            // Really Simple Discovery — lié à XML-RPC
+remove_action('wp_head', 'wlwmanifest_link');    // Windows Live Writer — inutile, désactivé
+remove_action('wp_head', 'wp_shortlink_wp_head'); // shortlink redondant avec le canonical
+remove_action('send_headers', 'pingback_header'); // en-tête X-Pingback — lié à XML-RPC
 
 add_filter('rest_endpoints', function (array $endpoints): array {
     unset($endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)']);
     return $endpoints;
 });
 
+// Le sitemap XML natif (wp-sitemap-users-*.xml) liste sinon les archives auteur
+// (donc les identifiants) de tout compte ayant publié — même faille d'énumération
+// que ?author=N, via un chemin non couvert par le filtre rest_endpoints ci-dessus.
+add_filter('wp_sitemaps_add_provider', function ($provider, string $name) {
+    return $name === 'users' ? false : $provider;
+}, 10, 2);
+
+// Toute archive auteur (/author/<slug>/, plus seulement ?author=N) redirige vers
+// l'accueil : ce site institutionnel n'a aucune valeur éditoriale à en tirer, et la
+// page confirmerait sinon l'existence d'un identifiant de connexion à un visiteur.
 add_action('template_redirect', function (): void {
-    if (is_author() && !is_user_logged_in() && get_query_var('author_name') === '' && get_query_var('author') !== '') {
+    if (is_author() && !is_user_logged_in()) {
         wp_safe_redirect(home_url('/'), 301);
         exit;
     }
@@ -667,4 +698,45 @@ add_action('template_redirect', function (): void {
 // ou non (empêche l'énumération de comptes via le formulaire wp-login.php).
 add_filter('login_errors', function (): string {
     return __('Identifiants incorrects.', 'klem-theme');
+});
+
+/**
+ * ── Anti-brute-force wp-login.php ────────────────────────────────────────
+ * Aucune limite native sur les tentatives de connexion WordPress — un script
+ * peut essayer des milliers de mots de passe sans frein. Même patron que le
+ * rate limiting déjà en place sur le formulaire de contact (transient par IP).
+ */
+function klem_login_rate_limit_key(): string {
+    $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? ''));
+    return 'klem_login_fail_' . md5($ip);
+}
+
+// Priorité 30 : s'exécute APRÈS wp_authenticate_username_password/_email_password
+// (priorité 20 dans le core). Nécessaire car ces callbacks core ignorent une
+// WP_Error déjà présente dès que identifiant et mot de passe sont non vides —
+// un filtre en priorité plus basse serait donc systématiquement écrasé par le
+// résultat de la tentative en cours, réussie ou non.
+add_filter('authenticate', function ($user, string $username, string $password) {
+    if ($username === '' && $password === '') {
+        return $user;
+    }
+
+    if ((int) get_transient(klem_login_rate_limit_key()) >= 5) {
+        return new WP_Error(
+            'klem_too_many_attempts',
+            __('Trop de tentatives de connexion. Merci de réessayer dans 15 minutes.', 'klem-theme')
+        );
+    }
+
+    return $user;
+}, 30, 3);
+
+add_action('wp_login_failed', function (): void {
+    $key = klem_login_rate_limit_key();
+    $attempts = (int) get_transient($key);
+    set_transient($key, $attempts + 1, 15 * MINUTE_IN_SECONDS);
+});
+
+add_action('wp_login', function (): void {
+    delete_transient(klem_login_rate_limit_key());
 });
