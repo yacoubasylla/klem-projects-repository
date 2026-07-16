@@ -4,6 +4,25 @@
 
 ---
 
+## Session 21 — 2026-07-16
+
+**Objectif :** Correction de cohérence design sur la page "Cas Clients" signalée par l'utilisateur (en tant qu'expert web designer) : le libellé promettait des références clients vérifiables alors que le contenu (et le teaser home) présentait déjà des cas d'usage explicitement illustratifs.
+
+### Renommage "Cas Clients" → "Cas d'usage"
+- Voir **DEC-038** pour l'analyse et la décision complète
+- Nav desktop + mobile (`header.php`), footer (`footer.php`), badge hero + `Template Name` + `post_title` de bootstrap + meta title + breadcrumb (`page-cas-clients.php`, `functions.php`)
+- URL `/cas-clients/` inchangée (pas de risque SEO/redirection)
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `header.php` | Libellé nav "Cas Clients" → "Cas d'usage" (desktop + mobile) |
+| `footer.php` | Libellé lien footer "Cas clients" → "Cas d'usage" |
+| `page-cas-clients.php` | Badge hero + `Template Name` renommés |
+| `functions.php` | `post_title` bootstrap, meta title, breadcrumb JSON-LD renommés |
+
+---
+
 ## Session 20 — 2026-07-15
 
 **Objectif :** Ajustements de copy Hero, correction des images manquantes du hub Actualités en production, ajout de 3 cas d'usage R&D à la page Cas Clients, et mise en ordre de la gestion des accès/secrets.

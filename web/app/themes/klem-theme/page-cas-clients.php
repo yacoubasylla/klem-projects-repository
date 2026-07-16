@@ -1,11 +1,11 @@
 <?php
 /**
- * Template Name: Cas Clients
+ * Template Name: Cas d'usage
  *
- * Page « Cas Clients / Références » : KLEM étant une jeune structure en
- * phase de prospection, cette page présente des cas d'usage illustratifs
- * (types de projets menés), explicitement présentés comme tels — sans
- * fausse citation client ni résultat chiffré inventé (cf. DEC-012, DEC-032).
+ * Page « Cas d'usage » : KLEM étant une jeune structure en phase de
+ * prospection, cette page présente des cas d'usage illustratifs (types de
+ * projets menés), explicitement présentés comme tels — sans fausse
+ * citation client ni résultat chiffré inventé (cf. DEC-012, DEC-032, DEC-038).
  */
 
 $klem_use_cases = [
@@ -65,7 +65,7 @@ get_header();
     <section class="pt-16 pb-10 lg:pt-20 lg:pb-14 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center" data-animate>
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-5 px-4 py-1.5 bg-klem-red/8 rounded-full">
-                <?php esc_html_e('Cas Clients & Références', 'klem-theme'); ?>
+                <?php esc_html_e("Cas d'usage & Exemples de projets", 'klem-theme'); ?>
             </span>
             <h1 class="text-3xl lg:text-5xl font-extrabold text-klem-blue leading-tight mb-4">
                 <?php esc_html_e('Comment nous aidons nos organisations à réussir leurs projets numériques', 'klem-theme'); ?>

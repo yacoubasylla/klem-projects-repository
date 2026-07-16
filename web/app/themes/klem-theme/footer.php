@@ -89,7 +89,7 @@
                     $company_links = [
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
                         ['label' => 'Notre équipe', 'href' => '#'],
-                        ['label' => 'Cas clients',  'href' => klem_cas_clients_url()],
+                        ['label' => "Cas d'usage", 'href' => klem_cas_clients_url()],
                         ['label' => 'Carrières',    'href' => '#'],
                         ['label' => 'Contact',      'href' => klem_home_anchor('#contact')],
                     ];

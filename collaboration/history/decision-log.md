@@ -5,6 +5,15 @@
 
 ---
 
+## [DEC-038] 2026-07-16 — Renommage "Cas Clients" → "Cas d'usage" (nav, page, footer, meta)
+
+**Contexte :** L'utilisateur (en tant qu'expert web designer) a signalé une incohérence : le libellé "Cas Clients" (nav, footer, badge de la page `/cas-clients/`, meta title, breadcrumb) laisse attendre de vraies références clients, alors que le sous-titre de la page et le teaser home (`cas-clients-preview.php`) précisent déjà explicitement qu'il s'agit de scénarios types/illustratifs "plutôt qu'un historique" — cohérent avec DEC-012/DEC-032 (pas de faux témoignage tant que KLEM n'a pas de premiers clients réels documentés), mais le libellé lui-même n'avait jamais été aligné sur ce positionnement.
+**Décision :** Remplacer "Cas Clients" par "Cas d'usage" partout où le texte est visible ou indexable : nav desktop/mobile (`header.php`), footer (`footer.php`), badge hero + `Template Name` (`page-cas-clients.php`), `post_title` de la page auto-créée, meta title et breadcrumb JSON-LD (`functions.php`). L'URL/slug `/cas-clients/` et le nom de fonction `klem_cas_clients_url()` sont **conservés tels quels** (pas de risque de casser un lien déjà indexé suite au travail SEO de DEC-037, changement purement cosmétique).
+**Impact :** `header.php`, `footer.php`, `page-cas-clients.php`, `functions.php`
+**Limite connue :** `post_title` n'est appliqué qu'à la création de la page (`wp_insert_post` dans `klem_bootstrap_cas_clients()`, idempotent). Si la page existe déjà en base (site déjà en production), le titre affiché dans wp-admin doit être corrigé manuellement — le code ne le fait pas rétroactivement.
+
+---
+
 ## [DEC-037] 2026-07-15 — SEO local Afrique/CI + fermeture de 2 fuites d'énumération résiduelles
 
 **Contexte :** Demande explicite d'optimiser le référencement pour la Côte d'Ivoire/l'Afrique et de corriger les vulnérabilités restantes. Le site avait déjà un socle SEO/sécurité solide (DEC antérieurs, commit `219a6d3`), mais deux angles morts identifiés : `lang="fr-FR"` (moins précis que `fr-CI` pour un ciblage régional), aucune coordonnée géographique dans le JSON-LD `ProfessionalService`, et surtout — le sitemap XML natif WordPress (`wp-sitemap-users-*.xml`) et les archives auteur (`/author/<slug>/`) exposaient encore le nom d'utilisateur admin malgré le filtre `rest_endpoints` déjà en place (qui ne couvrait que l'API REST, pas ces deux autres chemins).

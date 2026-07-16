@@ -200,15 +200,15 @@ function klem_actualites_url(): string {
 }
 
 /**
- * ── Page Cas Clients ─────────────────────────────────────────────────────
+ * ── Page Cas d'usage ─────────────────────────────────────────────────────
  * Crée, une seule fois et de façon idempotente, la page présentant des cas
  * d'usage illustratifs (KLEM étant une jeune structure, aucun cas client
- * réel n'est encore public — cf. DEC-012 et DEC-032).
+ * réel n'est encore public — cf. DEC-012, DEC-032 et DEC-038).
  */
 function klem_bootstrap_cas_clients(): void {
     if (!get_page_by_path('cas-clients')) {
         $page_id = wp_insert_post([
-            'post_title'   => __('Cas Clients', 'klem-theme'),
+            'post_title'   => __("Cas d'usage", 'klem-theme'),
             'post_name'    => 'cas-clients',
             'post_type'    => 'page',
             'post_status'  => 'publish',
@@ -402,7 +402,7 @@ function klem_seo_context(): ?array {
 
     if (is_page('cas-clients')) {
         return [
-            'title'       => __('Cas Clients', 'klem-theme') . ' – ' . $site_name,
+            'title'       => __("Cas d'usage", 'klem-theme') . ' – ' . $site_name,
             'description' => __("Comment KLEM Technologies & Services aide les organisations à réussir leurs projets numériques : cas d'usage en logistique, éducation et commerce.", 'klem-theme'),
             'url'         => klem_cas_clients_url(),
             'image'       => $default_image,
@@ -600,7 +600,7 @@ function klem_seo_breadcrumbs_schema(): void {
     } elseif (is_page('cas-clients')) {
         $items = [
             ['name' => __('Accueil', 'klem-theme'), 'url' => home_url('/')],
-            ['name' => __('Cas Clients', 'klem-theme'), 'url' => klem_cas_clients_url()],
+            ['name' => __("Cas d'usage", 'klem-theme'), 'url' => klem_cas_clients_url()],
         ];
     } else {
         return;
