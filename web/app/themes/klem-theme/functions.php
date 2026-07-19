@@ -740,3 +740,32 @@ add_action('wp_login_failed', function (): void {
 add_action('wp_login', function (): void {
     delete_transient(klem_login_rate_limit_key());
 });
+
+/**
+ * ── Commentaires désactivés site entier ──────────────────────────────────
+ * Le thème ne rend aucun formulaire ni liste de commentaires ; laisser le
+ * statut par défaut WordPress ("ouvert") n'apporte rien mais expose
+ * wp-comments-post.php et l'endpoint REST /wp/v2/comments au spam sans
+ * aucune valeur éditoriale pour ce site institutionnel. Fermé de façon
+ * absolue (au niveau des filtres, pas seulement du réglage par défaut) pour
+ * couvrir aussi tout contenu existant déjà marqué "ouvert" en base.
+ */
+add_filter('comments_open', '__return_false', 20, 2);
+add_filter('pings_open', '__return_false', 20, 2);
+add_filter('comments_array', '__return_empty_array', 10, 2);
+
+add_action('init', function (): void {
+    update_option('default_comment_status', 'closed');
+    update_option('default_ping_status', 'closed');
+});
+
+remove_action('wp_head', 'feed_links_extra', 3); // flux de commentaires par article — inutile, commentaires fermés
+
+add_filter('rest_endpoints', function (array $endpoints): array {
+    foreach (array_keys($endpoints) as $route) {
+        if (str_starts_with($route, '/wp/v2/comments')) {
+            unset($endpoints[$route]);
+        }
+    }
+    return $endpoints;
+});

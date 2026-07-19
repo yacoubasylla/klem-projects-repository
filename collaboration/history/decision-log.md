@@ -5,6 +5,18 @@
 
 ---
 
+## [DEC-043] 2026-07-19 — Audit SEO/sécurité : CSP scopée + fermeture des commentaires
+
+**Contexte :** Demande explicite d'améliorer le SEO et de corriger les vulnérabilités. Audit préalable (JSON-LD, OG, Twitter Card, robots meta, sitemap XML, en-têtes de sécurité déjà présents `X-Content-Type-Options`/`X-Frame-Options`/`Referrer-Policy`/`Permissions-Policy`/HSTS, XML-RPC désactivé, énumération de comptes bloquée, rate limiting login/contact/chatbot, `pnpm audit` sans vulnérabilité) confirme un socle déjà mature (cf. DEC-037, ADR précédents). Deux lacunes réelles identifiées : absence de Content-Security-Policy, et commentaires WordPress laissés au statut par défaut ("ouvert") alors qu'aucun template ne les affiche jamais.
+**Décision :**
+1. **CSP scopée au front public.** Ajout d'un `Content-Security-Policy` dans `web/.htaccess`, exclu explicitement de `/wp/wp-admin/` et `wp-login.php` (via `<If>`, même patron que le blocage PHP déjà en place sur `/app/uploads/`) car l'éditeur et la médiathèque WordPress reposent sur de nombreux scripts/styles inline sans nonce — une CSP stricte y aurait cassé des fonctionnalités sans test exhaustif possible dans cette session. `script-src`/`style-src` restent en `'unsafe-inline'` par nécessité (thème + WP core), mais `object-src 'none'`, `base-uri 'self'`, `form-action 'self'` et `frame-ancestors 'self'` apportent une vraie défense en profondeur. Vérifié sans erreur console ni violation CSP (Playwright, page d'accueil complète) et confirmé exclu sur `/wp/wp-admin/` par requête directe.
+2. **Commentaires fermés site entier.** Le thème ne rend jamais de formulaire ni de liste de commentaires, mais WordPress garde `wp-comments-post.php` et l'endpoint REST `/wp/v2/comments` actifs par défaut — surface de spam sans aucune valeur éditoriale. Fermeture par filtres (`comments_open`, `pings_open`, `comments_array`) plutôt que par le seul réglage par défaut (couvre aussi les contenus déjà en base), réglages par défaut mis à jour pour le futur contenu, flux de commentaires retiré du `<head>`, endpoint REST `/wp/v2/comments` désenregistré. Vérifié : 404 sur `/wp-json/wp/v2/comments`.
+**Alternatives considérées :** CSP stricte sans `unsafe-inline` — écartée, casserait probablement wp-admin (nonces/hash non configurés pour les scripts inline de core) sans possibilité de valider exhaustivement dans cette session ; upgrade de Composer 2.2.6 pour disposer de `composer audit` — hors périmètre (outillage local, pas une vulnérabilité du site ; seules 3 dépendances déclarées, WordPress core déjà à jour en 6.9.4).
+**Impact :** `web/.htaccess`, `web/app/themes/klem-theme/functions.php`.
+**Limite connue :** La CSP reste permissive sur `script-src`/`style-src` (`unsafe-inline`) — un futur durcissement complet nécessiterait de déplacer les styles inline du thème vers des classes et d'auditer les scripts inline de wp-admin pour y ajouter des nonces, hors périmètre de cette session.
+
+---
+
 ## [DEC-042] 2026-07-19 — Bandeau "Stack technique" : logos de marque réels + ton monochrome sombre
 
 **Contexte :** L'utilisateur a demandé (1) un ton "calque noir/blanc" pour la bande de technologies, (2) une couleur et un logo propres à chaque technologie/stack, (3) une harmonie de couleurs plus sophistiquée pour l'ensemble du site, sans donner l'impression d'un rendu généré par IA, tout en conservant la charte KLEM.

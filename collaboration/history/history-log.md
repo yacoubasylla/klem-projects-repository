@@ -83,9 +83,25 @@
 - Un sous-agent en arrière-plan a modifié 6 fichiers (H1 + cartes en boucle) pour revenir à Inter Bold, sans demande explicite retrouvée dans la conversation — voir addendum **DEC-041**
 - Signalé à l'utilisateur immédiatement ; confirmation obtenue de revenir à Questrial partout (choix initial) ; réappliqué sur les 6 fichiers, `php -l` + `pnpm build` revérifiés OK
 
-### État de clôture (final)
+### État de clôture (4e partie)
 - `php -l` OK sur tous les fichiers, `pnpm build` sans erreur, rendu vérifié par capture d'écran (hero + section Services)
-- Aucun commit effectué pour cette 4e partie — en attente de validation de l'utilisateur
+- Commits `95d1438` (technologies) et `ee48009` (harmonie couleurs) créés et poussés à la demande de l'utilisateur
+
+### Complément — Audit SEO/sécurité (CSP + fermeture des commentaires)
+- Voir **DEC-043** pour l'analyse complète
+- Audit du socle existant : déjà mature (JSON-LD, OG, robots, sitemap, XML-RPC désactivé, énumération bloquée, rate limiting, `pnpm audit` clean) — pas de régression, deux vraies lacunes comblées
+- CSP ajoutée dans `web/.htaccess`, scopée hors `/wp/wp-admin/` et `wp-login.php` pour ne pas casser l'éditeur core ; vérifiée sans violation console (Playwright) et exclusion admin confirmée par requête directe
+- Commentaires fermés site entier par filtres (`comments_open`, `pings_open`, `comments_array`) + endpoint REST `/wp/v2/comments` désenregistré (vérifié 404)
+
+### Fichiers modifiés (SEO/sécurité)
+| Fichier | Action |
+|---|---|
+| `web/.htaccess` | Ajout de l'en-tête `Content-Security-Policy`, scopée hors wp-admin |
+| `functions.php` | Fermeture des commentaires (filtres + options + retrait endpoint REST) |
+
+### État de clôture (5e partie)
+- `php -l` OK, aucune erreur console/CSP en navigateur réel (Playwright), endpoint REST comments confirmé 404
+- Commit en attente
 
 ---
 

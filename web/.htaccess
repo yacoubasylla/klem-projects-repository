@@ -5,6 +5,16 @@ Header always set X-Frame-Options "SAMEORIGIN"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+
+# CSP limitée au front public (exclut /wp/wp-admin et wp-login.php pour ne pas
+# casser l'éditeur/la médiathèque, qui reposent sur de nombreux scripts/styles
+# inline sans nonce). object-src/base-uri/form-action/frame-ancestors sont les
+# directives qui apportent une vraie défense en profondeur ici ; script-src et
+# style-src restent en 'unsafe-inline' car le thème (styles inline ponctuels)
+# et WordPress core en dépendent encore.
+<If "%{REQUEST_URI} !~ m#^/wp/wp-admin/# && %{REQUEST_URI} !~ m#^/wp/wp-login\.php#">
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+</If>
 </IfModule>
 
 # ── Pas de listing de répertoire ──────────────────────────────────────────
