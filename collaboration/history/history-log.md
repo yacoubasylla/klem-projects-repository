@@ -4,6 +4,53 @@
 
 ---
 
+## Session 22 — 2026-07-19
+
+**Objectif :** Appliquer les recommandations d'un audit PDF externe rédigé par un consultant en stratégie d'entreprise (`Consultant en stratégie d.pdf`, note 8,6/10), en filtrant les recommandations incompatibles avec la politique déjà actée du projet (pas de preuve fabriquée).
+
+### Tri des recommandations
+- Voir **DEC-039** pour l'analyse complète et la justification
+- Question à choix multiple posée à l'utilisateur pour trancher chiffres/témoignages/page équipe/certifications → toutes déclinées pour l'instant ("pas encore" / "aucune")
+- Recherche web sur la structuration des offres d'entrée (lead magnets B2B, pratiques ESN régionales SGCI/Dakar.IT.Services) pour justifier le choix "sur devis" plutôt que des prix fixes
+
+### Modifications appliquées
+- Hero réécrit : message plus orienté bénéfice client, positionnement "souveraineté numérique" conservé
+- Page Cas d'usage : icônes ajoutées sur les 4 sous-sections (Contexte/Défi/Solution/Bénéfice) pour la scannabilité
+- Nouvelle section "Offres de démarrage" (`template-parts/home/offers.php`) insérée après Services sur la home : 4 offres nommées, "Sur devis" sauf le diagnostic 30 min déjà gratuit
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/hero.php` | Titre + sous-titre réécrits (bénéfice client) |
+| `template-parts/home/offers.php` | Nouveau — section "Offres de démarrage" |
+| `front-page.php` | Insertion de `template-parts/home/offers` après `services` |
+| `page-cas-clients.php` | Icônes ajoutées aux 4 sous-sections de chaque cas d'usage |
+
+### État de clôture (1ère partie)
+- `php -l` OK sur les 4 fichiers modifiés, `pnpm build` sans erreur
+- Reste en attente côté utilisateur (si disponible un jour) : chiffres vérifiables, témoignage client réel, page dirigeants, certifications/partenariats réellement détenus, captures d'écran/vidéo démo pour Cantine Connect et FleetControl
+
+### Complément — CV du gérant analysé pour compléter certifications/expérience
+- Voir **DEC-039** (complément) pour l'analyse complète
+- L'utilisateur a fourni `CV/CV_SYLLA.pdf` et `CV/CV_DA.pdf` (2 versions du même CV) avec consigne stricte : pas de nom, pas d'employeur actuel (GUCE-CI) affiché ; validation explicite requise avant toute publication
+- Certifications réelles identifiées : PSM I (Scrum.org), ITIL® V3 & V4 (Axelos/PeopleCert) ; ~21 ans d'expérience pro depuis 2005 → arrondi à "20 ans" validé par l'utilisateur
+- Détails de projets chez l'employeur actuel exclus (trop identifiables — plateforme de guichet unique gouvernementale)
+- `.gitignore` mis à jour : `CV/` et `/*.pdf` (racine) ajoutés pour ne jamais committer ces documents personnels
+
+### Fichiers modifiés (complément)
+| Fichier | Action |
+|---|---|
+| `template-parts/home/certifications.php` | Nouveau — badges PSM I / ITIL V4 / ITIL V3, anonymes |
+| `template-parts/home/hero.php` | Stat "100% sur-mesure" → "20 ans d'expertise (équipe dirigeante)" |
+| `front-page.php` | Insertion de `template-parts/home/certifications` après `about` |
+| `.gitignore` | Ajout `CV/` et `/*.pdf` |
+
+### État de clôture (final)
+- `php -l` OK sur tous les fichiers modifiés, `pnpm build` sans erreur, rendu vérifié par capture d'écran (Playwright)
+- Aucun commit effectué — en attente de validation finale de l'utilisateur
+
+---
+
 ## Session 21 — 2026-07-16
 
 **Objectif :** Correction de cohérence design sur la page "Cas Clients" signalée par l'utilisateur (en tant qu'expert web designer) : le libellé promettait des références clients vérifiables alors que le contenu (et le teaser home) présentait déjà des cas d'usage explicitement illustratifs.

@@ -56,6 +56,13 @@ $klem_use_cases = [
     ],
 ];
 
+$klem_case_labels = [
+    'context'  => ['title' => __('Contexte', 'klem-theme'), 'icon' => 'M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5'],
+    'problem'  => ['title' => __('Défi', 'klem-theme'), 'icon' => 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z'],
+    'solution' => ['title' => __('Solution KLEM', 'klem-theme'), 'icon' => 'M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18'],
+    'benefit'  => ['title' => __('Ce que cela change', 'klem-theme'), 'icon' => 'M2.25 18L9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0l-5.94-2.281m5.94 2.28l-2.28 5.941'],
+];
+
 get_header();
 ?>
 
@@ -100,22 +107,17 @@ get_header();
                 </div>
 
                 <div class="lg:col-span-8 grid sm:grid-cols-2 gap-6">
+                    <?php foreach (['context', 'problem', 'solution', 'benefit'] as $key) : $label = $klem_case_labels[$key]; ?>
                     <div>
-                        <p class="text-klem-blue font-bold text-sm mb-1.5"><?php esc_html_e('Contexte', 'klem-theme'); ?></p>
-                        <p class="text-gray-500 text-sm leading-relaxed"><?php echo esc_html($case['context']); ?></p>
+                        <p class="flex items-center gap-1.5 text-klem-blue font-bold text-sm mb-1.5">
+                            <svg class="w-4 h-4 text-klem-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo esc_attr($label['icon']); ?>"/>
+                            </svg>
+                            <?php echo esc_html($label['title']); ?>
+                        </p>
+                        <p class="text-gray-500 text-sm leading-relaxed"><?php echo esc_html($case[$key]); ?></p>
                     </div>
-                    <div>
-                        <p class="text-klem-blue font-bold text-sm mb-1.5"><?php esc_html_e('Défi', 'klem-theme'); ?></p>
-                        <p class="text-gray-500 text-sm leading-relaxed"><?php echo esc_html($case['problem']); ?></p>
-                    </div>
-                    <div>
-                        <p class="text-klem-blue font-bold text-sm mb-1.5"><?php esc_html_e('Solution KLEM', 'klem-theme'); ?></p>
-                        <p class="text-gray-500 text-sm leading-relaxed"><?php echo esc_html($case['solution']); ?></p>
-                    </div>
-                    <div>
-                        <p class="text-klem-blue font-bold text-sm mb-1.5"><?php esc_html_e('Ce que cela change', 'klem-theme'); ?></p>
-                        <p class="text-gray-500 text-sm leading-relaxed"><?php echo esc_html($case['benefit']); ?></p>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <div class="lg:col-span-12 pt-4 mt-2 border-t border-gray-100">

@@ -15,6 +15,10 @@ web/wp/
 !.env.example
 ACCESS.md
 
+# ── Documents personnels (CV, audits externes) — jamais dans l'historique git ──
+CV/
+/*.pdf
+
 # ── Backup & dumps SQL ───────────────────────────────────────────────────────
 web_bkp/
 *.sql
