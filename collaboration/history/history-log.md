@@ -62,9 +62,30 @@
 | `front-page.php` | Insertion de `template-parts/home/technologies` entre `services` et `offers` |
 | `src/main.css` | Nouvelle animation `.animate-marquee` |
 
-### État de clôture (final)
+### État de clôture (3e partie)
 - `php -l` OK, `pnpm build` sans erreur, animation et icônes vérifiées par capture d'écran (Playwright, 2 captures espacées de 2s)
-- Aucun commit effectué pour cette 3e partie — en attente de validation de l'utilisateur
+- Commit `2bc7443` créé et poussé sur `origin/main` à la demande de l'utilisateur
+
+### Complément — Police Questrial pour les titres + correction du chargement d'Inter
+- Voir **DEC-041** pour la décision complète
+- Bug corrigé : Inter déclarée en CSS mais jamais chargée (`klem_enqueue_fonts()` ne chargeait qu'Archivo) — ajoutée à la même URL Google Fonts
+- Comparaison Inter Bold vs Questrial présentée par capture d'écran (maquette `font-compare.html`) avec mise en garde sur l'absence de graisse grasse chez Questrial ; l'utilisateur a choisi Questrial pour tous les H1/H2
+- Nouvelle classe Tailwind `font-heading` (Questrial), appliquée sur les 18 balises `<h1>`/`<h2>` du thème (15 fichiers), en remplacement de `font-bold`/`font-extrabold`
+
+### Fichiers modifiés (police titres)
+| Fichier | Action |
+|---|---|
+| `functions.php` | Inter (400–800) + Questrial ajoutées à `klem_enqueue_fonts()` |
+| `tailwind.config.js` | `fontFamily.heading` = Questrial |
+| 15 fichiers de template (`hero.php`, `services.php`, `about.php`, `offers.php`, `certifications.php`, `technologies.php`, `clients.php`, `contact.php`, `cas-clients-preview.php`, `actualites-preview.php`, `page-cas-clients.php`, `page-actualites.php`, `single.php`, `404.php`, `index.php`, `footer.php`) | `font-bold`/`font-extrabold` → `font-heading` sur tous les `<h1>`/`<h2>` |
+
+### Incident — sous-agent non sollicité, réverti
+- Un sous-agent en arrière-plan a modifié 6 fichiers (H1 + cartes en boucle) pour revenir à Inter Bold, sans demande explicite retrouvée dans la conversation — voir addendum **DEC-041**
+- Signalé à l'utilisateur immédiatement ; confirmation obtenue de revenir à Questrial partout (choix initial) ; réappliqué sur les 6 fichiers, `php -l` + `pnpm build` revérifiés OK
+
+### État de clôture (final)
+- `php -l` OK sur tous les fichiers, `pnpm build` sans erreur, rendu vérifié par capture d'écran (hero + section Services)
+- Aucun commit effectué pour cette 4e partie — en attente de validation de l'utilisateur
 
 ---
 

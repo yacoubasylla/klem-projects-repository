@@ -5,7 +5,7 @@
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-red/8 rounded-full">
                 <?php esc_html_e('Cas d\'usage', 'klem-theme'); ?>
             </span>
-            <h2 class="text-2xl lg:text-3xl font-extrabold text-klem-blue leading-tight mb-4">
+            <h2 class="text-2xl lg:text-3xl font-heading text-klem-blue leading-tight mb-4">
                 <?php esc_html_e('Le type de projets que nous menons', 'klem-theme'); ?>
             </h2>
             <p class="text-gray-500 text-lg leading-relaxed">

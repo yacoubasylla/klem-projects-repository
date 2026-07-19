@@ -6,7 +6,7 @@
             <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-orange/20 rounded-full">
                 <?php esc_html_e('Notre Différence', 'klem-theme'); ?>
             </span>
-            <h2 class="text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-4">
+            <h2 class="text-2xl lg:text-3xl font-heading text-white leading-tight mb-4">
                 <?php esc_html_e('Ce qui nous', 'klem-theme'); ?><br>
                 <?php esc_html_e('distingue', 'klem-theme'); ?>
             </h2>

@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-041] 2026-07-19 — Correction du chargement d'Inter + adoption de Questrial pour les titres
+
+**Contexte :** L'utilisateur a partagé une capture de l'inspecteur de polices du navigateur sur un site concurrent (veone.net, ESN ivoirienne) montrant des polices d'icônes (Font Awesome 5). Clarification apportée : Font Awesome est une police d'icônes, pas la police de texte de veone.net. Inspection directe du HTML/CSS de veone.net (balises `<link>` Google Fonts + `font-family` inline) : leur véritable typographie est **Questrial** (titres) + **Inter Tight** (corps de texte).
+**Découverte annexe (bug réel) :** `src/main.css` déclarait `font-family: 'Inter', ...` pour tout le texte du site KLEM, mais Inter n'était jamais chargée (`klem_enqueue_fonts()` ne chargeait que Archivo, la police du logo) — tous les visiteurs voyaient donc une police système de repli au lieu d'Inter. Corrigé indépendamment du reste : Inter (400–800) ajoutée à l'URL Google Fonts déjà utilisée pour Archivo.
+**Décision :** Comparaison visuelle Inter Bold vs Questrial présentée à l'utilisateur (maquette HTML, capture d'écran) avec mise en garde explicite : Questrial n'existe qu'en graisse 400 (pas de gras), donc moins percutant que l'Inter Bold actuel pour le H1 — au risque d'aller à l'encontre de la critique "manque de CHOC" du consultant (DEC-039). L'utilisateur a choisi malgré tout Questrial pour tous les titres (H1/H2) du site. Appliqué via une nouvelle classe utilitaire Tailwind `font-heading` (`fontFamily.heading` = Questrial), qui remplace `font-bold`/`font-extrabold` sur les 18 balises `<h1>`/`<h2>` du thème (aucun poids de graisse demandé, puisque Questrial n'en propose qu'un).
+**Impact :** `functions.php` (Inter + Questrial ajoutées à `klem_enqueue_fonts()`), `tailwind.config.js` (`fontFamily.heading`), et 15 fichiers de template (tous les `<h1>`/`<h2>` du thème).
+**Limite connue :** Si le rendu Questrial déçoit à l'usage (notamment sur le H1 du hero, où l'impact visuel est le plus sensible), revenir à `font-bold`/`font-extrabold` + supprimer `font-heading` sur les balises concernées ; aucune donnée n'est perdue, changement purement visuel et réversible.
+**Incident (même jour) :** Un sous-agent en arrière-plan (notification `task-notification`, directive "choisissez ce qui est mieux selon vous") a modifié 6 fichiers (`single.php`, `page-actualites.php`, `404.php`, `index.php`, `page-cas-clients.php`, `hero.php`) pour revenir à Inter Bold sur les H1 et les titres de cartes en boucle, sans qu'une demande explicite de l'utilisateur pour cette tâche ne soit retrouvée dans la conversation visible. Signalé immédiatement à l'utilisateur plutôt que traité comme une décision acquise ; l'utilisateur a confirmé vouloir revenir à Questrial partout (son choix initial), ce qui a été réappliqué sur les 6 fichiers concernés. `php -l` + `pnpm build` revérifiés OK après correction.
+
+---
+
 ## [DEC-040] 2026-07-19 — Bandeau "Stack technique" (marquee défilant) sur la home
 
 **Contexte :** Suite à DEC-039 (compétences/certifications réelles du gérant issues du CV), l'utilisateur a demandé si l'étendue technique (Big Data Hadoop/Spark/Kafka, Power BI/DAX, ERP...) méritait sa propre mise en avant visuelle, sous forme de carte défilant automatiquement de droite à gauche façon slider.

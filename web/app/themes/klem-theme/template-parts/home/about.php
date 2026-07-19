@@ -7,7 +7,7 @@
                 <p class="text-klem-orange font-semibold tracking-widest text-sm uppercase mb-3">
                     <?php esc_html_e('À Propos', 'klem-theme'); ?>
                 </p>
-                <h2 class="text-2xl lg:text-3xl font-bold text-klem-blue leading-tight mb-6">
+                <h2 class="text-2xl lg:text-3xl font-heading text-klem-blue leading-tight mb-6">
                     <?php esc_html_e('Partenaire Stratégique de votre Croissance', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-600 leading-relaxed mb-4">

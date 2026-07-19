@@ -33,7 +33,7 @@ while (have_posts()) :
                 </span>
             <?php endif; ?>
 
-            <h1 class="text-3xl lg:text-4xl font-extrabold text-klem-blue leading-tight mb-5">
+            <h1 class="text-3xl lg:text-4xl font-heading text-klem-blue leading-tight mb-5">
                 <?php the_title(); ?>
             </h1>
 

@@ -74,7 +74,7 @@ get_header();
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-5 px-4 py-1.5 bg-klem-red/8 rounded-full">
                 <?php esc_html_e("Cas d'usage & Exemples de projets", 'klem-theme'); ?>
             </span>
-            <h1 class="text-3xl lg:text-5xl font-extrabold text-klem-blue leading-tight mb-4">
+            <h1 class="text-3xl lg:text-5xl font-heading text-klem-blue leading-tight mb-4">
                 <?php esc_html_e('Comment nous aidons nos organisations à réussir leurs projets numériques', 'klem-theme'); ?>
             </h1>
             <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
@@ -98,7 +98,7 @@ get_header();
                     <span class="inline-block text-klem-red text-[11px] font-extrabold uppercase tracking-widest mb-3">
                         <?php echo esc_html($case['sector']); ?>
                     </span>
-                    <h2 class="text-xl lg:text-2xl font-bold text-klem-blue leading-snug mb-2">
+                    <h2 class="text-xl lg:text-2xl font-heading text-klem-blue leading-snug mb-2">
                         <?php echo esc_html($case['title']); ?>
                     </h2>
                     <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide">

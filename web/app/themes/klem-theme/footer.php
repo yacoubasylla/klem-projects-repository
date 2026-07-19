@@ -10,7 +10,7 @@
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
         <div>
-            <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-3 leading-tight">
+            <h2 class="text-3xl lg:text-4xl font-heading text-white mb-3 leading-tight">
                 <?php esc_html_e('Prêt à transformer votre organisation ?', 'klem-theme'); ?>
             </h2>
             <p class="text-white/55 text-lg max-w-xl">

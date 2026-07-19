@@ -12,7 +12,7 @@ get_header();
             <p class="text-klem-red font-extrabold text-sm tracking-widest uppercase mb-4">
                 <?php esc_html_e('Erreur 404', 'klem-theme'); ?>
             </p>
-            <h1 class="text-3xl lg:text-4xl font-extrabold text-klem-blue leading-tight mb-4">
+            <h1 class="text-3xl lg:text-4xl font-heading text-klem-blue leading-tight mb-4">
                 <?php esc_html_e('Cette page est introuvable', 'klem-theme'); ?>
             </h1>
             <p class="text-gray-500 text-lg leading-relaxed mb-10">

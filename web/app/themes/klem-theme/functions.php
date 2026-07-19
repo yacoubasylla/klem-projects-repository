@@ -20,7 +20,7 @@ add_action('after_setup_theme', 'klem_theme_setup');
 function klem_enqueue_fonts(): void {
     wp_enqueue_style(
         'klem-fonts',
-        'https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap',
+        'https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Questrial&display=swap',
         [],
         null
     );

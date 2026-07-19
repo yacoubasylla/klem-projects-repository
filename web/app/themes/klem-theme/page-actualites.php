@@ -74,7 +74,7 @@ if ($klem_filtre === '' && !empty($klem_posts)) {
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-5 px-4 py-1.5 bg-klem-red/8 rounded-full">
                 <?php esc_html_e('Blog & Actualités', 'klem-theme'); ?>
             </span>
-            <h1 class="text-3xl lg:text-5xl font-extrabold text-klem-blue leading-tight mb-4">
+            <h1 class="text-3xl lg:text-5xl font-heading text-klem-blue leading-tight mb-4">
                 <?php echo esc_html($klem_page['title']); ?>
             </h1>
             <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
@@ -139,7 +139,7 @@ if ($klem_filtre === '' && !empty($klem_posts)) {
                                     <?php echo esc_html($klem_badge['name']); ?>
                                 </span>
                             <?php endif; ?>
-                            <h2 class="text-2xl lg:text-3xl font-extrabold text-klem-blue leading-tight mb-4 group-hover:text-klem-red transition-colors duration-200">
+                            <h2 class="text-2xl lg:text-3xl font-heading text-klem-blue leading-tight mb-4 group-hover:text-klem-red transition-colors duration-200">
                                 <?php the_title(); ?>
                             </h2>
                             <p class="text-gray-500 leading-relaxed mb-6">

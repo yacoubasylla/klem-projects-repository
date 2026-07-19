@@ -14,6 +14,7 @@ export default {
       },
       fontFamily: {
         logo: ['Archivo', 'sans-serif'],
+        heading: ['Questrial', 'sans-serif'],
       },
     },
   },

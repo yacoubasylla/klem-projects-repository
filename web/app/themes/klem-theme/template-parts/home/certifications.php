@@ -7,7 +7,7 @@
                 <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-3 px-4 py-1.5 bg-klem-orange/10 rounded-full">
                     <?php esc_html_e('Expertise certifiée', 'klem-theme'); ?>
                 </span>
-                <h2 class="text-xl lg:text-2xl font-extrabold text-klem-blue leading-tight mb-2">
+                <h2 class="text-xl lg:text-2xl font-heading text-klem-blue leading-tight mb-2">
                     <?php esc_html_e('Une équipe dirigeante formée aux standards internationaux', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-500 text-sm leading-relaxed">

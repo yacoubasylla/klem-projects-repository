@@ -63,7 +63,7 @@
                     <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
                 </span>
 
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-klem-blue leading-tight mb-6" data-animate data-delay="100">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading text-klem-blue leading-tight mb-6" data-animate data-delay="100">
                     <?php esc_html_e('Des plateformes qui', 'klem-theme'); ?><br>
                     <span class="text-klem-orange"><?php esc_html_e('font gagner du temps', 'klem-theme'); ?></span><br>
                     <?php esc_html_e('et accélèrent votre croissance', 'klem-theme'); ?>
