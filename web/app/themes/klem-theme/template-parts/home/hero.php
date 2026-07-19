@@ -64,14 +64,13 @@
                 </span>
 
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading text-klem-blue leading-tight mb-6" data-animate data-delay="100">
-                    <?php esc_html_e('Des plateformes qui', 'klem-theme'); ?><br>
-                    <span class="text-klem-orange"><?php esc_html_e('font gagner du temps', 'klem-theme'); ?></span><br>
-                    <?php esc_html_e('et accélèrent votre croissance', 'klem-theme'); ?>
+                    <?php esc_html_e('Des plateformes sur-mesure', 'klem-theme'); ?><br>
+                    <span class="text-klem-orange"><?php esc_html_e('pour accélérer votre croissance.', 'klem-theme'); ?></span>
                 </h1>
 
                 <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10" data-animate data-delay="200">
-                    <span class="font-medium text-gray-700"><?php esc_html_e('Ingénierie de données • Applications sur-mesure • Intégration ERP • Infrastructures IT :', 'klem-theme'); ?></span>
-                    <?php esc_html_e('nous construisons la souveraineté numérique des organisations africaines.', 'klem-theme'); ?>
+                    <span class="font-medium text-gray-700"><?php esc_html_e('Ingénierie de données, applications, ERP et infrastructures IT :', 'klem-theme'); ?></span>
+                    <?php esc_html_e('nous bâtissons la souveraineté numérique des organisations africaines, du cadrage à la mise en production.', 'klem-theme'); ?>
                 </p>
 
                 <div class="flex flex-wrap gap-4" data-animate data-delay="300">
