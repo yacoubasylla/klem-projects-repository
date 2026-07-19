@@ -45,9 +45,26 @@
 | `front-page.php` | Insertion de `template-parts/home/certifications` après `about` |
 | `.gitignore` | Ajout `CV/` et `/*.pdf` |
 
-### État de clôture (final)
+### État de clôture (2e partie)
 - `php -l` OK sur tous les fichiers modifiés, `pnpm build` sans erreur, rendu vérifié par capture d'écran (Playwright)
-- Aucun commit effectué — en attente de validation finale de l'utilisateur
+- Commit `51d07cb` créé et poussé sur `origin/main` à la demande de l'utilisateur ; déploiement Hostinger automatique confirmé en vérifiant klemtech.net en ligne
+
+### Complément — Bandeau "Stack technique" (marquee défilant)
+- Voir **DEC-040** pour la décision complète
+- Nouvelle section `template-parts/home/technologies.php` : 12 technologies/catégories (Big Data, BI, Streaming, Dev, ERP, Sécurité, Bases de données, ITIL, Cloud, Agile, IA/ML, Automatisation), pastilles icône + libellé défilant en continu droite → gauche
+- Animation CSS `@keyframes klem-marquee` ajoutée dans `src/main.css`, pause au survol/focus, désactivée si `prefers-reduced-motion`
+- Tous les tracés SVG réutilisent des icônes déjà validées ailleurs dans le thème (aucun nouveau tracé inventé)
+
+### Fichiers modifiés (bandeau technologies)
+| Fichier | Action |
+|---|---|
+| `template-parts/home/technologies.php` | Nouveau — bandeau défilant des technologies |
+| `front-page.php` | Insertion de `template-parts/home/technologies` entre `services` et `offers` |
+| `src/main.css` | Nouvelle animation `.animate-marquee` |
+
+### État de clôture (final)
+- `php -l` OK, `pnpm build` sans erreur, animation et icônes vérifiées par capture d'écran (Playwright, 2 captures espacées de 2s)
+- Aucun commit effectué pour cette 3e partie — en attente de validation de l'utilisateur
 
 ---
 

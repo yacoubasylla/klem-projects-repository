@@ -5,6 +5,15 @@
 
 ---
 
+## [DEC-040] 2026-07-19 — Bandeau "Stack technique" (marquee défilant) sur la home
+
+**Contexte :** Suite à DEC-039 (compétences/certifications réelles du gérant issues du CV), l'utilisateur a demandé si l'étendue technique (Big Data Hadoop/Spark/Kafka, Power BI/DAX, ERP...) méritait sa propre mise en avant visuelle, sous forme de carte défilant automatiquement de droite à gauche façon slider.
+**Décision :** Nouvelle section `template-parts/home/technologies.php`, insérée entre Services et Offres. 12 technologies/catégories génériques (Big Data, BI & Reporting, Streaming, Développement, ERP & Intégration, Sécurité applicative, Bases de données, Gouvernance IT ITIL®, Cloud & Infrastructure, Méthodes Agile, IA & Machine Learning, Automatisation) affichées en pastilles icône + libellé, dans un bandeau à défilement continu (CSS `@keyframes klem-marquee`, liste dupliquée ×2 pour une boucle sans coupure, pause au survol/focus, désactivé si `prefers-reduced-motion`). Contrairement à DEC-039, aucune validation préalable n'a été nécessaire ici : il s'agit d'un inventaire de technologies génériques (pas une allégation d'historique client, pas une donnée personnelle identifiante), cohérent avec ce qui est déjà publiquement affiché ailleurs sur le site (Kafka/Spark déjà cités en Hero et dans Services).
+**Impact :** `template-parts/home/technologies.php` (nouveau), `front-page.php`, `src/main.css` (nouvelle animation `.animate-marquee`)
+**Limite connue :** Les icônes réutilisent des tracés SVG déjà validés ailleurs dans le thème (aucun nouveau tracé inventé) pour éviter tout risque de path SVG malformé.
+
+---
+
 ## [DEC-039] 2026-07-19 — Application filtrée d'un audit externe (consultant stratégie) : refus des preuves fabriquées, ajout d'une offre d'entrée "sur devis"
 
 **Contexte :** L'utilisateur a soumis un PDF d'audit rédigé par un consultant externe en stratégie d'entreprise (note 8,6/10), demandant d'appliquer ses recommandations pour améliorer le fond et la forme du site. Le rapport recommandait, entre autres, d'ajouter des statistiques chiffrées d'exemple ("+20 projets réalisés", "18 entreprises accompagnées"), des témoignages clients types (citations attribuées à des rôles génériques), une page dirigeants, des logos de certifications, et une grille tarifaire chiffrée.
