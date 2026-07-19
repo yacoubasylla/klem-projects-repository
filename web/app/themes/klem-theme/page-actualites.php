@@ -71,7 +71,7 @@ if ($klem_filtre === '' && !empty($klem_posts)) {
     <!-- Hero -->
     <section class="pt-16 pb-10 lg:pt-20 lg:pb-14 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center" data-animate>
-            <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-5 px-4 py-1.5 bg-klem-red/8 rounded-full">
+            <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-5">
                 <?php esc_html_e('Blog & Actualités', 'klem-theme'); ?>
             </span>
             <h1 class="text-3xl lg:text-5xl font-heading text-klem-blue leading-tight mb-4">

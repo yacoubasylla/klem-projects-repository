@@ -13,6 +13,10 @@
 **Impact :** `template-parts/home/technologies.php` (régénéré via script Node à partir des données Simple Icons, cf. `/tmp/.../gen-technologies.js` — script non versionné, usage ponctuel).
 **Limite connue :** Le point (3) "harmonie de couleurs" n'a pas encore été exécuté — analyse livrée, exécution en attente de la direction choisie par l'utilisateur.
 
+**Complément (même jour) — Exécution de l'harmonie couleurs.** L'utilisateur a validé l'exécution directe ("bleu marine + rouge uniquement, rien d'autre"). Décision : le vrai levier n'est pas la couleur (klem-orange = klem-red, même hex) mais la répétition à l'identique de la pastille "œillet" (fond teinté + majuscules + `rounded-full`) en tête de 10 sections sur ~13. Plutôt que d'inventer un nouveau style, réutilisation du traitement déjà présent et déjà réussi dans `about.php` (simple label coloré en majuscules, sans fond ni pastille) : 6 fichiers alignés sur ce style (`page-actualites.php`, `page-cas-clients.php`, `actualites-preview.php`, `offers.php`, `contact.php`, `cas-clients-preview.php`). Conservé tel quel (pastille pleine) pour les sections où le concept de badge fait sens ou où le contexte est déjà différencié : `services.php` (section d'ancrage), `certifications.php` (le concept même de certification = badge), `hero.php` (positionnement différent, pas un simple en-tête de section), `technologies.php` et `clients.php` (sections sombres déjà distinctes). Résultat : la pastille pleine passe de 10 occurrences à 5, avec un vrai contraste entre les deux traitements plutôt qu'une répétition uniforme.
+**Impact :** `page-actualites.php`, `page-cas-clients.php`, `template-parts/home/actualites-preview.php`, `template-parts/home/offers.php`, `template-parts/home/contact.php`, `template-parts/home/cas-clients-preview.php`.
+**Limite connue :** Le renommage `klem-orange` → `klem-red` (nettoyage de code, aucun effet visuel puisque même hex) n'a pas été fait — signalé comme nettoyage optionnel, pas nécessaire pour l'harmonie visuelle demandée.
+
 ---
 
 ## [DEC-041] 2026-07-19 — Correction du chargement d'Inter + adoption de Questrial pour les titres

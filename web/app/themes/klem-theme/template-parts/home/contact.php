@@ -4,7 +4,7 @@
 
             <!-- Colonne gauche : informations -->
             <div data-animate data-delay="0">
-                <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-orange/10 rounded-full">
+                <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-4">
                     <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
                 </span>
                 <h2 class="text-2xl lg:text-3xl font-heading text-klem-blue leading-tight mb-5">
