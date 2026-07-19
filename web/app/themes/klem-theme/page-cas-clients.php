@@ -12,7 +12,7 @@ $klem_use_cases = [
     [
         'sector'  => __('Logistique & Transport', 'klem-theme'),
         'title'   => __('Optimisation de flotte avec FleetControl', 'klem-theme'),
-        'context' => __("De nombreux opérateurs de transport gèrent encore leur flotte sur des tableurs, sans visibilité en temps réel sur la localisation, la consommation ou l'état d'entretien des véhicules.", 'klem-theme'),
+        'context' => __("De nombreux opérateurs gèrent encore leur flotte sur des tableurs, sans visibilité en temps réel sur localisation, consommation ou entretien.", 'klem-theme'),
         'problem' => __("Coûts de carburant mal maîtrisés, pannes découvertes trop tard, reporting manuel chronophage pour les équipes d'exploitation.", 'klem-theme'),
         'solution' => __("Déploiement de FleetControl : géolocalisation en temps réel, alertes de maintenance prédictive et tableau de bord de consommation centralisé.", 'klem-theme'),
         'benefit' => __("Des décisions plus rapides, un entretien anticipé plutôt que subi, et une visibilité complète sur les coûts d'exploitation.", 'klem-theme'),
@@ -21,7 +21,7 @@ $klem_use_cases = [
     [
         'sector'  => __('Éducation & Collectivités', 'klem-theme'),
         'title'   => __('Digitalisation de la restauration scolaire avec Cantine Connect', 'klem-theme'),
-        'context' => __("La gestion des paiements de cantine scolaire reste souvent manuelle — espèces, cahiers de suivi — avec des files d'attente et un risque d'erreur ou de perte.", 'klem-theme'),
+        'context' => __("La gestion des paiements de cantine reste souvent manuelle — espèces, cahiers de suivi — avec files d'attente et risques d'erreur.", 'klem-theme'),
         'problem' => __("Faible traçabilité budgétaire, temps d'attente pour les élèves, charge administrative importante pour le personnel.", 'klem-theme'),
         'solution' => __("Déploiement de Cantine Connect : paiement dématérialisé et contrôle d'accès à l'entrée du réfectoire.", 'klem-theme'),
         'benefit' => __("Des paiements tracés en continu, un accès simplifié pour les élèves, et une charge administrative réduite pour les équipes.", 'klem-theme'),
@@ -30,7 +30,7 @@ $klem_use_cases = [
     [
         'sector'  => __('Commerce & Services', 'klem-theme'),
         'title'   => __('Mise en place d\'un socle de données cloud', 'klem-theme'),
-        'context' => __("Les données d'une PME sont souvent dispersées entre plusieurs outils — tableurs, logiciel de caisse, CRM — rendant le reporting long à produire et peu fiable.", 'klem-theme'),
+        'context' => __("Les données d'une PME sont souvent dispersées entre plusieurs outils — tableurs, caisse, CRM — rendant le reporting long et peu fiable.", 'klem-theme'),
         'problem' => __("Décisions prises sur des données incomplètes ou obsolètes, temps perdu chaque mois à consolider manuellement les chiffres.", 'klem-theme'),
         'solution' => __("Mise en place d'un entrepôt de données cloud alimenté par des pipelines d'ingénierie des données automatisés.", 'klem-theme'),
         'benefit' => __("Un reporting fiable, rapide à produire, et une vision unifiée de l'activité pour l'équipe dirigeante.", 'klem-theme'),
@@ -39,9 +39,9 @@ $klem_use_cases = [
     [
         'sector'  => __('Douane & Commerce International', 'klem-theme'),
         'title'   => __('Pré-audit automatisé des déclarations douanières avec Clear-Comply', 'klem-theme'),
-        'context' => __("Les commissionnaires en douane traitent chaque jour de nombreuses déclarations, avec un contrôle qualité réalisé manuellement par des agents expérimentés dont la disponibilité est limitée.", 'klem-theme'),
+        'context' => __("Les commissionnaires en douane traitent chaque jour de nombreuses déclarations, avec un contrôle qualité manuel, limité par la disponibilité des agents.", 'klem-theme'),
         'problem' => __("Erreurs de code SH ou de valorisation détectées trop tard, immobilisation de conteneurs, pénalités de redressement et surcoûts de magasinage.", 'klem-theme'),
-        'solution' => __("Déploiement de Clear-Comply : un outil de pré-contrôle interne qui détecte les anomalies avant la soumission de la déclaration, plutôt qu'après contrôle.", 'klem-theme'),
+        'solution' => __("Déploiement de Clear-Comply : un outil de pré-contrôle interne qui détecte les anomalies avant la soumission de la déclaration.", 'klem-theme'),
         'benefit' => __("Un filtre de pré-contrôle interne qui réduit le risque de redressement, sans remplacer les systèmes de déclaration existants.", 'klem-theme'),
         'icon'    => 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
     ],
@@ -50,7 +50,7 @@ $klem_use_cases = [
         'title'   => __("Réseau d'interopérabilité santé avec Med-Share", 'klem-theme'),
         'context' => __("Les systèmes d'information des cliniques, hôpitaux et pharmacies restent cloisonnés, sans échange standardisé entre établissements.", 'klem-theme'),
         'problem' => __("Perte de continuité clinique lors des références inter-établissements, et absence de visibilité inter-pharmacies sur les stocks de médicaments essentiels.", 'klem-theme'),
-        'solution' => __("Déploiement de Med-Share : une plateforme de partage sécurisé d'informations entre établissements de santé partenaires, pensée pour répondre aux exigences de souveraineté des données de santé.", 'klem-theme'),
+        'solution' => __("Déploiement de Med-Share : une plateforme de partage sécurisé d'informations entre établissements de santé, conçue pour la souveraineté des données.", 'klem-theme'),
         'benefit' => __("Un accès plus rapide à l'historique clinique d'un patient référé, et une meilleure anticipation des ruptures de stock pharmaceutique en réseau.", 'klem-theme'),
         'icon'    => 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z',
     ],
@@ -75,10 +75,10 @@ get_header();
                 <?php esc_html_e("Cas d'usage & Exemples de projets", 'klem-theme'); ?>
             </span>
             <h1 class="text-3xl lg:text-5xl font-heading text-klem-blue leading-tight mb-4">
-                <?php esc_html_e('Comment nous aidons nos organisations à réussir leurs projets numériques', 'klem-theme'); ?>
+                <?php esc_html_e('Comment nous aidons les organisations africaines à réussir leurs projets numériques', 'klem-theme'); ?>
             </h1>
             <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
-                <?php esc_html_e("Voici des exemples concrets du type de projets que nous menons, pour donner une idée précise de notre expertise plutôt qu'un historique.", 'klem-theme'); ?>
+                <?php esc_html_e("Des exemples concrets du type de projets que nous menons, pour donner une idée précise de notre expertise.", 'klem-theme'); ?>
             </p>
         </div>
     </section>

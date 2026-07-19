@@ -11,7 +11,7 @@
                     <?php esc_html_e('Une équipe dirigeante formée aux standards internationaux', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-500 text-sm leading-relaxed">
-                    <?php esc_html_e("Certifications individuelles détenues par notre équipe dirigeante, garantes d'une méthode agile et d'une gouvernance IT rigoureuse sur chaque projet.", 'klem-theme'); ?>
+                    <?php esc_html_e("Certifications individuelles de notre équipe dirigeante, garantes d'une méthode agile et d'une gouvernance IT rigoureuse.", 'klem-theme'); ?>
                 </p>
             </div>
 

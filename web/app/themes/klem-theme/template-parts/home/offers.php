@@ -9,7 +9,7 @@
                 <?php esc_html_e('Un point de départ clair, sans engagement flou', 'klem-theme'); ?>
             </h2>
             <p class="text-gray-500 text-lg leading-relaxed">
-                <?php esc_html_e("Avant de parler de projet, nous cadrons un premier périmètre précis. Voici les formats d'entrée les plus demandés.", 'klem-theme'); ?>
+                <?php esc_html_e("Nous cadrons d'abord un périmètre précis. Voici nos formats d'entrée les plus demandés.", 'klem-theme'); ?>
             </p>
         </div>
 
@@ -19,7 +19,7 @@
                 'badge_label' => __('Gratuit', 'klem-theme'),
                 'badge_style' => 'bg-green-100 text-green-700',
                 'title'       => __('Diagnostic initial (30 min)', 'klem-theme'),
-                'scope'       => __("Un échange avec un expert pour clarifier votre besoin, identifier les priorités et vous dire honnêtement si nous sommes les bons interlocuteurs.", 'klem-theme'),
+                'scope'       => __("Un échange avec un expert pour clarifier votre besoin et vérifier, honnêtement, si nous sommes les bons interlocuteurs.", 'klem-theme'),
                 'delay'       => '0',
                 'icon'        => 'M8.25 4.5l7.5 7.5-7.5 7.5',
             ],
@@ -27,7 +27,7 @@
                 'badge_label' => __('Sur devis', 'klem-theme'),
                 'badge_style' => 'bg-klem-blue/10 text-klem-blue',
                 'title'       => __('Audit Data', 'klem-theme'),
-                'scope'       => __('Cartographie de vos sources de données actuelles et feuille de route priorisée pour fiabiliser votre reporting.', 'klem-theme'),
+                'scope'       => __('Cartographie de vos données existantes et feuille de route priorisée pour fiabiliser votre reporting.', 'klem-theme'),
                 'delay'       => '100',
                 'icon'        => 'M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375',
             ],

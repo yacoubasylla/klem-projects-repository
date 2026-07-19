@@ -8,7 +8,7 @@
                 <?php esc_html_e('Les technologies derrière nos solutions', 'klem-theme'); ?>
             </h2>
             <p class="text-white/50 text-base leading-relaxed">
-                <?php esc_html_e("Un socle technique large, choisi projet par projet plutôt qu'imposé par une seule solution propriétaire.", 'klem-theme'); ?>
+                <?php esc_html_e("Un socle technique large, choisi projet par projet — jamais imposé par une solution propriétaire.", 'klem-theme'); ?>
             </p>
         </div>
     </div>

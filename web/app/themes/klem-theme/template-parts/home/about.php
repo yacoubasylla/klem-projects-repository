@@ -11,7 +11,7 @@
                     <?php esc_html_e('Partenaire Stratégique de votre Croissance', 'klem-theme'); ?>
                 </h2>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    <?php esc_html_e('KLEM Technologies & Services est un intégrateur numérique positionné sur les marchés privés et publics d\'Afrique. Notre mission : rendre accessible l\'excellence technologique aux organisations qui construisent le continent de demain.', 'klem-theme'); ?>
+                    <?php esc_html_e('KLEM Technologies & Services, intégrateur numérique en Afrique, rend l\'excellence technologique accessible aux organisations qui construisent le continent de demain.', 'klem-theme'); ?>
                 </p>
                 <a href="#contact" class="inline-block mt-4 text-klem-orange font-semibold border-b-2 border-klem-orange pb-1 hover:opacity-80 transition-opacity">
                     <?php esc_html_e('Parlons de votre projet →', 'klem-theme'); ?>

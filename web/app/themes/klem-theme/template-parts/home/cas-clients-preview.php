@@ -9,7 +9,7 @@
                 <?php esc_html_e('Le type de projets que nous menons', 'klem-theme'); ?>
             </h2>
             <p class="text-gray-500 text-lg leading-relaxed">
-                <?php esc_html_e("Voici, à titre d'exemple, des scénarios types qui illustrent l'étendue de notre expertise sur ces secteurs.", 'klem-theme'); ?>
+                <?php esc_html_e("Des scénarios types qui illustrent l'étendue de notre expertise, secteur par secteur.", 'klem-theme'); ?>
             </p>
         </div>
 

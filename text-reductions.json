@@ -1,0 +1,220 @@
+{
+  "pages": [
+    {
+      "url": "https://www.klemtech.net/",
+      "modifications": [
+        {
+          "section": "Services (#services) — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/services.php",
+          "selector": "#services p.text-gray-500.text-lg",
+          "texte_actuel": "Des solutions technologiques de bout en bout, conçues pour les organisations qui misent sur l'innovation comme levier de compétitivité.",
+          "texte_propose": "Des solutions technologiques complètes, pensées pour les organisations qui misent sur l'innovation.",
+          "lignes": 2
+        },
+        {
+          "section": "Services — carte 01 Ingénierie des Données",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/services.php",
+          "selector": "#services article:nth-of-type(1) p.text-gray-500",
+          "texte_actuel": "Pipelines Big Data, architectures temps réel (Kafka, Spark) et lacs de données pour transformer vos données brutes en avantage stratégique décisif.",
+          "texte_propose": "Pipelines Big Data et architectures temps réel (Kafka, Spark) pour transformer vos données en avantage stratégique.",
+          "lignes": 3
+        },
+        {
+          "section": "Services — carte 02 Applications Sur-Mesure",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/services.php",
+          "selector": "#services article:nth-of-type(2) p.text-gray-500",
+          "texte_actuel": "Développement d'applications web et mobiles d'envergure — comme Cantine Connect, notre solution de gestion des paiements et de contrôle d'accès pour la restauration scolaire — ERP et logiciels métiers haute performance, 100 % adaptés à vos processus et à votre ambition.",
+          "texte_propose": "Applications web, mobiles et ERP 100 % sur-mesure — comme Cantine Connect, notre solution de paiement pour la restauration scolaire.",
+          "lignes": 3
+        },
+        {
+          "section": "Services — carte 03 Intégration ERP & FleetControl",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/services.php",
+          "selector": "#services article:nth-of-type(3) p.text-gray-500",
+          "texte_actuel": "Orchestration de systèmes d'information complexes et déploiement de FleetControl, notre solution de gestion de flotte intelligente pour les opérateurs africains.",
+          "texte_propose": "Intégration de vos systèmes d'information et déploiement de FleetControl, notre solution de gestion de flotte pour l'Afrique.",
+          "lignes": 3
+        },
+        {
+          "section": "Services — carte 04 Matériel IT & Infrastructure",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/services.php",
+          "selector": "#services article:nth-of-type(4) p.text-gray-500",
+          "texte_actuel": "Fourniture et déploiement d'équipements serveurs, réseaux et postes de travail de qualité entreprise pour des infrastructures critiques robustes et évolutives.",
+          "texte_propose": "Serveurs, réseaux, postes de travail : nous déployons des infrastructures IT robustes et évolutives.",
+          "lignes": 2
+        },
+        {
+          "section": "Stack technique — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/technologies.php",
+          "selector": "section p.text-white\\/50",
+          "texte_actuel": "Un socle technique large, choisi projet par projet plutôt qu'imposé par une seule solution propriétaire.",
+          "texte_propose": "Un socle technique large, choisi projet par projet — jamais imposé par une solution propriétaire.",
+          "lignes": 2
+        },
+        {
+          "section": "Premier pas (#offres) — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/offers.php",
+          "selector": "#offres p.text-gray-500.text-lg",
+          "texte_actuel": "Avant de parler de projet, nous cadrons un premier périmètre précis. Voici les formats d'entrée les plus demandés.",
+          "texte_propose": "Nous cadrons d'abord un périmètre précis. Voici nos formats d'entrée les plus demandés.",
+          "lignes": 2
+        },
+        {
+          "section": "Offre — Diagnostic initial",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/offers.php",
+          "selector": "#offres .grid > div:nth-child(1) p",
+          "texte_actuel": "Un échange avec un expert pour clarifier votre besoin, identifier les priorités et vous dire honnêtement si nous sommes les bons interlocuteurs.",
+          "texte_propose": "Un échange avec un expert pour clarifier votre besoin et vérifier, honnêtement, si nous sommes les bons interlocuteurs.",
+          "lignes": 3
+        },
+        {
+          "section": "Offre — Audit Data",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/offers.php",
+          "selector": "#offres .grid > div:nth-child(2) p",
+          "texte_actuel": "Cartographie de vos sources de données actuelles et feuille de route priorisée pour fiabiliser votre reporting.",
+          "texte_propose": "Cartographie de vos données existantes et feuille de route priorisée pour fiabiliser votre reporting.",
+          "lignes": 2
+        },
+        {
+          "section": "À propos (#about) — texte principal",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/about.php",
+          "selector": "#about p.text-gray-600",
+          "texte_actuel": "KLEM Technologies & Services est un intégrateur numérique positionné sur les marchés privés et publics d'Afrique. Notre mission : rendre accessible l'excellence technologique aux organisations qui construisent le continent de demain.",
+          "texte_propose": "KLEM Technologies & Services, intégrateur numérique en Afrique, rend l'excellence technologique accessible aux organisations qui construisent le continent de demain.",
+          "lignes": 3
+        },
+        {
+          "section": "Expertise certifiée — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/certifications.php",
+          "selector": "section p.text-gray-500.text-sm",
+          "texte_actuel": "Certifications individuelles détenues par notre équipe dirigeante, garantes d'une méthode agile et d'une gouvernance IT rigoureuse sur chaque projet.",
+          "texte_propose": "Certifications individuelles de notre équipe dirigeante, garantes d'une méthode agile et d'une gouvernance IT rigoureuse.",
+          "lignes": 2
+        },
+        {
+          "section": "Notre Différence (#clients) — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/clients.php",
+          "selector": "#clients p.text-white\\/50.text-lg",
+          "texte_actuel": "Une équipe passionnée, des méthodes éprouvées et une ambition claire : accompagner les entreprises africaines dans leur transformation numérique.",
+          "texte_propose": "Une équipe passionnée, des méthodes éprouvées, une ambition claire : accompagner la transformation numérique des entreprises africaines.",
+          "lignes": 2
+        },
+        {
+          "section": "Différenciateur 1 — Expertise Technique",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/clients.php",
+          "selector": "#clients .grid > div:nth-child(1) p",
+          "texte_actuel": "Architectures robustes et scalables, standards d'ingénierie mondiaux, maîtrise des technologies Big Data, ERP et développement sur-mesure — appliqués aux réalités concrètes du marché local.",
+          "texte_propose": "Architectures robustes et scalables, standards d'ingénierie mondiaux : Big Data, ERP et développement sur-mesure, appliqués au marché local.",
+          "lignes": 3
+        },
+        {
+          "section": "Différenciateur 2 — Rigueur & Transparence",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/clients.php",
+          "selector": "#clients .grid > div:nth-child(2) p",
+          "texte_actuel": "Périmètre défini, jalons clairs, budget respecté. Chaque engagement est encadré par une méthodologie stricte : vous savez exactement où en est votre projet, à chaque étape.",
+          "texte_propose": "Périmètre défini, jalons clairs, budget respecté : une méthodologie stricte pour savoir, à chaque étape, où en est votre projet.",
+          "lignes": 3
+        },
+        {
+          "section": "Différenciateur 3 — Ancrage Africain",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/clients.php",
+          "selector": "#clients .grid > div:nth-child(3) p",
+          "texte_actuel": "Basés à Abidjan, nous comprenons les contraintes et les opportunités du marché ivoirien et ouest-africain. Nos solutions sont conçues pour fonctionner ici, pas seulement adaptées depuis ailleurs.",
+          "texte_propose": "Basés à Abidjan, nous connaissons le marché ivoirien et ouest-africain : nos solutions sont pensées pour fonctionner ici, pas juste adaptées d'ailleurs.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas d'usage (aperçu accueil) — intro",
+          "fichier": "web/app/themes/klem-theme/template-parts/home/cas-clients-preview.php",
+          "selector": "section p.text-gray-500.text-lg",
+          "texte_actuel": "Voici, à titre d'exemple, des scénarios types qui illustrent l'étendue de notre expertise sur ces secteurs.",
+          "texte_propose": "Des scénarios types qui illustrent l'étendue de notre expertise, secteur par secteur.",
+          "lignes": 2
+        },
+        {
+          "section": "Footer — description entreprise",
+          "fichier": "web/app/themes/klem-theme/footer.php",
+          "selector": "footer .lg\\:col-span-4 p.text-white\\/50",
+          "texte_actuel": "Intégrateur numérique de référence en Afrique. Nous concevons et déployons les architectures digitales des organisations qui construisent le continent de demain.",
+          "texte_propose": "Intégrateur numérique de référence en Afrique, nous concevons et déployons les architectures digitales du continent de demain.",
+          "lignes": 2
+        }
+      ]
+    },
+    {
+      "url": "https://www.klemtech.net/cas-clients/",
+      "modifications": [
+        {
+          "section": "Hero — titre",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "main section:first-of-type h1",
+          "texte_actuel": "Comment nous aidons nos organisations à réussir leurs projets numériques",
+          "texte_propose": "Comment nous aidons les organisations africaines à réussir leurs projets numériques",
+          "lignes": 2
+        },
+        {
+          "section": "Hero — sous-titre",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "main section:first-of-type p.text-gray-500",
+          "texte_actuel": "Voici des exemples concrets du type de projets que nous menons, pour donner une idée précise de notre expertise plutôt qu'un historique.",
+          "texte_propose": "Des exemples concrets du type de projets que nous menons, pour donner une idée précise de notre expertise.",
+          "lignes": 2
+        },
+        {
+          "section": "Cas 1 (FleetControl) — Contexte",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(1) [data-field=context] p",
+          "texte_actuel": "De nombreux opérateurs de transport gèrent encore leur flotte sur des tableurs, sans visibilité en temps réel sur la localisation, la consommation ou l'état d'entretien des véhicules.",
+          "texte_propose": "De nombreux opérateurs gèrent encore leur flotte sur des tableurs, sans visibilité en temps réel sur localisation, consommation ou entretien.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas 2 (Cantine Connect) — Contexte",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(2) [data-field=context] p",
+          "texte_actuel": "La gestion des paiements de cantine scolaire reste souvent manuelle — espèces, cahiers de suivi — avec des files d'attente et un risque d'erreur ou de perte.",
+          "texte_propose": "La gestion des paiements de cantine reste souvent manuelle — espèces, cahiers de suivi — avec files d'attente et risques d'erreur.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas 3 (Socle de données) — Contexte",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(3) [data-field=context] p",
+          "texte_actuel": "Les données d'une PME sont souvent dispersées entre plusieurs outils — tableurs, logiciel de caisse, CRM — rendant le reporting long à produire et peu fiable.",
+          "texte_propose": "Les données d'une PME sont souvent dispersées entre plusieurs outils — tableurs, caisse, CRM — rendant le reporting long et peu fiable.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas 4 (Clear-Comply) — Contexte",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(4) [data-field=context] p",
+          "texte_actuel": "Les commissionnaires en douane traitent chaque jour de nombreuses déclarations, avec un contrôle qualité réalisé manuellement par des agents expérimentés dont la disponibilité est limitée.",
+          "texte_propose": "Les commissionnaires en douane traitent chaque jour de nombreuses déclarations, avec un contrôle qualité manuel, limité par la disponibilité des agents.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas 4 (Clear-Comply) — Solution KLEM",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(4) [data-field=solution] p",
+          "texte_actuel": "Déploiement de Clear-Comply : un outil de pré-contrôle interne qui détecte les anomalies avant la soumission de la déclaration, plutôt qu'après contrôle.",
+          "texte_propose": "Déploiement de Clear-Comply : un outil de pré-contrôle interne qui détecte les anomalies avant la soumission de la déclaration.",
+          "lignes": 3
+        },
+        {
+          "section": "Cas 5 (Med-Share) — Solution KLEM",
+          "fichier": "web/app/themes/klem-theme/page-cas-clients.php",
+          "selector": "article:nth-of-type(5) [data-field=solution] p",
+          "texte_actuel": "Déploiement de Med-Share : une plateforme de partage sécurisé d'informations entre établissements de santé partenaires, pensée pour répondre aux exigences de souveraineté des données de santé.",
+          "texte_propose": "Déploiement de Med-Share : une plateforme de partage sécurisé d'informations entre établissements de santé, conçue pour la souveraineté des données.",
+          "lignes": 3
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Le hero de la homepage (h1 + paragraphe d'intro) a déjà été retravaillé lors d'un échange précédent et respecte déjà la règle 2-4 lignes / 30-60 mots : aucune nouvelle modification proposée ici.",
+    "Les badges, labels de navigation, titres de cartes courts (≤ 8 mots) et champs de formulaire ne sont pas listés : déjà conformes, aucune réécriture nécessaire.",
+    "Les 4 champs Contexte/Défi/Solution/Ce que ça change ne sont proposés en réécriture que lorsqu'ils dépassaient ~20 mots ; les autres (déjà courts) sont laissés tels quels.",
+    "La page Actualités (liste + articles) et la page 404 n'ont pas de texte long nécessitant une réécriture."
+  ]
+}

@@ -51,7 +51,7 @@
                     </div>
                 </a>
                 <p class="text-white/50 text-sm leading-relaxed mb-7 max-w-xs">
-                    <?php esc_html_e('Intégrateur numérique de référence en Afrique. Nous concevons et déployons les architectures digitales des organisations qui construisent le continent de demain.', 'klem-theme'); ?>
+                    <?php esc_html_e('Intégrateur numérique de référence en Afrique, nous concevons et déployons les architectures digitales du continent de demain.', 'klem-theme'); ?>
                 </p>
 
                 <!-- Réseaux sociaux -->

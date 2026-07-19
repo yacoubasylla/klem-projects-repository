@@ -11,7 +11,7 @@
                 <?php esc_html_e('distingue', 'klem-theme'); ?>
             </h2>
             <p class="text-white/50 text-lg leading-relaxed">
-                <?php esc_html_e("Une équipe passionnée, des méthodes éprouvées et une ambition claire : accompagner les entreprises africaines dans leur transformation numérique.", 'klem-theme'); ?>
+                <?php esc_html_e("Une équipe passionnée, des méthodes éprouvées, une ambition claire : accompagner la transformation numérique des entreprises africaines.", 'klem-theme'); ?>
             </p>
         </div>
 
@@ -22,21 +22,21 @@
                 'delay'   => '100',
                 'icon'    => 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
                 'title'   => 'Expertise Technique',
-                'body'    => "Architectures robustes et scalables, standards d'ingénierie mondiaux, maîtrise des technologies Big Data, ERP et développement sur-mesure — appliqués aux réalités concrètes du marché local.",
+                'body'    => "Architectures robustes et scalables, standards d'ingénierie mondiaux : Big Data, ERP et développement sur-mesure, appliqués au marché local.",
                 'badge'   => 'Architecture & Ingénierie',
             ],
             [
                 'delay'   => '200',
                 'icon'    => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
                 'title'   => 'Rigueur & Transparence',
-                'body'    => "Périmètre défini, jalons clairs, budget respecté. Chaque engagement est encadré par une méthodologie stricte : vous savez exactement où en est votre projet, à chaque étape.",
+                'body'    => "Périmètre défini, jalons clairs, budget respecté : une méthodologie stricte pour savoir, à chaque étape, où en est votre projet.",
                 'badge'   => 'Méthode & Fiabilité',
             ],
             [
                 'delay'   => '300',
                 'icon'    => 'M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-9 8.25c0-3.314 2.686-6 6-6s6 2.686 6 6',
                 'title'   => 'Ancrage Africain',
-                'body'    => "Basés à Abidjan, nous comprenons les contraintes et les opportunités du marché ivoirien et ouest-africain. Nos solutions sont conçues pour fonctionner ici, pas seulement adaptées depuis ailleurs.",
+                'body'    => "Basés à Abidjan, nous connaissons le marché ivoirien et ouest-africain : nos solutions sont pensées pour fonctionner ici, pas juste adaptées d'ailleurs.",
                 'badge'   => 'Côte d\'Ivoire & Afrique de l\'Ouest',
             ],
         ];

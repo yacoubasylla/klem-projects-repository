@@ -11,7 +11,7 @@
             </h2>
             <p class="text-gray-500 text-lg leading-relaxed">
                 <?php esc_html_e(
-                    "Des solutions technologiques de bout en bout, conçues pour les organisations qui misent sur l'innovation comme levier de compétitivité.",
+                    "Des solutions technologiques complètes, pensées pour les organisations qui misent sur l'innovation.",
                     'klem-theme'
                 ); ?>
             </p>
@@ -121,7 +121,7 @@
             [
                 'num'      => '01',
                 'title'    => 'Ingénierie des Données',
-                'desc'     => 'Pipelines Big Data, architectures temps réel (Kafka, Spark) et lacs de données pour transformer vos données brutes en avantage stratégique décisif.',
+                'desc'     => 'Pipelines Big Data et architectures temps réel (Kafka, Spark) pour transformer vos données en avantage stratégique.',
                 'cta'      => 'Planifier un atelier data',
                 'delay'    => '100',
                 'icon_svg' => $icon_data,
@@ -129,7 +129,7 @@
             [
                 'num'      => '02',
                 'title'    => 'Applications Sur-Mesure',
-                'desc'     => "Développement d'applications web et mobiles d'envergure — comme Cantine Connect, notre solution de gestion des paiements et de contrôle d'accès pour la restauration scolaire — ERP et logiciels métiers haute performance, 100 % adaptés à vos processus et à votre ambition.",
+                'desc'     => "Applications web, mobiles et ERP 100 % sur-mesure — comme Cantine Connect, notre solution de paiement pour la restauration scolaire.",
                 'cta'      => 'Discuter de mon application',
                 'delay'    => '200',
                 'icon_svg' => $icon_apps,
@@ -137,7 +137,7 @@
             [
                 'num'      => '03',
                 'title'    => 'Intégration ERP & FleetControl',
-                'desc'     => "Orchestration de systèmes d'information complexes et déploiement de FleetControl, notre solution de gestion de flotte intelligente pour les opérateurs africains.",
+                'desc'     => "Intégration de vos systèmes d'information et déploiement de FleetControl, notre solution de gestion de flotte pour l'Afrique.",
                 'cta'      => 'Demander une démo FleetControl',
                 'delay'    => '300',
                 'icon_svg' => $icon_erp,
@@ -145,7 +145,7 @@
             [
                 'num'      => '04',
                 'title'    => 'Matériel IT & Infrastructure',
-                'desc'     => "Fourniture et déploiement d'équipements serveurs, réseaux et postes de travail de qualité entreprise pour des infrastructures critiques robustes et évolutives.",
+                'desc'     => "Serveurs, réseaux, postes de travail : nous déployons des infrastructures IT robustes et évolutives.",
                 'cta'      => 'Obtenir une estimation infra',
                 'delay'    => '400',
                 'icon_svg' => $icon_hardware,
