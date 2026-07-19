@@ -142,7 +142,7 @@
                                     name="klem_name"
                                     required
                                     autocomplete="name"
-                                    placeholder="<?php esc_attr_e('Jean Dupont', 'klem-theme'); ?>"
+                                    placeholder="<?php esc_attr_e('Y. Sylson', 'klem-theme'); ?>"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors"
                                 >
                             </div>
@@ -155,7 +155,7 @@
                                     id="klem-company"
                                     name="klem_company"
                                     autocomplete="organization"
-                                    placeholder="<?php esc_attr_e('Acme Corp.', 'klem-theme'); ?>"
+                                    placeholder="<?php esc_attr_e('Baobab Corp.', 'klem-theme'); ?>"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors"
                                 >
                             </div>
