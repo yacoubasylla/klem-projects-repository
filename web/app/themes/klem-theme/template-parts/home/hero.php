@@ -71,7 +71,7 @@
 
                 <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10" data-animate data-delay="200">
                     <span class="font-medium text-gray-700"><?php esc_html_e('Ingénierie de données • Applications sur-mesure • Intégration ERP • Infrastructures IT :', 'klem-theme'); ?></span>
-                    <?php esc_html_e('nous construisons la souveraineté numérique des organisations africaines, de la première idée à la mise en production.', 'klem-theme'); ?>
+                    <?php esc_html_e('nous construisons la souveraineté numérique des organisations africaines.', 'klem-theme'); ?>
                 </p>
 
                 <div class="flex flex-wrap gap-4" data-animate data-delay="300">

@@ -105,7 +105,7 @@ ol.klem-chat-list {
 }
 
 .animate-marquee {
-    animation: klem-marquee 32s linear infinite;
+    animation: klem-marquee 48s linear infinite;
 }
 
 .animate-marquee:hover,
