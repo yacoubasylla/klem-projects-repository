@@ -8,7 +8,7 @@
     <div class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-klem-orange/10 to-transparent pointer-events-none" aria-hidden="true"></div>
     <div class="absolute -top-20 right-32 w-72 h-72 rounded-full bg-klem-orange/15 blur-3xl pointer-events-none" aria-hidden="true"></div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+    <div class="relative z-10 max-w-[1600px] mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
         <div>
             <h2 class="text-3xl lg:text-4xl font-heading text-white mb-3 leading-tight">
                 <?php esc_html_e('Prêt à transformer votre organisation ?', 'klem-theme'); ?>
@@ -219,7 +219,7 @@
 
     <!-- Barre inférieure : copyright + liens légaux -->
     <div class="border-t border-white/8">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="max-w-[1600px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p class="text-white/30 text-xs">
                 <?php esc_html_e('Copyright © KLEM', 'klem-theme'); ?> <?php echo esc_html(date('Y')); ?> <?php esc_html_e('– Tous droits réservés.', 'klem-theme'); ?>
             </p>

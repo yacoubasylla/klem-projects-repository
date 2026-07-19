@@ -1,5 +1,5 @@
 <section id="clients" class="py-24 lg:py-32 bg-klem-blue overflow-hidden">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
 
         <!-- En-tête de section -->
         <div class="max-w-2xl mb-16 lg:mb-20" data-animate data-delay="0">

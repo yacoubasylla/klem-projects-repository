@@ -1,5 +1,5 @@
 <section id="services" class="pt-16 pb-10 lg:pt-24 lg:pb-14 bg-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
 
         <!-- En-tête de section -->
         <div class="max-w-2xl mb-16 lg:mb-20" data-animate data-delay="0">

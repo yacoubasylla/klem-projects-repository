@@ -1,5 +1,5 @@
 <section id="contact" class="py-24 lg:py-32 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
             <!-- Colonne gauche : informations -->

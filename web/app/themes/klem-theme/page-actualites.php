@@ -106,7 +106,7 @@ if ($klem_filtre === '' && !empty($klem_posts)) {
 
     <!-- Contenu -->
     <section class="pb-20 lg:pb-28 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
 
             <?php if (!$klem_featured && empty($klem_posts)) : ?>
 

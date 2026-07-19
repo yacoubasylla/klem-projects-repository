@@ -1,5 +1,5 @@
 <section class="py-16 lg:py-20 bg-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
 
         <div class="max-w-2xl mb-12" data-animate data-delay="0">
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-4">

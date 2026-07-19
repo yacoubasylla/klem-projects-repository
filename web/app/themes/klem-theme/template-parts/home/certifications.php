@@ -1,5 +1,5 @@
 <section class="py-14 lg:py-16 bg-white border-t border-gray-100">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
 
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 

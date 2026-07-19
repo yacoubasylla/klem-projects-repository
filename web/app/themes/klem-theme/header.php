@@ -11,7 +11,7 @@
 <?php wp_body_open(); ?>
 
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 transition-shadow duration-300">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
 
         <!-- Logo -->
         <a href="<?php echo esc_url(home_url('/')); ?>" class="flex-shrink-0 flex items-center gap-1.5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
@@ -111,7 +111,7 @@
 
     <!-- Menu mobile déroulant -->
     <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="max-w-[1600px] mx-auto px-6 py-4">
             <?php
             wp_nav_menu([
                 'theme_location' => 'primary',

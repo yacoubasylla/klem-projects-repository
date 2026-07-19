@@ -1,5 +1,5 @@
 <section class="py-14 lg:py-16 overflow-hidden" style="background: linear-gradient(180deg, #0B1626 0%, #13294B 55%, #0B1626 100%);">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 mb-10">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 mb-10">
         <div class="max-w-2xl mx-auto text-center" data-animate data-delay="0">
             <span class="inline-block text-klem-orange font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-orange/20 rounded-full">
                 <?php esc_html_e('Stack technique', 'klem-theme'); ?>
