@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-048] 2026-07-20 — Suivi d'événements GA4 par CTA et conversion "generate_lead"
+
+**ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md) (complète la mise en œuvre déjà décrite)
+**Contexte :** Suite à DEC-047, la mesure automatique GA4 (mesure améliorée) ne permettait pas de distinguer quel CTA métier motive un visiteur (« Planifier un atelier data », « Discuter de mon application », « Demander une démo FleetControl », « Obtenir une estimation infra »), ni d'isoler la vraie conversion (soumission du formulaire de contact) d'une simple navigation vers `#contact`.
+**Décision :** Réutilisation de l'attribut `data-sector` déjà présent sur ces 4 CTA et sur les cartes « Secteurs ciblés » de la section Clients (déjà utilisé pour pré-remplir le formulaire, cf. le gestionnaire de clic existant dans `src/main.js`) : un événement GA4 `cta_click` y est ajouté (`cta_label` = libellé du CTA/secteur, `cta_location` = id de la section). Un événement `generate_lead` (nom recommandé par Google pour la génération de leads) est envoyé sur la réponse `success` de la soumission AJAX du formulaire de contact. Les deux appels utilisent `window.gtag?.(...)` (optional chaining) pour rester silencieux quand le tag n'est pas chargé (dev/local, visiteur connecté, consentement refusé).
+**Impact :** `src/main.js` (2 appels `gtag('event', …)` ajoutés, aucun nouvel attribut HTML nécessaire).
+**Vérification :** `pnpm build` sans erreur.
+**Point de vigilance :** Les CTA génériques sans `data-sector` (footer « Lancer mon projet », bas de section Services « Parler à un expert », CTA du header) restent hors de ce suivi individuel — seul l'effet final (vue de `#contact` ou lead) est visible. À marquer `generate_lead` comme événement clé dans GA4 (Admin → Événements) pour qu'il apparaisse comme conversion dans les rapports — étape manuelle documentée dans `collaboration/doc/procedure-google-analytics-4.md`.
+
+---
+
 ## [DEC-047] 2026-07-20 — Intégration Google Analytics 4 avec Consent Mode v2
 
 **ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md)

@@ -47,6 +47,14 @@
 - `KLEM_GA_MEASUREMENT_ID` doit encore être ajouté au `.env` **de production** sur Hostinger (le `.env` local ne suffit pas)
 - Connexion de la propriété GA4 à Looker Studio non encore réalisée (dernière étape de la procédure, à faire depuis l'interface Google, hors dépôt)
 
+### Complément — Suivi d'événements GA4 par CTA
+- Voir **DEC-048** pour le détail complet
+- Réutilisation de l'attribut `data-sector` déjà présent sur les 4 CTA de la section Services et sur les cartes « Secteurs ciblés » (section Clients) : événement `cta_click` ajouté dans le gestionnaire de clic existant de `src/main.js` (`cta_label` = libellé, `cta_location` = section)
+- Événement `generate_lead` ajouté sur la soumission réussie du formulaire de contact — la vraie conversion à marquer comme événement clé dans GA4 (Admin → Événements)
+- Aucun nouvel attribut HTML nécessaire ; `pnpm build` sans erreur
+- `collaboration/doc/procedure-google-analytics-4.md` mis à jour (section événements par CTA + comment les marquer comme conversions dans GA4)
+- Fichier modifié : `src/main.js` (+2 appels `gtag('event', …)`)
+
 ---
 
 ## Session 23 — 2026-07-20

@@ -87,6 +87,8 @@ if (contactForm && window.klemAjax) {
             if (json.success) {
                 formFeedback.classList.add('bg-green-50', 'text-green-700', 'border', 'border-green-200');
                 formFeedback.textContent = json.data.message;
+                // Conversion GA4 — voir DEC-048 : à marquer comme événement clé dans GA4.
+                window.gtag?.('event', 'generate_lead', { form_id: 'contact' });
                 contactForm.reset();
             } else {
                 formFeedback.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
@@ -112,6 +114,14 @@ if (sectorLinks.length > 0 && messageField) {
     sectorLinks.forEach((link) => {
         link.addEventListener('click', () => {
             const sector  = link.dataset.sector;
+
+            // Suivi GA4 par CTA — voir DEC-048. Couvre les 4 piliers de services
+            // et les cartes "Secteurs ciblés", qui partagent le même attribut.
+            window.gtag?.('event', 'cta_click', {
+                cta_label:    sector,
+                cta_location: link.closest('section')?.id ?? 'unknown',
+            });
+
             const isUntouched = messageField.value.trim() === '' || messageField.dataset.klemPrefilled === 'true';
 
             if (isUntouched) {

@@ -67,8 +67,23 @@ Si l'ID de mesure change un jour (rotation de propriété), il suffit de mettre 
 4. Sélectionner le compte GA, puis la propriété `KLEMTECH` (flux GA4, pas Universal Analytics).
 5. Construire les visualisations utiles au suivi des KPI : sessions dans le temps, pages les plus visitées, taux d'engagement, canaux d'acquisition (organique, direct, réseaux sociaux, referral).
 
-## 5. Limites actuelles de l'intégration (état à 2026-07-20)
+## 5. Événements personnalisés par CTA (implémenté — voir DEC-048)
 
-- La **mesure améliorée** GA4 (activée à l'étape 1) couvre déjà automatiquement : vues de page, scroll, clics sortants, recherche sur site, engagement.
-- **Pas encore fait** : suivi d'événements personnalisés sur les CTA métier (« Planifier un atelier data », « Discuter de mon application », « Demander une démo FleetControl », « Obtenir une estimation infra », soumission du formulaire de contact). À ajouter si un suivi de conversion précis par CTA est souhaité — nécessiterait des appels `gtag('event', …)` dans `src/main.js` sur les clics/soumissions concernés, plus la création des conversions correspondantes dans GA4 (Admin → Événements → Marquer comme conversion).
+En plus de la mesure améliorée automatique, deux événements custom sont envoyés depuis `src/main.js` :
+
+| Événement GA4 | Déclenché par | Paramètres |
+|---|---|---|
+| `cta_click` | Clic sur un des 4 CTA de la section Services (« Planifier un atelier data », « Discuter de mon application », « Demander une démo FleetControl », « Obtenir une estimation infra ») ou sur une carte « Secteur ciblé » (section Clients) — tous partagent l'attribut HTML `data-sector` | `cta_label` (libellé du CTA/secteur), `cta_location` (id de la section : `services` ou `clients`) |
+| `generate_lead` | Soumission réussie du formulaire de contact (`#klem-contact-form`) | `form_id: 'contact'` |
+
+Ces événements ne remontent que dans les mêmes conditions que le tag principal (production, consentement accordé). Pour transformer `generate_lead` (et éventuellement `cta_click`) en objectif de conversion dans les rapports GA4 :
+
+1. GA4 → **Admin** → **Événements**.
+2. Repérer `generate_lead` dans la liste (apparaît après au moins une soumission de formulaire réelle).
+3. Activer le bouton **Marquer comme événement clé** (*Mark as key event*).
+4. Optionnel : faire de même pour `cta_click` si un suivi de conversion par CTA (et pas seulement par lead final) est utile au reporting.
+
+## 6. Limites actuelles de l'intégration (état à 2026-07-20)
+
 - Le bandeau de consentement est **binaire** (accepter/refuser tout GA) — suffisant tant qu'aucun autre outil (publicité, remarketing) n'est ajouté. À revoir si un tel besoin apparaît.
+- Les CTA génériques qui ne portent pas l'attribut `data-sector` (ex. « Lancer mon projet » du footer, « Parler à un expert » en bas de la section Services, CTA du header) ne sont pas encore instrumentés individuellement — seul leur effet final (page vue de `#contact`, ou lead si le formulaire est soumis) est visible dans les rapports.
