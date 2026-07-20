@@ -92,7 +92,7 @@
                         href="<?php echo esc_url(admin_url('admin.php?page=klem-partenaires')); ?>"
                         class="text-klem-orange text-sm font-semibold hover:opacity-80 transition-opacity whitespace-nowrap"
                     >
-                        <?php esc_html_e('Admin', 'klem-theme'); ?>
+                        <?php esc_html_e('Administration', 'klem-theme'); ?>
                     </a>
                     <div class="h-4 w-px bg-gray-200"></div>
                     <?php endif; ?>
@@ -175,7 +175,7 @@
                 <?php if (is_user_logged_in()) : ?>
                     <?php if (current_user_can('manage_options')) : ?>
                     <p class="px-3">
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=klem-partenaires')); ?>" class="text-klem-orange font-semibold text-sm"><?php esc_html_e('Admin — Comptes partenaires', 'klem-theme'); ?></a>
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=klem-partenaires')); ?>" class="text-klem-orange font-semibold text-sm"><?php esc_html_e('Administration — Comptes partenaires', 'klem-theme'); ?></a>
                     </p>
                     <?php endif; ?>
                     <p class="px-3 text-sm text-gray-500">
