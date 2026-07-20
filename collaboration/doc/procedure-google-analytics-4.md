@@ -23,7 +23,9 @@
    - **ID de flux** (interne à GA, ex. `15289565572`) — informatif, pas utilisé dans le code
    - **ID de mesure** (`G-XXXXXXXXXX`) — **c'est celui-ci qu'il faut copier dans le site**
 
-Pour ce site, l'ID de mesure actuel est `G-TNR3CBT1NN` (flux `KLEMTECH`, ID de flux `15289565572`).
+Pour ce site, l'ID de mesure actuel est `G-16DCTL19QY` (flux `KLEMTECH`, ID de flux `15290299535`), sous le compte Google Analytics **KLEM**.
+
+> ⚠️ **Piège vécu (voir DEC-049) :** si plusieurs comptes Google Analytics sont accessibles depuis le même identifiant Google, il est facile de créer deux propriétés portant le même nom (`KLEMTECH`) sous deux comptes différents sans s'en rendre compte — l'une réellement câblée sur le site, l'autre qui ne reçoit jamais rien. **Avant de copier un ID de mesure, toujours vérifier le fil d'ariane en haut de la page GA4 (`Tous les comptes > NOM_DU_COMPTE`)** pour confirmer qu'on est bien sous le compte **KLEM**, pas un autre compte auquel le même identifiant Google a accès.
 
 ## 2. Configurer le site pour utiliser cet ID (côté dépôt)
 
@@ -32,7 +34,7 @@ Le tag n'est **jamais codé en dur** — il est lu depuis une variable d'environ
 ### En local (développement)
 Déjà fait dans `.env` du dépôt local :
 ```
-KLEM_GA_MEASUREMENT_ID=G-TNR3CBT1NN
+KLEM_GA_MEASUREMENT_ID=G-16DCTL19QY
 ```
 Sans effet en local : le tag ne se charge que si `WP_ENV=production` (jamais le cas en dev/Docker).
 
@@ -43,7 +45,7 @@ Sans effet en local : le tag ne se charge que si `WP_ENV=production` (jamais le 
 2. Ouvrir le fichier `.env` à la racine du projet (même niveau que `web/`).
 3. Ajouter la ligne :
    ```
-   KLEM_GA_MEASUREMENT_ID=G-TNR3CBT1NN
+   KLEM_GA_MEASUREMENT_ID=G-16DCTL19QY
    ```
 4. Vérifier que `WP_ENV=production` est bien déjà présent dans ce même fichier (condition pour que le tag se déclenche).
 5. Sauvegarder — aucun redémarrage serveur nécessaire, la variable est relue à chaque requête PHP (`wp-config.php` la charge via `getenv()`).

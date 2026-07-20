@@ -55,6 +55,13 @@
 - `collaboration/doc/procedure-google-analytics-4.md` mis à jour (section événements par CTA + comment les marquer comme conversions dans GA4)
 - Fichier modifié : `src/main.js` (+2 appels `gtag('event', …)`)
 
+### Complément — Correction : mauvais compte Google Analytics
+- Voir **DEC-049** pour le détail complet
+- En cherchant à marquer `generate_lead` comme événement clé, l'utilisateur a découvert que la propriété GA4 câblée depuis le début (`G-TNR3CBT1NN`) était rattachée à un compte Google tiers (« GUCE CI »), pas au compte **KLEM** légitime — une seconde propriété `KLEMTECH`, correctement rattachée à **KLEM**, existait déjà et n'avait jamais reçu de données (`G-16DCTL19QY`)
+- `KLEM_GA_MEASUREMENT_ID` basculé vers `G-16DCTL19QY` dans le `.env` local ; **le `.env` de production reste à mettre à jour manuellement** (pas d'accès SSH automatisable — mot de passe interactif)
+- `collaboration/doc/procedure-google-analytics-4.md` mis à jour avec l'ID correct et un avertissement sur ce piège (toujours vérifier le compte GA affiché dans le fil d'ariane avant de copier un ID de mesure)
+- Aucun changement de code applicatif nécessaire (l'ID n'est jamais codé en dur)
+
 ---
 
 ## Session 23 — 2026-07-20

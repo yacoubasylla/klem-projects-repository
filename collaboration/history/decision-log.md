@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-049] 2026-07-20 — Correction de l'ID de mesure GA4 : propriété sous le mauvais compte Google
+
+**ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md) (corrige la mise en œuvre de DEC-047, ne change pas la décision d'architecture)
+**Contexte :** En tentant de marquer `generate_lead` comme événement clé (suite à DEC-048), l'utilisateur a découvert que le compte Google Analytics utilisé pour créer la propriété initiale (celle fournie en amont de DEC-047, ID de mesure `G-TNR3CBT1NN`, ID de flux `15289565572`) n'était pas rattaché à son compte **KLEM** légitime, mais visible sous un compte nommé « GUCE CI » (organisation tierce, sans rapport avec KLEM). Une seconde propriété, également nommée `KLEMTECH` mais correctement rattachée au compte **KLEM**, existait déjà (ID de mesure `G-16DCTL19QY`, ID de flux `15290299535`) et n'avait jamais reçu de données — le site pointait vers la mauvaise propriété depuis le début de l'intégration.
+**Décision :** Basculer `KLEM_GA_MEASUREMENT_ID` vers `G-16DCTL19QY` (propriété `KLEMTECH` du compte **KLEM**), aucune autre modification de code nécessaire (l'ID n'est jamais codé en dur, cf. DEC-047). `.env` local mis à jour ; `.env` de production (Hostinger) à mettre à jour manuellement par l'utilisateur (hors dépôt, accès SSH non automatisable — mot de passe saisi interactivement, cf. `ACCESS.md`).
+**Impact :** `.env` (non versionné), `collaboration/doc/procedure-google-analytics-4.md` (ID de mesure et avertissement mis à jour).
+**Vérification :** À refaire une fois le `.env` de production mis à jour — revérifier en direct sur `https://www.klemtech.net` que `gtag('config', 'G-16DCTL19QY', …)` apparaît dans le HTML servi, puis dans GA4 → Rapports → Temps réel sous le compte **KLEM**.
+**Point de vigilance :** Avant toute future consultation d'un ID de mesure GA4, vérifier explicitement le fil d'ariane de compte en haut de l'interface GA4 (`Tous les comptes > NOM_DU_COMPTE`) — plusieurs comptes accessibles depuis un même identifiant Google peuvent héberger des propriétés au nom identique.
+
+---
+
 ## [DEC-048] 2026-07-20 — Suivi d'événements GA4 par CTA et conversion "generate_lead"
 
 **ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md) (complète la mise en œuvre déjà décrite)
