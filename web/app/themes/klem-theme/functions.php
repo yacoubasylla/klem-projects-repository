@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once get_template_directory() . '/inc/chatbot.php';
+require_once get_template_directory() . '/inc/partner-accounts.php';
 
 function klem_theme_setup(): void {
     add_theme_support('title-tag');

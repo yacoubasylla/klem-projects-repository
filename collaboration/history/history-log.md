@@ -41,9 +41,43 @@ Trois choix de conception non déductibles du code existant (le header n'avait a
 | `footer.php` | Lien "Cas d'usage" masqué si non connecté |
 | `template-parts/home/contact.php` | Option "Demande de partenariat" + présélection + bandeau contextuel |
 
-### État de clôture
+### État de clôture (1ère partie)
 - Fonctionnalité complète et testée de bout en bout en local ; aucun compte réel modifié pendant les tests
 - ADR-009 rédigé, DEC-044 consignée
+
+### Complément — Bug de présélection + mise en forme du bandeau
+- Le lien "Faites une demande de partenariat" de `page-connexion.php` pointait vers `#contact` sans `?sujet=partenariat` : ni la présélection ni le bandeau ne s'affichaient depuis ce point d'entrée
+- Corrigé en extrayant la construction de l'URL dans `klem_partnership_contact_url()` (`functions.php`), réutilisée à la fois par ce lien et par le gating de `/cas-clients/`
+- "cas d'usage" et "nos partenaires" mis en gras dans le bandeau informatif (chaîne traduisible avec placeholders `%1$s`/`%2$s`, pas de contenu utilisateur impliqué)
+
+### Complément — Page admin CRUD comptes partenaires
+- Voir **DEC-045** / **ADR-010** pour le détail complet
+- Question posée à l'utilisateur : étendre l'écran natif Utilisateurs (recommandation, moins de code à sécuriser) vs page dédiée sur-mesure → l'utilisateur a choisi la page dédiée
+- Nouveau rôle `klem_partenaire` (capacités `subscriber`), écran wp-admin autonome (`inc/partner-accounts.php`) avec liste/création/édition/suppression basées sur les API natives WordPress (`wp_insert_user()`/`wp_update_user()`/`wp_delete_user()`, hashage géré par le cœur, aucune cryptographie maison)
+- Champ "Secteur d'activité" en `user_meta`, liste fermée reprenant les secteurs de `page-cas-clients.php`
+- Mot de passe optionnel à l'édition (vide = inchangé), bouton "Générer un mot de passe" (JS vanilla, `crypto.getRandomValues`, enqueue conditionnel sur cet écran uniquement)
+- Sécurité : `current_user_can('manage_options')` vérifié dans chaque handler `admin_post_*`, nonces dédiés par action, sanitisation stricte, suppression via lien GET nonce-protégé + confirmation JS (même patron que les écrans natifs WordPress)
+
+### Vérification en local (page admin partenaires)
+- Compte administrateur temporaire créé/supprimé via script one-shot (jamais committé), flux testé de bout en bout via HTTP réel (nonces, redirections, capability checks inclus) :
+  - Création d'un compte partenaire (login, e-mail, mot de passe, secteur) → notice de succès, ligne visible dans la liste ✅
+  - Édition (changement de secteur, mot de passe laissé vide) → notice de succès, secteur mis à jour ✅ ; connexion avec l'**ancien** mot de passe toujours valide (confirme qu'un champ vide ne l'écrase pas) ✅
+  - Connexion du partenaire créé → accès direct à `/cas-clients/` sans redirection, header affiche son nom + Déconnexion, barre d'admin WordPress absente ✅
+  - Suppression (lien nonce-protégé) → notice de succès, compte disparu de la liste ✅
+- `php -l` et `node --check` sans erreur sur tous les fichiers modifiés, `pnpm build` sans erreur
+
+### Fichiers modifiés (compléments)
+| Fichier | Action |
+|---|---|
+| `page-connexion.php` | Lien "Faites une demande de partenariat" corrigé (`klem_partnership_contact_url()`) |
+| `functions.php` | `klem_partnership_contact_url()` extrait, réutilisé par le gating et le lien ; require de `inc/partner-accounts.php` |
+| `template-parts/home/contact.php` | Mise en gras de "cas d'usage" / "nos partenaires" dans le bandeau |
+| `inc/partner-accounts.php` | Nouveau — écran admin CRUD comptes partenaires |
+| `assets/js/admin-partners.js` | Nouveau — bouton "Générer un mot de passe" |
+
+### État de clôture (2e partie)
+- Écran d'administration complet et testé de bout en bout en local ; aucun compte réel modifié pendant les tests
+- ADR-010 rédigé, DEC-045 consignée
 
 ---
 

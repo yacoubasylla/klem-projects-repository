@@ -5,6 +5,16 @@
 
 ---
 
+## [DEC-045] 2026-07-20 — Page d'administration sur-mesure pour les comptes partenaires
+
+**ARD :** [ADR-010](../doc/ard/ADR-010-page-admin-comptes-partenaires.md)
+**Contexte :** Suite à DEC-044, KLEM doit pouvoir créer/modifier/supprimer un compte partenaire (identifiant, mot de passe, e-mail, secteur d'activité) après avoir reçu une demande de partenariat via le formulaire de contact. Point de vue proposé : étendre l'écran natif Utilisateurs plutôt que construire un CRUD dédié (moins de code à sécuriser). L'utilisateur a explicitement choisi la page dédiée malgré cette recommandation.
+**Décision :** Nouvel écran wp-admin (`inc/partner-accounts.php`, menu « Partenaires ») avec rôle dédié `klem_partenaire`, liste/création/édition/suppression basées sur `wp_insert_user()`/`wp_update_user()`/`wp_delete_user()` natifs (aucune cryptographie maison). Champ « Secteur d'activité » en `user_meta`. Mot de passe optionnel à l'édition (laisser vide = inchangé), modifiable ensuite par le partenaire lui-même via le flux « mot de passe oublié » déjà en place. Sécurité : `current_user_can('manage_options')` vérifié dans chaque handler `admin_post_*`, nonces dédiés, sanitisation stricte (`sanitize_user()` strict, `validate_username()`, `is_email()`), mot de passe ≥ 8 caractères.
+**Impact :** `inc/partner-accounts.php` (nouveau), `assets/js/admin-partners.js` (nouveau — bouton « Générer un mot de passe »), `functions.php` (require).
+**Vérification :** Flux CRUD complet testé de bout en bout en local via un compte administrateur temporaire (créé/supprimé par script, jamais de credentials réels utilisés) : création d'un compte partenaire ✅, édition (changement de secteur, mot de passe laissé vide = inchangé, vérifié en se connectant ensuite avec l'ancien mot de passe) ✅, connexion du partenaire créé → accès à `/cas-clients/` sans redirection, barre d'admin masquée ✅, suppression → compte disparu de la liste ✅. `php -l` et `node --check` sans erreur, `pnpm build` sans erreur.
+
+---
+
 ## [DEC-044] 2026-07-20 — Authentification native : Cas d'usage réservés aux partenaires connectés
 
 **ARD :** [ADR-009](../doc/ard/ADR-009-authentification-cas-usage-reserves.md)
