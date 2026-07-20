@@ -315,14 +315,21 @@ add_action('admin_post_klem_login',        'klem_handle_login');
 add_action('admin_post_nopriv_klem_login', 'klem_handle_login');
 
 /**
+ * URL du formulaire de contact avec le sujet « Demande de partenariat »
+ * présélectionné (cf. contact.php, qui lit $_GET['sujet']).
+ */
+function klem_partnership_contact_url(): string {
+    return add_query_arg('sujet', 'partenariat', home_url('/')) . '#contact';
+}
+
+/**
  * Page « Cas d'usage » réservée aux visiteurs authentifiés : un visiteur non
  * connecté est redirigé vers le formulaire de contact, sujet « Demande de
- * partenariat » présélectionné (cf. contact.php).
+ * partenariat » présélectionné.
  */
 add_action('template_redirect', function (): void {
     if (is_page('cas-clients') && !is_user_logged_in()) {
-        $url = add_query_arg('sujet', 'partenariat', home_url('/')) . '#contact';
-        wp_safe_redirect($url);
+        wp_safe_redirect(klem_partnership_contact_url());
         exit;
     }
 });

@@ -99,7 +99,7 @@ get_header();
 
         <p class="text-center text-gray-500 text-sm mt-8" data-animate data-delay="200">
             <?php esc_html_e("Pas encore partenaire ?", 'klem-theme'); ?>
-            <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="text-klem-orange font-semibold hover:underline">
+            <a href="<?php echo esc_url(klem_partnership_contact_url()); ?>" class="text-klem-orange font-semibold hover:underline">
                 <?php esc_html_e('Faites une demande de partenariat', 'klem-theme'); ?>
             </a>
         </p>
