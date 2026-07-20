@@ -9,12 +9,22 @@ const burgerOpen  = document.getElementById('burger-open');
 const burgerClose = document.getElementById('burger-close');
 
 if (menuToggle && mobileMenu) {
+    const setMobileMenuOpen = (open) => {
+        mobileMenu.classList.toggle('hidden', !open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+        burgerOpen.classList.toggle('hidden', open);
+        burgerClose.classList.toggle('hidden', !open);
+    };
+
     menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        const isOpen = !mobileMenu.classList.contains('hidden');
-        menuToggle.setAttribute('aria-expanded', String(isOpen));
-        burgerOpen.classList.toggle('hidden', isOpen);
-        burgerClose.classList.toggle('hidden', !isOpen);
+        setMobileMenuOpen(mobileMenu.classList.contains('hidden'));
+    });
+
+    // Referme le menu dès qu'un lien est choisi (ancre de la page d'accueil
+    // ou lien vers une autre page) : sans ça, le panneau reste ouvert par-
+    // dessus le contenu après la navigation.
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setMobileMenuOpen(false));
     });
 }
 
