@@ -4,7 +4,7 @@
         <!-- En-tête de section -->
         <div class="max-w-2xl mb-16 lg:mb-20" data-animate data-delay="0">
             <span class="inline-block text-klem-red font-bold tracking-widest text-xs uppercase mb-4 px-4 py-1.5 bg-klem-red/8 rounded-full">
-                <?php esc_html_e('Notre Expertise', 'klem-theme'); ?>
+                <?php esc_html_e('Services', 'klem-theme'); ?>
             </span>
             <h2 class="text-2xl lg:text-3xl font-heading text-klem-blue leading-tight mb-4">
                 <?php esc_html_e("Quatre Piliers d'Excellence", 'klem-theme'); ?>
