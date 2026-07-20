@@ -78,12 +78,12 @@ En plus de la mesure améliorée automatique, deux événements custom sont envo
 | `cta_click` | Clic sur un des 4 CTA de la section Services (« Planifier un atelier data », « Discuter de mon application », « Demander une démo FleetControl », « Obtenir une estimation infra ») ou sur une carte « Secteur ciblé » (section Clients) — tous partagent l'attribut HTML `data-sector` | `cta_label` (libellé du CTA/secteur), `cta_location` (id de la section : `services` ou `clients`) |
 | `generate_lead` | Soumission réussie du formulaire de contact (`#klem-contact-form`) | `form_id: 'contact'` |
 
-Ces événements ne remontent que dans les mêmes conditions que le tag principal (production, consentement accordé). Pour transformer `generate_lead` (et éventuellement `cta_click`) en objectif de conversion dans les rapports GA4 :
+Ces événements ne remontent que dans les mêmes conditions que le tag principal (production, consentement accordé). Pour transformer un événement en objectif de conversion dans les rapports GA4, deux méthodes :
 
-1. GA4 → **Admin** → **Événements**.
-2. Repérer `generate_lead` dans la liste (apparaît après au moins une soumission de formulaire réelle).
-3. Activer le bouton **Marquer comme événement clé** (*Mark as key event*).
-4. Optionnel : faire de même pour `cta_click` si un suivi de conversion par CTA (et pas seulement par lead final) est utile au reporting.
+- **Pré-enregistrement (sans attendre de données)** : GA4 → Admin → Événements → **Créer un événement** → nom exact de l'événement (ex. `generate_lead`) → option **« Créer avec du code »** (pas « Créer sans code », qui sert à synthétiser un événement à partir d'un autre déclencheur — inutile ici puisque l'événement est déjà envoyé par le code du site) → activer **« Marquer comme événement clé »** → Créer.
+- **Après réception d'au moins une occurrence réelle** : Admin → Événements → onglet **« Événements récents »** → repérer l'événement → cliquer l'étoile ⭐ pour le marquer comme événement clé.
+
+**État à ce jour :** `generate_lead` a été marqué comme événement clé (2026-07-20, via la première méthode) sous la propriété `KLEMTECH` du compte **KLEM**. `cta_click` n'est pas encore marqué — à faire de la même façon si un suivi de conversion par CTA (et pas seulement le lead final) est utile au reporting.
 
 ## 6. Limites actuelles de l'intégration (état à 2026-07-20)
 

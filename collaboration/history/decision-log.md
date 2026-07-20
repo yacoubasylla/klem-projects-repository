@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-050] 2026-07-20 — Correction : la CSP bloquait le chargement de Google Analytics 4
+
+**ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md) (corrige la mise en œuvre, ne change pas la décision d'architecture)
+**Contexte :** Après correction de l'ID de mesure (DEC-049), le rapport Temps réel GA4 restait à 0 malgré des visites réelles en navigation privée. Diagnostic via l'onglet Réseau du navigateur : la requête `https://www.googletagmanager.com/gtag/js?id=…` était bloquée avec le statut `CSP` — la Content-Security-Policy scopée mise en place lors de l'audit sécurité (DEC-043) restreint `script-src` à `'self' 'unsafe-inline'` et `connect-src` à `'self'`, sans exception pour les domaines Google Analytics. Le tag GA4 (ajouté ensuite, DEC-047) n'avait jamais pu s'exécuter dans un navigateur respectant la CSP, y compris en production, depuis le tout début de l'intégration.
+**Décision :** Ajout d'exceptions ciblées dans la CSP (`web/.htaccess`) : `script-src` autorise désormais `https://www.googletagmanager.com` (chargement du script), `connect-src` autorise `https://www.googletagmanager.com`, `https://*.google-analytics.com` et `https://*.analytics.google.com` (envoi des hits de mesure). Aucune autre directive touchée — la CSP reste scopée au front public uniquement (exclut `/wp/wp-admin` et `wp-login.php`, cf. DEC-043).
+**Impact :** `web/.htaccess` (une ligne modifiée).
+**Vérification :** À refaire par l'utilisateur — recharger le site en navigation privée, onglet Réseau : la requête vers `googletagmanager.com` doit passer en `200` (plus de statut `CSP`/bloqué), puis confirmer l'apparition de la visite dans GA4 → Temps réel.
+**Point de vigilance :** Toute future intégration d'un script tiers (widget, pixel, autre outil de mesure) sur le front public devra explicitement étendre cette CSP — elle est volontairement stricte par défaut (`default-src 'self'`) et ne whiteliste rien d'autre que ce qui est déjà nécessaire.
+
+---
+
 ## [DEC-049] 2026-07-20 — Correction de l'ID de mesure GA4 : propriété sous le mauvais compte Google
 
 **ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md) (corrige la mise en œuvre de DEC-047, ne change pas la décision d'architecture)

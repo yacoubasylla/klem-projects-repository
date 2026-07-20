@@ -61,6 +61,21 @@
 - `KLEM_GA_MEASUREMENT_ID` basculé vers `G-16DCTL19QY` dans le `.env` local ; **le `.env` de production reste à mettre à jour manuellement** (pas d'accès SSH automatisable — mot de passe interactif)
 - `collaboration/doc/procedure-google-analytics-4.md` mis à jour avec l'ID correct et un avertissement sur ce piège (toujours vérifier le compte GA affiché dans le fil d'ariane avant de copier un ID de mesure)
 - Aucun changement de code applicatif nécessaire (l'ID n'est jamais codé en dur)
+- Confirmé en direct sur `https://www.klemtech.net` après la mise à jour manuelle du `.env` de production : `gtag('config', 'G-16DCTL19QY', …)` bien servi
+
+### Complément — `generate_lead` marqué comme événement clé
+- L'utilisateur a pré-enregistré `generate_lead` comme événement clé dans GA4 (Admin → Événements → Créer un événement → option « Créer avec du code » → toggle « Marquer comme événement clé »), sous la propriété `KLEMTECH` du compte **KLEM**
+- Procédure documentée dans `collaboration/doc/procedure-google-analytics-4.md` (les deux méthodes : pré-enregistrement vs marquage après première réception réelle)
+- `cta_click` non marqué comme événement clé pour l'instant — laissé en observation simple, à faire de la même façon si besoin plus tard
+- Intégration Google Analytics 4 désormais fonctionnelle de bout en bout : tag + consentement + événements custom + conversion identifiée, sous le bon compte Google
+
+### Complément — Correction : la CSP bloquait Google Analytics
+- Voir **DEC-050** pour le détail complet
+- Malgré l'ID corrigé (DEC-049), le rapport Temps réel restait à 0 même en navigation privée — diagnostic via l'onglet Réseau du navigateur (fourni par l'utilisateur) : `https://www.googletagmanager.com/gtag/js` bloqué avec le statut `CSP`
+- Cause : la Content-Security-Policy scopée ajoutée lors de l'audit sécurité (DEC-043) ne whitelistait aucun domaine Google Analytics — le tag GA4 (DEC-047) n'a jamais pu s'exécuter dans un navigateur respectant la CSP depuis le début de l'intégration
+- Correction : `script-src` et `connect-src` étendus à `googletagmanager.com` et `google-analytics.com`/`analytics.google.com` dans `web/.htaccess`, aucune autre directive touchée
+- Fichier modifié : `web/.htaccess`
+- Vérification restant à faire par l'utilisateur (recharger le site, confirmer requête `200` vers `googletagmanager.com`, puis Temps réel GA4)
 
 ---
 

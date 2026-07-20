@@ -13,7 +13,7 @@ Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains
 # style-src restent en 'unsafe-inline' car le thème (styles inline ponctuels)
 # et WordPress core en dépendent encore.
 <If "%{REQUEST_URI} !~ m#^/wp/wp-admin/# && %{REQUEST_URI} !~ m#^/wp/wp-login\.php#">
-Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
 </If>
 </IfModule>
 
