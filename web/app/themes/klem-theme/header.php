@@ -87,6 +87,15 @@
             <!-- Connexion / Compte -->
             <?php if (is_user_logged_in()) : ?>
                 <div class="flex items-center gap-3">
+                    <?php if (current_user_can('manage_options')) : ?>
+                    <a
+                        href="<?php echo esc_url(admin_url('admin.php?page=klem-partenaires')); ?>"
+                        class="text-klem-orange text-sm font-semibold hover:opacity-80 transition-opacity whitespace-nowrap"
+                    >
+                        <?php esc_html_e('Admin', 'klem-theme'); ?>
+                    </a>
+                    <div class="h-4 w-px bg-gray-200"></div>
+                    <?php endif; ?>
                     <span class="text-klem-blue text-sm font-medium whitespace-nowrap">
                         <?php echo esc_html(wp_get_current_user()->display_name); ?>
                     </span>
@@ -164,6 +173,11 @@
                     <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                 </p>
                 <?php if (is_user_logged_in()) : ?>
+                    <?php if (current_user_can('manage_options')) : ?>
+                    <p class="px-3">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=klem-partenaires')); ?>" class="text-klem-orange font-semibold text-sm"><?php esc_html_e('Admin — Comptes partenaires', 'klem-theme'); ?></a>
+                    </p>
+                    <?php endif; ?>
                     <p class="px-3 text-sm text-gray-500">
                         <?php echo esc_html(wp_get_current_user()->display_name); ?>
                         · <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>" class="text-klem-orange font-semibold"><?php esc_html_e('Déconnexion', 'klem-theme'); ?></a>

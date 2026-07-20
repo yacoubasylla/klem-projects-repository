@@ -776,13 +776,12 @@ add_filter('xmlrpc_enabled', '__return_false');
 remove_action('wp_head', 'wp_generator');
 add_filter('the_generator', '__return_empty_string');
 
-// Barre d'administration masquée en façade pour les comptes partenaires (rôle
-// "subscriber" créé manuellement suite à une demande de partenariat) : ils
-// n'ont aucun usage du tableau de bord WordPress, et l'afficher exposerait
-// inutilement la nature technique du site à un public non-administrateur.
-add_filter('show_admin_bar', function (bool $show): bool {
-    return current_user_can('manage_options') ? $show : false;
-});
+// Barre d'administration WordPress jamais affichée en façade, y compris pour
+// l'administrateur : le site institutionnel garde sa propre identité visuelle
+// de bout en bout. L'administrateur atteint l'écran de gestion des comptes
+// partenaires via le lien « Admin » du header (cf. header.php), pas via cette
+// barre.
+add_filter('show_admin_bar', '__return_false');
 remove_action('wp_head', 'rsd_link');            // Really Simple Discovery — lié à XML-RPC
 remove_action('wp_head', 'wlwmanifest_link');    // Windows Live Writer — inutile, désactivé
 remove_action('wp_head', 'wp_shortlink_wp_head'); // shortlink redondant avec le canonical

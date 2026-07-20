@@ -79,6 +79,25 @@ Trois choix de conception non déductibles du code existant (le header n'avait a
 - Écran d'administration complet et testé de bout en bout en local ; aucun compte réel modifié pendant les tests
 - ADR-010 rédigé, DEC-045 consignée
 
+### Complément — Barre d'admin masquée pour tous + lien "Admin" dans le header
+- L'utilisateur a signalé (capture d'écran) que la barre noire "Howdy, klem" restait visible sur le site public en tant qu'administrateur, et qu'il n'avait aucun lien depuis le site pour rejoindre l'écran "Partenaires" créé plus tôt dans la session
+- Voir **DEC-046** pour le détail
+- `show_admin_bar` passé à `__return_false` inconditionnel (avant : masqué seulement pour les non-administrateurs)
+- Lien "Admin" ajouté dans le header (desktop + mobile), visible uniquement pour `current_user_can('manage_options')`, vers `admin.php?page=klem-partenaires`
+
+### Vérification (complément)
+- Compte administrateur temporaire créé/supprimé par script : barre noire absente de la page d'accueil (0 occurrence), lien "Admin" présent desktop + mobile, accès à l'écran Partenaires confirmé (200 OK)
+- `php -l` sans erreur, `pnpm build` sans erreur
+
+### Fichiers modifiés (complément)
+| Fichier | Action |
+|---|---|
+| `functions.php` | `show_admin_bar` → `__return_false` inconditionnel |
+| `header.php` | Lien "Admin" (desktop + mobile), visible aux seuls administrateurs |
+
+### État de clôture (3e partie)
+- `diff.txt` et le dossier `refonte site klem/` (fichiers de travail obsolètes, non versionnés) supprimés à la demande de l'utilisateur
+
 ---
 
 ## Session 22 — 2026-07-19

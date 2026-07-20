@@ -5,6 +5,15 @@
 
 ---
 
+## [DEC-046] 2026-07-20 — Barre d'admin WordPress masquée en façade pour tous + lien "Admin" dans le header
+
+**Contexte :** L'utilisateur a signalé que la barre noire "Howdy, klem" de WordPress restait visible sur le site public quand il navigue connecté en tant qu'administrateur (le filtre `show_admin_bar` posé en DEC-044 ne la masquait que pour les comptes non-administrateurs). Il n'existait par ailleurs aucun lien depuis le site public vers l'écran "Partenaires" créé en DEC-045 — l'administrateur devait connaître/taper l'URL `/wp/wp-admin/admin.php?page=klem-partenaires` de mémoire.
+**Décision :** `show_admin_bar` filtré à `__return_false` inconditionnellement (plus jamais affichée sur le frontend, y compris pour l'administrateur — le site garde son identité visuelle propre de bout en bout). Ajout d'un lien "Admin" dans le header (desktop : à côté du nom d'utilisateur/Déconnexion ; mobile : ligne dédiée juste au-dessus), visible uniquement si `current_user_can('manage_options')`, pointant directement vers l'écran "Partenaires" (`admin_url('admin.php?page=klem-partenaires')`).
+**Impact :** `functions.php` (filtre `show_admin_bar`), `header.php` (lien Admin desktop + mobile).
+**Vérification :** Testé via un compte administrateur temporaire (créé/supprimé par script) — barre noire absente de la page d'accueil (0 occurrence dans le HTML), lien "Admin" présent en desktop et mobile et menant bien à l'écran Partenaires (200 OK). `php -l` sans erreur, `pnpm build` sans erreur.
+
+---
+
 ## [DEC-045] 2026-07-20 — Page d'administration sur-mesure pour les comptes partenaires
 
 **ARD :** [ADR-010](../doc/ard/ADR-010-page-admin-comptes-partenaires.md)
