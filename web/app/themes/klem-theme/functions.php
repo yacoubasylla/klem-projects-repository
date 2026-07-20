@@ -228,6 +228,106 @@ function klem_cas_clients_url(): string {
 }
 
 /**
+ * ── Authentification : accès restreint aux "Cas d'usage" ────────────────
+ * KLEM étant en phase de prospection, les cas d'usage détaillés ne sont
+ * montrés qu'aux visiteurs authentifiés (partenaires). Un visiteur non
+ * connecté qui accède à /cas-clients/ est redirigé vers le formulaire de
+ * contact avec le sujet « Demande de partenariat » présélectionné ; KLEM
+ * traite la demande manuellement et crée le compte du partenaire.
+ */
+function klem_bootstrap_login_page(): void {
+    if (!get_page_by_path('connexion')) {
+        $page_id = wp_insert_post([
+            'post_title'   => __('Connexion', 'klem-theme'),
+            'post_name'    => 'connexion',
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_content' => '',
+        ]);
+
+        if ($page_id && !is_wp_error($page_id)) {
+            update_post_meta($page_id, '_wp_page_template', 'page-connexion.php');
+        }
+    }
+}
+add_action('init', 'klem_bootstrap_login_page', 20);
+
+/**
+ * URL absolue de la page en cours (utilisée pour ramener l'utilisateur là où
+ * il se trouvait avant de se connecter).
+ */
+function klem_current_url(): string {
+    $host = sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'] ?? ''));
+    $uri  = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'] ?? '/'));
+    return esc_url_raw((is_ssl() ? 'https://' : 'http://') . $host . $uri);
+}
+
+/**
+ * URL de la page de connexion, avec redirection de retour et indicateur
+ * d'erreur optionnels.
+ */
+function klem_login_url(string $redirect_to = '', bool $error = false): string {
+    $page = get_page_by_path('connexion');
+    $url  = $page ? get_permalink($page) : home_url('/');
+
+    if ($redirect_to !== '') {
+        $url = add_query_arg('redirect_to', rawurlencode($redirect_to), $url);
+    }
+    if ($error) {
+        $url = add_query_arg('erreur', '1', $url);
+    }
+
+    return $url;
+}
+
+/**
+ * Traite la soumission du formulaire de connexion sur-mesure (page-connexion.php).
+ * S'appuie sur wp_signon(), qui déclenche les mêmes hooks core (authenticate,
+ * wp_login_failed, wp_login) que wp-login.php — donc le rate limiting anti-
+ * brute-force déjà en place plus bas dans ce fichier s'applique aussi ici.
+ */
+function klem_handle_login(): void {
+    $redirect_to = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : '';
+
+    if (
+        !isset($_POST['klem_login_nonce'])
+        || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['klem_login_nonce'])), 'klem_login')
+    ) {
+        wp_safe_redirect(klem_login_url($redirect_to, true));
+        exit;
+    }
+
+    $user = wp_signon([
+        'user_login'    => sanitize_text_field(wp_unslash($_POST['klem_user'] ?? '')),
+        'user_password' => (string) wp_unslash($_POST['klem_password'] ?? ''),
+        'remember'      => true,
+    ], is_ssl());
+
+    if (is_wp_error($user)) {
+        wp_safe_redirect(klem_login_url($redirect_to, true));
+        exit;
+    }
+
+    wp_safe_redirect($redirect_to !== '' ? $redirect_to : home_url('/'));
+    exit;
+}
+add_action('admin_post_klem_login',        'klem_handle_login');
+add_action('admin_post_nopriv_klem_login', 'klem_handle_login');
+
+/**
+ * Page « Cas d'usage » réservée aux visiteurs authentifiés : un visiteur non
+ * connecté est redirigé vers le formulaire de contact, sujet « Demande de
+ * partenariat » présélectionné (cf. contact.php).
+ */
+add_action('template_redirect', function (): void {
+    if (is_page('cas-clients') && !is_user_logged_in()) {
+        $url = add_query_arg('sujet', 'partenariat', home_url('/')) . '#contact';
+        wp_safe_redirect($url);
+        exit;
+    }
+});
+
+/**
  * ── Contenu d'amorçage — Actualités ──────────────────────────────────────
  * Insère, une seule fois et de façon idempotente (vérification par
  * post_name avant insertion), 5 articles réels de fond sur les tendances
@@ -635,7 +735,7 @@ add_action('wp_head', 'klem_seo_breadcrumbs_schema', 4);
  * venu des résultats de recherche.
  */
 function klem_seo_robots(array $robots): array {
-    if (is_search() || is_category() || is_tag() || is_date() || is_author() || is_404()) {
+    if (is_search() || is_category() || is_tag() || is_date() || is_author() || is_404() || is_page('connexion')) {
         $robots['noindex']  = true;
         $robots['follow']   = true;
     }
@@ -667,6 +767,14 @@ add_filter('wp_get_attachment_image_attributes', 'klem_default_attachment_alt');
 add_filter('xmlrpc_enabled', '__return_false');
 remove_action('wp_head', 'wp_generator');
 add_filter('the_generator', '__return_empty_string');
+
+// Barre d'administration masquée en façade pour les comptes partenaires (rôle
+// "subscriber" créé manuellement suite à une demande de partenariat) : ils
+// n'ont aucun usage du tableau de bord WordPress, et l'afficher exposerait
+// inutilement la nature technique du site à un public non-administrateur.
+add_filter('show_admin_bar', function (bool $show): bool {
+    return current_user_can('manage_options') ? $show : false;
+});
 remove_action('wp_head', 'rsd_link');            // Really Simple Discovery — lié à XML-RPC
 remove_action('wp_head', 'wlwmanifest_link');    // Windows Live Writer — inutile, désactivé
 remove_action('wp_head', 'wp_shortlink_wp_head'); // shortlink redondant avec le canonical

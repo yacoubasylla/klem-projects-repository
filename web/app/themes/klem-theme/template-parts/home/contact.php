@@ -106,6 +106,21 @@
             <div data-animate data-delay="200">
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 lg:p-10">
 
+                    <?php
+                    $klem_prefill_partnership = isset($_GET['sujet']) && sanitize_key(wp_unslash($_GET['sujet'])) === 'partenariat';
+                    ?>
+
+                    <?php if ($klem_prefill_partnership) : ?>
+                    <div class="mb-6 flex items-start gap-3 bg-klem-red/5 border border-klem-red/10 rounded-xl p-4">
+                        <svg class="w-5 h-5 text-klem-red flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+                        </svg>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            <?php esc_html_e("Nos cas d'usage détaillés sont réservés à nos partenaires. Décrivez votre besoin ci-dessous : nous créons votre accès et vous le communiquons par e-mail.", 'klem-theme'); ?>
+                        </p>
+                    </div>
+                    <?php endif; ?>
+
                     <!-- Message de retour (caché par défaut) -->
                     <div id="klem-form-feedback" class="hidden mb-6 p-4 rounded-xl text-sm font-medium" role="alert" aria-live="polite"></div>
 
@@ -203,12 +218,13 @@
                                 required
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors bg-white"
                             >
-                                <option value="" disabled selected><?php esc_html_e('Sélectionnez un sujet', 'klem-theme'); ?></option>
+                                <option value="" disabled <?php selected(!$klem_prefill_partnership); ?>><?php esc_html_e('Sélectionnez un sujet', 'klem-theme'); ?></option>
                                 <option value="data"><?php esc_html_e('Ingénierie des Données', 'klem-theme'); ?></option>
                                 <option value="apps"><?php esc_html_e('Application Sur-Mesure', 'klem-theme'); ?></option>
                                 <option value="erp"><?php esc_html_e('Intégration ERP / FleetControl', 'klem-theme'); ?></option>
                                 <option value="cantine"><?php esc_html_e('Cantine Connect', 'klem-theme'); ?></option>
                                 <option value="hardware"><?php esc_html_e('Matériel IT & Infrastructure', 'klem-theme'); ?></option>
+                                <option value="partenariat" <?php selected($klem_prefill_partnership); ?>><?php esc_html_e('Demande de partenariat', 'klem-theme'); ?></option>
                                 <option value="other"><?php esc_html_e('Autre demande', 'klem-theme'); ?></option>
                             </select>
                         </div>

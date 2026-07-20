@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-044] 2026-07-20 — Authentification native : Cas d'usage réservés aux partenaires connectés
+
+**ARD :** [ADR-009](../doc/ard/ADR-009-authentification-cas-usage-reserves.md)
+**Contexte :** Demande utilisateur : le bouton du header devient "Connectez-vous" ; le lien de menu "Cas d'usage" reste caché tant que l'utilisateur n'est pas authentifié ; l'accès direct à `/cas-clients/` est réservé aux utilisateurs connectés, sinon redirection vers le formulaire de contact avec le sujet "Demande de partenariat" présélectionné. KLEM traite ensuite la demande manuellement (pas d'auto-inscription) et crée le compte du partenaire.
+**Décision :** Authentification 100 % native WordPress (`wp_signon()`), page de connexion sur-mesure `page-connexion.php` (créée idempotemment via `klem_bootstrap_login_page()`) postant vers `admin-post.php?action=klem_login`. Réutilise le rate limiting anti-brute-force déjà en place sur `wp-login.php` (mêmes hooks core `authenticate`/`wp_login_failed`/`wp_login`). Le CTA header (desktop + mobile) devient "Connectez-vous" quand non connecté, ou nom d'utilisateur + "Déconnexion" (`wp_logout_url()`) quand connecté. Le lien "Cas d'usage" est masqué (header + footer) tant que non connecté, en plus du gating serveur sur `/cas-clients/` (`template_redirect`). Option "Demande de partenariat" ajoutée au select Sujet du formulaire de contact, présélectionnée via `$_GET['sujet']`, avec bandeau contextuel. Barre d'admin WordPress masquée en façade pour les comptes non-administrateurs (`show_admin_bar`).
+**Impact :** `functions.php`, `page-connexion.php` (nouveau), `header.php`, `footer.php`, `template-parts/home/contact.php`.
+**Vérification :** Flux testé de bout en bout en local (compte de test créé puis supprimé via script temporaire) — redirection `/cas-clients/` → contact quand non connecté, connexion réussie → accès à `/cas-clients/`, menu "Cas d'usage" qui réapparaît, déconnexion qui le fait disparaître à nouveau, message d'erreur générique sur mot de passe invalide, présélection du sujet confirmée en sortie HTML. `pnpm build` et `php -l` sans erreur sur tous les fichiers modifiés.
+**Point de vigilance :** La création de compte partenaire reste manuelle (admin WordPress) — cohérent avec la demande, mais à reconsidérer si le volume augmente.
+
+---
+
 ## [DEC-043] 2026-07-19 — Audit SEO/sécurité : CSP scopée + fermeture des commentaires
 
 **Contexte :** Demande explicite d'améliorer le SEO et de corriger les vulnérabilités. Audit préalable (JSON-LD, OG, Twitter Card, robots meta, sitemap XML, en-têtes de sécurité déjà présents `X-Content-Type-Options`/`X-Frame-Options`/`Referrer-Policy`/`Permissions-Policy`/HSTS, XML-RPC désactivé, énumération de comptes bloquée, rate limiting login/contact/chatbot, `pnpm audit` sans vulnérabilité) confirme un socle déjà mature (cf. DEC-037, ADR précédents). Deux lacunes réelles identifiées : absence de Content-Security-Policy, et commentaires WordPress laissés au statut par défaut ("ouvert") alors qu'aucun template ne les affiche jamais.

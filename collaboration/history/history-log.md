@@ -4,6 +4,49 @@
 
 ---
 
+## Session 23 — 2026-07-20
+
+**Objectif :** Réserver l'accès aux "Cas d'usage" détaillés aux visiteurs authentifiés (partenaires), avec un flux de qualification via le formulaire de contact plutôt qu'une auto-inscription.
+
+### Clarifications demandées à l'utilisateur avant implémentation
+Trois choix de conception non déductibles du code existant (le header n'avait alors aucun bouton "Connectez-vous") :
+1. Le CTA "Connectez-vous" **remplace** le bouton "Contactez-nous" du header quand non connecté (plutôt que coexister à côté)
+2. Une fois connecté, le header affiche le **nom d'utilisateur + un lien "Déconnexion"** (plutôt qu'un simple lien ou un dropdown "Mon compte")
+3. La connexion passe par une **page sur-mesure stylée Tailwind** (`page-connexion.php`) plutôt qu'une redirection vers `wp-login.php` natif
+
+### Décision technique
+- Voir **DEC-044** / **ADR-009** pour le détail complet
+- Authentification 100 % native (`wp_signon()`), aucun plugin — réutilise le rate limiting anti-brute-force déjà en place sur `wp-login.php` (mêmes hooks core)
+- Page "Connexion" créée idempotemment en base (comme `cas-clients`/`actualites`), template `page-connexion.php`
+- Gating serveur sur `/cas-clients/` via `template_redirect` : non connecté → redirigé vers `/?sujet=partenariat#contact`
+- Menu "Cas d'usage" masqué (header desktop/mobile + footer) tant que non connecté — double protection avec le gating serveur
+- Formulaire de contact : option "Demande de partenariat" ajoutée au select Sujet, présélectionnée via `$_GET['sujet']`, bandeau contextuel explicatif
+- Barre d'admin WordPress masquée en façade pour les comptes non-administrateurs (`show_admin_bar`)
+
+### Vérification en local
+- Compte de test temporaire créé/supprimé via un script one-shot (jamais committé) pour valider le flux de bout en bout sans toucher au compte admin réel :
+  - `/cas-clients/` non connecté → 302 vers `/?sujet=partenariat#contact` ✅
+  - Mauvais mot de passe → redirection avec message d'erreur générique, aucune fuite d'information ✅
+  - Connexion réussie → accès à `/cas-clients/`, header affiche le nom d'utilisateur + Déconnexion, menu "Cas d'usage" réapparaît (header + footer) ✅
+  - Déconnexion → menu "Cas d'usage" disparaît à nouveau ✅
+  - Sujet "Demande de partenariat" bien présélectionné dans le HTML généré quand `?sujet=partenariat` ✅
+- `php -l` OK sur tous les fichiers modifiés, `pnpm build` sans erreur
+
+### Fichiers modifiés
+| Fichier | Action |
+|---|---|
+| `functions.php` | `klem_bootstrap_login_page()`, `klem_login_url()`, `klem_current_url()`, `klem_handle_login()`, gating `template_redirect` sur `cas-clients`, noindex page connexion, `show_admin_bar` filtré |
+| `page-connexion.php` | Nouveau — page de connexion sur-mesure |
+| `header.php` | CTA conditionnel (Connectez-vous / nom + Déconnexion), lien "Cas d'usage" masqué si non connecté (desktop + mobile) |
+| `footer.php` | Lien "Cas d'usage" masqué si non connecté |
+| `template-parts/home/contact.php` | Option "Demande de partenariat" + présélection + bandeau contextuel |
+
+### État de clôture
+- Fonctionnalité complète et testée de bout en bout en local ; aucun compte réel modifié pendant les tests
+- ADR-009 rédigé, DEC-044 consignée
+
+---
+
 ## Session 22 — 2026-07-19
 
 **Objectif :** Appliquer les recommandations d'un audit PDF externe rédigé par un consultant en stratégie d'entreprise (`Consultant en stratégie d.pdf`, note 8,6/10), en filtrant les recommandations incompatibles avec la politique déjà actée du projet (pas de preuve fabriquée).

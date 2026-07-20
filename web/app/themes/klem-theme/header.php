@@ -43,10 +43,12 @@
                         ['label' => 'Services',    'href' => klem_home_anchor('#services'), 'active' => false],
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about'),    'active' => false],
                         ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients'), 'active' => false],
-                        ['label' => "Cas d'usage", 'href' => klem_cas_clients_url(), 'active' => is_page('cas-clients')],
-                        ['label' => 'Actualités',  'href' => klem_actualites_url(), 'active' => $klem_on_actualites],
-                        ['label' => 'Contact',     'href' => klem_home_anchor('#contact'),  'active' => false],
                     ];
+                    if (is_user_logged_in()) {
+                        $items[] = ['label' => "Cas d'usage", 'href' => klem_cas_clients_url(), 'active' => is_page('cas-clients')];
+                    }
+                    $items[] = ['label' => 'Actualités', 'href' => klem_actualites_url(), 'active' => $klem_on_actualites];
+                    $items[] = ['label' => 'Contact',    'href' => klem_home_anchor('#contact'), 'active' => false];
                     echo '<ul class="flex items-center gap-7 whitespace-nowrap">';
                     foreach ($items as $item) {
                         $cls = $item['active']
@@ -82,13 +84,27 @@
             <!-- Séparateur vertical -->
             <div class="h-8 w-px bg-gray-200 self-center"></div>
 
-            <!-- Bouton CTA principal -->
-            <a
-                href="<?php echo esc_url(klem_home_anchor('#contact')); ?>"
-                class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
-            >
-                <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
-            </a>
+            <!-- Connexion / Compte -->
+            <?php if (is_user_logged_in()) : ?>
+                <div class="flex items-center gap-3">
+                    <span class="text-klem-blue text-sm font-medium whitespace-nowrap">
+                        <?php echo esc_html(wp_get_current_user()->display_name); ?>
+                    </span>
+                    <a
+                        href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>"
+                        class="text-gray-500 text-sm font-medium hover:text-klem-orange transition-colors duration-150 whitespace-nowrap"
+                    >
+                        <?php esc_html_e('Déconnexion', 'klem-theme'); ?>
+                    </a>
+                </div>
+            <?php else : ?>
+                <a
+                    href="<?php echo esc_url(klem_login_url(klem_current_url())); ?>"
+                    class="inline-flex items-center justify-center bg-klem-orange text-white font-bold px-5 py-2 rounded-lg text-sm hover:brightness-110 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
+                >
+                    <?php esc_html_e('Connectez-vous', 'klem-theme'); ?>
+                </a>
+            <?php endif; ?>
         </div>
 
         <!-- Burger mobile -->
@@ -125,10 +141,12 @@
                         ['label' => 'Services',    'href' => klem_home_anchor('#services')],
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
                         ['label' => 'Notre différence', 'href' => klem_home_anchor('#clients')],
-                        ['label' => "Cas d'usage", 'href' => klem_cas_clients_url()],
-                        ['label' => 'Actualités',  'href' => klem_actualites_url()],
-                        ['label' => 'Contact',     'href' => klem_home_anchor('#contact')],
                     ];
+                    if (is_user_logged_in()) {
+                        $items[] = ['label' => "Cas d'usage", 'href' => klem_cas_clients_url()];
+                    }
+                    $items[] = ['label' => 'Actualités', 'href' => klem_actualites_url()];
+                    $items[] = ['label' => 'Contact',    'href' => klem_home_anchor('#contact')];
                     echo '<ul class="space-y-1">';
                     foreach ($items as $item) {
                         printf(
@@ -145,9 +163,16 @@
                 <p class="text-klem-blue font-extrabold text-sm px-3">
                     <?php esc_html_e('+225 07 58 89 24 77', 'klem-theme'); ?>
                 </p>
-                <a href="<?php echo esc_url(klem_home_anchor('#contact')); ?>" class="block bg-klem-orange text-white font-bold text-center px-5 py-3 rounded-lg text-sm hover:brightness-110 transition-all">
-                    <?php esc_html_e('Contactez-nous', 'klem-theme'); ?>
-                </a>
+                <?php if (is_user_logged_in()) : ?>
+                    <p class="px-3 text-sm text-gray-500">
+                        <?php echo esc_html(wp_get_current_user()->display_name); ?>
+                        · <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>" class="text-klem-orange font-semibold"><?php esc_html_e('Déconnexion', 'klem-theme'); ?></a>
+                    </p>
+                <?php else : ?>
+                    <a href="<?php echo esc_url(klem_login_url(klem_current_url())); ?>" class="block bg-klem-orange text-white font-bold text-center px-5 py-3 rounded-lg text-sm hover:brightness-110 transition-all">
+                        <?php esc_html_e('Connectez-vous', 'klem-theme'); ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

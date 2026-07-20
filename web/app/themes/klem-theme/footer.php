@@ -89,10 +89,12 @@
                     $company_links = [
                         ['label' => 'À propos',    'href' => klem_home_anchor('#about')],
                         ['label' => 'Notre équipe', 'href' => '#'],
-                        ['label' => "Cas d'usage", 'href' => klem_cas_clients_url()],
-                        ['label' => 'Carrières',    'href' => '#'],
-                        ['label' => 'Contact',      'href' => klem_home_anchor('#contact')],
                     ];
+                    if (is_user_logged_in()) {
+                        $company_links[] = ['label' => "Cas d'usage", 'href' => klem_cas_clients_url()];
+                    }
+                    $company_links[] = ['label' => 'Carrières', 'href' => '#'];
+                    $company_links[] = ['label' => 'Contact',   'href' => klem_home_anchor('#contact')];
                     foreach ($company_links as $link) :
                     ?>
                     <li>
