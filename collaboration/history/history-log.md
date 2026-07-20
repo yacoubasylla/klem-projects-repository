@@ -4,6 +4,51 @@
 
 ---
 
+## Session 24 — 2026-07-20
+
+**Objectif :** Renommer le badge "Services" en "Nos Services" sur la page d'accueil, puis intégrer Google Analytics 4 pour le suivi des KPI (tableau de bord Looker Studio à venir).
+
+### Tâches réalisées
+
+#### 1. Badge "Nos Services"
+- `template-parts/home/services.php` : libellé du badge changé de "Services" à "Nos Services"
+- Le menu de navigation ("Services") reste inchangé — proposé à l'utilisateur (un commit antérieur avait justement aligné le badge sur le libellé du menu), qui a explicitement décliné cet alignement cette fois-ci
+
+#### 2. Intégration Google Analytics 4
+- Voir **DEC-047** / **ADR-011** pour le détail technique complet
+- Propriété GA4 créée côté utilisateur (flux « KLEMTECH », `https://www.klemtech.net`, ID de mesure `G-TNR3CBT1NN`, ID de flux `15289565572`)
+- Deux clarifications demandées avant implémentation :
+  1. Méthode d'intégration : `gtag.js` direct (retenu, cohérent avec le SEO déjà en PHP pur) vs Google Tag Manager
+  2. Consentement RGPD : bandeau explicite + Consent Mode v2 (retenu) vs chargement direct sans consentement vs Consent Mode v2 silencieux
+- Tag actif uniquement en production (`WP_ENV=production`) et jamais pour un visiteur connecté (admin ou compte `klem_partenaire`, DEC-045)
+- Bandeau cookies rendu côté serveur (`footer.php`) uniquement quand le tag est actif et qu'aucun choix n'est encore enregistré (cookie `klem_consent`)
+- Procédure complète de création/configuration de la propriété GA4 documentée dans `collaboration/doc/procedure-google-analytics-4.md`, pour permettre de la reproduire (rotation de propriété, nouvel environnement, etc.)
+
+### Vérification en local
+- `pnpm build` sans erreur (bundle CSS 49 kB → 8.7 kB gzippé, JS 7.2 kB → 2.6 kB gzippé)
+- `php -l` sans erreur sur `web/wp-config.php`, `functions.php`, `footer.php`
+- Le tag GA ne se déclenche jamais en local (`WP_ENV` non défini à `production` dans le `.env` de dev) — pas de test end-to-end du bandeau en environnement local par construction
+
+### Fichiers modifiés / créés
+| Fichier | Action |
+|---|---|
+| `template-parts/home/services.php` | Modifié (libellé du badge) |
+| `.env` / `.env.example` | Modifié (+`KLEM_GA_MEASUREMENT_ID`) |
+| `web/wp-config.php` | Modifié (+constante `KLEM_GA_MEASUREMENT_ID`) |
+| `functions.php` | Modifié (+`klem_ga4_tracking()`) |
+| `footer.php` | Modifié (+bandeau consentement cookies) |
+| `src/main.js` | Modifié (+logique bandeau/consentement) |
+| `collaboration/doc/ard/ADR-011-integration-google-analytics-4.md` | Créé |
+| `collaboration/doc/procedure-google-analytics-4.md` | Créé |
+| `collaboration/history/decision-log.md` | Modifié (+DEC-047) |
+| `collaboration/history/history-log.md` | Modifié (cette entrée) |
+
+### Point de vigilance pour la suite
+- `KLEM_GA_MEASUREMENT_ID` doit encore être ajouté au `.env` **de production** sur Hostinger (le `.env` local ne suffit pas)
+- Connexion de la propriété GA4 à Looker Studio non encore réalisée (dernière étape de la procédure, à faire depuis l'interface Google, hors dépôt)
+
+---
+
 ## Session 23 — 2026-07-20
 
 **Objectif :** Réserver l'accès aux "Cas d'usage" détaillés aux visiteurs authentifiés (partenaires), avec un flux de qualification via le formulaire de contact plutôt qu'une auto-inscription.

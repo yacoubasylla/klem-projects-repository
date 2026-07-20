@@ -328,6 +328,30 @@ if (counters.length > 0) {
     }
 }
 
+// ─── Bandeau consentement cookies (Google Analytics / Consent Mode v2) ──────
+const cookieBanner = document.getElementById('klem-cookie-banner');
+const cookieAccept = document.getElementById('klem-cookie-accept');
+const cookieRefuse = document.getElementById('klem-cookie-refuse');
+
+if (cookieBanner && cookieAccept && cookieRefuse) {
+    // Doit rester identique au nom de cookie lu côté PHP (functions.php / footer.php).
+    const setConsentCookie = (value) => {
+        const maxAge = 60 * 60 * 24 * 396; // ~13 mois, recommandation CNIL
+        document.cookie = `klem_consent=${value}; max-age=${maxAge}; path=/; SameSite=Lax; Secure`;
+    };
+
+    cookieAccept.addEventListener('click', () => {
+        setConsentCookie('granted');
+        window.gtag?.('consent', 'update', { analytics_storage: 'granted' });
+        cookieBanner.remove();
+    });
+
+    cookieRefuse.addEventListener('click', () => {
+        setConsentCookie('denied');
+        cookieBanner.remove();
+    });
+}
+
 // ─── Animations d'entrée au scroll (IntersectionObserver) ───────────────────
 if (prefersReducedMotion) {
     document.querySelectorAll('[data-animate]').forEach((el) => {

@@ -5,6 +5,17 @@
 
 ---
 
+## [DEC-047] 2026-07-20 — Intégration Google Analytics 4 avec Consent Mode v2
+
+**ARD :** [ADR-011](../doc/ard/ADR-011-integration-google-analytics-4.md)
+**Contexte :** L'utilisateur souhaite suivre les KPI du site via Google Analytics 4 et un tableau de bord Looker Studio. Propriété GA4 créée côté utilisateur (flux « KLEMTECH », ID de mesure `G-TNR3CBT1NN`). Aucun mécanisme de consentement cookies n'existait sur le site. Deux choix de conception validés par l'utilisateur avant implémentation : tag `gtag.js` injecté directement plutôt que Google Tag Manager, et bandeau de consentement explicite avec Consent Mode v2 plutôt qu'un chargement direct sans consentement ou un Consent Mode v2 silencieux.
+**Décision :** ID de mesure en variable d'environnement `KLEM_GA_MEASUREMENT_ID` (`.env`/`.env.example`/constante dans `wp-config.php`, même schéma que DEC-006). Tag chargé uniquement si `WP_ENV=production` et jamais pour un visiteur connecté (admin ou compte `klem_partenaire`). `gtag('consent', 'default', …)` fixe `analytics_storage` à `denied` par défaut (état initial déterminé côté PHP via le cookie `klem_consent`, pas de flash). Bandeau « Accepter/Refuser » rendu côté serveur uniquement quand le tag est actif et qu'aucun choix n'a encore été fait. Logique d'acceptation dans `src/main.js` (pipeline Vite existant) : pose le cookie `klem_consent` (13 mois, `SameSite=Lax; Secure`) et appelle `gtag('consent', 'update', …)`.
+**Impact :** `.env`, `.env.example`, `web/wp-config.php` (constante `KLEM_GA_MEASUREMENT_ID`), `functions.php` (`klem_ga4_tracking`), `footer.php` (bandeau), `src/main.js` (logique consentement).
+**Vérification :** `php -l` sans erreur sur `wp-config.php`/`functions.php`/`footer.php`, `pnpm build` sans erreur. Procédure de création/vérification de la propriété GA4 documentée dans `collaboration/doc/procedure-google-analytics-4.md`.
+**Point de vigilance :** Ajouter `KLEM_GA_MEASUREMENT_ID` au `.env` de production sur Hostinger (le `.env` local ne sert qu'au dev, où `WP_ENV` n'est pas `production` donc le tag ne se déclenche jamais).
+
+---
+
 ## [DEC-046] 2026-07-20 — Barre d'admin WordPress masquée en façade pour tous + lien "Admin" dans le header
 
 **Contexte :** L'utilisateur a signalé que la barre noire "Howdy, klem" de WordPress restait visible sur le site public quand il navigue connecté en tant qu'administrateur (le filtre `show_admin_bar` posé en DEC-044 ne la masquait que pour les comptes non-administrateurs). Il n'existait par ailleurs aucun lien depuis le site public vers l'écran "Partenaires" créé en DEC-045 — l'administrateur devait connaître/taper l'URL `/wp/wp-admin/admin.php?page=klem-partenaires` de mémoire.

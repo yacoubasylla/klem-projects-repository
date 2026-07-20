@@ -233,6 +233,34 @@
     </div>
 </footer>
 
+<?php
+$klem_show_consent_banner = (getenv('WP_ENV') ?: 'development') === 'production'
+    && KLEM_GA_MEASUREMENT_ID !== ''
+    && !is_user_logged_in()
+    && !isset($_COOKIE['klem_consent']);
+?>
+<?php if ($klem_show_consent_banner) : ?>
+<!-- Bandeau consentement cookies (Google Analytics / Consent Mode v2) -->
+<div
+    id="klem-cookie-banner"
+    class="fixed bottom-5 left-5 z-[9998] max-w-sm bg-[#060e1b] text-white rounded-2xl shadow-2xl border border-white/10 p-5"
+    role="region"
+    aria-label="<?php esc_attr_e('Consentement cookies', 'klem-theme'); ?>"
+>
+    <p class="text-sm text-white/70 leading-relaxed mb-4">
+        <?php esc_html_e("Nous utilisons des cookies de mesure d'audience (Google Analytics) pour comprendre l'usage du site et l'améliorer. Vous pouvez accepter ou refuser à tout moment.", 'klem-theme'); ?>
+    </p>
+    <div class="flex items-center gap-3">
+        <button id="klem-cookie-refuse" type="button" class="text-sm font-semibold text-white/70 hover:text-white px-4 py-2.5 transition-colors">
+            <?php esc_html_e('Refuser', 'klem-theme'); ?>
+        </button>
+        <button id="klem-cookie-accept" type="button" class="flex-1 text-sm font-bold bg-klem-orange text-white px-5 py-2.5 rounded-xl hover:brightness-110 transition-all">
+            <?php esc_html_e('Accepter', 'klem-theme'); ?>
+        </button>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Widget chatbot (capture de leads) -->
 <div id="klem-chatbot" class="fixed bottom-5 right-5 z-[9998] flex flex-col items-end">
 

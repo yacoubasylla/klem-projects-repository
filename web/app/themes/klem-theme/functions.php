@@ -431,6 +431,44 @@ function klem_actualites_badge(int $post_id): ?array {
     return null;
 }
 
+/**
+ * ── Google Analytics 4 (mesure d'audience) ──
+ * Actif uniquement en production, jamais pour les visiteurs connectés
+ * (admin/comptes partenaires). Consent Mode v2 : la mesure reste "denied"
+ * tant que le visiteur n'a pas accepté le bandeau cookies (cf. le bandeau
+ * dans footer.php et sa logique dans src/main.js — le nom du cookie
+ * "klem_consent" doit rester identique aux deux endroits).
+ */
+function klem_ga4_tracking(): void {
+    if ((getenv('WP_ENV') ?: 'development') !== 'production') {
+        return;
+    }
+
+    if (KLEM_GA_MEASUREMENT_ID === '' || is_user_logged_in()) {
+        return;
+    }
+
+    $consent_granted = isset($_COOKIE['klem_consent']) && $_COOKIE['klem_consent'] === 'granted';
+    ?>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+        'analytics_storage': '<?php echo $consent_granted ? 'granted' : 'denied'; ?>',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+    });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr(KLEM_GA_MEASUREMENT_ID); ?>"></script>
+    <script>
+    gtag('js', new Date());
+    gtag('config', '<?php echo esc_js(KLEM_GA_MEASUREMENT_ID); ?>', { anonymize_ip: true });
+    </script>
+    <?php
+}
+add_action('wp_head', 'klem_ga4_tracking', 1);
+
 function klem_add_favicon(): void {
     $uri = get_template_directory_uri();
     printf('<link rel="icon" type="image/png" sizes="32x32" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));

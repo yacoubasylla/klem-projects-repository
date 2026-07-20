@@ -68,6 +68,9 @@ define('KLEM_SMTP_FROM_NAME', getenv('KLEM_SMTP_FROM_NAME') ?: 'KLEM Technologie
 define('KLEM_ANTHROPIC_API_KEY', getenv('KLEM_ANTHROPIC_API_KEY') ?: '');
 define('KLEM_ANTHROPIC_MODEL',   getenv('KLEM_ANTHROPIC_MODEL')   ?: 'claude-haiku-4-5-20251001');
 
+// ── Analytics — Google Analytics 4 ─────────────────────────────────────────────
+define('KLEM_GA_MEASUREMENT_ID', getenv('KLEM_GA_MEASUREMENT_ID') ?: '');
+
 // ── Debug ─────────────────────────────────────────────────────────────────────
 $_klem_env_name = getenv('WP_ENV') ?: 'development';
 define('WP_DEBUG',         $_klem_env_name !== 'production');
