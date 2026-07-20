@@ -15,8 +15,16 @@ KLEM-REPO/
 │   │   ├── startup.md           # Commande /startup : Initialisation et alignement du contexte
 │   │   ├── update.md            # Commande /update : Resynchronisation du contexte en cours de session
 │   │   └── install.md           # Commande /morning : Routine de démarrage de journée des développeurs
-│   └── skills/                  # Capacités et outils spécifiques exécutés par l'IA
-│       └── recherche-actualites/# Outil autonome de veille technologique et légale
+│   ├── agents/                  # Macros et scripts de commandes personnalisées
+│   │   └── security-scanner.md  # Agent /secu : Initialisation et alignement du contexte
+│   │   
+│   ├── skills/                  # Capacités et outils spécifiques exécutés par l'IA
+│   │    └── recherche-actualites/# Outil autonome de veille technologique et légale
+│   ├── hooks/                   # lifecycle hook scripts
+│   │   └── security-check.sh
+│   │   
+│   │   
+│   └── settings.json            # project permissions
 ├── apps/                        # Applications autonomes et déployables (Exécutables)
 │   ├── backend-api/             # API Core Spring Boot 3.x & Logique métier du parc automobile
 │   ├── mobile-app/              # Application mobile multiplateforme (Chauffeurs / Livreurs)

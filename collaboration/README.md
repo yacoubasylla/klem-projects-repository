@@ -6,7 +6,6 @@ Ce répertoire est le système nerveux central de notre binôme de développeurs
 - **`prompts/`** : Contient les commandes d'automatisation.
   - `/startup.md` : À exécuter en début de session pour synchroniser l'IA.
   - `/update.md` : À exécuter en fin de session pour forcer l'IA à documenter son travail.
-  - `prime.md` : Le contexte maître pour l'interface Web.
 - **`history/`** : Contient les traces tangibles du développement.
   - `history-log.md` : Le journal de bord chronologique des fonctionnalités livrées.
   - `decision-log.md` : Le registre des choix d'architecture (ADR). Empêche de revenir sur une décision technique validée sans justification.

@@ -31,7 +31,7 @@ Pour agir sur une seule application sans impacter le reste du monorepo :
 *   **Structure des Paquetages :** Respecter le découpage orienté domaine :
     `com.klem.api.[domaine].[controller|service|repository|model|dto]`
 *   **Sécurité des Sessions :** Pas de stockage local de JWT. L'authentification utilise des sessions HTTP encapsulées dans des cookies sécurisés :
-```java
+  ...java
     ResponseCookie cookie = ResponseCookie.from("JSESSIONID", session.getId())
         .httpOnly(true)
         .secure(true) // Uniquement en HTTPS
@@ -62,17 +62,17 @@ Avant de déclarer une tâche comme "terminée" et de redonner la main à l'util
 
 ### 1️⃣ Validation Technique locale
 Exécuter un build complet et un contrôle qualité. Le code ne doit générer aucun warning bloquant.
-```bash
+  bash
 pnpm lint && pnpm build
 
-2️⃣ Documentation d'Arbitrage (Si applicable)
+### 2️⃣ Documentation d'Arbitrage (Si applicable)
 Si la tâche a nécessité l'introduction d'une nouvelle bibliothèque, d'un changement de modèle de données ou d'une modification de flux réseau, exécuter le script de génération d'ADR :
 
 Bash
 ./scripts/create-adr.sh "titre-de-la-decision"
 Compléter le fichier .md généré dans collaboration/history/adr/ en spécifiant le contexte, les alternatives et les conséquences.
 
-3️⃣ Journalisation Chronologique
+### 3️⃣ Journalisation Chronologique
 Ajouter un bloc au fichier collaboration/history/history-log.md respectant scrupuleusement la structure suivante :
 
 Markdown
@@ -80,7 +80,8 @@ Markdown
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `apps/backend-api/...`, `apps/web-app/...`
 - **Description :** Synthèse technique claire de ce qui a été codé et validé.
-4️⃣ Message de Commit Standardisé
+
+### 4️⃣ Message de Commit Standardisé
 Formater la proposition de message de fin de session selon les spécifications Conventional Commits :
 
 feat(scope): ... pour une nouvelle fonctionnalité.

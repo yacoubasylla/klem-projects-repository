@@ -1,7 +1,6 @@
 # Projet : Gestion de Parc Auto - KLEM Technologies
 
-# Instructions de Développement - FleetControl
-
+# Instructions de Développement 
 ## 📋 Présentation du Projet
 Application d'entreprise critique de gestion intégrale de parc automobile (Missions, courses, locations, livraisons, maintenance préventive/corrective, suivi de carburant, comptabilité des revenus, planning de chauffeurs et gestion de la paie des chauffeurs salariés).
 

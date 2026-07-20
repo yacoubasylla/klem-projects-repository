@@ -1,7 +1,10 @@
 # Node / Frontend
 node_modules/
 .dist/
+
+# Cores et Secrets
 .env
+.env.*
 .env.local
 
 # Java / Backend

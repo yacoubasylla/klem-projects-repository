@@ -1,15 +1,21 @@
 /* Développeur : claude "Exécute le prompt startup.md" */
 # Commande : /startup
+> Commande pour démarrer une nouvelle session avec contexte complet.
 
 Claude, nous démarrons une nouvelle session de développement sur le projet FleetControl de Klem Technologies & Services. Tu agis en tant qu'Architecte Logiciel et Développeur Senior. 
 
 Avant de générer ou de modifier du code, tu dois impérativement lire et analyser l'intégralité des fichiers de gouvernance et de contexte suivants pour aligner tes connaissances techniques, métier et historiques :
 
+
+## Mission
+
+Quand je lance `/startup` au début d'une session, exécute la séquence suivante :
+
 1. **`CLAUDE.md`** (À la racine : Commandes globales, stack React/MUI/Spring Boot/PostgreSQL et standards de code premium).
-2. **`claude-collaboration/docs/CONTEXT.md`** (Périmètre fonctionnel des 6 piliers du parc auto et règles métier comme les commissions chauffeurs).
-3. **`claude-collaboration/docs/workflows.md`** (Protocole de collaboration, GitFlow de l'équipe et règles de validation des Pull Requests).
-4. **`claude-collaboration/history/history-log.md`** (Journal de bord chronologique pour savoir exactement où s'est arrêtée la dernière session).
-5. **`claude-collaboration/history/decision-log.md`** (Registre des décisions architecturales - ADR - pour ne pas enfreindre les choix techniques passés).
+2. **`collaboration/docs/CONTEXT.md`** (Périmètre fonctionnel des 6 piliers du parc auto et règles métier comme les commissions chauffeurs).
+3. **`collaboration/docs/workflows.md`** (Protocole de collaboration, GitFlow de l'équipe et règles de validation des Pull Requests).
+4. **`collaboration/history/history-log.md`** (Journal de bord chronologique pour savoir exactement où s'est arrêtée la dernière session).
+5. **`collaboration/history/decision-log.md`** (Registre des décisions architecturales - ADR - pour ne pas enfreindre les choix techniques passés).
 
 ## Instructions de traitement
 - Utilise tes outils système pour lire le contenu de ces 5 fichiers.

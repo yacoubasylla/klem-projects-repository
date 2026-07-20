@@ -47,7 +47,7 @@ L'intégration de l'intelligence artificielle est au cœur de nos processus pour
 ### Règle d'or : Contextualisation
 Avant toute génération de code complexe (ex: architecture Big Data, CDC Oracle vers Kafka, ou UI avancée en React), le contexte doit être verrouillé.
 *   **En local (Terminal)** : Assurez-vous que le fichier `CLAUDE.md` est à jour. Lancez simplement la commande `claude` à la racine.
-*   **Interface Web** : Débutez toujours le prompt par l'inclusion du fichier `claude-collaboration/prompts/prime.md`.
+*   **Interface Web** : Débutez toujours le prompt par l'inclusion du fichier `commands/startup.md`.
 
 ### Processus de Refactoring et de Création
 1.  **Génération** : Demandez à Claude de générer le composant ou le service. (ex: *"Génère le service d'ingestion des logs de maintenance pour FleetControl v2.0 dans apps/api"*).
@@ -67,3 +67,7 @@ L'intégration continue est déclenchée automatiquement lors de la création d'
     *   Exécution des tests unitaires et d'intégration (Spring Boot & React).
 3.  **Code Review** : Au moins un pair doit valider la PR. L'attention est portée sur l'optimisation, la sécurité et la séparation des responsabilités.
 4.  **Merge** : Une fois validée, la PR est fusionnée ("Squash and Merge" recommandé pour garder un historique propre).
+
+
+## 5. Clôture de Session
+Avant de pousser le code final, le développeur exécute le prompt `commands/update` pour maintenir à jour les journaux de bord.

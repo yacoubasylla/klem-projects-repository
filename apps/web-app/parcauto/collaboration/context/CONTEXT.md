@@ -1,6 +1,6 @@
 # Projet : Gestion de Parc Auto - KLEM Technologies
 
-# Contexte Métier et Vision Produit - FleetControl
+# Contexte Métier et Vision Produit 
 
 ## 🎯 Objectif Général
 Développer une solution d'entreprise de classe "Enterprise Resource Planning" (ERP) robuste, modulaire et scalable pour centraliser, automatiser et optimiser la gestion opérationnelle, logistique et financière d'un parc automobile multi-usages (courses urbaines, locations de courte/longue durée, livraisons de marchandises).

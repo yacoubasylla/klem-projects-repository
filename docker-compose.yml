@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: fleetcontrol-db-local
+    environment:
+      POSTGRES_USER: klem_admin
+      POSTGRES_PASSWORD: klem_secure_password
+      POSTGRES_DB: fleetcontrol_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fleet-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fleet-network:
+    driver: bridge
