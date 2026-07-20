@@ -116,7 +116,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
                         </svg>
                         <p class="text-sm text-gray-600 leading-relaxed">
-                            <?php esc_html_e("Nos cas d'usage détaillés sont réservés à nos partenaires. Décrivez votre besoin ci-dessous : nous créons votre accès et vous le communiquons par e-mail.", 'klem-theme'); ?>
+                            <?php
+                            printf(
+                                /* translators: %1$s and %2$s: balises <strong> encadrant "cas d'usage" et "nos partenaires" */
+                                esc_html__("Nos %1\$scas d'usage%2\$s détaillés sont réservés à %1\$snos partenaires%2\$s. Décrivez votre besoin ci-dessous : nous créons votre accès et vous le communiquons par e-mail.", 'klem-theme'),
+                                '<strong>',
+                                '</strong>'
+                            );
+                            ?>
                         </p>
                     </div>
                     <?php endif; ?>
