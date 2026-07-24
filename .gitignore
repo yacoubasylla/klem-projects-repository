@@ -18,6 +18,7 @@ build/
 .vscode/
 *.suo
 *.ntvs*
+.claude/
 
 # OS
 .DS_Store
