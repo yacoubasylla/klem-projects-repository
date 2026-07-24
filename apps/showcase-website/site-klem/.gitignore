@@ -1,0 +1,41 @@
+# ── Dépendances ──────────────────────────────────────────────────────────────
+vendor/
+node_modules/
+web/app/themes/klem-theme/node_modules/
+
+# ── Assets compilés — committés pour hébergement mutualisé (pas de Node.js serveur) ──
+# web/app/themes/klem-theme/dist/
+
+# ── WordPress core (géré par Composer) ───────────────────────────────────────
+web/wp/
+
+# ── Environnement & secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+ACCESS.md
+
+# ── Documents personnels (CV, audits externes) — jamais dans l'historique git ──
+CV/
+/*.pdf
+
+# ── Backup & dumps SQL ───────────────────────────────────────────────────────
+web_bkp/
+*.sql
+
+# ── Uploads WordPress ────────────────────────────────────────────────────────
+web/app/uploads/
+
+# ── Système ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Turbo cache ──────────────────────────────────────────────────────────────
+.turbo/

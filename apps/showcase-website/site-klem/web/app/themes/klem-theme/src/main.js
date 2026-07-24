@@ -1,0 +1,387 @@
+import './main.css';
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ─── Menu mobile ────────────────────────────────────────────────────────────
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+const burgerOpen  = document.getElementById('burger-open');
+const burgerClose = document.getElementById('burger-close');
+
+if (menuToggle && mobileMenu) {
+    const setMobileMenuOpen = (open) => {
+        mobileMenu.classList.toggle('hidden', !open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+        burgerOpen.classList.toggle('hidden', open);
+        burgerClose.classList.toggle('hidden', !open);
+    };
+
+    menuToggle.addEventListener('click', () => {
+        setMobileMenuOpen(mobileMenu.classList.contains('hidden'));
+    });
+
+    // Referme le menu dès qu'un lien est choisi (ancre de la page d'accueil
+    // ou lien vers une autre page) : sans ça, le panneau reste ouvert par-
+    // dessus le contenu après la navigation.
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setMobileMenuOpen(false));
+    });
+}
+
+// ─── Ombre header au scroll ──────────────────────────────────────────────────
+const header = document.getElementById('site-header');
+if (header) {
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // appliquer l'état initial si la page est déjà scrollée
+}
+
+// ─── Animation barres de progression (section À Propos) ─────────────────────
+const progressBars = document.querySelectorAll('[data-target-width]');
+if (progressBars.length > 0) {
+    const aboutSection = document.getElementById('about');
+    const triggerEl    = aboutSection ?? document.body;
+
+    const progressObserver = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                progressBars.forEach((bar, i) => {
+                    setTimeout(() => {
+                        bar.style.width = bar.dataset.targetWidth + '%';
+                    }, i * 180);
+                });
+                progressObserver.disconnect();
+            }
+        },
+        { threshold: 0.3 }
+    );
+    progressObserver.observe(triggerEl);
+}
+
+// ─── Formulaire de contact (AJAX WordPress) ──────────────────────────────────
+const contactForm   = document.getElementById('klem-contact-form');
+const formFeedback  = document.getElementById('klem-form-feedback');
+const submitBtn     = document.getElementById('klem-submit');
+const submitLabel   = document.getElementById('klem-submit-label');
+const submitSpinner = document.getElementById('klem-submit-spinner');
+
+if (contactForm && window.klemAjax) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        submitBtn.disabled = true;
+        submitLabel.textContent = 'Envoi en cours…';
+        submitSpinner.classList.remove('hidden');
+        formFeedback.classList.add('hidden');
+
+        const body = new FormData(contactForm);
+        body.append('action', 'klem_contact');
+        body.append('klem_nonce', window.klemAjax.nonce);
+
+        try {
+            const res  = await fetch(window.klemAjax.url, { method: 'POST', body });
+            const json = await res.json();
+
+            formFeedback.classList.remove('hidden', 'bg-green-50', 'text-green-700', 'border', 'border-green-200', 'bg-red-50', 'text-red-700', 'border-red-200');
+
+            if (json.success) {
+                formFeedback.classList.add('bg-green-50', 'text-green-700', 'border', 'border-green-200');
+                formFeedback.textContent = json.data.message;
+                // Conversion GA4 — voir DEC-048 : à marquer comme événement clé dans GA4.
+                window.gtag?.('event', 'generate_lead', { form_id: 'contact' });
+                contactForm.reset();
+            } else {
+                formFeedback.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
+                formFeedback.textContent = json.data.message;
+            }
+        } catch {
+            formFeedback.classList.remove('hidden');
+            formFeedback.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
+            formFeedback.textContent = 'Une erreur réseau est survenue. Veuillez réessayer.';
+        } finally {
+            submitBtn.disabled = false;
+            submitLabel.textContent = 'Envoyer le message';
+            submitSpinner.classList.add('hidden');
+        }
+    });
+}
+
+// ─── Cartes "Secteurs ciblés" → pré-remplissage du formulaire de contact ────
+const sectorLinks  = document.querySelectorAll('[data-sector]');
+const messageField = document.getElementById('klem-message');
+
+if (sectorLinks.length > 0 && messageField) {
+    sectorLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+            const sector  = link.dataset.sector;
+
+            // Suivi GA4 par CTA — voir DEC-048. Couvre les 4 piliers de services
+            // et les cartes "Secteurs ciblés", qui partagent le même attribut.
+            window.gtag?.('event', 'cta_click', {
+                cta_label:    sector,
+                cta_location: link.closest('section')?.id ?? 'unknown',
+            });
+
+            const isUntouched = messageField.value.trim() === '' || messageField.dataset.klemPrefilled === 'true';
+
+            if (isUntouched) {
+                messageField.value = sector === 'Autre secteur'
+                    ? "Bonjour, je vous contacte au sujet d'un projet dans un secteur qui n'est pas listé sur votre site. "
+                    : `Bonjour, je vous contacte au sujet d'un projet dans le secteur ${sector}. `;
+                messageField.dataset.klemPrefilled = 'true';
+            }
+
+            window.setTimeout(() => messageField.focus({ preventScroll: true }), prefersReducedMotion ? 0 : 600);
+        });
+    });
+}
+
+// ─── CTA "Discuter avec l'assistant" (section Contact) → ouvre le chatbot ───
+document.getElementById('klem-open-chat-cta')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('klem:open-chat'));
+});
+
+// ─── Chatbot (capture de leads via API Anthropic) ────────────────────────────
+const chatToggle    = document.getElementById('klem-chat-toggle');
+const chatClose     = document.getElementById('klem-chat-close');
+const chatPanel     = document.getElementById('klem-chat-panel');
+const chatIconOpen  = document.getElementById('klem-chat-icon-open');
+const chatIconClose = document.getElementById('klem-chat-icon-close');
+const chatMessages  = document.getElementById('klem-chat-messages');
+const chatForm      = document.getElementById('klem-chat-form');
+const chatInput     = document.getElementById('klem-chat-input');
+const chatSend      = document.getElementById('klem-chat-send');
+const chatSendIcon  = document.getElementById('klem-chat-send-icon');
+const chatSendSpinner = document.getElementById('klem-chat-send-spinner');
+
+if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
+    const history = [];
+    let isChatOpen = false;
+    let isSending  = false;
+
+    const setChatOpen = (open) => {
+        isChatOpen = open;
+        chatPanel.classList.toggle('hidden', !open);
+        chatIconOpen.classList.toggle('hidden', open);
+        chatIconClose.classList.toggle('hidden', !open);
+        chatToggle.setAttribute('aria-expanded', String(open));
+        if (open) {
+            window.setTimeout(() => chatInput.focus(), prefersReducedMotion ? 0 : 150);
+        }
+    };
+
+    chatToggle.addEventListener('click', () => setChatOpen(!isChatOpen));
+    chatClose?.addEventListener('click', () => setChatOpen(false));
+
+    // Permet à d'autres CTA de la page (ex. encadré de la section Contact)
+    // d'ouvrir le widget sans dépendre de son ID interne.
+    window.addEventListener('klem:open-chat', () => setChatOpen(true));
+
+    // Ouverture automatique à l'arrivée du visiteur (une seule fois par session navigateur)
+    if (!window.sessionStorage.getItem('klemChatAutoOpened')) {
+        window.sessionStorage.setItem('klemChatAutoOpened', '1');
+        window.setTimeout(() => {
+            if (!isChatOpen) setChatOpen(true);
+        }, 4000);
+    }
+
+    const scrollChatToBottom = () => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    // Rendu Markdown minimal et sûr pour les réponses de l'assistant : le texte
+    // brut est d'abord entièrement échappé, puis seules nos propres balises
+    // (issues de motifs **gras** / listes à puces / paragraphes) sont injectées
+    // — aucune balise fournie par le modèle ne peut jamais atteindre le DOM.
+    const escapeHtml = (str) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    const renderInline = (line) => line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    const renderAssistantText = (text) => {
+        const lines = escapeHtml(text).split('\n');
+        let html = '';
+        let listTag = null; // 'ul' | 'ol' | null
+
+        const closeList = () => {
+            if (listTag) { html += `</${listTag}>`; listTag = null; }
+        };
+
+        lines.forEach((rawLine) => {
+            const line = rawLine.trim();
+            if (line === '') { return; } // une ligne vide ne referme pas une liste en cours (items séparés par un blanc)
+
+            const bulletMatch = line.match(/^[-*]\s+(.*)/);
+            const numberedMatch = line.match(/^\d+[.)]\s+(.*)/);
+            const targetTag = bulletMatch ? 'ul' : (numberedMatch ? 'ol' : null);
+
+            if (targetTag) {
+                if (listTag !== targetTag) {
+                    closeList();
+                    html += `<${targetTag} class="klem-chat-list">`;
+                    listTag = targetTag;
+                }
+                html += `<li>${renderInline((bulletMatch ?? numberedMatch)[1])}</li>`;
+                return;
+            }
+
+            closeList();
+            html += `<p class="klem-chat-paragraph">${renderInline(line)}</p>`;
+        });
+
+        closeList();
+        return html || escapeHtml(text);
+    };
+
+    const appendMessage = (role, text) => {
+        const row = document.createElement('div');
+        row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+
+        const bubble = document.createElement('div');
+        bubble.className = role === 'user'
+            ? 'max-w-[85%] bg-klem-orange text-white text-sm leading-relaxed rounded-2xl rounded-br-sm px-4 py-2.5'
+            : 'max-w-[85%] bg-white border border-gray-100 text-gray-700 text-sm leading-relaxed rounded-2xl rounded-bl-sm px-4 py-2.5 shadow-sm';
+
+        if (role === 'user') {
+            bubble.textContent = text;
+        } else {
+            bubble.innerHTML = renderAssistantText(text);
+        }
+
+        row.appendChild(bubble);
+        chatMessages.appendChild(row);
+        scrollChatToBottom();
+    };
+
+    const setSending = (sending) => {
+        isSending = sending;
+        chatInput.disabled  = sending;
+        chatSend.disabled   = sending;
+        chatSendIcon.classList.toggle('hidden', sending);
+        chatSendSpinner.classList.toggle('hidden', !sending);
+    };
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const text = chatInput.value.trim();
+        if (!text || isSending) return;
+
+        appendMessage('user', text);
+        history.push({ role: 'user', content: text });
+        chatInput.value = '';
+        setSending(true);
+
+        try {
+            const body = new URLSearchParams();
+            body.append('action', 'klem_chatbot_message');
+            body.append('nonce', window.klemChatbotAjax.nonce);
+            body.append('messages', JSON.stringify(history));
+
+            const res  = await fetch(window.klemChatbotAjax.url, { method: 'POST', body });
+            const json = await res.json();
+
+            if (json.success && json.data?.reply) {
+                appendMessage('assistant', json.data.reply);
+                history.push({ role: 'assistant', content: json.data.reply });
+            } else {
+                appendMessage('assistant', json.data?.message ?? 'Une erreur est survenue. Merci de réessayer.');
+            }
+        } catch {
+            appendMessage('assistant', 'Une erreur réseau est survenue. Merci de réessayer.');
+        } finally {
+            setSending(false);
+            chatInput.focus();
+        }
+    });
+}
+
+// ─── Compteurs animés (statistiques du hero) ─────────────────────────────────
+const counters = document.querySelectorAll('[data-count-target]');
+
+if (counters.length > 0) {
+    if (prefersReducedMotion) {
+        counters.forEach((el) => {
+            el.textContent = el.dataset.countTarget + (el.dataset.countSuffix ?? '');
+        });
+    } else {
+        const countObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+
+                    const el       = entry.target;
+                    const target   = parseFloat(el.dataset.countTarget);
+                    const suffix   = el.dataset.countSuffix ?? '';
+                    const decimals = parseInt(el.dataset.countDecimals ?? '0', 10);
+                    const duration = 1400;
+                    const start    = performance.now();
+
+                    const step = (now) => {
+                        const progress = Math.min((now - start) / duration, 1);
+                        const eased    = 1 - Math.pow(1 - progress, 3);
+                        el.textContent = (target * eased).toFixed(decimals) + suffix;
+                        if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                    countObserver.unobserve(el);
+                });
+            },
+            { threshold: 0.4 }
+        );
+
+        counters.forEach((el) => countObserver.observe(el));
+    }
+}
+
+// ─── Bandeau consentement cookies (Google Analytics / Consent Mode v2) ──────
+const cookieBanner = document.getElementById('klem-cookie-banner');
+const cookieAccept = document.getElementById('klem-cookie-accept');
+const cookieRefuse = document.getElementById('klem-cookie-refuse');
+
+if (cookieBanner && cookieAccept && cookieRefuse) {
+    // Doit rester identique au nom de cookie lu côté PHP (functions.php / footer.php).
+    const setConsentCookie = (value) => {
+        const maxAge = 60 * 60 * 24 * 396; // ~13 mois, recommandation CNIL
+        document.cookie = `klem_consent=${value}; max-age=${maxAge}; path=/; SameSite=Lax; Secure`;
+    };
+
+    cookieAccept.addEventListener('click', () => {
+        setConsentCookie('granted');
+        window.gtag?.('consent', 'update', { analytics_storage: 'granted' });
+        cookieBanner.remove();
+    });
+
+    cookieRefuse.addEventListener('click', () => {
+        setConsentCookie('denied');
+        cookieBanner.remove();
+    });
+}
+
+// ─── Animations d'entrée au scroll (IntersectionObserver) ───────────────────
+if (prefersReducedMotion) {
+    document.querySelectorAll('[data-animate]').forEach((el) => {
+        el.classList.add('is-visible');
+    });
+} else {
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.dataset.delay ?? '0', 10);
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+}

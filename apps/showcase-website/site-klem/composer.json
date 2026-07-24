@@ -1,0 +1,28 @@
+{
+  "name": "klem/site-vitrine",
+  "description": "Site institutionnel KLEM Technologies - Architecture Bedrock",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.2",
+    "composer/installers": "^2.0",
+    "johnpbloch/wordpress": "^6.5"
+  },
+  "extra": {
+    "wordpress-install-dir": "web/wp",
+    "installer-paths": {
+      "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
+      "web/app/themes/{$name}/": ["type:wordpress-theme"],
+      "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"]
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "johnpbloch/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "stable"
+}

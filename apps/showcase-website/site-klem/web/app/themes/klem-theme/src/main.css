@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+}
+
+/* Rendu Markdown minimal des réponses du chatbot (voir renderAssistantText en JS) */
+.klem-chat-paragraph {
+    margin: 0;
+}
+
+.klem-chat-paragraph + .klem-chat-paragraph,
+.klem-chat-list + .klem-chat-paragraph,
+.klem-chat-paragraph + .klem-chat-list {
+    margin-top: 0.5rem;
+}
+
+.klem-chat-list {
+    margin: 0.4rem 0 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+ul.klem-chat-list {
+    list-style: disc;
+}
+
+ol.klem-chat-list {
+    list-style: decimal;
+}
+
+/* ─── Header fixé — prioritaire sur tout conflit WordPress ──────────────── */
+#site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: #ffffff;
+}
+
+/* Compensation barre d'administration WordPress (utilisateurs connectés) */
+.admin-bar #site-header {
+    top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    .admin-bar #site-header {
+        top: 46px;
+    }
+}
+
+/* Ombre progressive au scroll (ajoutée via JS) */
+#site-header.scrolled {
+    box-shadow: 0 1px 12px 0 rgba(11, 25, 44, 0.10);
+}
+
+/* Animations d'entrée déclenchées au scroll */
+[data-animate] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+
+[data-animate].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-animate],
+    [data-animate].is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Flottement doux des cartes statistiques du hero */
+@keyframes klem-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+.animate-float {
+    animation: klem-float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-float {
+        animation: none;
+    }
+}
+
+/* Défilement continu droite → gauche du bandeau Technologies */
+@keyframes klem-marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+    animation: klem-marquee 48s linear infinite;
+}
+
+.animate-marquee:hover,
+.animate-marquee:focus-within {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-marquee {
+        animation: none;
+        flex-wrap: wrap;
+    }
+}
