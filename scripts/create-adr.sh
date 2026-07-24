@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 DATE=$(date +%Y-%m-%d)
-FILENAME="docs/adr/${DATE}-${1}.md"
+FILENAME="collaboration/history/adr/${DATE}-${1}.md"
 
 # Créer le template ADR
 cat <<EOF > "$FILENAME"

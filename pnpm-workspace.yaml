@@ -1,5 +1,7 @@
 # pnpm-workspace.yaml à la racine
+# Les apps vivent à apps/<categorie>/<nom> (ex: apps/web-app/parcauto), pas directement sous
+# apps/ -- le glob doit descendre d'un niveau supplémentaire pour les capturer réellement.
 packages:
-  - 'apps/*'
+  - 'apps/*/*'
   - 'packages/*'
   - 'services/*'

@@ -5,8 +5,9 @@
   "description": "Monorepo global pour KLEM Technologies & Services",
   "packageManager": "pnpm@9.0.0",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*/*",
+    "packages/*",
+    "services/*"
   ],
   "scripts": {
     "build": "turbo build",

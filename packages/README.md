@@ -11,5 +11,5 @@ Ce dossier centralise le code, les types et les configurations transversaux à t
 Pour utiliser un package partagé dans une application (ex: importer un composant de `packages/ui` dans `apps/web-app`), ajoutez la dépendance locale dans le `package.json` de l'application cible :
 ```json
 "dependencies": {
-  "@fleetcontrol/ui": "workspace:*"
+  "@klem/ui": "workspace:*"
 }
