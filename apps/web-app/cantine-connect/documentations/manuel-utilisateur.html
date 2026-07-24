@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manuel Utilisateur — Cantine Connect v1.0.0-beta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; color: #1a1a2e; background: #fff; }
+
+  /* PAGE BREAKS */
+  .page-break { page-break-before: always; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(160deg, #1565C0 0%, #0D47A1 60%, #E65100 100%);
+    color: white; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 60px 40px;
+  }
+  .cover .logo { font-size: 72px; margin-bottom: 24px; }
+  .cover h1 { font-size: 36pt; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+  .cover h2 { font-size: 16pt; font-weight: 400; opacity: 0.85; margin-bottom: 40px; }
+  .cover .version { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px; padding: 6px 20px; font-size: 11pt; margin-bottom: 60px; }
+  .cover .meta { font-size: 10pt; opacity: 0.75; line-height: 1.8; }
+  .cover .company { font-size: 13pt; font-weight: 700; margin-bottom: 4px; }
+
+  /* CONTENT */
+  .content { max-width: 800px; margin: 0 auto; padding: 40px 50px; }
+
+  /* HEADERS */
+  h1.section { font-size: 22pt; color: #1565C0; border-bottom: 3px solid #1565C0;
+    padding-bottom: 8px; margin: 40px 0 20px; }
+  h2.subsection { font-size: 15pt; color: #0D47A1; margin: 28px 0 12px; }
+  h3.sub { font-size: 12pt; color: #1565C0; margin: 20px 0 8px; font-weight: 700; }
+
+  /* TOC */
+  .toc { background: #F5F7FF; border-left: 4px solid #1565C0; padding: 24px 32px; border-radius: 0 8px 8px 0; }
+  .toc h2 { font-size: 14pt; color: #1565C0; margin-bottom: 16px; }
+  .toc ol { padding-left: 20px; line-height: 2.2; }
+  .toc li { color: #1565C0; }
+  .toc a { color: #1565C0; text-decoration: none; }
+  .toc .sub-item { padding-left: 20px; font-size: 10pt; color: #555; list-style-type: disc; }
+
+  /* INFO BOXES */
+  .info { background: #E3F2FD; border-left: 4px solid #1565C0; padding: 12px 16px;
+    border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 10.5pt; }
+  .warning { background: #FFF3E0; border-left: 4px solid #E65100; padding: 12px 16px;
+    border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 10.5pt; }
+  .success { background: #E8F5E9; border-left: 4px solid #2E7D32; padding: 12px 16px;
+    border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 10.5pt; }
+  .info strong, .warning strong, .success strong { display: block; margin-bottom: 4px; }
+
+  /* SCREENSHOT PLACEHOLDER */
+  .screenshot {
+    border-radius: 8px; background: #F5F7FF; margin: 20px 0; overflow: hidden;
+    box-shadow: 0 4px 16px rgba(21,101,192,0.12);
+  }
+  .screenshot img { display: block; width: 100%; height: auto; border-radius: 6px 6px 0 0; }
+  .screenshot .caption { font-size: 10pt; color: #546E7A; padding: 8px 16px 10px; font-style: italic; background: #F5F7FF; }
+
+  /* STEPS */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li { counter-increment: step; display: flex; align-items: flex-start;
+    gap: 14px; margin-bottom: 14px; }
+  .steps li::before { content: counter(step); background: #1565C0; color: white;
+    min-width: 28px; height: 28px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-weight: 700; font-size: 11pt;
+    flex-shrink: 0; margin-top: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 10.5pt; }
+  thead { background: #1565C0; color: white; }
+  thead th { padding: 10px 14px; text-align: left; font-weight: 600; }
+  tbody tr:nth-child(even) { background: #F5F7FF; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #E0E7EF; }
+
+  /* ROLE BADGE */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 9pt; font-weight: 700; }
+  .badge-admin { background: #1565C0; color: white; }
+  .badge-gest { background: #2E7D32; color: white; }
+  .badge-all { background: #546E7A; color: white; }
+
+  /* KEYBOARD */
+  kbd { background: #263238; color: #ECEFF1; padding: 2px 8px; border-radius: 4px;
+    font-family: monospace; font-size: 10pt; }
+
+  /* FOOTER */
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid #E0E7EF;
+    text-align: center; font-size: 9pt; color: #90A4AE; }
+
+  p { line-height: 1.7; margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; line-height: 2; }
+  strong { color: #0D47A1; }
+
+  @media print {
+    .cover { min-height: 100vh; }
+    h1.section { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ COUVERTURE ═══════════════════════════ -->
+<div class="cover">
+  <div class="logo">🍽️</div>
+  <h1>Cantine Connect</h1>
+  <h2>Manuel Utilisateur</h2>
+  <div class="version">Version 1.0.0-beta</div>
+  <div class="company">KLEM Technologies &amp; Services</div>
+  <div class="meta">
+    Juillet 2026 &nbsp;|&nbsp; Document confidentiel<br>
+    Responsable projet : Yacouba SYLLA<br>
+    📞 +225 07 58 89 24 77 &nbsp;|&nbsp; 📧 infos@klemtech.net
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TABLE DES MATIÈRES ═══════════════════════ -->
+<div class="content">
+<div class="toc">
+  <h2>📋 Table des Matières</h2>
+  <ol>
+    <li>Présentation de l'application</li>
+    <li>Accès et connexion
+      <ul class="sub-item"><li>Page de connexion</li><li>Rôles et droits d'accès</li></ul>
+    </li>
+    <li>Tableau de bord (Dashboard)</li>
+    <li>Module Établissements
+      <ul class="sub-item"><li>Consulter les établissements</li><li>Ajouter un établissement</li><li>Gérer les niveaux et classes</li></ul>
+    </li>
+    <li>Module Élèves
+      <ul class="sub-item"><li>Liste des élèves</li><li>Inscrire un élève</li><li>Modifier / Désactiver un élève</li></ul>
+    </li>
+    <li>Module Paiements</li>
+    <li>Module Scan Réfectoire</li>
+    <li>Module Historique des Passages</li>
+    <li>Module Utilisateurs (Admin)</li>
+    <li>Configuration</li>
+    <li>Personnalisation de l'interface (Thèmes)</li>
+    <li>Fenêtre À Propos</li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section">1. Présentation de l'application</h1>
+
+<p><strong>Cantine Connect</strong> est le système de gestion digitale de la restauration scolaire développé par <strong>KLEM Technologies &amp; Services</strong>. Il permet à chaque gestionnaire d'établissement de piloter en temps réel l'inscription des élèves, les paiements Mobile Money, le contrôle d'accès au réfectoire et l'historique des passages — le tout depuis une interface web accessible sur ordinateur et tablette.</p>
+
+<table>
+  <thead><tr><th>Fonctionnalité</th><th>Description rapide</th></tr></thead>
+  <tbody>
+    <tr><td>🏫 Établissements</td><td>Création et gestion des établissements, niveaux et classes</td></tr>
+    <tr><td>👨‍🎓 Élèves</td><td>Inscription, suivi et gestion du statut d'accès à la cantine</td></tr>
+    <tr><td>💳 Paiements</td><td>Suivi des transactions Mobile Money (Orange, MTN, Wave, Moov)</td></tr>
+    <tr><td>📷 Scan Réfectoire</td><td>Validation QR Code en moins d'une seconde</td></tr>
+    <tr><td>📋 Historique</td><td>Consultation filtrée des passages avec export CSV</td></tr>
+    <tr><td>📊 Dashboard</td><td>Statistiques globales et tendances sur 7 jours</td></tr>
+    <tr><td>👥 Utilisateurs</td><td>Gestion des comptes (ADMIN uniquement)</td></tr>
+    <tr><td>⚙️ Configuration</td><td>Paramètres tarifaires et périodes de grâce</td></tr>
+  </tbody>
+</table>
+
+<div class="info">
+  <strong>💡 Accès en ligne</strong>
+  L'application est accessible depuis n'importe quel navigateur moderne (Chrome, Firefox, Edge). Aucune installation n'est requise. Une connexion Internet est nécessaire sauf pour la validation QR Code qui fonctionne en mode hors-ligne (cache 24h).
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">2. Accès et Connexion</h1>
+
+<h2 class="subsection">2.1 Page de connexion</h2>
+
+<p>Ouvrez votre navigateur et accédez à l'URL de l'application fournie par votre administrateur.</p>
+
+<div class="screenshot">
+  <img src="assets/01-login.png" alt="Page de connexion Cantine Connect">
+  <div class="caption">Page de connexion — logo 🍽️, champ email, mot de passe avec affichage, bouton « Se connecter »</div>
+</div>
+
+<ol class="steps">
+  <li>Saisissez votre <strong>adresse email</strong> dans le premier champ.</li>
+  <li>Saisissez votre <strong>mot de passe</strong>. Cliquez sur l'icône 👁️ pour l'afficher temporairement.</li>
+  <li>Cliquez sur le bouton <strong>« Se connecter »</strong>.</li>
+  <li>En cas de succès, vous êtes automatiquement redirigé vers le <strong>Tableau de bord</strong>.</li>
+</ol>
+
+<div class="warning">
+  <strong>⚠️ En cas d'erreur de connexion</strong>
+  Un message rouge s'affiche sous l'en-tête. Vérifiez l'orthographe de votre email et votre mot de passe. Si le problème persiste, contactez votre administrateur système.
+</div>
+
+<h2 class="subsection">2.2 Rôles et droits d'accès</h2>
+
+<table>
+  <thead><tr><th>Rôle</th><th>Accès autorisés</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="badge badge-admin">ADMIN</span></td>
+      <td>Accès complet : tous les modules + Utilisateurs + Configuration</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-gest">GESTIONNAIRE</span></td>
+      <td>Dashboard, Établissements, Élèves, Paiements, Scan, Historique</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-all">CAISSIER</span></td>
+      <td>Paiements et Scan Réfectoire uniquement</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="info">
+  <strong>💡 Votre rôle est affiché</strong>
+  En bas du menu de navigation gauche, une étiquette indique votre rôle actuel (Administrateur, Gestionnaire, Caissier).
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">3. Tableau de Bord (Dashboard)</h1>
+
+<p>Le tableau de bord est la page d'accueil de l'application. Il donne une vue synthétique et en temps réel de l'activité de la cantine.</p>
+
+<div class="screenshot">
+  <img src="assets/02-dashboard.png" alt="Tableau de bord Cantine Connect">
+  <div class="caption">Tableau de bord — 4 cartes KPI, répartition des statuts, graphique tendance 7 jours, derniers passages</div>
+</div>
+
+<h2 class="subsection">3.1 Cartes KPI (indicateurs clés)</h2>
+<table>
+  <thead><tr><th>Indicateur</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>🏫 Établissements</td><td>Nombre d'établissements actifs dans le système</td></tr>
+    <tr><td>👨‍🎓 Élèves actifs</td><td>Total des élèves inscrits et actifs + nb autorisés</td></tr>
+    <tr><td>🍽️ Passages aujourd'hui</td><td>Total des validations du jour (✓ accordés / ✗ refusés)</td></tr>
+    <tr><td>💰 Paiements du mois</td><td>Montant total FCFA encaissé + nombre de transactions</td></tr>
+  </tbody>
+</table>
+
+<h2 class="subsection">3.2 Répartition des statuts</h2>
+<p>Quatre compteurs colorés affichent la répartition des élèves par statut d'accès :</p>
+<ul>
+  <li><strong style="color:#2E7D32">Autorisés</strong> — élèves à jour de paiement</li>
+  <li><strong style="color:#0288D1">Grâce</strong> — élèves en période de grâce (délai accordé)</li>
+  <li><strong style="color:#F57C00">En attente</strong> — paiement non reçu, accès sous conditions</li>
+  <li><strong style="color:#C62828">Suspendus</strong> — accès réfectoire bloqué</li>
+</ul>
+
+<h2 class="subsection">3.3 Graphique — Tendance 7 jours</h2>
+<p>Le graphique en barres empilées montre l'évolution des passages sur les 7 derniers jours. La partie <strong style="color:#2E7D32">verte</strong> représente les passages accordés, la partie <strong style="color:#C62828">rouge</strong> les refus. Survolez une barre pour voir le détail du jour.</p>
+
+<h2 class="subsection">3.4 Actualiser les données</h2>
+<p>Cliquez sur le bouton <strong>↻</strong> (en haut à droite du titre) pour recharger toutes les statistiques en temps réel.</p>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">4. Module Établissements</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> <span class="badge badge-gest">GESTIONNAIRE</span>
+</div>
+
+<h2 class="subsection">4.1 Consulter la liste</h2>
+<p>Cliquez sur <strong>🏫 Établissements</strong> dans le menu de gauche. La liste affiche tous les établissements actifs avec leur nom, adresse, nombre de classes et statut.</p>
+
+<div class="screenshot">
+  <img src="assets/05-etablissements.png" alt="Liste des établissements">
+  <div class="caption">Module Établissements — tableau avec nom, ville, niveaux, classes et statut. Bouton « + Ajouter » en haut.</div>
+</div>
+
+<h2 class="subsection">4.2 Ajouter un établissement</h2>
+<ol class="steps">
+  <li>Cliquez sur le bouton <strong>+ Ajouter un établissement</strong>.</li>
+  <li>Remplissez le formulaire : Nom, Adresse, Ville, Téléphone, Email de contact.</li>
+  <li>Cliquez sur <strong>Enregistrer</strong>.</li>
+</ol>
+
+<h2 class="subsection">4.3 Gérer les niveaux et classes</h2>
+<p>Cliquez sur l'icône <strong>⚙️</strong> sur la ligne d'un établissement pour ouvrir le panneau de gestion de sa structure :</p>
+<ul>
+  <li>Ajouter / renommer / supprimer des <strong>niveaux</strong> (ex : Primaire, Collège, Lycée)</li>
+  <li>Ajouter / renommer / supprimer des <strong>classes</strong> pour chaque niveau (ex : 6ème A, CP1)</li>
+</ul>
+
+<div class="warning">
+  <strong>⚠️ Attention</strong>
+  Supprimer une classe supprime définitivement son affectation. Les élèves déjà affectés devront être réaffectés manuellement.
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">5. Module Élèves</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> <span class="badge badge-gest">GESTIONNAIRE</span>
+</div>
+
+<h2 class="subsection">5.1 Liste des élèves</h2>
+<p>Cliquez sur <strong>👨‍🎓 Élèves</strong> dans le menu. La liste paginée affiche tous les élèves actifs. Utilisez les filtres pour affiner la recherche :</p>
+<ul>
+  <li><strong>Établissement</strong> — filtrer par établissement</li>
+  <li><strong>Classe</strong> — filtrer par classe</li>
+  <li><strong>Statut</strong> — AUTORISÉ / EN ATTENTE / SUSPENDU / GRÂCE</li>
+  <li><strong>Recherche</strong> — nom, prénom ou matricule</li>
+</ul>
+
+<div class="screenshot">
+  <img src="assets/06-eleves-liste.png" alt="Liste des élèves">
+  <div class="caption">Module Élèves — filtres (établissement, classe, statut, recherche), tableau paginé avec actions par ligne</div>
+</div>
+
+<h2 class="subsection">5.2 Inscrire un nouvel élève</h2>
+<p>Cliquez sur <strong>+ Inscrire un élève</strong>. Le formulaire d'inscription est divisé en <strong>3 onglets</strong> pour éviter le défilement :</p>
+
+<table>
+  <thead><tr><th>Onglet</th><th>Champs</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>1 — Général</strong></td>
+      <td>Nom, Prénom, Date de naissance, Matricule (auto-généré), Sexe, Photo (optionnelle)</td>
+    </tr>
+    <tr>
+      <td><strong>2 — Cantine / Affectation</strong></td>
+      <td>Établissement, Niveau, Classe, Statut d'accès initial, Tarif mensuel</td>
+    </tr>
+    <tr>
+      <td><strong>3 — Contacts / Allergies</strong></td>
+      <td>Nom et téléphone du parent/tuteur, email, allergies alimentaires, régime spécial</td>
+    </tr>
+  </tbody>
+</table>
+
+<ol class="steps">
+  <li>Remplissez les champs de l'onglet <strong>Général</strong>, puis cliquez sur suivant ou l'onglet suivant.</li>
+  <li>Remplissez l'onglet <strong>Cantine / Affectation</strong> — choisissez l'établissement, le niveau et la classe.</li>
+  <li>Remplissez l'onglet <strong>Contacts / Allergies</strong> avec les coordonnées du parent.</li>
+  <li>Cliquez sur <strong>Enregistrer</strong>. Un QR Code unique est automatiquement généré.</li>
+</ol>
+
+<div class="screenshot">
+  <img src="assets/07-eleve-form-onglet1.png" alt="Formulaire élève — Onglet Général">
+  <div class="caption">Formulaire Onglet 1 — Général : Nom, Prénom, Date de naissance, Matricule, Sexe</div>
+</div>
+<div class="screenshot">
+  <img src="assets/08-eleve-form-onglet2.png" alt="Formulaire élève — Onglet Cantine">
+  <div class="caption">Formulaire Onglet 2 — Cantine / Affectation : Établissement, Niveau, Classe, Statut d'accès</div>
+</div>
+<div class="screenshot">
+  <img src="assets/09-eleve-form-onglet3.png" alt="Formulaire élève — Onglet Contacts">
+  <div class="caption">Formulaire Onglet 3 — Contacts / Allergies : Nom tuteur, Téléphone, Email, Allergies</div>
+</div>
+
+<div class="success">
+  <strong>✅ QR Code automatique</strong>
+  À la création, chaque élève reçoit un QR Code UUID unique. Ce code est imprimable depuis la fiche élève et sert de badge d'accès au réfectoire.
+</div>
+
+<h2 class="subsection">5.3 Modifier un élève</h2>
+<p>Cliquez sur l'icône ✏️ sur la ligne de l'élève. Le même formulaire à 3 onglets s'ouvre pré-rempli. Modifiez les champs souhaités et cliquez sur <strong>Enregistrer</strong>.</p>
+
+<h2 class="subsection">5.4 Changer le statut d'accès</h2>
+<p>Le statut d'accès d'un élève est mis à jour automatiquement après la confirmation d'un paiement. Il peut aussi être modifié manuellement depuis la fiche élève (onglet Cantine) :</p>
+<ul>
+  <li><strong style="color:#2E7D32">AUTORISÉ</strong> — accès réfectoire pleinement accordé</li>
+  <li><strong style="color:#0288D1">GRÂCE</strong> — accès temporaire accordé malgré impayé (délai paramétrable)</li>
+  <li><strong style="color:#F57C00">EN ATTENTE</strong> — paiement non reçu, alerte envoyée au parent</li>
+  <li><strong style="color:#C62828">SUSPENDU</strong> — accès bloqué au réfectoire</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">6. Module Paiements</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> <span class="badge badge-gest">GESTIONNAIRE</span> <span class="badge badge-all">CAISSIER</span>
+</div>
+
+<p>Ce module permet de consulter toutes les transactions de paiement Mobile Money reçues pour les élèves inscrits.</p>
+
+<div class="screenshot">
+  <img src="assets/10-paiements.png" alt="Module Paiements">
+  <div class="caption">Module Paiements — transactions Mobile Money avec date, référence, élève, opérateur, montant FCFA et statut</div>
+</div>
+
+<h2 class="subsection">6.1 Statuts des transactions</h2>
+<table>
+  <thead><tr><th>Statut</th><th>Signification</th></tr></thead>
+  <tbody>
+    <tr><td><strong style="color:#F57C00">EN ATTENTE</strong></td><td>Paiement initié, confirmation opérateur non reçue</td></tr>
+    <tr><td><strong style="color:#2E7D32">ACCEPTÉ</strong></td><td>Paiement confirmé — statut élève mis à jour automatiquement</td></tr>
+    <tr><td><strong style="color:#C62828">REFUSÉ</strong></td><td>Transaction rejetée par l'opérateur Mobile Money</td></tr>
+    <tr><td><strong style="color:#546E7A">ANNULÉ</strong></td><td>Transaction annulée manuellement par un gestionnaire</td></tr>
+  </tbody>
+</table>
+
+<div class="info">
+  <strong>💡 Mise à jour automatique</strong>
+  Les paiements passent en statut ACCEPTÉ automatiquement via les webhooks CinetPay / PayDunya. Aucune action manuelle n'est requise en fonctionnement normal.
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">7. Module Scan Réfectoire</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> <span class="badge badge-gest">GESTIONNAIRE</span> <span class="badge badge-all">CAISSIER</span>
+</div>
+
+<p>Ce module permet de valider l'accès au réfectoire en scannant le QR Code du badge élève. La validation s'effectue en <strong>moins d'une seconde</strong>.</p>
+
+<div class="screenshot">
+  <img src="assets/11-scan-refectoire.png" alt="Interface de scan réfectoire">
+  <div class="caption">Scan Réfectoire — zone caméra QR Code à gauche, résultat du dernier scan à droite (ACCORDÉ/REFUSÉ)</div>
+</div>
+
+<h2 class="subsection">7.1 Effectuer un scan</h2>
+<ol class="steps">
+  <li>Cliquez sur <strong>📷 Scan Réfectoire</strong> dans le menu.</li>
+  <li>Autorisez l'accès à la caméra si demandé par le navigateur.</li>
+  <li>Présentez le badge QR Code de l'élève devant la caméra.</li>
+  <li>Le résultat s'affiche immédiatement :<br>
+    &nbsp;&nbsp;✅ <strong style="color:#2E7D32">ACCORDÉ</strong> — l'élève peut entrer<br>
+    &nbsp;&nbsp;❌ <strong style="color:#C62828">REFUSÉ</strong> — motif affiché (statut suspendu, déjà passé, etc.)
+  </li>
+</ol>
+
+<h2 class="subsection">7.2 Motifs de refus possibles</h2>
+<table>
+  <thead><tr><th>Motif</th><th>Action recommandée</th></tr></thead>
+  <tbody>
+    <tr><td>STATUT_SUSPENDU</td><td>Rediriger vers le gestionnaire pour régularisation paiement</td></tr>
+    <tr><td>DEJA_PASSE</td><td>L'élève a déjà utilisé son accès pour ce service (anti-passback)</td></tr>
+    <tr><td>QR_CODE_INCONNU</td><td>Badge endommagé ou non enregistré — contacter l'administration</td></tr>
+    <tr><td>ELEVE_INACTIF</td><td>Élève désactivé du système — contacter l'administration</td></tr>
+  </tbody>
+</table>
+
+<h2 class="subsection">7.3 Mode hors-ligne</h2>
+<div class="success">
+  <strong>✅ Fonctionnement sans connexion Internet</strong>
+  Le système maintient un cache local valable 24h mis à jour à chaque connexion. En cas de coupure réseau, les scans continuent de fonctionner normalement. Les passages sont synchronisés automatiquement au retour de la connexion.
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">8. Module Historique des Passages</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> <span class="badge badge-gest">GESTIONNAIRE</span>
+</div>
+
+<p>Ce module permet de consulter l'historique complet de tous les passages enregistrés au réfectoire, avec des filtres avancés.</p>
+
+<div class="screenshot">
+  <img src="assets/12-historique.png" alt="Historique des passages">
+  <div class="caption">Historique — filtres (période, établissement, résultat), barre récapitulative Total/Accordés/Refusés, export CSV</div>
+</div>
+
+<h2 class="subsection">8.1 Filtrer les passages</h2>
+<ul>
+  <li><strong>Période</strong> — sélectionnez une date de début et une date de fin</li>
+  <li><strong>Établissement</strong> — filtrer sur un établissement spécifique</li>
+  <li><strong>Résultat</strong> — Tous / Accordés seulement / Refusés seulement</li>
+  <li><strong>Recherche</strong> — tapez le nom, prénom ou matricule de l'élève</li>
+</ul>
+
+<h2 class="subsection">8.2 Exporter en CSV</h2>
+<ol class="steps">
+  <li>Appliquez les filtres souhaités.</li>
+  <li>Cliquez sur le bouton <strong>📥 Exporter CSV</strong>.</li>
+  <li>Le fichier se télécharge automatiquement. Ouvrez-le dans Excel ou Google Sheets.</li>
+</ol>
+<div class="info">
+  <strong>💡 Encodage UTF-8</strong>
+  Le fichier CSV est encodé en UTF-8 avec BOM pour une compatibilité optimale avec Microsoft Excel (les accents s'affichent correctement sans manipulation).
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">9. Module Utilisateurs (Administrateur)</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> uniquement
+</div>
+
+<p>Ce module permet à l'administrateur de gérer les comptes d'accès à l'application.</p>
+
+<div class="screenshot">
+  <img src="assets/13-utilisateurs.png" alt="Gestion des utilisateurs">
+  <div class="caption">Module Utilisateurs — tableau avec nom, email, rôle et statut. Actions : modifier, activer/désactiver, supprimer</div>
+</div>
+
+<h2 class="subsection">9.1 Créer un utilisateur</h2>
+<ol class="steps">
+  <li>Cliquez sur <strong>+ Ajouter un utilisateur</strong>.</li>
+  <li>Remplissez : Prénom, Nom, Email, Mot de passe (min. 8 caractères), Rôle.</li>
+  <li>Cliquez sur <strong>Créer</strong>.</li>
+</ol>
+
+<h2 class="subsection">9.2 Modifier un utilisateur</h2>
+<p>Cliquez sur l'icône ✏️. Vous pouvez modifier le nom, prénom, email et optionnellement définir un nouveau mot de passe (laissez vide pour le conserver).</p>
+
+<h2 class="subsection">9.3 Désactiver / Réactiver</h2>
+<p>Cliquez sur le bouton de bascule pour désactiver temporairement un compte (l'utilisateur ne peut plus se connecter) ou le réactiver.</p>
+
+<h2 class="subsection">9.4 Supprimer définitivement</h2>
+<p>Cliquez sur l'icône 🗑️ rouge. Une fenêtre de confirmation s'affiche. Cliquez sur <strong>Supprimer définitivement</strong> pour confirmer.</p>
+<div class="warning">
+  <strong>⚠️ Action irréversible</strong>
+  La suppression définitive est irréversible. Le système protège automatiquement le dernier compte ADMIN — il est impossible de supprimer le seul administrateur restant.
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">10. Configuration</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> <span class="badge badge-admin">ADMIN</span> uniquement
+</div>
+
+<p>Ce module permet de configurer les paramètres globaux de la cantine : tarifs, périodes de grâce, et autres paramètres opérationnels. Toute modification est prise en compte immédiatement.</p>
+
+<div class="screenshot">
+  <img src="assets/14-configuration.png" alt="Page de configuration">
+  <div class="caption">Configuration — paramètres globaux : tarif mensuel (FCFA), durée période de grâce, activation scanner caméra</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">11. Personnalisation de l'Interface (Thèmes)</h1>
+
+<div class="info">
+  <strong>👤 Rôles concernés :</strong> Tous les utilisateurs
+</div>
+
+<p>Cantine Connect propose <strong>3 thèmes visuels</strong> que vous pouvez changer à tout moment. Votre choix est mémorisé automatiquement dans votre navigateur.</p>
+
+<h2 class="subsection">Comment changer de thème</h2>
+<ol class="steps">
+  <li>Cliquez sur l'icône <strong>🎨</strong> (palette) dans la barre de navigation en haut à droite.</li>
+  <li>Un panneau s'ouvre avec les 3 thèmes disponibles.</li>
+  <li>Cliquez sur le thème souhaité — le changement est immédiat.</li>
+</ol>
+
+<table>
+  <thead><tr><th>Thème</th><th>Description</th><th>Idéal pour</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>🏢 <strong>Corporatif</strong></td>
+      <td>Dark mode — fond marine profond, texte clair, interface sobre</td>
+      <td>Travail en bureau, lumière tamisée</td>
+    </tr>
+    <tr>
+      <td>✨ <strong>Moderne</strong></td>
+      <td>Fond blanc, gradients colorés, effets premium (défaut)</td>
+      <td>Présentations, usage quotidien lumineux</td>
+    </tr>
+    <tr>
+      <td>🇨🇮 <strong>École Ivoirienne</strong></td>
+      <td>Orange primaire, vert secondaire, fond ivoire</td>
+      <td>Affichage public, écrans d'entrée</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="screenshot">
+  <img src="assets/03-theme-switcher.png" alt="Sélecteur de thème">
+  <div class="caption">Panneau de sélection des thèmes — accessible via l'icône 🎨 palette dans la barre du haut</div>
+</div>
+<div class="screenshot">
+  <img src="assets/04-dashboard-corporate.png" alt="Thème Corporatif — dark mode">
+  <div class="caption">Thème 🏢 Corporatif — dark mode, fond marine profond #0F172A, texte clair, interface sobre et premium</div>
+</div>
+<div class="screenshot">
+  <img src="assets/16-dashboard-ivoirien.png" alt="Thème École Ivoirienne">
+  <div class="caption">Thème 🇨🇮 École Ivoirienne — couleurs orange (#E65100), vert (#2E7D32) et fond ivoire</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<h1 class="section page-break">12. Fenêtre À Propos</h1>
+
+<p>Pour consulter les informations de version et les contacts KLEM Technologies &amp; Services :</p>
+<ol class="steps">
+  <li>En bas du menu de navigation gauche, cliquez sur l'icône <strong>ℹ️ À Propos</strong>.</li>
+  <li>Une fenêtre s'ouvre avec la version de l'application, les coordonnées et le copyright.</li>
+</ol>
+
+<div class="screenshot">
+  <img src="assets/15-apropos.png" alt="Fenêtre À Propos">
+  <div class="caption">Fenêtre À Propos — version 1.0.0-beta, coordonnées KLEM Technologies &amp; Services, copyright 2026</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="footer">
+  <p><strong>Cantine Connect — Manuel Utilisateur v1.0.0-beta</strong></p>
+  <p>© 2026 KLEM Technologies &amp; Services &nbsp;|&nbsp; 📞 +225 07 58 89 24 77 &nbsp;|&nbsp; 📧 infos@klemtech.net &nbsp;|&nbsp; 🌐 www.klemtech.net</p>
+  <p style="margin-top:8px; font-style:italic;">Document confidentiel — Reproduction interdite sans autorisation</p>
+</div>
+
+</div><!-- end .content -->
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cahier de Recette — Cantine Connect v1.0.0-beta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 10.5pt; color: #1a1a2e; background: #fff; }
+  .page-break { page-break-before: always; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(160deg, #0D47A1 0%, #1565C0 50%, #E65100 100%);
+    color: white; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 60px 40px;
+  }
+  .cover .logo { font-size: 64px; margin-bottom: 24px; }
+  .cover h1 { font-size: 30pt; font-weight: 800; margin-bottom: 8px; }
+  .cover h2 { font-size: 18pt; font-weight: 400; opacity: 0.85; margin-bottom: 12px; }
+  .cover h3 { font-size: 13pt; font-weight: 400; opacity: 0.75; margin-bottom: 40px; }
+  .cover .version { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px; padding: 6px 20px; font-size: 11pt; margin-bottom: 60px; }
+  .cover .meta { font-size: 10pt; opacity: 0.75; line-height: 1.8; }
+  .cover .company { font-size: 13pt; font-weight: 700; margin-bottom: 4px; }
+
+  /* LAYOUT */
+  .content { max-width: 900px; margin: 0 auto; padding: 40px 50px; }
+
+  h1.section { font-size: 20pt; color: #1565C0; border-bottom: 3px solid #1565C0;
+    padding-bottom: 8px; margin: 40px 0 20px; }
+  h2.subsection { font-size: 13pt; color: #0D47A1; margin: 24px 0 10px; font-weight: 700; }
+
+  /* INFO BOXES */
+  .info { background: #E3F2FD; border-left: 4px solid #1565C0; padding: 10px 14px;
+    border-radius: 0 6px 6px 0; margin: 14px 0; font-size: 10pt; }
+  .warning { background: #FFF3E0; border-left: 4px solid #E65100; padding: 10px 14px;
+    border-radius: 0 6px 6px 0; margin: 14px 0; font-size: 10pt; }
+  .info strong, .warning strong { display: block; margin-bottom: 2px; }
+
+  /* RECETTE TABLE */
+  .recette-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 10pt; }
+  .recette-table thead { background: #1565C0; color: white; }
+  .recette-table thead th { padding: 9px 12px; text-align: left; font-weight: 700; }
+  .recette-table tbody tr:nth-child(even) { background: #F5F7FF; }
+  .recette-table tbody td { padding: 8px 12px; border-bottom: 1px solid #E0E7EF; vertical-align: top; }
+  .recette-table .tc-id { font-weight: 700; color: #1565C0; white-space: nowrap; }
+  .recette-table .result-ok { color: #2E7D32; font-weight: 700; }
+  .recette-table .result-ko { color: #C62828; font-weight: 700; }
+  .recette-table .result-cell { width: 80px; text-align: center; }
+  .recette-table .date-cell { width: 100px; white-space: nowrap; }
+
+  /* SUMMARY TABLE */
+  .summary-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .summary-table th, .summary-table td { padding: 10px 14px; border: 1px solid #E0E7EF; }
+  .summary-table thead { background: #0D47A1; color: white; }
+  .summary-table tbody tr:nth-child(even) { background: #F5F7FF; }
+
+  /* SIGN BLOCK */
+  .sign-block { display: flex; gap: 40px; margin-top: 30px; flex-wrap: wrap; }
+  .sign-box { flex: 1; min-width: 200px; border: 1px solid #B0BEC5; border-radius: 8px; padding: 16px; }
+  .sign-box h4 { font-size: 10pt; color: #546E7A; margin-bottom: 40px; }
+  .sign-box .sign-line { border-top: 1px solid #546E7A; margin-top: 10px; padding-top: 6px;
+    font-size: 9pt; color: #90A4AE; }
+
+  /* PRIORITY BADGES */
+  .prio { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 9pt; font-weight: 700; }
+  .prio-haute { background: #FFCDD2; color: #C62828; }
+  .prio-moyenne { background: #FFF3E0; color: #E65100; }
+  .prio-basse { background: #E8F5E9; color: #2E7D32; }
+
+  /* RESULT CHECKBOXES */
+  .check { display: inline-block; width: 18px; height: 18px; border: 2px solid #90A4AE;
+    border-radius: 3px; vertical-align: middle; }
+
+  p { line-height: 1.7; margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; line-height: 1.9; }
+
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid #E0E7EF;
+    text-align: center; font-size: 9pt; color: #90A4AE; }
+
+  @media print {
+    .cover { min-height: 100vh; }
+    h1.section { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUVERTURE -->
+<div class="cover">
+  <div class="logo">📋</div>
+  <h1>Cahier de Recette</h1>
+  <h2>Cantine Connect</h2>
+  <h3>Tests d'acceptation — MVP v1.0.0-beta</h3>
+  <div class="version">Version 1.0.0-beta — Juillet 2026</div>
+  <div class="company">KLEM Technologies &amp; Services</div>
+  <div class="meta">
+    Responsable recette : Yacouba SYLLA<br>
+    📞 +225 07 58 89 24 77 &nbsp;|&nbsp; 📧 infos@klemtech.net<br><br>
+    <em>Document de validation — Usage interne</em>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- FICHE DE SUIVI -->
+<h1 class="section">Fiche de Suivi du Document</h1>
+
+<table class="summary-table">
+  <thead><tr><th>Attribut</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>Projet</td><td>Cantine Connect — Système de gestion de cantine scolaire multi-établissements</td></tr>
+    <tr><td>Client</td><td>KLEM Technologies &amp; Services</td></tr>
+    <tr><td>Version testée</td><td>1.0.0-beta</td></tr>
+    <tr><td>Date de rédaction</td><td>Juillet 2026</td></tr>
+    <tr><td>Rédigé par</td><td>KLEM Technologies &amp; Services — Équipe QA</td></tr>
+    <tr><td>Environnement de test</td><td>Production (Vercel + Railway)</td></tr>
+    <tr><td>Navigateur cible</td><td>Google Chrome 120+, Firefox 121+, Edge 120+</td></tr>
+  </tbody>
+</table>
+
+<!-- TABLEAU DE BORD RECETTE -->
+<h1 class="section page-break">Tableau de Bord de la Recette</h1>
+
+<table class="summary-table">
+  <thead><tr><th>Module</th><th>Nb cas de test</th><th>Validés</th><th>Échoués</th><th>Taux</th></tr></thead>
+  <tbody>
+    <tr><td>Authentification</td><td>4</td><td style="color:#2E7D32">___</td><td style="color:#C62828">___</td><td>___%</td></tr>
+    <tr><td>Dashboard</td><td>5</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Établissements</td><td>6</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Élèves</td><td>8</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Paiements</td><td>4</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Scan Réfectoire</td><td>6</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Historique</td><td>5</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Utilisateurs</td><td>6</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Configuration</td><td>2</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr><td>Thèmes</td><td>3</td><td>___</td><td>___</td><td>___%</td></tr>
+    <tr style="background:#EEF2F8; font-weight:700"><td>TOTAL</td><td>49</td><td>___</td><td>___</td><td>___%</td></tr>
+  </tbody>
+</table>
+
+<div class="sign-block">
+  <div class="sign-box">
+    <h4>Responsable Recette</h4>
+    <div class="sign-line">Nom : ___________________________</div>
+    <div class="sign-line">Date : ___________________________</div>
+    <div class="sign-line">Signature : </div>
+  </div>
+  <div class="sign-box">
+    <h4>Validation Client / MOA</h4>
+    <div class="sign-line">Nom : ___________________________</div>
+    <div class="sign-line">Date : ___________________________</div>
+    <div class="sign-line">Signature : </div>
+  </div>
+</div>
+
+<!-- MODULE 1 : AUTH -->
+<h1 class="section page-break">Module 1 — Authentification</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">AUTH-01</td>
+      <td>Connexion valide ADMIN</td>
+      <td>Compte admin@cantine.connect / Admin123! existant</td>
+      <td>1. Ouvrir la page de connexion<br>2. Saisir email + mdp valides<br>3. Cliquer Se connecter</td>
+      <td>Redirection vers le Dashboard. Menu gauche complet visible (y compris Utilisateurs et Configuration).</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">AUTH-02</td>
+      <td>Connexion mot de passe incorrect</td>
+      <td>Compte admin existant</td>
+      <td>1. Saisir email valide + mdp incorrect<br>2. Cliquer Se connecter</td>
+      <td>Message d'erreur rouge affiché. Aucune redirection. Champs conservés.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">AUTH-03</td>
+      <td>Champs vides</td>
+      <td>Page de connexion ouverte</td>
+      <td>1. Laisser tous les champs vides<br>2. Cliquer Se connecter</td>
+      <td>Message d'erreur « Remplissez tous les champs ». Aucun appel API.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">AUTH-04</td>
+      <td>Déconnexion</td>
+      <td>Utilisateur connecté</td>
+      <td>1. Cliquer sur l'icône 🚪 Déconnexion en haut à droite</td>
+      <td>Redirection vers la page de connexion. Token supprimé. Accès à /dashboard redirigé vers /login.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 2 : DASHBOARD -->
+<h1 class="section page-break">Module 2 — Tableau de Bord</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">DASH-01</td>
+      <td>Chargement des KPIs</td>
+      <td>Utilisateur connecté, au moins 1 établissement + 1 élève</td>
+      <td>1. Naviguer vers Dashboard</td>
+      <td>4 cartes KPI affichent des valeurs numériques (pas de 0 figés). Skeletons disparaissent en &lt; 3s.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">DASH-02</td>
+      <td>Répartition statuts cohérente</td>
+      <td>Élèves avec différents statuts en base</td>
+      <td>1. Vérifier les 4 chips de statut</td>
+      <td>Autorisés + Grâce + En attente + Suspendus = Total élèves actifs.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">DASH-03</td>
+      <td>Graphique tendance 7 jours</td>
+      <td>Des passages existent dans la semaine</td>
+      <td>1. Observer le graphique<br>2. Survoler une barre</td>
+      <td>Barres empilées visibles. Tooltip affiche le détail (jour, accordés, refusés).</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">DASH-04</td>
+      <td>Paiements du mois</td>
+      <td>Au moins 1 paiement ACCEPTÉ ce mois</td>
+      <td>1. Vérifier le panneau Paiements</td>
+      <td>Montant FCFA &gt; 0, nombre de transactions correct, paiements en attente cohérent.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">DASH-05</td>
+      <td>Bouton Actualiser</td>
+      <td>Dashboard affiché</td>
+      <td>1. Cliquer sur ↻ (refresh)</td>
+      <td>Skeletons réapparaissent brièvement, puis données rechargées. Aucune erreur.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 3 : ÉTABLISSEMENTS -->
+<h1 class="section page-break">Module 3 — Établissements</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">ETB-01</td>
+      <td>Liste des établissements</td>
+      <td>Au moins 1 établissement en base</td>
+      <td>1. Cliquer sur Établissements</td>
+      <td>Tableau affiché avec au moins 1 ligne. Colonnes : Nom, Localisation, Classes, Statut.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ETB-02</td>
+      <td>Création établissement</td>
+      <td>Utilisateur ADMIN connecté</td>
+      <td>1. Cliquer + Ajouter<br>2. Remplir Nom, Adresse, Ville<br>3. Cliquer Enregistrer</td>
+      <td>Nouvel établissement apparaît dans la liste. Toast de confirmation affiché.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ETB-03</td>
+      <td>Validation champs obligatoires</td>
+      <td>Dialog de création ouverte</td>
+      <td>1. Laisser le champ Nom vide<br>2. Cliquer Enregistrer</td>
+      <td>Message d'erreur de validation. Aucun enregistrement en base.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ETB-04</td>
+      <td>Ajout niveau</td>
+      <td>Établissement existant</td>
+      <td>1. Cliquer ⚙️ sur l'établissement<br>2. Ajouter un niveau (ex: Primaire)<br>3. Enregistrer</td>
+      <td>Niveau visible dans la structure de l'établissement.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ETB-05</td>
+      <td>Ajout classe</td>
+      <td>Niveau existant</td>
+      <td>1. Dans la gestion structure, ajouter une classe (ex: 6ème A)</td>
+      <td>Classe visible sous le niveau concerné. Disponible dans le formulaire élève.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ETB-06</td>
+      <td>Modification établissement</td>
+      <td>Établissement existant</td>
+      <td>1. Cliquer ✏️ modifier<br>2. Changer le nom<br>3. Enregistrer</td>
+      <td>Nom mis à jour dans la liste. Modification visible immédiatement.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 4 : ÉLÈVES -->
+<h1 class="section page-break">Module 4 — Élèves</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">ELV-01</td>
+      <td>Inscription élève complet</td>
+      <td>Établissement + classe existants</td>
+      <td>1. Cliquer + Inscrire<br>2. Remplir les 3 onglets<br>3. Enregistrer</td>
+      <td>Élève créé avec statut EN_ATTENTE_PAIEMENT. QR Code UUID généré. Apparaît dans la liste.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-02</td>
+      <td>Formulaire 3 onglets — navigation</td>
+      <td>Dialog d'inscription ouverte</td>
+      <td>1. Cliquer sur chaque onglet (Général, Cantine, Contacts)</td>
+      <td>Navigation fluide entre onglets. Pas de défilement vertical. Contenu adapté à l'écran.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-03</td>
+      <td>Matricule unique</td>
+      <td>Élève avec matricule X existant</td>
+      <td>1. Créer un 2ème élève avec le même matricule X</td>
+      <td>Erreur 409 Conflict retournée. Message explicite affiché. Aucun doublon créé.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-04</td>
+      <td>Filtres — par établissement</td>
+      <td>Élèves dans plusieurs établissements</td>
+      <td>1. Sélectionner un établissement dans le filtre</td>
+      <td>Seuls les élèves de cet établissement sont affichés. Compteur total mis à jour.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-05</td>
+      <td>Filtres — recherche texte</td>
+      <td>Élèves existants avec noms variés</td>
+      <td>1. Saisir un fragment de nom dans le champ Recherche</td>
+      <td>Liste filtrée en temps réel (après 3+ caractères ou validation). Résultats cohérents.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-06</td>
+      <td>Pagination</td>
+      <td>Plus de 20 élèves en base</td>
+      <td>1. Observer la liste<br>2. Cliquer sur page suivante</td>
+      <td>Pagination affichée. Navigation entre pages fonctionnelle. Performance acceptable (&lt; 2s).</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-07</td>
+      <td>Modification élève</td>
+      <td>Élève existant</td>
+      <td>1. Cliquer ✏️<br>2. Modifier le prénom<br>3. Enregistrer</td>
+      <td>Modification persistée. Nouveau prénom visible dans la liste. Aucun autre champ altéré.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">ELV-08</td>
+      <td>Désactivation élève</td>
+      <td>Élève actif existant</td>
+      <td>1. Cliquer sur Désactiver<br>2. Confirmer</td>
+      <td>Élève n'apparaît plus dans la liste active. Statut basculé à inactif. QR Code invalide pour scan.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 5 : PAIEMENTS -->
+<h1 class="section page-break">Module 5 — Paiements</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">PAI-01</td>
+      <td>Liste des transactions</td>
+      <td>Au moins 1 transaction en base</td>
+      <td>1. Naviguer vers Paiements</td>
+      <td>Tableau affiché avec : Date, Référence, Élève, Opérateur, Montant, Statut. Paginator visible.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">PAI-02</td>
+      <td>Filtre par statut</td>
+      <td>Transactions avec statuts variés</td>
+      <td>1. Sélectionner ACCEPTÉ dans le filtre Statut</td>
+      <td>Seules les transactions ACCEPTÉES affichées.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">PAI-03</td>
+      <td>Webhook paiement accepté</td>
+      <td>Environnement de test CinetPay / PayDunya</td>
+      <td>1. Simuler un webhook ACCEPTÉ pour un élève SUSPENDU</td>
+      <td>Transaction passe en ACCEPTÉ. Statut de l'élève basculé en AUTORISÉ automatiquement.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">PAI-04</td>
+      <td>Filtre par élève</td>
+      <td>Plusieurs élèves avec transactions</td>
+      <td>1. Saisir le nom d'un élève dans le filtre</td>
+      <td>Seules les transactions de cet élève affichées.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 6 : SCAN -->
+<h1 class="section page-break">Module 6 — Scan Réfectoire</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">SCN-01</td>
+      <td>Scan élève AUTORISÉ</td>
+      <td>Élève avec statut AUTORISÉ, QR Code disponible</td>
+      <td>1. Ouvrir Scan Réfectoire<br>2. Scanner le QR Code</td>
+      <td>Résultat ACCORDÉ (vert) en &lt; 1 seconde. Nom + classe affichés.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">SCN-02</td>
+      <td>Scan élève SUSPENDU</td>
+      <td>Élève avec statut SUSPENDU</td>
+      <td>1. Scanner le QR Code d'un élève suspendu</td>
+      <td>Résultat REFUSÉ (rouge). Motif STATUT_SUSPENDU affiché.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">SCN-03</td>
+      <td>Anti-passback (double passage)</td>
+      <td>Élève AUTORISÉ ayant déjà été accordé aujourd'hui</td>
+      <td>1. Scanner le même QR Code une 2ème fois le même jour</td>
+      <td>Résultat REFUSÉ. Motif DEJA_PASSE affiché.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">SCN-04</td>
+      <td>Scan QR Code inconnu</td>
+      <td>QR Code non enregistré en base</td>
+      <td>1. Scanner un QR Code inexistant</td>
+      <td>Résultat REFUSÉ. Motif QR_CODE_INCONNU affiché.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">SCN-05</td>
+      <td>Mode hors-ligne</td>
+      <td>Cache local chargé (connexion établie au préalable)</td>
+      <td>1. Désactiver la connexion réseau<br>2. Scanner le QR Code d'un élève AUTORISÉ</td>
+      <td>Résultat ACCORDÉ malgré l'absence de réseau (cache 24h actif).</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">SCN-06</td>
+      <td>Performance &lt; 1 seconde</td>
+      <td>Connexion réseau normale</td>
+      <td>1. Scanner 5 QR Codes successifs et chronométrer</td>
+      <td>Chaque validation retourne un résultat en moins d'une seconde.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 7 : HISTORIQUE -->
+<h1 class="section page-break">Module 7 — Historique des Passages</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">HIS-01</td>
+      <td>Affichage par défaut (aujourd'hui)</td>
+      <td>Des passages ont été enregistrés aujourd'hui</td>
+      <td>1. Naviguer vers Historique</td>
+      <td>Passages du jour affichés par défaut. Date début = date fin = aujourd'hui.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">HIS-02</td>
+      <td>Filtre par période</td>
+      <td>Passages sur plusieurs jours</td>
+      <td>1. Changer la date début à J-7<br>2. Laisser date fin à aujourd'hui</td>
+      <td>Passages des 7 derniers jours affichés. Compteurs Total/Accordés/Refusés mis à jour.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">HIS-03</td>
+      <td>Filtre par résultat</td>
+      <td>Passages accordés et refusés en base</td>
+      <td>1. Sélectionner « Refusés » dans le filtre Résultat</td>
+      <td>Seuls les passages REFUSÉ affichés. Colonne Motif renseignée.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">HIS-04</td>
+      <td>Recherche par élève</td>
+      <td>Passages de plusieurs élèves</td>
+      <td>1. Saisir un nom ou matricule dans le champ Recherche</td>
+      <td>Résultats filtrés sur l'élève concerné uniquement.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">HIS-05</td>
+      <td>Export CSV</td>
+      <td>Des passages sont affichés</td>
+      <td>1. Appliquer un filtre<br>2. Cliquer Exporter CSV</td>
+      <td>Fichier .csv téléchargé. Ouvrable dans Excel avec accents corrects. Colonnes : Date, Heure, Matricule, Élève, Classe, Établissement, Résultat, Motif.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULE 8 : UTILISATEURS -->
+<h1 class="section page-break">Module 8 — Utilisateurs</h1>
+
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">USR-01</td>
+      <td>Création utilisateur</td>
+      <td>Connecté ADMIN</td>
+      <td>1. + Ajouter<br>2. Saisir Prénom, Nom, Email, Mdp, Rôle GESTIONNAIRE<br>3. Créer</td>
+      <td>Utilisateur créé et visible dans la liste. Connexion possible avec ces identifiants.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">USR-02</td>
+      <td>Email dupliqué</td>
+      <td>Email X déjà utilisé</td>
+      <td>1. Créer un utilisateur avec l'email X</td>
+      <td>Erreur 409 Conflict. Message clair affiché. Aucun doublon.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">USR-03</td>
+      <td>Modification utilisateur</td>
+      <td>Utilisateur existant (pas soi-même)</td>
+      <td>1. Cliquer ✏️<br>2. Changer le prénom<br>3. Enregistrer</td>
+      <td>Modification persistée. Nouveau prénom visible.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">USR-04</td>
+      <td>Désactivation utilisateur</td>
+      <td>Utilisateur actif (pas soi-même)</td>
+      <td>1. Cliquer Désactiver</td>
+      <td>Statut basculé à Inactif. L'utilisateur ne peut plus se connecter.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">USR-05</td>
+      <td>Suppression définitive</td>
+      <td>Utilisateur existant (pas soi-même, pas dernier ADMIN)</td>
+      <td>1. Cliquer 🗑️<br>2. Confirmer dans le dialog</td>
+      <td>Utilisateur supprimé de la liste. Connexion impossible avec ses identifiants.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">USR-06</td>
+      <td>Protection dernier ADMIN</td>
+      <td>Un seul compte ADMIN en base</td>
+      <td>1. Tenter de supprimer le dernier ADMIN</td>
+      <td>Erreur 409 Conflict. Message « Impossible de supprimer le dernier administrateur ». Aucune suppression.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MODULES 9 & 10 -->
+<h1 class="section page-break">Modules 9 &amp; 10 — Configuration &amp; Thèmes</h1>
+
+<h2 class="subsection">Module 9 — Configuration</h2>
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">CFG-01</td>
+      <td>Modifier tarif mensuel</td>
+      <td>Connecté ADMIN</td>
+      <td>1. Aller dans Configuration<br>2. Modifier le tarif mensuel<br>3. Enregistrer</td>
+      <td>Nouveau tarif persisté. Affiché lors de la création d'un prochain élève.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">CFG-02</td>
+      <td>Modifier période de grâce</td>
+      <td>Connecté ADMIN</td>
+      <td>1. Modifier la durée de grâce (ex: 7 jours)<br>2. Enregistrer</td>
+      <td>Valeur persistée. Visible au rechargement de la page.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 class="subsection">Module 10 — Thèmes</h2>
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID</th><th style="width:140px">Cas de test</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th class="result-cell">✓/✗</th><th class="date-cell">Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc-id">THM-01</td>
+      <td>Changement thème Corporatif</td>
+      <td>Thème Moderne actif</td>
+      <td>1. Cliquer 🎨<br>2. Sélectionner Corporatif</td>
+      <td>Interface passe en dark mode (fond marine). AppBar sombre. Texte clair.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">THM-02</td>
+      <td>Changement thème École Ivoirienne</td>
+      <td>N'importe quel thème actif</td>
+      <td>1. Cliquer 🎨<br>2. Sélectionner École Ivoirienne</td>
+      <td>Interface avec AppBar orange, fonds ivoire, accents verts.</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="tc-id">THM-03</td>
+      <td>Persistance après rechargement</td>
+      <td>Thème École Ivoirienne actif</td>
+      <td>1. Fermer et rouvrir le navigateur (ou F5)</td>
+      <td>Le thème École Ivoirienne est toujours actif après rechargement (localStorage).</td>
+      <td class="result-cell"><span class="check"></span></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- OBSERVATIONS & SIGNATURE FINALE -->
+<h1 class="section page-break">Observations &amp; Validation Finale</h1>
+
+<h2 class="subsection">Anomalies détectées</h2>
+<table class="recette-table">
+  <thead>
+    <tr><th style="width:80px">ID Anom.</th><th style="width:80px">TC lié</th><th>Description</th><th style="width:100px">Priorité</th><th>Résolution</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+  </tbody>
+</table>
+
+<h2 class="subsection">Critères d'acceptation finale</h2>
+<ul>
+  <li>Taux de réussite global ≥ <strong>95%</strong> (≥ 47 cas sur 49 validés)</li>
+  <li>Aucune anomalie de priorité <span class="prio prio-haute">HAUTE</span> ouverte</li>
+  <li>Modules Scan et Paiements : 100% des cas de test validés</li>
+  <li>Performances : temps de réponse &lt; 2s pour les listes, &lt; 1s pour le scan QR Code</li>
+</ul>
+
+<div class="sign-block" style="margin-top:40px">
+  <div class="sign-box">
+    <h4>Validé par (MOE — KLEM Technologies)</h4>
+    <div class="sign-line">Nom : Yacouba SYLLA</div>
+    <div class="sign-line">Date : ___________________________</div>
+    <div class="sign-line">Signature :</div>
+  </div>
+  <div class="sign-box">
+    <h4>Accepté par (MOA — Client)</h4>
+    <div class="sign-line">Nom : ___________________________</div>
+    <div class="sign-line">Date : ___________________________</div>
+    <div class="sign-line">Signature :</div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Cantine Connect — Cahier de Recette v1.0.0-beta</strong></p>
+  <p>© 2026 KLEM Technologies &amp; Services &nbsp;|&nbsp; 📞 +225 07 58 89 24 77 &nbsp;|&nbsp; 📧 infos@klemtech.net</p>
+</div>
+
+</div>
+</body>
+</html>

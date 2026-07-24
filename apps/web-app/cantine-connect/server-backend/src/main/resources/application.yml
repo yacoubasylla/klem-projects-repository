@@ -1,0 +1,159 @@
+spring:
+  application:
+    name: cantine-connect-backend
+
+  profiles:
+    active: dev
+
+  # ── JPA / Hibernate ──────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+        default_batch_fetch_size: 50
+
+  # ── Flyway (migrations versionnées) ──────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
+
+  # ── Pagination par défaut ────────────────────────────────
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 200
+
+  # ── Notifications Email (SMTP) ────────────────────────────
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+# ── Serveur ───────────────────────────────────────────────
+# Railway injecte $PORT dynamiquement — fallback 8081 en local
+server:
+  port: ${PORT:8081}
+
+# ── Actuator (Health Check) ───────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: when-authorized
+  health:
+    mail:
+      enabled: false
+
+# ── Paiements Mobile Money ───────────────────────────────
+paiement:
+  cinetpay:
+    api-key: ${CINETPAY_API_KEY:cle_test}
+    site-id: ${CINETPAY_SITE_ID:site_test}
+    api-secret: ${CINETPAY_API_SECRET:secret_test}
+    verify-signature: ${CINETPAY_VERIFY_SIGNATURE:false}
+  paydunya:
+    master-key: ${PAYDUNYA_MASTER_KEY:cle_test}
+    private-key: ${PAYDUNYA_PRIVATE_KEY:cle_privee_test}
+    token: ${PAYDUNYA_TOKEN:token_test}
+    verify-signature: ${PAYDUNYA_VERIFY_SIGNATURE:false}
+
+# ── JWT ───────────────────────────────────────────────────
+jwt:
+  secret: ${JWT_SECRET:cantine-connect-secret-key-dev-only-256bits-change-in-production!!}
+  expiration-ms: 86400000  # 24 heures
+
+# ── CORS ──────────────────────────────────────────────────
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+notification:
+  from: ${NOTIFICATION_FROM_EMAIL:noreply@cantine-connect.ci}
+  app-url: ${APP_URL:http://localhost:5173}
+
+# ── Logging ───────────────────────────────────────────────
+logging:
+  level:
+    com.klem.cantine: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+---
+# ════════════════════════════════════════════════════════════
+# Profil : DEV (Docker Compose local)
+# ════════════════════════════════════════════════════════════
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cantine_connect
+    username: cantine_admin
+    password: cantine_dev_pass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+---
+# ════════════════════════════════════════════════════════════
+# Profil : PROD (Variables d'environnement obligatoires)
+# ════════════════════════════════════════════════════════════
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+# Conteneur Railway limité à ~1 Go — le pool de threads Tomcat par défaut
+# (200) réserve trop de mémoire (piles de threads) pour la charge réelle
+# de cette application ; réduit à un niveau adapté à un petit établissement.
+server:
+  tomcat:
+    threads:
+      max: 50
+      min-spare: 5
+
+logging:
+  level:
+    com.klem.cantine: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN

@@ -1,0 +1,27 @@
+# ── Java / Maven ──────────────────────────────────────────
+server-backend/target/
+server-backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+
+# ── Node / React ──────────────────────────────────────────
+client-frontend/node_modules/
+client-frontend/dist/
+client-frontend/.vite/
+
+# ── IDE & OS ──────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ── Environnement & Secrets ───────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Logs ──────────────────────────────────────────────────
+*.log
+/tmp/

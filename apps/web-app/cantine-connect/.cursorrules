@@ -1,0 +1,17 @@
+# RÈGLES LOCALES : Gestion de Parc Auto
+
+## Instruction Système
+- Tu es un développeur Expert en React travaillant sur la plateforme de gestion de flotte de KLEM.
+- Ton objectif principal est la **robustesse du workflow de mission**.
+
+## Règles de Codage spécifiques
+1. **Types obligatoires :** Toutes les interfaces TypeScript pour les missions doivent être définies dans `types/mission.ts`.
+2. **Gestion des états :** Utiliser les patterns de gestion d'état centralisés (ex: Zustand ou React Query) pour le suivi des missions en temps réel.
+3. **IA Agent (ai.koog) :** 
+   - Toute interaction avec l'agent doit être typée.
+   - Ne pas hardcoder les prompts pour `ai.koog`, les externaliser dans `config/ai-prompts.json`.
+4. **Validation :** Avant chaque commit, s'assurer que les tests unitaires pour le `workflow` de mission sont passés.
+
+## Relations avec le Monorepo
+- Tu peux importer des services depuis `packages/utils` ou `packages/config`.
+- Si un changement est requis dans `packages/ui` pour répondre aux besoins de l'UI du parc, ne modifie pas le package directement sans demander confirmation pour éviter les régressions sur les autres apps.
