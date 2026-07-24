@@ -9,6 +9,19 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-07-24] - Unification workspace KLEM + scaffold services/infrastructure/docs + pont Labs->Projects
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `services/README.md`, `infrastructure/{docker,terraform,kubernetes}/README.md`,
+  `docs/README.md`, `pnpm-workspace.yaml`, `README.md`, `collaboration/history/adr/2026-07-24-scaffold-services-infra-docs-et-pont-labs-projects.md`
+  (ce dépôt) ; `klem-labs-repository/platform-devsecops/scripts/klem_promote.py`,
+  `klem-labs-repository/bin/klem-promote`, `klem-labs-repository/GLOBAL_README.md` (dépôt sibling).
+- **Description :** Les deux dépôts `klem-labs-repository` et `klem-projects-repository` sont
+  unifiés sous `~/Documents/klem-enterprise-workspace/` (dossier plat, historique et remotes
+  git intacts, vérifié par diff de `git status`/`git log` avant/après). Ajout de `services/`,
+  `infrastructure/`, `docs/` en scaffolding (aucun code existant déplacé -- voir l'ADR associé pour
+  le raisonnement). Ajout de `klem_promote.py` : passerelle Labs -> Projects qui réutilise la
+  détection de statut de `generate_dashboard_data.py` et ne promeut un projet que si la règle de
+  gouvernance n°7 est satisfaite.
 
 ## [2026-06-21] - Implémentation Sécurité & Authentification
 

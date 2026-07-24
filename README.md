@@ -30,6 +30,9 @@ KLEM-REPO/
 │   ├── mobile-app/              # Application mobile multiplateforme (Chauffeurs / Livreurs)
 │   ├── showcase-website/        # Site vitrine et infographies de KLEM Technologies
 │   └── web-app/                 # Dashboard d'administration Enterprise ERP (React / MUI)
+├── services/                    # Réservé : microservices backend indépendants (voir services/README.md)
+├── infrastructure/               # Réservé : Docker/Terraform/Kubernetes une fois le VPS provisionné
+├── docs/                        # Index léger vers collaboration/ et knowledges/ (pas une 3e arborescence)
 ├── collaboration/               # Base de connaissances projet partagée humain/IA
 │   ├── context/
 │   │   └── CONTEXT.md           # Vision produit, alignement métier et règles globales KLEM
