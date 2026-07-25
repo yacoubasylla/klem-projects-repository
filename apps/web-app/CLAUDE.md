@@ -1,8 +1,11 @@
-# Example CLAUDE.md — Monorepo
+# Exemple de CLAUDE.md — Monorepo
 
-This example shows how to structure CLAUDE.md files in a monorepo with multiple packages. Claude Code supports nested CLAUDE.md files — the root file provides global conventions while package-level files add specific instructions for each package.
+Cet exemple montre comment structurer des fichiers CLAUDE.md dans un monorepo à plusieurs
+packages. Claude Code prend en charge les fichiers CLAUDE.md imbriqués — le fichier racine fournit
+les conventions globales tandis que les fichiers de niveau package ajoutent des instructions
+spécifiques à chaque package.
 
-## Repository Structure
+## Structure du dépôt
 
 ```
 KLEM-REPO/
@@ -16,13 +19,13 @@ KLEM-REPO/
 │       └── recherche-actualites/# Outil autonome de veille technologique et légale
 ├── apps/                        # Applications autonomes et déployables (Exécutables)
 │   ├── backend-api/             # API Core Spring Boot 3.x & Logique métier 
-│   │   └── CLAUDE.md            # Backend & API specific instructions
+│   │   └── CLAUDE.md            # Instructions spécifiques Backend & API
 │   ├── mobile-app/              # Application mobile multiplateforme (Chauffeurs / Livreurs)
-│   │   └── CLAUDE.md            # mobile-app specific instructions
+│   │   └── CLAUDE.md            # Instructions spécifiques mobile-app
 │   ├── showcase-website/        # Site vitrine et infographies de KLEM Technologies
-│   │   └── CLAUDE.md            # showcase & Website specific instructions
+│   │   └── CLAUDE.md            # Instructions spécifiques showcase & Website
 │   └── web-app/                 # Dashboard d'administration Enterprise ERP (React / MUI)
-│       └── CLAUDE.md            # Web app-specific instructions
+│       └── CLAUDE.md            # Instructions spécifiques Web app
 ├── collaboration/               # Base de connaissances projet partagée humain/IA
 │   ├── context/
 │   │   └── CONTEXT.md           # Vision produit, alignement métier et règles globales KLEM
@@ -50,55 +53,59 @@ KLEM-REPO/
 ├── templates/                   # Squelettes de code et modèles de fichiers standardisés
 ├── .cursorrules                 # Instructions de contextualisation pour l'éditeur Cursor
 ├── .turbo.json                  # Configuration du cache et des pipelines de build Turborepo
-├── CLAUDE.md                    # Racine de conevntions et règles globales strictes pour l'IA
-└── package.json                 # Racine de configuration des workspaces pnpm```
+├── CLAUDE.md                    # Racine de conventions et règles globales strictes pour l'IA
+└── package.json                 # Racine de configuration des workspaces pnpm
+```
 
 ````markdown
 # Klem Platform Monorepo
 
-Turborepo monorepo. Node.js 20, pnpm workspaces.
+Monorepo Turborepo. Node.js 20, workspaces pnpm.
 
-## Commands (from repo root)
+## Commandes (depuis la racine du dépôt)
 
-- `pnpm install` — install all dependencies
-- `pnpm build` — build all packages (respects dependency order)
-- `pnpm test` — run all tests across all packages
-- `pnpm lint` — lint all packages
-- `pnpm dev` — start all dev servers
+- `pnpm install` — installe toutes les dépendances
+- `pnpm build` — build tous les packages (respecte l'ordre des dépendances)
+- `pnpm test` — exécute tous les tests sur tous les packages
+- `pnpm lint` — lint tous les packages
+- `pnpm dev` — démarre tous les serveurs de dev
 
-### Per-package commands
+### Commandes ciblées par package
 
-- `pnpm --filter @klem/backen-api test` — run tests for a single package
-- `pnpm --filter @klem/web-app dev` — start dev server for a single package
-- `pnpm --filter @klem/mobile-app build` — build a single package
+- `pnpm --filter @klem/backen-api test` — exécute les tests d'un seul package
+- `pnpm --filter @klem/web-app dev` — démarre le serveur de dev d'un seul package
+- `pnpm --filter @klem/mobile-app build` — build un seul package
 
 ## Architecture
 
-- `apps/backen-api` — API Core Spring Boot 3.x REST API(Spring Boot),Express.js REST API (Node.js backend)
-- `apps/web-app` — React.js , Next.js frontend application
-- `apps/showcase-website` — html javascript css, utilities
-- `apps/mobile-app` — React native
-- `infrastructure/` — Terraform IaC (not a Node package)
+- `apps/backen-api` — API Core Spring Boot 3.x REST API (Spring Boot), Express.js REST API (backend Node.js)
+- `apps/web-app` — application frontend React.js, Next.js
+- `apps/showcase-website` — html javascript css, utilitaires
+- `apps/mobile-app` — React Native
+- `infrastructure/` — IaC Terraform (pas un package Node)
 
-## Global Conventions
+## Conventions globales
 
-- TypeScript strict mode in all packages
-- Named exports only — no default exports
-- All packages use the shared ESLint and Prettier configs from the root
-- Import from `@klem/shared` for shared types — never duplicate type definitions across packages
-- Use workspace protocol for internal deps: `"@klem/shared": "workspace:*"`
+- Mode strict TypeScript dans tous les packages
+- Exports nommés uniquement — pas d'export par défaut
+- Tous les packages utilisent les configs ESLint et Prettier partagées de la racine
+- Importer `@klem/shared` pour les types partagés — ne jamais dupliquer de définitions de type
+  entre packages
+- Utiliser le protocole workspace pour les dépendances internes :
+  `"@klem/shared": "workspace:*"`
 
 ## Git
 
-- Conventional commits with scope: `feat(backend-api):`, `fix(web-app):`, `chore(mobile-app):`
-- PR titles should include the affected package(s)
-- Run `pnpm lint && pnpm typecheck` before committing
+- Conventional commits avec scope : `feat(backend-api):`, `fix(web-app):`, `chore(mobile-app):`
+- Les titres de PR doivent inclure le(s) package(s) concerné(s)
+- Exécuter `pnpm lint && pnpm typecheck` avant de committer
 
-## Do NOT
+## À NE PAS faire
 
-- Do not install dependencies in the root unless they are truly shared tooling
-- Do not import directly from another package's src/ — always use the package's public API
-- Do not create circular dependencies between packages
+- Ne pas installer de dépendances à la racine sauf s'il s'agit vraiment d'outillage partagé
+- Ne pas importer directement depuis le `src/` d'un autre package — toujours passer par l'API
+  publique du package
+- Ne pas créer de dépendances circulaires entre packages
 ````
 
 ## apps/backend-api/CLAUDE.md
@@ -106,27 +113,28 @@ Turborepo monorepo. Node.js 20, pnpm workspaces.
 ````markdown
 # @klem/backend-api
 
-API Core Spring Boot 3.x REST API(Spring Boot), Express.js REST API. This CLAUDE.md supplements the root CLAUDE.md.
+API Core Spring Boot 3.x REST API (Spring Boot), Express.js REST API. Ce CLAUDE.md complète le
+CLAUDE.md racine.
 
-## Commands
+## Commandes
 
-- `pnpm --filter @klem/backend-api test` — run API tests
-- `pnpm --filter @klem/backend-api dev` — start with hot reload (port 4000)
-- `pnpm --filter @klem/backend-api test -- --grep "auth"` — run subset of tests
+- `pnpm --filter @klem/backend-api test` — exécute les tests de l'API
+- `pnpm --filter @klem/backend-api dev` — démarre avec hot reload (port 4000)
+- `pnpm --filter @klem/backend-api test -- --grep "auth"` — exécute un sous-ensemble de tests
 
 ## Structure
 
-- `src/routes/` — route handlers grouped by resource
-- `src/middleware/` — Express middleware (auth, validation, error handling)
-- `src/services/` — business logic
-- `src/db/` — Prisma schema and migrations
+- `src/routes/` — gestionnaires de routes groupés par ressource
+- `src/middleware/` — middleware Express (auth, validation, gestion d'erreurs)
+- `src/services/` — logique métier
+- `src/db/` — schéma Prisma et migrations
 
 ## Conventions
 
-- All routes use the async error wrapper from `src/middleware/asyncHandler.ts`
-- Validate request bodies with Zod schemas in `src/schemas/`
-- Use Prisma for all database access — no raw SQL
-- Database migrations: `pnpm --filter @klem/api prisma migrate dev`
+- Toutes les routes utilisent le wrapper d'erreur asynchrone de `src/middleware/asyncHandler.ts`
+- Valider les corps de requête avec des schémas Zod dans `src/schemas/`
+- Utiliser Prisma pour tout accès base de données — pas de SQL brut
+- Migrations de base de données : `pnpm --filter @klem/api prisma migrate dev`
 ````
 
 ## apps/web-app/CLAUDE.md
@@ -134,27 +142,28 @@ API Core Spring Boot 3.x REST API(Spring Boot), Express.js REST API. This CLAUDE
 ````markdown
 # @klem/web-app
 
-React.js , Next.js 14 frontend with App Router.
+Frontend React.js, Next.js 14 avec App Router.
 
-## Commands
+## Commandes
 
-- `pnpm --filter @klem/web-app dev` — start dev server (port 3000)
-- `pnpm --filter @klem/web-app test` — run Vitest tests
-- `pnpm --filter @klem/web-app storybook` — start Storybook
+- `pnpm --filter @klem/web-app dev` — démarre le serveur de dev (port 3000)
+- `pnpm --filter @klem/web-app test` — exécute les tests Vitest
+- `pnpm --filter @klem/web-app storybook` — démarre Storybook
 
 ## Structure
 
-- `src/app/` — Next.js App Router pages and layouts
-- `src/components/` — reusable UI components
-- `src/hooks/` — custom React hooks
-- `src/lib/` — API client, utilities
+- `src/app/` — pages et layouts App Router de Next.js
+- `src/components/` — composants UI réutilisables
+- `src/hooks/` — hooks React personnalisés
+- `src/lib/` — client API, utilitaires
 
 ## Conventions
 
-- Use Server Components by default — add 'use client' only when needed
-- Styles: Tailwind CSS utility classes, no CSS Modules
-- Data fetching: Server Components for initial data, TanStack Query for client-side
-- Images: always use next/image
+- Utiliser les Server Components par défaut — ajouter 'use client' seulement si nécessaire
+- Styles : classes utilitaires Tailwind CSS, pas de CSS Modules
+- Récupération de données : Server Components pour les données initiales, TanStack Query côté
+  client
+- Images : toujours utiliser next/image
 ````
 
 ## apps/mobile-app/CLAUDE.md
@@ -162,33 +171,38 @@ React.js , Next.js 14 frontend with App Router.
 ````markdown
 # @klem/mobile-app
 
-Shared types, utilities, and constants. Imported by api, web, and cli.
+Types, utilitaires et constantes partagés. Importé par api, web et cli.
 
 ## Important
 
-- This package is a dependency of all other packages — breaking changes here affect everything
-- Run `pnpm build` after any changes (other packages import the built output)
-- Run the full repo test suite after changes: `pnpm test` from the root
+- Ce package est une dépendance de tous les autres packages — les changements cassants ici
+  affectent tout
+- Exécuter `pnpm build` après tout changement (les autres packages importent le résultat buildé)
+- Exécuter la suite de tests complète du dépôt après tout changement : `pnpm test` depuis la racine
 
 ## Structure
 
-- `src/types/` — shared TypeScript interfaces and type definitions
-- `src/utils/` — pure utility functions (must have zero external dependencies)
-- `src/constants/` — shared constants and enums
+- `src/types/` — interfaces et définitions de types TypeScript partagés
+- `src/utils/` — fonctions utilitaires pures (doivent avoir zéro dépendance externe)
+- `src/constants/` — constantes et enums partagés
 
 ## Conventions
 
-- Every export must be re-exported from `src/index.ts`
-- No runtime dependencies — this package should only export types and pure functions
-- 100% test coverage on utility functions
+- Chaque export doit être ré-exporté depuis `src/index.ts`
+- Aucune dépendance runtime — ce package ne doit exporter que des types et des fonctions pures
+- Couverture de test à 100 % sur les fonctions utilitaires
 ````
 
-## How Nested CLAUDE.md Files Work
+## Fonctionnement des fichiers CLAUDE.md imbriqués
 
-When Claude Code operates on a file, it loads:
-1. The **root CLAUDE.md** — always loaded, provides global conventions
-2. The **nearest CLAUDE.md** in the file's directory ancestry — provides package-specific overrides
+Lorsque Claude Code opère sur un fichier, il charge :
+1. Le **CLAUDE.md racine** — toujours chargé, fournit les conventions globales
+2. Le **CLAUDE.md le plus proche** dans l'arborescence parente du fichier — fournit les
+   surcharges spécifiques au package
 
-For example, when editing `apps/web-app/src/routes/users.ts`, Claude sees both the root conventions (TypeScript strict, conventional commits) and the API-specific conventions (use Prisma, Zod validation, async error wrapper).
+Par exemple, lors de l'édition de `apps/web-app/src/routes/users.ts`, Claude voit à la fois les
+conventions racine (TypeScript strict, conventional commits) et les conventions spécifiques à
+l'API (utiliser Prisma, validation Zod, wrapper d'erreur asynchrone).
 
-Packages without their own CLAUDE.md (like `cli/`) inherit only the root file's instructions.
+Les packages sans leur propre CLAUDE.md (comme `cli/`) héritent uniquement des instructions du
+fichier racine.

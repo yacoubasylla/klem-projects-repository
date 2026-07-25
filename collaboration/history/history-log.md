@@ -9,6 +9,26 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-07-25] - Traduction en français de tous les documents restés en anglais dans le workspace
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `docs/README.md`, `services/README.md`,
+  `infrastructure/{docker,terraform,kubernetes}/README.md`,
+  `apps/web-app/cantine-connect/client-frontend/README.md`, `apps/web-app/CLAUDE.md` (ce dépôt) ;
+  `klem-labs-repository/platform-devsecops/raw-notes/prompt_chirugical.md` (dépôt sibling) ;
+  `README.md`, `AUDIT_SUMMARY.md` (workspace racine).
+- **Description :** Un scan de langue sur les 286 fichiers `.md` du workspace (heuristique
+  mots-clés FR/EN + densité de caractères accentués) a identifié 9 documents rédigés en anglais,
+  tous traduits en français sans changement de structure, de liens ni de blocs de code/commandes.
+  `AUDIT_SUMMARY.md` (racine) a été traduit et mis à jour au passage avec le résultat vérifié des
+  alertes Dependabot (20/23 refermées, 3 restantes détaillées en tableau). `apps/web-app/CLAUDE.md`
+  est un exemple générique (stack Express.js/Prisma, noms de package fautifs) qui contredit le
+  vrai `CLAUDE.md` racine du dépôt (Spring Boot/React, déjà en français et faisant autorité) —
+  traduit tel quel car demandé explicitement, mais à supprimer ou remplacer plutôt qu'à maintenir.
+  Aucune référence croisée (liens markdown, chemins cités) n'a nécessité de changement : les noms
+  de fichiers sont inchangés, seule la langue du contenu a changé. `README.md` et
+  `GLOBAL_README.md` de `klem-labs-repository` étaient déjà en français et à jour — vérifiés, non
+  modifiés.
+
 ### [2026-07-24] - Unification workspace KLEM + scaffold services/infrastructure/docs + pont Labs->Projects
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `services/README.md`, `infrastructure/{docker,terraform,kubernetes}/README.md`,

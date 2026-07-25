@@ -1,31 +1,35 @@
 # services/
 
-Reserved for **independent backend microservices** (Java Spring Boot, Python APIs) once a domain
-is actually split out of the current monolith.
+Réservé aux **microservices backend indépendants** (Java Spring Boot, API Python) une fois qu'un
+domaine est effectivement extrait du monolithe actuel.
 
-## Why this is empty today
+## Pourquoi c'est vide aujourd'hui
 
-Governance rule 4 in `klem-labs-repository/GLOBAL_README.md` is explicit: *"un monolithe modulaire
-bien structuré (packages par domaine) est une étape de trajectoire acceptée au stade Prototype,
-jamais une destination finale"*. Today's `apps/backend-api` is that accepted monolith stage — it
-is **not** being moved here preemptively. Moving it now would rewrite every doc/config that
-references `apps/backend-api` (README, CLAUDE.md, ADRs) for zero functional gain, since there is
-no second independent service yet to justify the split.
+La règle de gouvernance 4 dans `klem-labs-repository/GLOBAL_README.md` est explicite : *« un
+monolithe modulaire bien structuré (packages par domaine) est une étape de trajectoire acceptée au
+stade Prototype, jamais une destination finale »*. L'actuel `apps/backend-api` est ce stade de
+monolithe accepté — il **n'est pas** déplacé ici par anticipation. Le déplacer maintenant
+réécrirait chaque document/config qui référence `apps/backend-api` (README, CLAUDE.md, ADR) pour
+un gain fonctionnel nul, puisqu'il n'existe encore aucun second service indépendant pour justifier
+la scission.
 
-## When to actually use this folder
+## Quand utiliser réellement ce dossier
 
-When a domain inside `apps/backend-api` is decomposed into its own deployable service (per
-`shared_architecture/microservices_&_delivery/specifications_techniques.md` in the Labs repo):
+Lorsqu'un domaine à l'intérieur d'`apps/backend-api` est décomposé en son propre service
+déployable (selon
+`shared_architecture/microservices_&_delivery/specifications_techniques.md` dans le dépôt Labs) :
 
-1. `git mv apps/backend-api/<domain-package> services/<service-name>` (preserves history).
-2. Add `services/<service-name>` to `pnpm-workspace.yaml` — already covered by the `services/*`
-   glob added alongside this scaffold, so no further workspace-file edit is needed.
-3. Give it its own `package.json` (Node) or `pom.xml`/`build.gradle` (Java) and CI job.
-4. Update `apps/backend-api`'s references to call the new service over its API instead of
-   in-process.
+1. `git mv apps/backend-api/<domain-package> services/<service-name>` (préserve l'historique).
+2. Ajouter `services/<service-name>` à `pnpm-workspace.yaml` — déjà couvert par le glob
+   `services/*` ajouté avec cet échafaudage, donc aucune modification supplémentaire du fichier de
+   workspace n'est nécessaire.
+3. Lui donner son propre `package.json` (Node) ou `pom.xml`/`build.gradle` (Java) et son propre job
+   CI.
+4. Mettre à jour les références d'`apps/backend-api` pour appeler le nouveau service via son API
+   plutôt qu'en process.
 
-## Naming convention
+## Convention de nommage
 
-`services/<domain>-service` (e.g. `services/billing-service`, matching the `billing-service`
-name already used in `klem-labs-repository/platform-devsecops/cycle-devsecops-complet.md` §1,
-maillon 10).
+`services/<domaine>-service` (ex. `services/billing-service`, correspondant au nom
+`billing-service` déjà utilisé dans
+`klem-labs-repository/platform-devsecops/cycle-devsecops-complet.md` §1, maillon 10).

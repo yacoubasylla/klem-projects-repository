@@ -1,6 +1,7 @@
 # infrastructure/kubernetes/
 
-Reserved for Kubernetes manifests. Not currently planned — KLEM's deployment target per
-`klem-labs-repository/platform-devsecops/adr/0001-hebergement-hostinger.md` is a single Hostinger
-VPS running Docker Compose, not a Kubernetes cluster. Keep this folder empty until a documented
-ADR in the Labs repo actually calls for orchestration beyond Compose.
+Réservé aux manifestes Kubernetes. Non prévu actuellement — la cible de déploiement de KLEM selon
+`klem-labs-repository/platform-devsecops/adr/0001-hebergement-hostinger.md` est un unique VPS
+Hostinger faisant tourner Docker Compose, pas un cluster Kubernetes. Garder ce dossier vide tant
+qu'un ADR documenté dans le dépôt Labs n'appelle pas réellement une orchestration au-delà de
+Compose.
