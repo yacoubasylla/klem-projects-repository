@@ -9,6 +9,32 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-07-29] - Formalisation du workflow multi-agents IA (Recherche → Plan → Exécution → Revue)
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `.github/PULL_REQUEST_TEMPLATE.md` (ce dépôt) ;
+  `klem-labs-repository/platform-devsecops/workflow-multi-agents-ia.md` (nouveau),
+  `klem-labs-repository/platform-devsecops/adr/0016-workflow-multi-agents-ia-recherche-plan-execution-review.md` (nouveau),
+  `klem-labs-repository/platform-devsecops/templates/{readme,template-recherche,template-plan-architecture,template-review-ia}.md` (nouveaux),
+  `klem-labs-repository/platform-devsecops/adr/readme.md`, `klem-labs-repository/platform-devsecops/decision-log.md`,
+  `klem-labs-repository/platform-devsecops/cycle-devsecops-complet.md`,
+  `klem-labs-repository/projects/09_klem_dev_workflow/specifications_fonctionnelles.md` (dépôt sibling).
+- **Description :** Enrichissement du cycle DEVFLOW-KLEM existant (10 maillons déjà actés) plutôt
+  que création d'un système parallèle : les maillons 1 (Cadrage), 4 (Cycle Git) et 5 (Revue)
+  détaillent désormais comment des agents IA interviennent au-delà du rôle de copilote unique —
+  recherche multi-agents, plans d'implémentation concurrents, exécution par rôle, revue `/code-review`
+  avant la revue humaine. Deux profils actés par ADR 0016 (`klem-labs-repository`) : **light**
+  (défaut, tâches courantes, compatible avec la contrainte « équipe 1-3 devs ») et **full** (features
+  majeures/structurantes). Point de vigilance explicitement documenté dans l'ADR : les plans
+  concurrents du profil full ne remettent jamais en cause la cible d'architecture déjà tranchée par
+  `GLOBAL_README.md` règle de gouvernance n°4 (microservices cible, monolithe modulaire accepté
+  comme étape de trajectoire) — ils comparent des options de mise en œuvre, pas la stack macro.
+  Le template de PR de ce dépôt référence désormais explicitement cette revue agent préalable et la
+  vérification humaine obligatoire des zones critiques (auth, paiement, données sensibles).
+  Aucun nouvel outil introduit : le workflow s'appuie sur les mécanismes déjà en place (agents
+  Explore/Plan/general-purpose, skills `/code-review`/`security-review`, gabarit ADR et
+  `scripts/create-adr.sh` existants). La création de sous-agents dédiés par rôle
+  (`.claude/agents/*.md` back/front/QA/migration) est notée comme piste V2 hors périmètre.
+
 ### [2026-07-25] - Traduction en français de tous les documents restés en anglais dans le workspace
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `docs/README.md`, `services/README.md`,
