@@ -107,28 +107,38 @@ Avant de commencer, assurez-vous d'avoir les outils suivants :
 - VS Code : Recommandé avec les extensions ESLint et Prettier
 
 2. **Installer toutes les dépendances du monorepo :**
-   Bash 
-      pnpm install
+
+   ```bash
+   pnpm install
+   ```
 
 3. **Vérifier que tout est correctement lié :**
-  Bash
-      pnpm turbo run build
-    Si cette commande se termine sans erreur, votre environnement est parfaitement configuré.
+
+   ```bash
+   pnpm turbo run build
+   ```
+
+   Si cette commande se termine sans erreur, votre environnement est parfaitement configuré.
 
 4. **Guide de développement quotidien :**
      **A. Lancer les projets**
+
       Pour démarrer tous vos projets simultanément en mode développement :
 
-      Bash
+      ```bash
       pnpm dev
+      ```
 
      **B. Ajouter une nouvelle fonctionnalité (Workflow)**
+
       Si vous développez une nouvelle brique :
 
       Créer un ADR : Avant de coder, documentez votre choix.
 
-      Bash
+      ```bash
       ./scripts/create-adr.sh <nom-de-votre-feature>
+      ```
+
       Créer votre package/app : Utilisez les templates situés dans /templates/.
 
 Lier les dépendances : Si vous ajoutez un nouveau package, assurez-vous qu'il est bien déclaré dans package.json de votre application avec "nom-du-package": "workspace:*".
@@ -143,8 +153,10 @@ Lier les dépendances : Si vous ajoutez un nouveau package, assurez-vous qu'il e
       La présence d'un fichier ADR pour toute nouvelle structure.
       Rejette automatiquement tout code ne respectant pas les règles de linting ou sans ADR.
 - Commande de vérification locale : Avant de soumettre votre travail, lancez ceci pour éviter les erreurs sur le serveur :
-    Bash
-    pnpm turbo run lint build
+
+  ```bash
+  pnpm turbo run lint build
+  ```
 
 
 ## Collaboration
@@ -173,10 +185,12 @@ Pour l'équipe de développement et les assistants IA, voici ce qu'il faut reten
 *   **L'Écosystème** : Un monorepo unique (propulsé par **Turborepo** et géré via **pnpm**) qui centralise toutes les applications de KLEM (Backend Spring Boot, Web React/MUI, Mobile, et pipelines Big Data Spark/Kafka).
 *   **La Règle d'Or Technique** : Typage stricts **TypeScript** côté frontend, architecture découplée, et **zéro modification d'architecture sans document ADR** (généré via `./scripts/create-adr.sh`).
 *   **Le Dual Humain-IA** : Un espace de travail optimisé pour la collaboration avec **Claude Code** et **Cursor**. L'IA s'aligne sur vos standards grâce au duo `CLAUDE.md` / `CONTEXT.md` et documente ses livraisons dans `history-log.md`.
-*   **Démarrage Éclair** : 
+*   **Démarrage Éclair** :
 
+    ```bash
     pnpm install && pnpm dev
-    
+    ```
+
 *   **Objectif Final** : Chaque brique de code produite ici doit servir notre mission : bâtir des solutions robustes, souveraines et prêtes pour le terrain afin de moderniser les infrastructures publiques et privées en Afrique.
 
 ## Pour toute question, contactez le Lead Développeur ou consultez le CLAUDE.md à la racine.
