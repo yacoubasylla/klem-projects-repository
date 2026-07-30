@@ -5,11 +5,11 @@
     <div class="absolute top-1/3 -left-10 w-64 h-64 rounded-full bg-klem-blue/5 pointer-events-none" aria-hidden="true"></div>
 
     <div class="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 py-8 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 py-12 lg:py-32">
 
             <!-- IMAGE : en premier dans le HTML → haut sur mobile, droite sur desktop -->
             <div class="lg:col-start-2 lg:row-start-1 lg:self-stretch relative rounded-2xl overflow-hidden bg-cover bg-center lg:[clip-path:polygon(20%_0%,100%_0%,100%_100%,0%_100%)] lg:-ml-6"
-                 style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B; min-height: 260px;"
+                 style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B; min-height: 340px;"
                  data-animate data-delay="150"
                  aria-hidden="true">
 
