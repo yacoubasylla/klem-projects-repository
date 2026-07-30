@@ -18,7 +18,7 @@
         </div>
 
         <?php
-        /* ── Icônes SVG illustrées — palette 2 couleurs : #13294B + #E42313 ── */
+        /* ── Icônes SVG illustrées — palette 2 couleurs : #13294B + #D6301F ── */
 
         /* 01 — Ingénierie des Données : cylindre base de données */
         $icon_data = '<svg viewBox="0 0 72 72" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -31,7 +31,7 @@
   <!-- Strie milieu -->
   <path d="M8 37 Q8 46 36 46 Q64 46 64 37" stroke="#13294B" stroke-width="1" stroke-dasharray="3 2" fill="none" opacity="0.35"/>
   <!-- Ellipse supérieure — accent rouge -->
-  <ellipse cx="36" cy="22" rx="28" ry="9" fill="#E42313"/>
+  <ellipse cx="36" cy="22" rx="28" ry="9" fill="#D6301F"/>
   <!-- Pointillés blancs sur ellipse rouge -->
   <circle cx="26" cy="22" r="2.5" fill="white" opacity="0.65"/>
   <circle cx="36" cy="22" r="2.5" fill="white" opacity="0.65"/>
@@ -48,8 +48,8 @@
   <!-- Zone écran -->
   <rect x="10" y="16" width="52" height="32" rx="3" fill="#F7F9FC"/>
   <!-- Barre du haut (accent rouge) -->
-  <rect x="10" y="16" width="52" height="9" rx="3" fill="#E42313"/>
-  <rect x="10" y="20" width="52" height="5" rx="0" fill="#E42313"/>
+  <rect x="10" y="16" width="52" height="9" rx="3" fill="#D6301F"/>
+  <rect x="10" y="20" width="52" height="5" rx="0" fill="#D6301F"/>
   <!-- Boutons fenêtre -->
   <circle cx="17" cy="20" r="2.5" fill="white" opacity="0.5"/>
   <circle cx="24" cy="20" r="2.5" fill="white" opacity="0.5"/>
@@ -61,7 +61,7 @@
   <!-- Lignes de code (droite) -->
   <rect x="42" y="31" width="16" height="3" rx="1.5" fill="#13294B" opacity="0.25"/>
   <rect x="42" y="37" width="11" height="3" rx="1.5" fill="#13294B" opacity="0.18"/>
-  <rect x="42" y="43" width="14" height="3" rx="1.5" fill="#E42313" opacity="0.4"/>
+  <rect x="42" y="43" width="14" height="3" rx="1.5" fill="#D6301F" opacity="0.4"/>
   <!-- Pied moniteur -->
   <line x1="36" y1="54" x2="36" y2="63" stroke="#13294B" stroke-width="2"/>
   <line x1="24" y1="63" x2="48" y2="63" stroke="#13294B" stroke-width="2.5" stroke-linecap="round"/>
@@ -87,7 +87,7 @@
   <circle cx="57" cy="62" r="8" fill="#13294B" opacity="0.8"/>
   <circle cx="57" cy="62" r="4" fill="#EEF3F9"/>
   <!-- PIN GPS — accent rouge -->
-  <path d="M65 4 C65 0 62 -2 59 -2 C56 -2 53 0 53 4 C53 10 59 18 59 18 C59 18 65 10 65 4 Z" fill="#E42313" transform="translate(0 4)"/>
+  <path d="M65 4 C65 0 62 -2 59 -2 C56 -2 53 0 53 4 C53 10 59 18 59 18 C59 18 65 10 65 4 Z" fill="#D6301F" transform="translate(0 4)"/>
   <circle cx="59" cy="8" r="3.5" fill="white" opacity="0.85"/>
   <!-- Trait route vers pin -->
   <path d="M46 40 C50 30 54 22 58 16" stroke="#13294B" stroke-width="1.2" stroke-dasharray="3 3" fill="none" opacity="0.4"/>
@@ -112,7 +112,7 @@
   <rect x="40" y="33" width="14" height="8" rx="2" fill="#D6E4F5" stroke="#13294B" stroke-width="0.8"/>
   <!-- Unité serveur 3 — LED rouge (alerte) -->
   <rect x="14" y="48" width="44" height="14" rx="3" fill="#FDF2F2" stroke="#13294B" stroke-width="1.2"/>
-  <circle cx="21" cy="55" r="3.5" fill="#E42313"/>
+  <circle cx="21" cy="55" r="3.5" fill="#D6301F"/>
   <circle cx="30" cy="55" r="3.5" fill="#D6E4F5" stroke="#13294B" stroke-width="1"/>
   <rect x="40" y="51" width="14" height="8" rx="2" fill="#D6E4F5" stroke="#13294B" stroke-width="0.8"/>
 </svg>';

@@ -41,8 +41,8 @@
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-2 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
                     <!-- ChevronMark — double chevron 3D (fond sombre) -->
                     <svg viewBox="0 0 65 56" width="29" height="25" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; flex-shrink:0;">
-                        <polygon points="0,0 22,0 40,28 22,56 0,56 18,28" fill="#E42313"/>
-                        <polygon points="25,0 47,0 65,28 47,56 25,56 43,28" fill="#E42313"/>
+                        <polygon points="0,0 22,0 40,28 22,56 0,56 18,28" fill="#D6301F"/>
+                        <polygon points="25,0 47,0 65,28 47,56 25,56 43,28" fill="#D6301F"/>
                     </svg>
                     <!-- Wordmark -->
                     <div class="flex flex-col leading-none gap-[2px]">

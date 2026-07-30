@@ -8,8 +8,8 @@ export default {
     extend: {
       colors: {
         'klem-blue':   '#13294B',   // Bleu KLEM — charte logo Chevron
-        'klem-orange': '#E42313',   // Alias → Rouge KLEM (aucun orange dans la charte)
-        'klem-red':    '#E42313',   // Rouge KLEM officiel
+        'klem-orange': '#D6301F',   // Alias → Rouge KLEM (aucun orange dans la charte)
+        'klem-red':    '#D6301F',   // Rouge KLEM officiel — assourdi (ex: #E42313, jugé trop vif)
         'klem-slate':  '#6B7280',   // Textes secondaires
       },
       fontFamily: {
