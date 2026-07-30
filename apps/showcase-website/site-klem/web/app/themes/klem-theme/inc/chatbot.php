@@ -136,6 +136,15 @@ function klem_handle_chatbot_message(): void {
         wp_send_json_error(['message' => __('Requête invalide.', 'klem-theme')], 422);
     }
 
+    // Force IPv4 : l'hébergement mutualisé rencontre par intermittence des
+    // délais d'attente réseau sur la route IPv6 vers api.anthropic.com
+    // (cURL error 28, 0 octet reçu), alors que l'IPv4 répond de manière fiable.
+    add_action('http_api_curl', function ($handle, $parsed_args, $url) {
+        if (str_contains($url, 'api.anthropic.com')) {
+            curl_setopt($handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        }
+    }, 10, 3);
+
     $response = wp_remote_post('https://api.anthropic.com/v1/messages', [
         'timeout' => 30,
         'headers' => [
