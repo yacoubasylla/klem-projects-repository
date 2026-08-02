@@ -9,6 +9,19 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-08-02] - Message d'indisponibilité unifié pour le chatbot IA (showcase-website)
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `apps/showcase-website/site-klem/web/app/themes/klem-theme/inc/chatbot.php`,
+  `apps/showcase-website/site-klem/web/app/themes/klem-theme/src/main.js`, assets recompilés
+  (`dist/assets/main-*.js`, `dist/.vite/manifest.json`).
+- **Description :** Le widget de chat affichait parfois un message d'erreur brut/générique côté
+  visiteur en cas de dysfonctionnement (clé API Anthropic absente, erreur réseau serveur, réponse API
+  non-2xx, échec du `fetch` côté navigateur, réponse malformée). Ces branches d'erreur "malfonction"
+  (backend PHP et frontend JS) affichent désormais un message unique et clair : « Votre assistant est
+  momentanément indisponible. Veuillez réessayer plus tard. ». Les messages spécifiques déjà
+  pertinents pour les cas attendus (limite de débit, requête invalide, nonce non autorisé) sont
+  conservés inchangés. `pnpm build` validé sans erreur.
+
 ### [2026-07-29] - Formalisation du workflow multi-agents IA (Recherche → Plan → Exécution → Revue)
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `.github/PULL_REQUEST_TEMPLATE.md` (ce dépôt) ;

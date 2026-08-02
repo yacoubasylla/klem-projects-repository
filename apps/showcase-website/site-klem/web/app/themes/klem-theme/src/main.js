@@ -289,10 +289,10 @@ if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
                 appendMessage('assistant', json.data.reply);
                 history.push({ role: 'assistant', content: json.data.reply });
             } else {
-                appendMessage('assistant', json.data?.message ?? 'Une erreur est survenue. Merci de réessayer.');
+                appendMessage('assistant', json.data?.message ?? 'Votre assistant est momentanément indisponible. Veuillez réessayer plus tard.');
             }
         } catch {
-            appendMessage('assistant', 'Une erreur réseau est survenue. Merci de réessayer.');
+            appendMessage('assistant', 'Votre assistant est momentanément indisponible. Veuillez réessayer plus tard.');
         } finally {
             setSending(false);
             chatInput.focus();

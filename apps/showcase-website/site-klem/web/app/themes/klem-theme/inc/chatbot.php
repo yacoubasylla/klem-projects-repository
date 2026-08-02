@@ -123,7 +123,7 @@ function klem_handle_chatbot_message(): void {
 
     if (!KLEM_ANTHROPIC_API_KEY) {
         error_log('[KLEM Chatbot] KLEM_ANTHROPIC_API_KEY manquante ou vide — vérifier le .env serveur');
-        wp_send_json_error(['message' => __('Le chatbot est momentanément indisponible.', 'klem-theme')], 503);
+        wp_send_json_error(['message' => __('Votre assistant est momentanément indisponible. Veuillez réessayer plus tard.', 'klem-theme')], 503);
     }
 
     $raw = json_decode((string) wp_unslash($_POST['messages'] ?? '[]'), true);
@@ -163,7 +163,7 @@ function klem_handle_chatbot_message(): void {
 
     if (is_wp_error($response)) {
         error_log('[KLEM Chatbot] Erreur réseau : ' . $response->get_error_message());
-        wp_send_json_error(['message' => __('Une erreur est survenue. Merci de réessayer.', 'klem-theme')], 500);
+        wp_send_json_error(['message' => __('Votre assistant est momentanément indisponible. Veuillez réessayer plus tard.', 'klem-theme')], 500);
     }
 
     $code = wp_remote_retrieve_response_code($response);
@@ -171,7 +171,7 @@ function klem_handle_chatbot_message(): void {
 
     if ($code < 200 || $code >= 300 || !is_array($data)) {
         error_log(sprintf('[KLEM Chatbot] API Anthropic erreur %d : %s', $code, wp_remote_retrieve_body($response)));
-        wp_send_json_error(['message' => __('Une erreur est survenue. Merci de réessayer.', 'klem-theme')], 500);
+        wp_send_json_error(['message' => __('Votre assistant est momentanément indisponible. Veuillez réessayer plus tard.', 'klem-theme')], 500);
     }
 
     if (($data['stop_reason'] ?? '') === 'refusal') {
