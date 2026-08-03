@@ -25,20 +25,22 @@ public class EtablissementController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(etablissementService.creer(dto)));
     }
 
+    // Lecture ouverte à tous les rôles authentifiés (y compris PARENT) — nécessaire
+    // à la cascade établissement→niveau→classe du formulaire d'ajout d'enfant
+    // self-service (MesEnfantsPage). Aucune donnée sensible exposée (noms
+    // d'établissements/classes uniquement).
+
     @GetMapping
-    @PreAuthorize("!hasRole('PARENT')")
     public ResponseEntity<ApiResponse<?>> lister() {
         return ResponseEntity.ok(ApiResponse.ok(etablissementService.listerActifs()));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("!hasRole('PARENT')")
     public ResponseEntity<ApiResponse<?>> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(etablissementService.getById(id)));
     }
 
     @GetMapping("/{id}/classes")
-    @PreAuthorize("!hasRole('PARENT')")
     public ResponseEntity<ApiResponse<?>> getClasses(
             @PathVariable Long id,
             @RequestParam(defaultValue = "2025-2026") String anneeScolaire) {
@@ -46,7 +48,6 @@ public class EtablissementController {
     }
 
     @GetMapping("/{id}/niveaux")
-    @PreAuthorize("!hasRole('PARENT')")
     public ResponseEntity<ApiResponse<?>> getNiveaux(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(etablissementService.getNiveauxAvecClasses(id)));
     }
