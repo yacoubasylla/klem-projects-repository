@@ -1,7 +1,9 @@
 package com.klem.cantine.eleve.dto;
 
 import com.klem.cantine.eleve.entity.Eleve;
+import com.klem.cantine.eleve.entity.PeriodeAbonnement;
 import com.klem.cantine.eleve.entity.RegimeAlimentaire;
+import com.klem.cantine.eleve.entity.Sexe;
 import com.klem.cantine.eleve.entity.StatutAcces;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +20,11 @@ public record EleveResponseDTO(
     String nom,
     String prenom,
     LocalDate dateNaissance,
+    Sexe sexe,
     String photoUrl,
+    String ville,
+    String commune,
+    String quartier,
     UUID qrCodeToken,
     StatutAcces statutAcces,
     LocalDate dateFinGrace,
@@ -29,7 +35,9 @@ public record EleveResponseDTO(
     String parentTelephone,
     String parentEmail,
     String allergies,
+    String certificatMedicalUrl,
     String notesMedicales,
+    PeriodeAbonnement periodeAbonnement,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -44,7 +52,11 @@ public record EleveResponseDTO(
             e.getNom(),
             e.getPrenom(),
             e.getDateNaissance(),
+            e.getSexe(),
             e.getPhotoUrl(),
+            e.getVille(),
+            e.getCommune(),
+            e.getQuartier(),
             e.getQrCodeToken(),
             e.getStatutAcces(),
             e.getDateFinGrace(),
@@ -55,7 +67,9 @@ public record EleveResponseDTO(
             e.getParentTelephone(),
             e.getParentEmail(),
             e.getAllergies(),
+            e.getCertificatMedicalUrl(),
             e.getNotesMedicales(),
+            e.getPeriodeAbonnement(),
             e.getCreatedAt(),
             e.getUpdatedAt()
         );

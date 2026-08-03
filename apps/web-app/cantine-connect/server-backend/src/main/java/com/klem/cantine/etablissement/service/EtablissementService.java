@@ -34,6 +34,7 @@ public class EtablissementService {
                 .adresse(dto.adresse())
                 .ville(dto.ville() != null ? dto.ville() : "Abidjan")
                 .telephone(dto.telephone())
+                .delaiGraceJours(dto.delaiGraceJours())
                 .build();
         return EtablissementResponseDTO.from(etablissementRepository.save(e));
     }
@@ -81,6 +82,7 @@ public class EtablissementService {
         if (dto.adresse() != null) e.setAdresse(dto.adresse());
         if (dto.ville() != null && !dto.ville().isBlank()) e.setVille(dto.ville());
         if (dto.telephone() != null) e.setTelephone(dto.telephone());
+        e.setDelaiGraceJours(dto.delaiGraceJours());
         return EtablissementResponseDTO.from(etablissementRepository.save(e));
     }
 

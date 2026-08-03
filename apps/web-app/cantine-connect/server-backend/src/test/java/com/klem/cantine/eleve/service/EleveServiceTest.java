@@ -47,7 +47,7 @@ class EleveServiceTest {
                 "Traoré", "Aminata", null, null,
                 false, null, null,
                 "Parent Traoré", "0700000001",
-                null, null, null);
+                null, null, null, null, null);
     }
 
     private Eleve eleveComplet(Long id, String matricule, StatutAcces statut) {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router'
+import { Outlet, Navigate, useNavigate, useLocation } from 'react-router'
 import {
   Box, Drawer, AppBar, Toolbar, Typography,
   List, ListItemButton, ListItemIcon, ListItemText, Divider,
@@ -9,6 +9,8 @@ import DashboardIcon      from '@mui/icons-material/Dashboard'
 import SchoolIcon         from '@mui/icons-material/School'
 import PeopleIcon         from '@mui/icons-material/People'
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom'
+import ChildCareIcon      from '@mui/icons-material/ChildCare'
+import HowToRegIcon       from '@mui/icons-material/HowToReg'
 import RestaurantIcon     from '@mui/icons-material/Restaurant'
 import PaymentsIcon       from '@mui/icons-material/Payments'
 import QrCodeScannerIcon  from '@mui/icons-material/QrCodeScanner'
@@ -21,7 +23,6 @@ import MenuIcon           from '@mui/icons-material/Menu'
 import InfoOutlinedIcon  from '@mui/icons-material/InfoOutlined'
 import { useAuth }       from '../hooks/useAuth'
 import AProposDialog     from '../components/AProposDialog'
-import ThemeSwitcher     from '../components/ThemeSwitcher'
 
 const DRAWER_WIDTH = 240
 
@@ -31,12 +32,14 @@ const NAV_ITEMS = [
   { label: 'Tableau de bord', icon: <DashboardIcon />,      path: '/dashboard',      roles: null },
   { label: 'Établissements',  icon: <SchoolIcon />,         path: '/etablissements', roles: STAFF_ROLES },
   { label: 'Élèves',          icon: <PeopleIcon />,         path: '/eleves',         roles: STAFF_ROLES },
+  { label: 'Mes enfants',     icon: <ChildCareIcon />,      path: '/mes-enfants',    roles: ['PARENT'] },
   { label: 'Paiements',       icon: <PaymentsIcon />,       path: '/paiements',      roles: null },
   { label: 'Scan Réfectoire', icon: <QrCodeScannerIcon />,  path: '/scan',           roles: STAFF_ROLES },
   { label: 'Historique',      icon: <HistoryIcon />,        path: '/passages',       roles: null },
   { label: 'Rapports',        icon: <AssessmentIcon />,     path: '/rapports',       roles: STAFF_ROLES },
   { label: 'Utilisateurs',    icon: <ManageAccountsIcon />, path: '/utilisateurs',   roles: ['ADMIN'] },
   { label: 'Parents',         icon: <FamilyRestroomIcon />, path: '/parents',        roles: ['ADMIN'] },
+  { label: "Demandes d'accès", icon: <HowToRegIcon />,      path: '/demandes-acces', roles: ['ADMIN'] },
   { label: 'Configuration',   icon: <TuneIcon />,           path: '/configuration',  roles: ['ADMIN'] },
 ]
 
@@ -50,6 +53,12 @@ export default function MainLayout() {
   const isDesktop   = useMediaQuery(theme.breakpoints.up('lg')) // ≥ 1200px
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const [aProposOpen,  setAProposOpen]  = useState(false)
+
+  // Mot de passe temporaire non encore changé — bloque l'accès au reste de
+  // l'app tant que le changement n'est pas fait (voir ChangerMotDePassePage).
+  if (user?.doitChangerMotDePasse) {
+    return <Navigate to="/changer-mot-de-passe" replace />
+  }
 
   const handleLogout = () => { logout(); navigate('/login', { replace: true }) }
 
@@ -143,7 +152,6 @@ export default function MainLayout() {
               <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.dark', fontSize: 14 }}>
                 {initials}
               </Avatar>
-              <ThemeSwitcher />
               <Tooltip title="Déconnexion">
                 <IconButton color="inherit" onClick={handleLogout} size="small">
                   <LogoutIcon fontSize="small" />

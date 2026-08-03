@@ -10,12 +10,14 @@ public record AuthResponseDTO(
     String nom,
     String prenom,
     String email,
-    String role
+    String role,
+    Boolean doitChangerMotDePasse
 ) {
     public static AuthResponseDTO of(String token, long expiresInMs, Utilisateur u) {
         return new AuthResponseDTO(
             token, "Bearer", expiresInMs,
-            u.getId(), u.getNom(), u.getPrenom(), u.getEmail(), u.getRole().name()
+            u.getId(), u.getNom(), u.getPrenom(), u.getEmail(), u.getRole().name(),
+            u.getDoitChangerMotDePasse()
         );
     }
 }

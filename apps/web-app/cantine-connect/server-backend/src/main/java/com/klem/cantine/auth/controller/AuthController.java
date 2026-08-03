@@ -1,6 +1,8 @@
 package com.klem.cantine.auth.controller;
 
+import com.klem.cantine.auth.dto.ChangerMotDePasseRequestDTO;
 import com.klem.cantine.auth.dto.LoginRequestDTO;
+import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.auth.service.AuthService;
 import com.klem.cantine.common.ApiResponse;
 import jakarta.validation.Valid;
@@ -31,5 +33,18 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<?>> me(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(ApiResponse.ok(userDetails.getUsername()));
+    }
+
+    @PostMapping("/changer-mot-de-passe")
+    public ResponseEntity<ApiResponse<?>> changerMotDePasse(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangerMotDePasseRequestDTO dto) {
+        try {
+            authService.changerMotDePasse((Utilisateur) userDetails, dto);
+            return ResponseEntity.ok(ApiResponse.ok("Mot de passe mis à jour", null));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401)
+                    .body(ApiResponse.error(401, "UNAUTHORIZED", e.getMessage()));
+        }
     }
 }

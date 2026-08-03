@@ -28,6 +28,11 @@ public class Etablissement {
     @Column(length = 20)
     private String telephone;
 
+    // Délai de grâce (jours) accordé après échéance de paiement — surcharge la
+    // valeur globale DELAI_GRACE_JOURS_DEFAUT si renseigné, sinon celle-ci s'applique.
+    @Column(name = "delai_grace_jours")
+    private Integer delaiGraceJours;
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean actif = true;

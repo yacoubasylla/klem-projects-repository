@@ -148,3 +148,20 @@
 - **Contexte** : Aucune infrastructure PDF/Excel n'existait dans le projet. `xlsx` (SheetJS) — bibliothèque JS de référence pour Excel — n'a plus été patché sur le registre npm depuis la version `0.18.5`, qui contient deux vulnérabilités connues sans correctif disponible (Prototype Pollution, ReDoS) ; les versions corrigées de SheetJS ne sont distribuées que via leur propre CDN, hors npm.
 - **Alternative rejetée** : `xlsx`/SheetJS — écarté uniquement pour la raison de sécurité ci-dessus, malgré sa popularité ; génération côté serveur (OpenPDF/Apache POI) — écartée pour cette v1 exploratoire, plus coûteuse à livrer et nécessitant de paramétrer en dates les agrégations aujourd'hui figées sur « aujourd'hui »/« ce mois » dans `DashboardService`.
 - **Fichier ADR** : `adr/2026-07-03-module-rapports-generation-navigateur-exceljs.md`
+
+---
+
+### ADR-017 · Refonte Premium Phase 1 — Fondations Backend (Demandes d'Accès, Délai de Grâce, Certificat Médical, Périodes d'Abonnement)
+- **Statut** : En cours — 2026-08-03 (backend écrit, non commité ; UI et validation admin non livrées)
+- **Décision** :
+  1. Workflow de demande d'accès parent en file d'attente (`demandes_acces`, statut `EN_ATTENTE/VALIDEE/REJETEE`) plutôt qu'activation immédiate — le compte `Utilisateur`/`Parent` n'est créé qu'à la validation par un ADMIN (phase 2, non implémentée dans cette session).
+  2. Délai de grâce piloté par configuration globale + surcharge optionnelle par établissement, plutôt qu'un champ unique codé en dur.
+  3. Contrainte allergie ⇒ certificat médical appliquée en code service (`IllegalArgumentException` → 400), pas en contrainte SQL, pour un message métier explicite via `GlobalExceptionHandler`.
+  4. Le mode `CREDITS` (portefeuille prépayé) est conservé en coexistence avec les nouveaux abonnements trimestriel/annuel — la règle « pas de mensualisation » s'applique uniquement au mode `ABONNEMENT`.
+  5. Introduction d'interfaces `PaymentProvider` / `NotificationSender` pour préparer l'ajout de rails de paiement (Orange/MTN/Moov Money direct) et de canaux de notification (SMS) sans intégration marchande réelle immédiate.
+- **Contexte** : refonte visuelle et fonctionnelle demandée pour rendre l'application plus premium/crédible pour le contexte scolaire ivoirien (page d'accueil, connexion, inscription parent) + règles métier manquantes (délai de grâce non paramétrable, allergies sans justificatif, recherche parent limitée à l'email). Portée de session validée avec l'utilisateur : UI + fondations de données cette session ; workflow de validation admin complet et écrans self-service parent reportés à une phase 2.
+- **Alternatives rejetées** :
+  - Activation immédiate du compte parent à la soumission — rejetée : aucun contrôle admin avant l'accès, risque de faux comptes en contexte scolaire.
+  - Remplacement total du mode `CREDITS` par l'abonnement — rejeté : fonctionnalité existante utilisée (repas ponctuels hors abonnement), aucune demande de suppression.
+  - Intégration immédiate d'un SDK Orange/MTN/Moov Money réel — rejetée : aucun accès marchand disponible à ce stade ; l'abstraction `PaymentProvider` permet de brancher un provider réel sans reprise du code appelant.
+- **Fichier ADR** : à créer via `./scripts/create-adr.sh` lors de la clôture de la Phase 1 (une fois l'UI livrée et vérifiée).

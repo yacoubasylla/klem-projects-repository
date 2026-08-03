@@ -1,6 +1,7 @@
 package com.klem.cantine.auth.service;
 
 import com.klem.cantine.auth.dto.AuthResponseDTO;
+import com.klem.cantine.auth.dto.ChangerMotDePasseRequestDTO;
 import com.klem.cantine.auth.dto.LoginRequestDTO;
 import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.auth.repository.UtilisateurRepository;
@@ -38,5 +39,17 @@ public class AuthService implements UserDetailsService {
 
         String token = jwtService.generateToken(utilisateur);
         return AuthResponseDTO.of(token, jwtService.getExpirationMs(), utilisateur);
+    }
+
+    @Transactional
+    public void changerMotDePasse(Utilisateur principal, ChangerMotDePasseRequestDTO dto) {
+        Utilisateur utilisateur = utilisateurRepository.findById(principal.getId())
+                .orElseThrow(() -> new BadCredentialsException("Utilisateur introuvable"));
+        if (!passwordEncoder.matches(dto.motDePasseActuel(), utilisateur.getMotDePasse())) {
+            throw new BadCredentialsException("Mot de passe actuel incorrect");
+        }
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.nouveauMotDePasse()));
+        utilisateur.setDoitChangerMotDePasse(false);
+        utilisateurRepository.save(utilisateur);
     }
 }

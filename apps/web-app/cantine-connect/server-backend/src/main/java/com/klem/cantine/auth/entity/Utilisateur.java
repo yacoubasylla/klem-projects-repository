@@ -42,6 +42,12 @@ public class Utilisateur implements UserDetails {
     @Column(nullable = false)
     private Boolean actif = true;
 
+    // Forcé à true lors de la génération d'un mot de passe temporaire
+    // (validation d'une demande d'accès) — remis à false au changement.
+    @Builder.Default
+    @Column(name = "doit_changer_mot_de_passe", nullable = false)
+    private Boolean doitChangerMotDePasse = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

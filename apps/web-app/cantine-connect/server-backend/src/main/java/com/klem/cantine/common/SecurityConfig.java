@@ -41,8 +41,9 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/demandes-acces").permitAll()
                 .requestMatchers("/api/v1/auth/**", "/api/v1/webhooks/**", "/actuator/**",
-                                 "/api/v1/configurations/FOND_ECRAN_LOGIN").permitAll()
+                                 "/api/v1/configurations/FOND_ECRAN_LOGIN", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

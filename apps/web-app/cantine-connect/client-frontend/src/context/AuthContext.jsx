@@ -41,8 +41,16 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const updateUser = (partial) => {
+    setUser((prev) => {
+      const next = { ...prev, ...partial }
+      safeStorage.setItem(USER_KEY, JSON.stringify(next))
+      return next
+    })
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, isAuthenticated: Boolean(user) }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, loading, isAuthenticated: Boolean(user) }}>
       {children}
     </AuthContext.Provider>
   )

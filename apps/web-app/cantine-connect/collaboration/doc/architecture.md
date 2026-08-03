@@ -213,3 +213,36 @@ services:
 4. **Déploiement** : Connexion SSH sécurisée au serveur, `docker compose pull` + redémarrage progressif.
 
 **Sauvegarde** : `pg_dump` automatique chaque nuit à 02h00, chiffrement de l'archive, export vers stockage objet distant (S3 / équivalent), rétention 30 jours.
+
+---
+
+## 8. Extensions Phase 1 — Refonte Premium (en cours, backend uniquement)
+
+> Voir ADR-017 (decision-log.md). État à la date de rédaction : migrations et code
+> backend écrits en local (non commités), UI (accueil/connexion/demande d'accès) et
+> validation admin des demandes **non encore implémentées**. À ne pas considérer
+> comme livré tant que ce bandeau n'est pas retiré.
+
+- **Demandes d'accès parent (self-service)** : nouvelle table `demandes_acces`
+  (migration `V8`) + `AccesController` (`POST /api/v1/demandes-acces`, public).
+  Persiste uniquement la demande (statut `EN_ATTENTE`) — ne crée aucun compte.
+  L'écran de validation admin et la création automatique du compte
+  `Utilisateur`(PARENT)+`Parent` sont reportés à une phase 2.
+- **Délai de grâce paramétrable** : clé de configuration globale
+  `DELAI_GRACE_JOURS_DEFAUT` (défaut 7 j) + colonne `etablissements.delai_grace_jours`
+  en surcharge optionnelle par établissement (migration `V9`). Fondation de données
+  uniquement — aucun job n'exploite encore cette valeur pour faire évoluer
+  automatiquement `Eleve.statutAcces`.
+- **Certificat médical pour allergies** : colonne `eleves.certificat_medical_url`
+  (migration `V10`). Règle appliquée dans `EleveService` (pas en contrainte SQL) :
+  `allergies` renseigné ⇒ certificat obligatoire, sinon `400 VALIDATION_ERROR`.
+- **Périodes d'abonnement** : colonne `eleves.periode_abonnement`
+  (`TRIMESTRIEL`/`ANNUEL`, migration `V11`) + clés de config `TARIF_TRIMESTRE` /
+  `TARIF_ANNEE`. Le mode `CREDITS` (portefeuille prépayé) existant est conservé
+  tel quel et coexiste avec l'abonnement.
+- **Architecture paiement/notification multi-provider** : direction retenue —
+  interface `PaymentProvider` (CinetPay/PayDunya adaptés à l'interface,
+  placeholders Orange/MTN/Moov Money direct) sélectionnée via la clé de config
+  `PAIEMENT_PROVIDER_ACTIF` ; interface `NotificationSender` (email existant +
+  SMS stub/log, aucun fournisseur SMS choisi à ce stade). Pas d'intégration
+  marchande réelle dans cette phase.

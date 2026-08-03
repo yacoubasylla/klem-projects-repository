@@ -5,12 +5,13 @@ import com.klem.cantine.eleve.entity.StatutAcces;
 import com.klem.cantine.eleve.repository.EleveRepository;
 import com.klem.cantine.etablissement.entity.Classe;
 import com.klem.cantine.etablissement.entity.Etablissement;
-import com.klem.cantine.paiement.config.PaiementProperties;
 import com.klem.cantine.paiement.dto.ModifierPaiementRequestDTO;
 import com.klem.cantine.paiement.entity.OperateurMobileMoney;
 import com.klem.cantine.paiement.entity.StatutPaiement;
 import com.klem.cantine.paiement.entity.TransactionPaiement;
+import com.klem.cantine.paiement.provider.PaymentProvider;
 import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
+import com.klem.cantine.parametrage.service.ConfigurationService;
 import com.klem.cantine.parent.repository.ParentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,8 +36,7 @@ class PaiementServiceTest {
     @Mock private EleveRepository eleveRepository;
     @Mock private ParentRepository parentRepository;
     @Mock private WebhookService webhookService;
-
-    private final PaiementProperties paiementProperties = new PaiementProperties();
+    @Mock private ConfigurationService configurationService;
 
     private PaiementService paiementService;
 
@@ -43,7 +44,7 @@ class PaiementServiceTest {
     void setUp() {
         paiementService = new PaiementService(
                 transactionRepository, eleveRepository, parentRepository,
-                paiementProperties, webhookService);
+                webhookService, List.<PaymentProvider>of(), configurationService);
     }
 
     private Eleve eleve(Long id) {

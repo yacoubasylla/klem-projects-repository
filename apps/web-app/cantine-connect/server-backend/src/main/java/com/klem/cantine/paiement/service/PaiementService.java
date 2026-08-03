@@ -5,14 +5,15 @@ import com.klem.cantine.actionlog.entity.TypeAction;
 import com.klem.cantine.auth.entity.Role;
 import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.eleve.repository.EleveRepository;
-import com.klem.cantine.paiement.config.PaiementProperties;
 import com.klem.cantine.paiement.dto.InitierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.ModifierPaiementRequestDTO;
 import com.klem.cantine.paiement.dto.PaiementResponseDTO;
 import com.klem.cantine.paiement.entity.OperateurMobileMoney;
 import com.klem.cantine.paiement.entity.StatutPaiement;
 import com.klem.cantine.paiement.entity.TransactionPaiement;
+import com.klem.cantine.paiement.provider.PaymentProvider;
 import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
+import com.klem.cantine.parametrage.service.ConfigurationService;
 import com.klem.cantine.parent.repository.ParentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +40,9 @@ public class PaiementService {
     private final TransactionPaiementRepository transactionRepository;
     private final EleveRepository eleveRepository;
     private final ParentRepository parentRepository;
-    private final PaiementProperties paiementProperties;
     private final WebhookService webhookService;
+    private final List<PaymentProvider> paymentProviders;
+    private final ConfigurationService configurationService;
 
     @Traceable(action = TypeAction.CREATE, entite = "TransactionPaiement")
     @Transactional
@@ -62,8 +66,7 @@ public class PaiementService {
 
         transaction = transactionRepository.save(transaction);
 
-        // URL de paiement CinetPay (en production : appel API CinetPay pour obtenir l'URL réelle)
-        String paymentUrl = construireUrlPaiement(referenceInterne, dto);
+        String paymentUrl = resolveProviderActif().initierPaiement(referenceInterne, dto);
         log.info("Paiement initié : ref={} operateur={} montant={} XOF",
                 referenceInterne, dto.operateur(), dto.montant());
 
@@ -139,13 +142,17 @@ public class PaiementService {
         transactionRepository.deleteById(id);
     }
 
-    // ── Construction URL paiement ─────────────────────────────────────────────
+    // ── Résolution du provider de paiement actif ──────────────────────────────
 
-    private String construireUrlPaiement(String referenceInterne, InitierPaiementRequestDTO dto) {
-        String siteId = paiementProperties.getCinetpay().getSiteId();
-        return String.format(
-                "https://checkout.cinetpay.com/pay?site_id=%s&transaction_id=%s&amount=%s&currency=XOF&phone=%s",
-                siteId, referenceInterne, dto.montant(), dto.telephonePayeur()
-        );
+    /**
+     * Sélectionne le {@link PaymentProvider} désigné par la configuration
+     * `PAIEMENT_PROVIDER_ACTIF` (ex. CINETPAY, PAYDUNYA, ORANGE_MONEY_DIRECT...).
+     * Repli sur CinetPay si la config est absente/invalide.
+     */
+    private PaymentProvider resolveProviderActif() {
+        String code = configurationService.getValeur("PAIEMENT_PROVIDER_ACTIF");
+        Map<String, PaymentProvider> byCode = paymentProviders.stream()
+                .collect(java.util.stream.Collectors.toMap(PaymentProvider::getCode, Function.identity()));
+        return byCode.getOrDefault(code, byCode.get("CINETPAY"));
     }
 }

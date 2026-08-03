@@ -1,5 +1,6 @@
 package com.klem.cantine.eleve.dto;
 
+import com.klem.cantine.eleve.entity.PeriodeAbonnement;
 import com.klem.cantine.eleve.entity.RegimeAlimentaire;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,5 +42,8 @@ public record EleveRequestDTO(
 
     String parentEmail,
     String allergies,
-    String notesMedicales
+    // Obligatoire si `allergies` est renseigné (certificat d'un médecin allergologue)
+    String certificatMedicalUrl,
+    String notesMedicales,
+    PeriodeAbonnement periodeAbonnement
 ) {}

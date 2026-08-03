@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/eleves")
@@ -55,6 +56,15 @@ public class EleveController {
             @PathVariable Long id,
             @RequestParam StatutAcces statut) {
         return ResponseEntity.ok(ApiResponse.ok("Statut mis à jour", eleveService.changerStatut(id, statut)));
+    }
+
+    @PostMapping("/{id}/certificat-medical")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('GESTIONNAIRE')")
+    public ResponseEntity<ApiResponse<?>> uploaderCertificatMedical(
+            @PathVariable Long id,
+            @RequestParam("fichier") MultipartFile fichier) {
+        String url = eleveService.uploaderCertificatMedical(id, fichier);
+        return ResponseEntity.ok(ApiResponse.ok("Certificat médical enregistré", java.util.Map.of("certificatMedicalUrl", url)));
     }
 
     @DeleteMapping("/{id}")

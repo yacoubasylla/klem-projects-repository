@@ -6,4 +6,9 @@ export const authService = {
 
   me: () =>
     apiClient.get('/auth/me').then((r) => r.data.data),
+
+  changerMotDePasse: (motDePasseActuel, nouveauMotDePasse) =>
+    apiClient
+      .post('/auth/changer-mot-de-passe', { motDePasseActuel, nouveauMotDePasse })
+      .then((r) => r.data),
 };

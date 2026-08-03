@@ -46,6 +46,17 @@ spring:
             enable: true
             required: true
 
+  # ── Upload de fichiers (ex. certificats médicaux) ────────
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+# ── Stockage local des fichiers uploadés ─────────────────
+# ⚠️ Disque éphémère sur Railway — bascule S3-compatible à prévoir en phase 2
+storage:
+  uploads-dir: ${UPLOADS_DIR:uploads}
+
 # ── Serveur ───────────────────────────────────────────────
 # Railway injecte $PORT dynamiquement — fallback 8081 en local
 server:

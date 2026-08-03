@@ -1,6 +1,9 @@
 package com.klem.cantine.parent.controller;
 
+import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.common.ApiResponse;
+import com.klem.cantine.eleve.dto.AjoutEnfantRequestDTO;
+import com.klem.cantine.eleve.service.EleveService;
 import com.klem.cantine.parent.dto.ParentRequestDTO;
 import com.klem.cantine.parent.dto.ParentResponseDTO;
 import com.klem.cantine.parent.service.ParentService;
@@ -24,6 +27,7 @@ import java.util.List;
 public class ParentController {
 
     private final ParentService parentService;
+    private final EleveService eleveService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -48,6 +52,15 @@ public class ParentController {
         return ResponseEntity.ok(ApiResponse.ok(parentService.getMoi(
                 ((com.klem.cantine.auth.entity.Utilisateur) userDetails).getId()
         )));
+    }
+
+    @PostMapping("/moi/enfants")
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<ApiResponse<?>> ajouterEnfant(
+            @Valid @RequestBody AjoutEnfantRequestDTO dto,
+            @AuthenticationPrincipal Utilisateur principal) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created(eleveService.creerViaParent(principal, dto)));
     }
 
     @PostMapping

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import {
-  Box, Card, CardContent, Typography, TextField,
-  Button, Stack, Alert, CircularProgress, InputAdornment, IconButton,
+  Box, Typography, TextField, Button, Stack, Alert, CircularProgress,
+  InputAdornment, IconButton, Divider,
 } from '@mui/material'
-import { alpha } from '@mui/material/styles'
 import VisibilityIcon    from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import LockOutlinedIcon  from '@mui/icons-material/LockOutlined'
 import { useAuth } from '../../hooks/useAuth'
 import { authService } from '../../services/authService'
 import apiClient from '../../services/apiClient'
+import PublicSplitLayout from '../../layouts/PublicSplitLayout'
 
 export default function LoginPage() {
   const { login }  = useAuth()
@@ -41,7 +41,7 @@ export default function LoginPage() {
     try {
       const authResponse = await authService.login(form.email, form.motDePasse)
       login(authResponse)
-      navigate('/dashboard', { replace: true })
+      navigate(authResponse.doitChangerMotDePasse ? '/changer-mot-de-passe' : '/dashboard', { replace: true })
     } catch (err) {
       setError(err.message || 'Email ou mot de passe incorrect')
     } finally {
@@ -50,122 +50,92 @@ export default function LoginPage() {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...(bgImage
-          ? {
-              backgroundImage: `url(${bgImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }
-          : {
-              background: (t) =>
-                `linear-gradient(160deg, ${alpha(t.palette.primary.main, 0.10)} 0%, ${t.palette.background.default} 55%, ${alpha(t.palette.secondary.main, 0.06)} 100%)`,
-            }),
-        px: 2,
-      }}
-    >
-      <Box sx={{ width: '100%', maxWidth: 420 }}>
-        {/* Branding au-dessus de la carte */}
-        <Stack alignItems="center" spacing={0.5} mb={3}>
-          <Box
-            sx={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              background: (t) =>
-                `linear-gradient(135deg, ${t.palette.primary.light} 0%, ${t.palette.primary.dark} 100%)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: (t) => `0 8px 24px ${alpha(t.palette.primary.main, 0.35)}`,
-              mb: 1,
-            }}
-          >
-            <Typography fontSize={28} lineHeight={1}>🍽️</Typography>
-          </Box>
-          <Typography variant="h5" fontWeight={800} letterSpacing="-0.02em">
-            Cantine Connect
+    <PublicSplitLayout
+      activePage="login"
+      heroBackgroundImage={bgImage}
+      heroSlot={
+        <Box sx={{ py: { xs: 1, md: 3 } }}>
+          <Typography fontSize={40} lineHeight={1} mb={2}>🍽️</Typography>
+          <Typography variant="h3" sx={{ fontSize: { xs: '1.9rem', md: '2.3rem' }, mb: 2 }}>
+            Content de vous revoir
           </Typography>
-          <Typography variant="caption" color="text.secondary" fontWeight={500}>
-            KLEM Technologies &amp; Services
+          <Typography variant="h6" sx={{ fontWeight: 400, color: 'text.secondary', maxWidth: 440 }}>
+            Retrouvez le suivi des repas, des paiements et des accès de votre établissement
+            en un coup d'œil.
+          </Typography>
+        </Box>
+      }
+    >
+      <Box sx={{ p: { xs: 3, sm: 4 } }}>
+        <Stack direction="row" alignItems="center" spacing={1} mb={2.5}>
+          <LockOutlinedIcon fontSize="small" color="primary" />
+          <Typography variant="subtitle1" fontWeight={700}>
+            Connexion à votre espace
           </Typography>
         </Stack>
 
-        {/* Carte de connexion */}
-        <Card sx={{ overflow: 'visible' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-            <Stack direction="row" alignItems="center" spacing={1} mb={2.5}>
-              <LockOutlinedIcon fontSize="small" color="primary" />
-              <Typography variant="subtitle1" fontWeight={700}>
-                Connexion à votre espace
-              </Typography>
-            </Stack>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-                {error}
-              </Alert>
-            )}
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={2.5}>
+            <TextField
+              label="Adresse email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              fullWidth
+              autoFocus
+              autoComplete="email"
+              size="medium"
+            />
+            <TextField
+              label="Mot de passe"
+              name="motDePasse"
+              type={showPwd ? 'text' : 'password'}
+              value={form.motDePasse}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="current-password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPwd(!showPwd)} edge="end" size="small">
+                      {showPwd ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              disabled={loading}
+              sx={{ py: 1.4, mt: 0.5 }}
+            >
+              {loading
+                ? <CircularProgress size={22} color="inherit" />
+                : 'Se connecter'
+              }
+            </Button>
+          </Stack>
+        </form>
 
-            <form onSubmit={handleSubmit}>
-              <Stack spacing={2.5}>
-                <TextField
-                  label="Adresse email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  fullWidth
-                  autoFocus
-                  autoComplete="email"
-                  size="medium"
-                />
-                <TextField
-                  label="Mot de passe"
-                  name="motDePasse"
-                  type={showPwd ? 'text' : 'password'}
-                  value={form.motDePasse}
-                  onChange={handleChange}
-                  fullWidth
-                  autoComplete="current-password"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPwd(!showPwd)} edge="end" size="small">
-                          {showPwd ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  disabled={loading}
-                  sx={{ py: 1.4, mt: 0.5 }}
-                >
-                  {loading
-                    ? <CircularProgress size={22} color="inherit" />
-                    : 'Se connecter'
-                  }
-                </Button>
-              </Stack>
-            </form>
-          </CardContent>
-        </Card>
+        <Divider sx={{ my: 3 }} />
 
-        <Typography variant="caption" color="text.disabled" display="block" textAlign="center" mt={2.5}>
-          © 2026 KLEM Technologies &amp; Services
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+          Vous êtes parent et n'avez pas encore de compte ?{' '}
+          <Box component="a" href="/demande-acces" sx={{ color: 'primary.main', fontWeight: 700, textDecoration: 'none' }}>
+            Faites une demande d'accès
+          </Box>
         </Typography>
       </Box>
-    </Box>
+    </PublicSplitLayout>
   )
 }

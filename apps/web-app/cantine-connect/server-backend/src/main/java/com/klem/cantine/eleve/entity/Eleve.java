@@ -42,8 +42,22 @@ public class Eleve {
     @Column(name = "date_naissance")
     private LocalDate dateNaissance;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 1)
+    private Sexe sexe;
+
     @Column(name = "photo_url", length = 255)
     private String photoUrl;
+
+    // ── Lieu d'habitation de l'élève ──────────────────────
+    @Column(length = 100)
+    private String ville;
+
+    @Column(length = 100)
+    private String commune;
+
+    @Column(length = 100)
+    private String quartier;
 
     // ── Cantine / Affectation ─────────────────────────────
     @Column(name = "qr_code_token", nullable = false, unique = true)
@@ -79,8 +93,20 @@ public class Eleve {
     @Column(columnDefinition = "TEXT")
     private String allergies;
 
+    // Obligatoire dès lors qu'une allergie est déclarée (validée par le service,
+    // pas de contrainte SQL, pour un message métier clair) — certificat médical
+    // d'un allergologue justifiant l'allergie.
+    @Column(name = "certificat_medical_url")
+    private String certificatMedicalUrl;
+
     @Column(name = "notes_medicales", columnDefinition = "TEXT")
     private String notesMedicales;
+
+    // Périodicité de l'abonnement cantine (mode ABONNEMENT) — trimestriel ou annuel
+    // uniquement, sans objet en mode CREDITS.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "periode_abonnement", length = 20)
+    private PeriodeAbonnement periodeAbonnement;
 
     // ── Solde (mode CREDITS) ──────────────────────────────
     @Builder.Default
