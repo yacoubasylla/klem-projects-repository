@@ -42,8 +42,10 @@ public class Eleve {
     @Column(name = "date_naissance")
     private LocalDate dateNaissance;
 
+    // length=1 pousse Hibernate 6 à valider le schéma en attendant un type SQL
+    // CHAR(1) plutôt que VARCHAR — élargi pour rester sur un VARCHAR standard.
     @Enumerated(EnumType.STRING)
-    @Column(length = 1)
+    @Column(length = 10)
     private Sexe sexe;
 
     @Column(name = "photo_url", length = 255)
