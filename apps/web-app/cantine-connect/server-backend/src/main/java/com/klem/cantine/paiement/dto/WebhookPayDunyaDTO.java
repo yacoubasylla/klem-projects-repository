@@ -12,7 +12,10 @@ public record WebhookPayDunyaDTO(
 
         BigDecimal amount,
         String currency,
-        String phone
+        String phone,
+
+        // Fourni par PayDunya = sha512(clé privée) — confirme l'origine PayDunya
+        String hash
 ) {
     public boolean estAccepte() {
         return "completed".equalsIgnoreCase(status);

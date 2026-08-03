@@ -76,6 +76,9 @@ management:
       enabled: false
 
 # ── Paiements Mobile Money ───────────────────────────────
+# ⚠️ Valeurs par défaut "*_test" non fonctionnelles — renseigner de vraies
+# clés (comptes CinetPay/PayDunya) pour activer un paiement réel. Sans
+# elles, l'appel API échoue proprement (message clair, pas de crash).
 paiement:
   cinetpay:
     api-key: ${CINETPAY_API_KEY:cle_test}
@@ -85,8 +88,24 @@ paiement:
   paydunya:
     master-key: ${PAYDUNYA_MASTER_KEY:cle_test}
     private-key: ${PAYDUNYA_PRIVATE_KEY:cle_privee_test}
+    public-key: ${PAYDUNYA_PUBLIC_KEY:cle_publique_test}
     token: ${PAYDUNYA_TOKEN:token_test}
+    mode: ${PAYDUNYA_MODE:test}
     verify-signature: ${PAYDUNYA_VERIFY_SIGNATURE:false}
+
+# ── URLs publiques (callbacks paiement, liens dans les notifications) ────
+app:
+  frontend-url: ${APP_URL:http://localhost:5173}
+  backend-url: ${BACKEND_URL:http://localhost:8081}
+
+# ── SMS (Twilio) ──────────────────────────────────────────
+# ⚠️ Sans identifiants, SmsNotificationSender bascule en mode journal
+# (log-only) — comportement sûr par défaut, aucun crash.
+sms:
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    from-number: ${TWILIO_FROM_NUMBER:}
 
 # ── JWT ───────────────────────────────────────────────────
 jwt:

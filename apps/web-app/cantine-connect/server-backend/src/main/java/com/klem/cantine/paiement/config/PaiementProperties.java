@@ -28,7 +28,10 @@ public class PaiementProperties {
     public static class PayDunyaProps {
         private String masterKey;
         private String privateKey;
+        private String publicKey;
         private String token;
+        // "test" (sandbox-api) ou "live" (api) — détermine l'hôte PayDunya appelé.
+        private String mode = "test";
         private boolean verifySignature = false;
     }
 }

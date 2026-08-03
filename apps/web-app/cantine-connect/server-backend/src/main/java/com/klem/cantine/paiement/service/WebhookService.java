@@ -67,7 +67,7 @@ public class WebhookService {
     public void traiterPayDunya(WebhookPayDunyaDTO dto, String rawBody) {
         try {
             if (paiementProperties.getPaydunya().isVerifySignature()) {
-                verifierSignaturePayDunya(dto, rawBody);
+                verifierSignaturePayDunya(dto);
             }
 
             TransactionPaiement transaction = transactionRepository
@@ -143,27 +143,35 @@ public class WebhookService {
 
     // ── Vérification signature PayDunya ──────────────────────────────────────
 
-    private void verifierSignaturePayDunya(WebhookPayDunyaDTO dto, String rawBody) {
-        try {
-            String masterKey = paiementProperties.getPaydunya().getMasterKey();
-            String expected  = sha256(masterKey + rawBody);
-            // PayDunya envoie la signature dans un header X-PayDunya-Signature
-            // La vérification complète nécessite l'accès au header HTTP — à implémenter dans le controller si nécessaire
-            log.debug("Signature PayDunya calculée : {}", expected);
-        } catch (Exception e) {
+    // ⚠️ D'après la documentation PayDunya (IPN) : le champ `hash` transmis dans
+    // le webhook doit égaler sha512(clé privée) — confirme l'origine PayDunya.
+    // À revérifier contre la documentation à jour avant activation en production
+    // (verify-signature reste à `false` par défaut tant que non confirmé).
+    private void verifierSignaturePayDunya(WebhookPayDunyaDTO dto) {
+        String privateKey = paiementProperties.getPaydunya().getPrivateKey();
+        String attendu = sha512(privateKey);
+        if (dto.hash() == null || !attendu.equalsIgnoreCase(dto.hash())) {
             throw new SecurityException("Signature PayDunya invalide — webhook rejeté");
         }
     }
 
-    // ── Utilitaire SHA-256 ────────────────────────────────────────────────────
+    // ── Utilitaires de hachage ─────────────────────────────────────────────────
 
     private String sha256(String input) {
+        return hacher(input, "SHA-256");
+    }
+
+    private String sha512(String input) {
+        return hacher(input, "SHA-512");
+    }
+
+    private String hacher(String input, String algorithme) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance(algorithme);
             byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(hash);
         } catch (Exception e) {
-            throw new RuntimeException("Erreur calcul SHA-256", e);
+            throw new RuntimeException("Erreur calcul " + algorithme, e);
         }
     }
 }
