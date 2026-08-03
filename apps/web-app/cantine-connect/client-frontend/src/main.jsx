@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider, CssBaseline } from '@mui/material'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import './index.css'
 import { THEMES } from './theme/themes'
 import { ThemeModeProvider, useThemeMode } from './context/ThemeContext'

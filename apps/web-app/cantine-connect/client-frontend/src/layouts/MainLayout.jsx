@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router'
 import {
   Box, Drawer, AppBar, Toolbar, Typography,
   List, ListItemButton, ListItemIcon, ListItemText, Divider,
