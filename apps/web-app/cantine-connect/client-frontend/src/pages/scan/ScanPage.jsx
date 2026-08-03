@@ -201,10 +201,12 @@ export default function ScanPage() {
     finally { setLoadingP(false) }
   }, [])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { chargerPassages() }, [chargerPassages])
 
   // Recharger les passages après chaque scan réussi
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (result?.source === 'online') chargerPassages()
   }, [result, chargerPassages])
 
