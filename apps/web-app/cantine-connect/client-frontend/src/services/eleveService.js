@@ -23,4 +23,14 @@ export const eleveService = {
 
   supprimerDefinitivement: (id) =>
     apiClient.delete(`/eleves/${id}/permanent`).then((r) => r.data),
+
+  uploaderCertificatMedical: (id, fichier) => {
+    const formData = new FormData();
+    formData.append('fichier', fichier);
+    return apiClient
+      .post(`/eleves/${id}/certificat-medical`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((r) => r.data.data);
+  },
 };

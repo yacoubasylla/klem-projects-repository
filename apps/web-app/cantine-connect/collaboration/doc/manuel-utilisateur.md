@@ -107,7 +107,11 @@ Vue d'ensemble : nombre d'élèves, répartition par statut d'accès, paiements 
 - Suppression réservée à l'ADMIN.
 - Non accessible au rôle PARENT (le parent ajoute ses propres enfants via « Mes enfants », §8).
 
-> ⚠️ **Limitation connue** : le champ *Allergies* de ce formulaire est un simple champ texte. Or la règle métier impose désormais qu'une allergie ne puisse être enregistrée que si un certificat médical d'allergologue est associé (`certificatMedicalUrl`). L'API le permet (`POST /eleves/{id}/certificat-medical`), **mais ce formulaire n'expose pas encore de bouton d'upload** — tant que ce n'est pas ajouté, saisir une allergie depuis cet écran sera refusé par le serveur (erreur de validation). Écran à compléter en priorité.
+### Allergies et certificat médical
+
+- Le champ **Allergies** n'est modifiable **qu'en édition** d'une fiche déjà créée (pas à la création) : le certificat médical associé ne peut être importé qu'une fois la fiche existante (elle a besoin d'un identifiant). Créez d'abord l'élève sans allergie, puis ouvrez « Modifier » pour la déclarer.
+- En édition, le bloc **Certificat médical** (onglet Contacts/Allergies) permet d'**importer** un fichier (PDF, JPG ou PNG) — le certificat est envoyé immédiatement au serveur ; une fois chargé, un badge « Certificat fourni » apparaît avec un lien pour le consulter, et un bouton « Remplacer » pour en importer un nouveau.
+- L'enregistrement de la fiche est bloqué (message d'erreur explicite) si le champ Allergies contient du texte mais qu'aucun certificat n'a été importé.
 
 ---
 

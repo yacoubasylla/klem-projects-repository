@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
-  Tabs, Tab, Box, Stack, TextField, Button,
+  Tabs, Tab, Box, Stack, TextField, Button, Typography, Chip, Link,
   MenuItem, FormControlLabel, Checkbox, Alert, CircularProgress,
   useMediaQuery,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
+import UploadFileIcon from '@mui/icons-material/UploadFile'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useClasses } from '../../hooks/useClasses'
+import { eleveService } from '../../services/eleveService'
+import apiClient from '../../services/apiClient'
 
 const STATUTS = [
   { value: 'EN_ATTENTE_PAIEMENT', label: 'En attente de paiement' },
@@ -27,8 +31,12 @@ const FORM_INITIAL = {
   etablissementId: '', classeId: '',
   statutAcces: 'EN_ATTENTE_PAIEMENT', regimeAlimentaire: 'STANDARD', estBoursier: false,
   parentNom: '', parentTelephone: '', parentEmail: '',
-  allergies: '', notesMedicales: '',
+  allergies: '', certificatMedicalUrl: '', notesMedicales: '',
 }
+
+// L'API sert /uploads/** à la racine du backend, pas sous /api/v1 — on retire
+// ce suffixe de la baseURL pour construire un lien cliquable vers le certificat.
+const BACKEND_ORIGIN = (apiClient.defaults.baseURL || '').replace(/\/api\/v1\/?$/, '')
 
 function TabPanel({ children, value, index }) {
   return (
@@ -46,13 +54,18 @@ export default function EleveFormDialog({ open, onClose, onSuccess, eleveToEdit,
   const [form, setForm] = useState(FORM_INITIAL)
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState(null)
+  const fileInputRef = useRef(null)
 
   const { classes } = useClasses(form.etablissementId || null)
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTab(0)
       setFormError(null)
+      setUploadError(null)
       if (eleveToEdit) {
         setForm({
           matricule: eleveToEdit.matricule ?? '',
@@ -68,6 +81,7 @@ export default function EleveFormDialog({ open, onClose, onSuccess, eleveToEdit,
           parentTelephone: eleveToEdit.parentTelephone ?? '',
           parentEmail: eleveToEdit.parentEmail ?? '',
           allergies: eleveToEdit.allergies ?? '',
+          certificatMedicalUrl: eleveToEdit.certificatMedicalUrl ?? '',
           notesMedicales: eleveToEdit.notesMedicales ?? '',
         })
       } else {
@@ -87,7 +101,31 @@ export default function EleveFormDialog({ open, onClose, onSuccess, eleveToEdit,
     if (!form.classeId) return 'La classe est obligatoire (onglet Cantine)'
     if (!form.parentNom.trim()) return 'Le nom du parent est obligatoire (onglet Contacts)'
     if (!form.parentTelephone.trim()) return 'Le téléphone du parent est obligatoire (onglet Contacts)'
+    if (form.allergies.trim() && !isEdit) {
+      return "Un certificat médical ne peut être importé qu'après la création de la fiche — enregistrez d'abord sans allergie, puis modifiez la fiche pour l'ajouter (onglet Contacts)"
+    }
+    if (form.allergies.trim() && !form.certificatMedicalUrl) {
+      return "Un certificat médical (allergologue) est obligatoire pour déclarer une allergie — importez-le avant d'enregistrer (onglet Contacts)"
+    }
     return null
+  }
+
+  const handleUploadClick = () => fileInputRef.current?.click()
+
+  const handleFileSelected = async (e) => {
+    const fichier = e.target.files?.[0]
+    e.target.value = ''
+    if (!fichier || !eleveToEdit) return
+    setUploading(true)
+    setUploadError(null)
+    try {
+      const { certificatMedicalUrl } = await eleveService.uploaderCertificatMedical(eleveToEdit.id, fichier)
+      set('certificatMedicalUrl', certificatMedicalUrl)
+    } catch (err) {
+      setUploadError(err.message)
+    } finally {
+      setUploading(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -101,6 +139,7 @@ export default function EleveFormDialog({ open, onClose, onSuccess, eleveToEdit,
         etablissementId: Number(form.etablissementId),
         classeId: Number(form.classeId),
         dateNaissance: form.dateNaissance || null,
+        certificatMedicalUrl: form.certificatMedicalUrl || null,
       }
       await onSuccess(payload)
       onClose()
@@ -200,7 +239,59 @@ export default function EleveFormDialog({ open, onClose, onSuccess, eleveToEdit,
             <TextField label="Nom du parent/tuteur *" name="parentNom" value={form.parentNom} onChange={handleChange} fullWidth />
             <TextField label="Téléphone parent *" name="parentTelephone" value={form.parentTelephone} onChange={handleChange} fullWidth />
             <TextField label="Email parent" name="parentEmail" value={form.parentEmail} onChange={handleChange} fullWidth />
-            <TextField label="Allergies" name="allergies" value={form.allergies} onChange={handleChange} fullWidth multiline rows={2} />
+
+            <TextField
+              label="Allergies" name="allergies" value={form.allergies} onChange={handleChange}
+              fullWidth multiline rows={2}
+              disabled={!isEdit}
+              helperText={
+                !isEdit
+                  ? "Enregistrez d'abord la fiche, puis modifiez-la pour déclarer une allergie avec son certificat médical"
+                  : "Toute allergie déclarée requiert un certificat médical d'un allergologue (ci-dessous)"
+              }
+            />
+
+            {isEdit && (
+              <Box>
+                <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
+                  Certificat médical (allergologue)
+                </Typography>
+                <Stack direction="row" alignItems="center" spacing={1.5} flexWrap="wrap">
+                  {form.certificatMedicalUrl ? (
+                    <Chip
+                      icon={<CheckCircleIcon />}
+                      color="success"
+                      variant="outlined"
+                      label={
+                        <Link href={`${BACKEND_ORIGIN}${form.certificatMedicalUrl}`} target="_blank" rel="noopener" underline="hover" color="inherit">
+                          Certificat fourni — consulter
+                        </Link>
+                      }
+                    />
+                  ) : (
+                    <Typography variant="body2" color="text.disabled">Aucun certificat importé</Typography>
+                  )}
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={uploading ? <CircularProgress size={14} /> : <UploadFileIcon />}
+                    onClick={handleUploadClick}
+                    disabled={uploading}
+                  >
+                    {form.certificatMedicalUrl ? 'Remplacer' : 'Importer'}
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    hidden
+                    onChange={handleFileSelected}
+                  />
+                </Stack>
+                {uploadError && <Alert severity="error" sx={{ mt: 1 }}>{uploadError}</Alert>}
+              </Box>
+            )}
+
             <TextField label="Notes médicales" name="notesMedicales" value={form.notesMedicales} onChange={handleChange} fullWidth multiline rows={2} />
           </Stack>
         </TabPanel>
