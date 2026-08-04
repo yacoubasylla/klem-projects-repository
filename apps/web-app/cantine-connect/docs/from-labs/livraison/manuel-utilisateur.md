@@ -33,6 +33,8 @@
 
 ## 1. Page d'accueil (publique)
 
+![Page d'accueil](assets/24-accueil.png)
+
 Avant de se connecter, toute personne qui arrive sur le site voit une page d'accueil qui présente
 l'application : ses points forts (paiement par Mobile Money, entrée à la cantine par QR Code,
 suivi des allergies, notifications aux parents), avec deux boutons principaux :
