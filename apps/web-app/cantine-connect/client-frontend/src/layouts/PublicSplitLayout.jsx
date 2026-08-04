@@ -1,6 +1,8 @@
 import { Link as RouterLink } from 'react-router'
 import { Box, Container, Stack, Typography, Button, Paper } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import LoginIcon   from '@mui/icons-material/Login'
+import HowToRegIcon from '@mui/icons-material/HowToReg'
 
 // Motif géométrique discret d'inspiration textile ivoirienne — décoratif uniquement,
 // SVG léger généré localement (pas d'imagerie stock).
@@ -32,8 +34,8 @@ function DecorativePattern() {
 }
 
 const NAV_LINKS = [
-  { key: 'login', label: 'Se connecter', to: '/login', variant: 'outlined' },
-  { key: 'acces', label: "Demande d'accès", to: '/demande-acces', variant: 'contained' },
+  { key: 'login', label: 'Se connecter', to: '/login', variant: 'outlined', icon: <LoginIcon /> },
+  { key: 'acces', label: "Demande d'accès", to: '/demande-acces', variant: 'contained', icon: <HowToRegIcon /> },
 ]
 
 /**
@@ -76,7 +78,8 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
                   to={l.to}
                   variant={l.variant}
                   size="medium"
-                  sx={{ borderRadius: 999, px: 2.5 }}
+                  startIcon={l.icon}
+                  sx={{ borderRadius: 999, px: 2.5, whiteSpace: 'nowrap' }}
                 >
                   {l.label}
                 </Button>

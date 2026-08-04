@@ -8,6 +8,8 @@ import QrCodeScannerIcon   from '@mui/icons-material/QrCodeScanner'
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import SchoolIcon          from '@mui/icons-material/School'
+import LoginIcon           from '@mui/icons-material/Login'
+import HowToRegIcon        from '@mui/icons-material/HowToReg'
 import PublicSplitLayout   from '../layouts/PublicSplitLayout'
 
 const ATOUTS = [
@@ -41,13 +43,15 @@ export default function HomePage() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={5}>
             <Button
               component={RouterLink} to="/demande-acces"
-              variant="contained" size="large" sx={{ px: 4, py: 1.4, borderRadius: 999 }}
+              variant="contained" size="large" startIcon={<HowToRegIcon />}
+              sx={{ px: 4, py: 1.4, borderRadius: 999, whiteSpace: 'nowrap' }}
             >
               Demande d'accès parent
             </Button>
             <Button
               component={RouterLink} to="/login"
-              variant="outlined" size="large" sx={{ px: 4, py: 1.4, borderRadius: 999 }}
+              variant="outlined" size="large" startIcon={<LoginIcon />}
+              sx={{ px: 4, py: 1.4, borderRadius: 999, whiteSpace: 'nowrap' }}
             >
               Se connecter
             </Button>
