@@ -1,5 +1,7 @@
 package com.klem.cantine.dashboard.service;
 
+import com.klem.cantine.auth.entity.Role;
+import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.dashboard.dto.DashboardStatsDTO;
 import com.klem.cantine.dashboard.dto.JourPassageDTO;
 import com.klem.cantine.scan.dto.PassageResponseDTO;
@@ -8,6 +10,7 @@ import com.klem.cantine.eleve.repository.EleveRepository;
 import com.klem.cantine.etablissement.repository.EtablissementRepository;
 import com.klem.cantine.paiement.entity.StatutPaiement;
 import com.klem.cantine.paiement.repository.TransactionPaiementRepository;
+import com.klem.cantine.parent.repository.ParentRepository;
 import com.klem.cantine.scan.entity.ResultatScan;
 import com.klem.cantine.scan.repository.PassageRefectoireRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +34,17 @@ public class DashboardService {
     private final EleveRepository eleveRepository;
     private final PassageRefectoireRepository passageRepository;
     private final TransactionPaiementRepository transactionRepository;
+    private final ParentRepository parentRepository;
 
-    public DashboardStatsDTO getStats() {
+    public DashboardStatsDTO getStats(Utilisateur principal) {
+        if (principal != null && principal.getRole() == Role.PARENT) {
+            List<Long> enfantIds = parentRepository.findEnfantIdsByUtilisateurId(principal.getId());
+            return enfantIds.isEmpty() ? statsVides() : getStatsPourEnfants(enfantIds);
+        }
+        return getStatsGlobales();
+    }
+
+    private DashboardStatsDTO getStatsGlobales() {
         LocalDate today = LocalDate.now();
         LocalDate debut7Jours = today.minusDays(6);
         LocalDateTime debutMois = today.withDayOfMonth(1).atStartOfDay();
@@ -49,7 +61,7 @@ public class DashboardService {
         long passagesAccordes = passageRepository.countByDatePassageAndResultat(today, ResultatScan.ACCORDE);
         long passagesRefuses  = passageRepository.countByDatePassageAndResultat(today, ResultatScan.REFUSE);
 
-        List<JourPassageDTO> tendance = buildTendance(debut7Jours, today);
+        List<JourPassageDTO> tendance = buildTendance(debut7Jours, today, null);
 
         List<Object[]> payStatsRows = transactionRepository.statsAcceptesPeriode(debutMois, finMois);
         Object[] payStats = payStatsRows.isEmpty() ? null : payStatsRows.get(0);
@@ -76,8 +88,70 @@ public class DashboardService {
         );
     }
 
-    private List<JourPassageDTO> buildTendance(LocalDate debut, LocalDate fin) {
-        List<Object[]> raw = passageRepository.countByDateRangeGrouped(debut, fin);
+    // Mêmes indicateurs que getStatsGlobales(), restreints aux enfants du parent connecté —
+    // aucune requête de cette méthode n'agrège en dehors de la liste eleveIds fournie.
+    private DashboardStatsDTO getStatsPourEnfants(List<Long> eleveIds) {
+        LocalDate today = LocalDate.now();
+        LocalDate debut7Jours = today.minusDays(6);
+        LocalDateTime debutMois = today.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime finMois = today.plusDays(1).atStartOfDay();
+
+        long nbEtablissements = eleveRepository.countDistinctEtablissementByIdIn(eleveIds);
+
+        long totalEleves = eleveRepository.countByIdInAndActifTrue(eleveIds);
+        long autorises   = eleveRepository.countByIdInAndStatutAccesAndActifTrue(eleveIds, StatutAcces.AUTORISE);
+        long grace       = eleveRepository.countByIdInAndStatutAccesAndActifTrue(eleveIds, StatutAcces.GRACE);
+        long enAttente   = eleveRepository.countByIdInAndStatutAccesAndActifTrue(eleveIds, StatutAcces.EN_ATTENTE_PAIEMENT);
+        long suspendus   = eleveRepository.countByIdInAndStatutAccesAndActifTrue(eleveIds, StatutAcces.SUSPENDU);
+
+        long passagesAccordes = passageRepository.countByDatePassageAndResultatAndEleveIdIn(today, ResultatScan.ACCORDE, eleveIds);
+        long passagesRefuses  = passageRepository.countByDatePassageAndResultatAndEleveIdIn(today, ResultatScan.REFUSE, eleveIds);
+
+        List<JourPassageDTO> tendance = buildTendance(debut7Jours, today, eleveIds);
+
+        List<Object[]> payStatsRows = transactionRepository.statsAcceptesPeriodeForEleves(debutMois, finMois, eleveIds);
+        Object[] payStats = payStatsRows.isEmpty() ? null : payStatsRows.get(0);
+        long nbPaiementsMois = (payStats != null && payStats[0] != null)
+                ? ((Number) payStats[0]).longValue() : 0L;
+        BigDecimal montantMois = (payStats != null && payStats[1] != null)
+                ? new BigDecimal(payStats[1].toString()) : BigDecimal.ZERO;
+        long nbPaiementsEnAttente = transactionRepository.countByStatutAndEleveIdIn(StatutPaiement.EN_ATTENTE, eleveIds);
+
+        List<PassageResponseDTO> derniersPassages = passageRepository
+                .findTop5ByEleveIdInAndDatePassageOrderByHeurePassageDesc(eleveIds, today)
+                .stream()
+                .map(PassageResponseDTO::from)
+                .toList();
+
+        return new DashboardStatsDTO(
+            nbEtablissements,
+            totalEleves, autorises, grace, enAttente, suspendus,
+            passagesAccordes + passagesRefuses,
+            passagesAccordes, passagesRefuses,
+            tendance,
+            nbPaiementsMois, montantMois, nbPaiementsEnAttente,
+            derniersPassages
+        );
+    }
+
+    private DashboardStatsDTO statsVides() {
+        LocalDate today = LocalDate.now();
+        List<JourPassageDTO> tendanceVide = new ArrayList<>();
+        for (LocalDate d = today.minusDays(6); !d.isAfter(today); d = d.plusDays(1)) {
+            tendanceVide.add(new JourPassageDTO(d, 0L, 0L));
+        }
+        return new DashboardStatsDTO(
+            0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
+            tendanceVide,
+            0L, BigDecimal.ZERO, 0L,
+            List.of()
+        );
+    }
+
+    private List<JourPassageDTO> buildTendance(LocalDate debut, LocalDate fin, List<Long> eleveIdsRestriction) {
+        List<Object[]> raw = eleveIdsRestriction == null
+                ? passageRepository.countByDateRangeGrouped(debut, fin)
+                : passageRepository.countByDateRangeGroupedForEleves(debut, fin, eleveIdsRestriction);
 
         Map<LocalDate, long[]> byDay = new LinkedHashMap<>();
         for (LocalDate d = debut; !d.isAfter(fin); d = d.plusDays(1)) {

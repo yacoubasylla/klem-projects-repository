@@ -163,7 +163,7 @@ export default function PassagesPage() {
     setDeleteTarget(null)
   }
 
-  const colSpan = isAdmin ? 9 : 8
+  const colSpan = isAdmin ? 9 : (isParent ? 7 : 8)
 
   return (
     <Box>
@@ -280,7 +280,7 @@ export default function PassagesPage() {
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Matricule</TableCell>
                 <TableCell>Élève</TableCell>
                 <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Classe</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Établissement</TableCell>
+                {!isParent && <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Établissement</TableCell>}
                 <TableCell align="center">Résultat</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Motif de refus</TableCell>
                 {isAdmin && <TableCell align="center">Actions</TableCell>}
@@ -326,11 +326,13 @@ export default function PassagesPage() {
                         {p.classeNom ?? '—'}
                       </Typography>
                     </TableCell>
-                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {p.etablissementNom ?? '—'}
-                      </Typography>
-                    </TableCell>
+                    {!isParent && (
+                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {p.etablissementNom ?? '—'}
+                        </Typography>
+                      </TableCell>
+                    )}
                     <TableCell align="center">
                       {p.resultat === 'ACCORDE'
                         ? <CheckCircleIcon color="success" fontSize="small" />

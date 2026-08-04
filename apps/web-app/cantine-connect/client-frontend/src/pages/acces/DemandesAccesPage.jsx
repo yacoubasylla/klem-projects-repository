@@ -171,6 +171,8 @@ export default function DemandesAccesPage() {
   const [page, setPage]             = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(20)
   const [statutFiltre, setStatutFiltre] = useState('EN_ATTENTE')
+  const [searchInput, setSearchInput]   = useState('')
+  const [searchFiltre, setSearchFiltre] = useState('')
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState(null)
   const [actionError, setActionError] = useState(null)
@@ -185,6 +187,7 @@ export default function DemandesAccesPage() {
     try {
       const params = { page, size: rowsPerPage }
       if (statutFiltre) params.statut = statutFiltre
+      if (searchFiltre) params.search = searchFiltre
       const data = await demandeAccesService.lister(params)
       setDemandes(data.content)
       setTotal(data.totalElements)
@@ -193,10 +196,19 @@ export default function DemandesAccesPage() {
     } finally {
       setLoading(false)
     }
-  }, [page, rowsPerPage, statutFiltre])
+  }, [page, rowsPerPage, statutFiltre, searchFiltre])
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { charger() }, [charger])
+
+  // Recherche débouncée (300ms) : évite un appel réseau à chaque frappe
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchFiltre(searchInput.trim())
+      setPage(0)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleValider = async (demande) => {
     setValidatingId(demande.id); setActionError(null)
@@ -231,7 +243,14 @@ export default function DemandesAccesPage() {
           <Typography variant="h5" fontWeight={600}>Demandes d'accès parent</Typography>
           <Typography variant="caption" color="text.secondary">Validez ou rejetez les demandes soumises depuis la page publique</Typography>
         </Box>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
+          <TextField
+            size="small" label="Rechercher"
+            placeholder="Nom, prénom, téléphone, email, résidence…"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            sx={{ minWidth: 260 }}
+          />
           <TextField
             select size="small" label="Statut" value={statutFiltre}
             onChange={(e) => { setStatutFiltre(e.target.value); setPage(0) }}

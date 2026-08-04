@@ -71,4 +71,12 @@ public interface EleveRepository extends JpaRepository<Eleve, Long> {
     long countByActifTrue();
 
     long countByStatutAccesAndActifTrue(StatutAcces statut);
+
+    // Variantes restreintes à un ensemble d'élèves (tableau de bord PARENT — ses propres enfants)
+    long countByIdInAndActifTrue(List<Long> ids);
+
+    long countByIdInAndStatutAccesAndActifTrue(List<Long> ids, StatutAcces statut);
+
+    @Query("SELECT COUNT(DISTINCT e.etablissement.id) FROM Eleve e WHERE e.id IN :ids AND e.actif = true")
+    long countDistinctEtablissementByIdIn(@Param("ids") List<Long> ids);
 }

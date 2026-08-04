@@ -34,4 +34,16 @@ public interface PassageRefectoireRepository
            "WHERE p.datePassage BETWEEN :debut AND :fin " +
            "GROUP BY p.datePassage, p.resultat ORDER BY p.datePassage ASC")
     List<Object[]> countByDateRangeGrouped(@Param("debut") LocalDate debut, @Param("fin") LocalDate fin);
+
+    // Variantes restreintes à un ensemble d'élèves (tableau de bord PARENT — ses propres enfants)
+    long countByDatePassageAndResultatAndEleveIdIn(LocalDate date, ResultatScan resultat, List<Long> eleveIds);
+
+    List<PassageRefectoire> findTop5ByEleveIdInAndDatePassageOrderByHeurePassageDesc(
+            List<Long> eleveIds, LocalDate date);
+
+    @Query("SELECT p.datePassage, p.resultat, COUNT(p) FROM PassageRefectoire p " +
+           "WHERE p.datePassage BETWEEN :debut AND :fin AND p.eleve.id IN :eleveIds " +
+           "GROUP BY p.datePassage, p.resultat ORDER BY p.datePassage ASC")
+    List<Object[]> countByDateRangeGroupedForEleves(
+            @Param("debut") LocalDate debut, @Param("fin") LocalDate fin, @Param("eleveIds") List<Long> eleveIds);
 }

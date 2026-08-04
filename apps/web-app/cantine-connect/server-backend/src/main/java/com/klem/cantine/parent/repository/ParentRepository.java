@@ -20,10 +20,13 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
 
     // :search est garanti non-null par le service (branchement en Java) — évite le bug
     // Hibernate 6 de type inference sur paramètre JPQL null dans LOWER()/LIKE (voir ADR-007).
-    // Recherche sur email OU téléphone (le téléphone n'a pas besoin de LOWER()).
+    // Recherche sur nom, prénom, email OU téléphone (le téléphone n'a pas besoin de LOWER()).
+    // Pas de champ résidence sur Parent/Utilisateur — non applicable ici.
     @Query("""
             SELECT p FROM Parent p JOIN FETCH p.utilisateur LEFT JOIN FETCH p.enfants
-            WHERE LOWER(p.utilisateur.email) LIKE LOWER(CONCAT('%', :search, '%'))
+            WHERE LOWER(p.utilisateur.nom) LIKE LOWER(CONCAT('%', :search, '%'))
+               OR LOWER(p.utilisateur.prenom) LIKE LOWER(CONCAT('%', :search, '%'))
+               OR LOWER(p.utilisateur.email) LIKE LOWER(CONCAT('%', :search, '%'))
                OR p.utilisateur.telephone LIKE CONCAT('%', :search, '%')
             """)
     Page<Parent> findAllWithDetailsBySearch(@Param("search") String search, Pageable pageable);

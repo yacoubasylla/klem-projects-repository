@@ -1,5 +1,7 @@
 package com.klem.cantine.scan.service;
 
+import com.klem.cantine.auth.entity.Role;
+import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.eleve.entity.Eleve;
 import com.klem.cantine.eleve.entity.StatutAcces;
 import com.klem.cantine.eleve.repository.EleveRepository;
@@ -7,6 +9,8 @@ import com.klem.cantine.etablissement.entity.Classe;
 import com.klem.cantine.etablissement.entity.Etablissement;
 import com.klem.cantine.notification.NotificationService;
 import com.klem.cantine.parametrage.service.ConfigurationService;
+import com.klem.cantine.parent.repository.ParentRepository;
+import com.klem.cantine.scan.dto.PassageResponseDTO;
 import com.klem.cantine.scan.dto.ScanResultDTO;
 import com.klem.cantine.scan.entity.MotifRefus;
 import com.klem.cantine.scan.entity.PassageRefectoire;
@@ -18,9 +22,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,9 +47,14 @@ class ScanServiceTest {
 
     @Mock private PassageRefectoireRepository passageRepository;
     @Mock private EleveRepository eleveRepository;
+    @Mock private ParentRepository parentRepository;
     @Mock private NotificationService notificationService;
     @Mock private ConfigurationService configurationService;
     @InjectMocks private ScanService scanService;
+
+    private Utilisateur principal(Role role) {
+        return Utilisateur.builder().id(42L).role(role).build();
+    }
 
     // ── Helpers ───────────────────────────────────────────────
 
@@ -164,5 +179,47 @@ class ScanServiceTest {
         assertThatThrownBy(() -> scanService.scanner("pas-un-uuid-valide"))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Format QR code invalide");
+    }
+
+    @Test
+    void listerPassages_restreintAuxEnfantsDuParent_quandRolePARENT() {
+        Utilisateur parent = principal(Role.PARENT);
+        when(parentRepository.findEnfantIdsByUtilisateurId(42L)).thenReturn(List.of(1L));
+
+        Eleve e = eleve(1L, StatutAcces.AUTORISE);
+        Pageable pageable = PageRequest.of(0, 50);
+        Page<PassageRefectoire> page = new PageImpl<>(List.of(passage(e, ResultatScan.ACCORDE, null)), pageable, 1);
+        when(passageRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+
+        Page<PassageResponseDTO> result = scanService.listerPassages(
+                null, null, null, null, null, null, pageable, parent);
+
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        verify(parentRepository).findEnfantIdsByUtilisateurId(42L);
+    }
+
+    @Test
+    void listerPassages_retournePageVide_quandParentSansEnfant() {
+        Utilisateur parent = principal(Role.PARENT);
+        when(parentRepository.findEnfantIdsByUtilisateurId(42L)).thenReturn(List.of());
+        Pageable pageable = PageRequest.of(0, 50);
+
+        Page<PassageResponseDTO> result = scanService.listerPassages(
+                null, null, null, null, null, null, pageable, parent);
+
+        assertThat(result.getTotalElements()).isZero();
+        verify(passageRepository, never()).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void listerPassages_neRestreintPas_quandRoleNonParent() {
+        Utilisateur admin = principal(Role.ADMIN);
+        Pageable pageable = PageRequest.of(0, 50);
+        when(passageRepository.findAll(any(Specification.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+        scanService.listerPassages(null, null, null, null, null, null, pageable, admin);
+
+        verify(parentRepository, never()).findEnfantIdsByUtilisateurId(any(Long.class));
     }
 }

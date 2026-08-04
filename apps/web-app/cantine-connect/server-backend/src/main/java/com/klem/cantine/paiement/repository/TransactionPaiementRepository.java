@@ -104,4 +104,13 @@ public interface TransactionPaiementRepository extends JpaRepository<Transaction
            "WHERE t.statut = com.klem.cantine.paiement.entity.StatutPaiement.ACCEPTE " +
            "AND t.dateCreation >= :debut AND t.dateCreation < :fin")
     List<Object[]> statsAcceptesPeriode(@Param("debut") LocalDateTime debut, @Param("fin") LocalDateTime fin);
+
+    // Variantes restreintes à un ensemble d'élèves (tableau de bord PARENT — ses propres enfants)
+    long countByStatutAndEleveIdIn(StatutPaiement statut, List<Long> eleveIds);
+
+    @Query("SELECT COUNT(t), COALESCE(SUM(t.montant), 0) FROM TransactionPaiement t " +
+           "WHERE t.statut = com.klem.cantine.paiement.entity.StatutPaiement.ACCEPTE " +
+           "AND t.dateCreation >= :debut AND t.dateCreation < :fin AND t.eleve.id IN :eleveIds")
+    List<Object[]> statsAcceptesPeriodeForEleves(
+            @Param("debut") LocalDateTime debut, @Param("fin") LocalDateTime fin, @Param("eleveIds") List<Long> eleveIds);
 }

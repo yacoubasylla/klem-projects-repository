@@ -66,10 +66,16 @@ public class DemandeAccesService {
         return DemandeAccesResponseDTO.from(demandeAccesRepository.save(demande));
     }
 
-    public Page<DemandeAccesResponseDTO> lister(StatutDemande statut, Pageable pageable) {
-        Page<DemandeAcces> page = statut != null
-                ? demandeAccesRepository.findByStatut(statut, pageable)
-                : demandeAccesRepository.findAll(pageable);
+    public Page<DemandeAccesResponseDTO> lister(StatutDemande statut, String search, Pageable pageable) {
+        String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
+        Page<DemandeAcces> page;
+        if (searchParam != null) {
+            page = demandeAccesRepository.findAllBySearch(statut, searchParam, pageable);
+        } else if (statut != null) {
+            page = demandeAccesRepository.findByStatut(statut, pageable);
+        } else {
+            page = demandeAccesRepository.findAll(pageable);
+        }
         return page.map(DemandeAccesResponseDTO::from);
     }
 

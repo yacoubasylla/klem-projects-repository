@@ -37,8 +37,9 @@ public class AccesController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<?>> lister(
             @RequestParam(required = false) StatutDemande statut,
+            @RequestParam(required = false) String search,
             @PageableDefault(size = 20, sort = "dateSoumission") Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(demandeAccesService.lister(statut, pageable)));
+        return ResponseEntity.ok(ApiResponse.ok(demandeAccesService.lister(statut, search, pageable)));
     }
 
     @PatchMapping("/{id}/valider")

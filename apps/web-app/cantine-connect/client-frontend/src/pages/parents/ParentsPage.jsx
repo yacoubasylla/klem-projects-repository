@@ -260,8 +260,8 @@ export default function ParentsPage() {
       <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
         <TextField
           size="small"
-          label="Recherche par email parent"
-          placeholder="email@exemple.com"
+          label="Rechercher"
+          placeholder="Nom, prénom, téléphone ou email…"
           value={searchFiltre}
           onChange={(e) => { setSearchFiltre(e.target.value); setPage(0) }}
           sx={{ width: { xs: '100%', sm: 320 } }}
