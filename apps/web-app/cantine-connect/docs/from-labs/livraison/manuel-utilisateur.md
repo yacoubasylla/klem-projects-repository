@@ -4,6 +4,33 @@
 
 ---
 
+## Sommaire
+
+1. Page d'accueil (publique)
+2. Connexion
+3. Demande d'accès parent (sans avoir besoin d'un compte)
+4. Qui peut voir et faire quoi
+5. Tableau de bord
+6. Établissements
+7. Élèves
+8. Mes enfants
+9. Paiements Mobile Money
+10. Contrôle d'accès à la cantine
+11. Historique des passages
+12. Rapports
+13. Comptes utilisateurs
+14. Parents
+15. Demandes d'accès (validation par l'administrateur)
+16. Paramètres
+17. Paiement et notifications — état de la mise en service
+18. Support et à propos
+
+> Les sections 5 à 16 suivent l'ordre du menu affiché à gauche de l'écran une fois connecté —
+> pour retrouver rapidement une fonctionnalité dans ce manuel, il suffit de la chercher dans le
+> même ordre que dans l'application.
+
+---
+
 ## 1. Page d'accueil (publique)
 
 Avant de se connecter, toute personne qui arrive sur le site voit une page d'accueil qui présente
@@ -22,17 +49,9 @@ Ces deux boutons sont aussi disponibles en haut de toutes les pages publiques.
 ![Écran de connexion](assets/01-login.png)
 
 On se connecte avec une adresse email (ou l'identifiant qui a été donné automatiquement aux
-parents sans email — voir §3) et un mot de passe. Il n'y a plus d'identifiants affichés à
+parents sans email — voir §15) et un mot de passe. Il n'y a plus d'identifiants affichés à
 l'écran par défaut, pour des raisons de sécurité — ils doivent être communiqués séparément par un
-administrateur, ou reçus automatiquement quand une demande d'accès est validée (§3).
-
-Un **sélecteur d'habillage** (icône palette, visible une fois connecté, en haut de l'écran)
-permet de choisir entre trois présentations visuelles : **Premium** (par défaut, tons orange et
-vert chaleureux), **Corporatif** (fond sombre, plus sobre) et **Moderne** (fond blanc, dégradés
-bleu/orange). Le choix reste mémorisé sur l'appareil utilisé.
-
-![Sélecteur d'habillage](assets/03-theme-switcher.png)
-![Exemple d'habillage Corporatif](assets/04-dashboard-corporate.png)
+administrateur, ou reçus automatiquement quand une demande d'accès est validée (§15).
 
 ### Comptes de démonstration (un par rôle)
 
@@ -45,6 +64,26 @@ bleu/orange). Le choix reste mémorisé sur l'appareil utilisé.
 
 Chaque compte doit avoir un **numéro de téléphone unique** (obligatoire à la création) — c'est le
 numéro utilisé pour envoyer les notifications par SMS aux parents.
+
+### Habillages visuels
+
+Un **sélecteur d'habillage** (icône palette, visible une fois connecté, en haut de l'écran)
+permet de choisir entre trois présentations visuelles. Le choix reste mémorisé sur l'appareil
+utilisé.
+
+![Sélecteur d'habillage](assets/03-theme-switcher.png)
+
+**Premium** (par défaut) — tons orange et vert chaleureux :
+
+![Habillage Premium](assets/02-dashboard.png)
+
+**Corporatif** — fond sombre, plus sobre :
+
+![Habillage Corporatif](assets/04-dashboard-corporate.png)
+
+**Moderne** — fond blanc, dégradés bleu/orange :
+
+![Habillage Moderne](assets/23-dashboard-moderne.png)
 
 ---
 
@@ -80,33 +119,7 @@ Une fois les trois étapes remplies, un bouton « Envoyer ma demande » termine 
 ![Demande d'accès — confirmation](assets/20-demande-acces-confirmation.png)
 
 **Aucun compte n'est créé tout de suite** — la demande est mise en attente jusqu'à ce que
-l'établissement la valide.
-
-### Validation par l'administrateur
-
-Sur l'écran « Demandes d'accès » (réservé à l'administrateur), on retrouve la liste des demandes,
-que l'on peut filtrer par statut (En attente / Validées / Rejetées). Chaque ligne a un bouton
-« Voir détails » qui ouvre une fiche complète du demandeur (identité, tous les numéros de
-téléphone, email, résidence, historique du traitement) — pour une demande en attente, c'est
-depuis cette fiche que l'on **valide ou rejette**, afin de toujours vérifier les informations
-avant de créer un compte.
-
-- **Valider** : crée le compte du parent, avec un identifiant de connexion et un mot de passe
-  provisoire générés automatiquement. Si les notifications par email et SMS sont activées
-  (voir §15 Configuration), le parent les reçoit automatiquement ; **dans tous les cas**, une
-  fenêtre affiche l'identifiant et le mot de passe à l'écran, pour pouvoir les communiquer
-  manuellement si besoin.
-  - Si le parent n'a donné **aucun email**, un identifiant de connexion est créé automatiquement
-    à partir de son numéro de téléphone — ce n'est pas une adresse email utilisable, seulement un
-    identifiant de connexion.
-- **Rejeter** : un motif est obligatoire ; la demande reste visible avec son statut et le motif,
-  pour garder une trace.
-
-### Première connexion
-
-Un parent dont le compte vient d'être créé **doit changer son mot de passe provisoire** dès sa
-première connexion — l'application l'amène automatiquement sur cet écran et ne laisse pas accéder
-au reste du site tant que ce n'est pas fait.
+l'établissement la valide (voir §15 pour la suite du processus, côté administrateur).
 
 ---
 
@@ -137,7 +150,6 @@ accéder aux menus réservés au personnel.
 ## 5. Tableau de bord
 
 ![Tableau de bord](assets/02-dashboard.png)
-![Tableau de bord — habillage Premium](assets/16-dashboard-ivoirien.png)
 
 Vue d'ensemble à l'ouverture de l'application : nombre d'élèves, répartition par statut d'accès,
 paiements récents, résumé des passages du jour.
@@ -161,7 +173,7 @@ paiements récents, résumé des passages du jour.
   exemple taper `CP, CE1, CM1` crée les trois niveaux en une seule fois), et de les modifier
   directement dans le tableau.
 - **Délai de grâce** : un champ optionnel permet de définir, pour cet établissement uniquement,
-  un délai différent du délai par défaut (7 jours, réglable dans les Paramètres, §15). Laisser le
+  un délai différent du délai par défaut (7 jours, réglable dans les Paramètres, §16). Laisser le
   champ vide pour garder le délai par défaut.
 - Ce menu n'est pas accessible directement à un parent, mais la liste des établissements et des
   classes lui reste visible pour pouvoir choisir la bonne classe quand il ajoute un enfant
@@ -276,7 +288,7 @@ En cliquant sur « Mes enfants » dans ce menu, le parent arrive sur l'écran su
   propose un bouton pour forcer la mise à jour manuellement.
 - Par défaut, ces informations se mettent à jour automatiquement en arrière-plan dès l'ouverture
   de l'écran, si une connexion est disponible — ce comportement peut être désactivé dans les
-  Paramètres (§15) pour ne garder que la mise à jour manuelle.
+  Paramètres (§16) pour ne garder que la mise à jour manuelle.
 - Non accessible à un parent.
 
 ---
@@ -293,36 +305,7 @@ En cliquant sur « Mes enfants » dans ce menu, le parent arrive sur l'écran su
 
 ---
 
-## 12. Comptes utilisateurs (administrateur uniquement)
-
-![Liste des comptes utilisateurs](assets/13-utilisateurs.png)
-
-- Création d'un compte : nom, prénom, email, **numéro de téléphone (obligatoire, unique)**, mot
-  de passe, rôle (Administrateur, Gestionnaire, Caissier ou Parent).
-- Modification, changement de rôle directement dans le tableau, désactivation/réactivation,
-  suppression définitive.
-- Impossible de désactiver ou de supprimer le tout dernier compte administrateur du système.
-- Impossible de désactiver ou de supprimer son propre compte.
-- **Recherche** par email, nom, prénom ou téléphone ; filtres par rôle, par statut (actif ou
-  inactif) et par période de création — tous combinables.
-
----
-
-## 13. Parents (rattacher des enfants — administrateur uniquement)
-
-- Permet de rattacher un compte parent à un ou plusieurs élèves.
-- **Choix du compte parent** : recherche par numéro de téléphone, nom ou prénom (le compte doit
-  déjà exister — le créer d'abord dans « Comptes utilisateurs », ou passer par une demande
-  d'accès validée, §3).
-- **Choix des enfants** : recherche par matricule, nom ou prénom, plusieurs enfants peuvent être
-  sélectionnés à la fois.
-- Modification des enfants rattachés, suppression du lien (les fiches des élèves ne sont pas
-  supprimées pour autant).
-- **Recherche** sur la liste principale par **email ou numéro de téléphone** du compte parent.
-
----
-
-## 14. Rapports (administrateur / gestionnaire / caissier) — première version
+## 12. Rapports (administrateur / gestionnaire / caissier) — première version
 
 > Première version de ce module, mise à disposition pour recueillir des retours avant amélioration.
 > Non accessible à un parent.
@@ -343,7 +326,64 @@ En cliquant sur « Mes enfants » dans ce menu, le parent arrive sur l'écran su
 
 ---
 
-## 15. Paramètres (administrateur uniquement)
+## 13. Comptes utilisateurs (administrateur uniquement)
+
+![Liste des comptes utilisateurs](assets/13-utilisateurs.png)
+
+- Création d'un compte : nom, prénom, email, **numéro de téléphone (obligatoire, unique)**, mot
+  de passe, rôle (Administrateur, Gestionnaire, Caissier ou Parent).
+- Modification, changement de rôle directement dans le tableau, désactivation/réactivation,
+  suppression définitive.
+- Impossible de désactiver ou de supprimer le tout dernier compte administrateur du système.
+- Impossible de désactiver ou de supprimer son propre compte.
+- **Recherche** par email, nom, prénom ou téléphone ; filtres par rôle, par statut (actif ou
+  inactif) et par période de création — tous combinables.
+
+---
+
+## 14. Parents (rattacher des enfants — administrateur uniquement)
+
+- Permet de rattacher un compte parent à un ou plusieurs élèves.
+- **Choix du compte parent** : recherche par numéro de téléphone, nom ou prénom (le compte doit
+  déjà exister — le créer d'abord dans « Comptes utilisateurs », ou passer par une demande
+  d'accès validée, §15).
+- **Choix des enfants** : recherche par matricule, nom ou prénom, plusieurs enfants peuvent être
+  sélectionnés à la fois.
+- Modification des enfants rattachés, suppression du lien (les fiches des élèves ne sont pas
+  supprimées pour autant).
+- **Recherche** sur la liste principale par **email ou numéro de téléphone** du compte parent.
+
+---
+
+## 15. Demandes d'accès (validation par l'administrateur)
+
+Sur l'écran « Demandes d'accès » (réservé à l'administrateur), on retrouve la liste des demandes
+soumises depuis la page publique (§3), que l'on peut filtrer par statut (En attente / Validées /
+Rejetées). Chaque ligne a un bouton « Voir détails » qui ouvre une fiche complète du demandeur
+(identité, tous les numéros de téléphone, email, résidence, historique du traitement) — pour une
+demande en attente, c'est depuis cette fiche que l'on **valide ou rejette**, afin de toujours
+vérifier les informations avant de créer un compte.
+
+- **Valider** : crée le compte du parent, avec un identifiant de connexion et un mot de passe
+  provisoire générés automatiquement. Si les notifications par email et SMS sont activées
+  (voir §16 Paramètres), le parent les reçoit automatiquement ; **dans tous les cas**, une
+  fenêtre affiche l'identifiant et le mot de passe à l'écran, pour pouvoir les communiquer
+  manuellement si besoin.
+  - Si le parent n'a donné **aucun email**, un identifiant de connexion est créé automatiquement
+    à partir de son numéro de téléphone — ce n'est pas une adresse email utilisable, seulement un
+    identifiant de connexion.
+- **Rejeter** : un motif est obligatoire ; la demande reste visible avec son statut et le motif,
+  pour garder une trace.
+
+### Première connexion du parent
+
+Un parent dont le compte vient d'être créé **doit changer son mot de passe provisoire** dès sa
+première connexion — l'application l'amène automatiquement sur cet écran et ne laisse pas accéder
+au reste du site tant que ce n'est pas fait.
+
+---
+
+## 16. Paramètres (administrateur uniquement)
 
 ![Écran des paramètres](assets/14-configuration.png)
 
@@ -379,7 +419,7 @@ Tant qu'aucune de ces informations n'est renseignée, l'application garde son ap
 
 ---
 
-## 16. Paiement et notifications — état de la mise en service
+## 17. Paiement et notifications — état de la mise en service
 
 - **Paiement** : la connexion avec le service de paiement Mobile Money est réelle, pas une
   simulation — dès que le client fournit ses identifiants marchands réels, le paiement fonctionne
@@ -393,7 +433,7 @@ Tant qu'aucune de ces informations n'est renseignée, l'application garde son ap
 
 ---
 
-## 17. Support et à propos
+## 18. Support et à propos
 
 ![Fenêtre « À propos »](assets/15-apropos.png)
 

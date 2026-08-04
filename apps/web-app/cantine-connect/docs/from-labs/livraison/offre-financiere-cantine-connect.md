@@ -18,6 +18,22 @@
 
 ---
 
+## Sommaire
+
+1. Résumé exécutif
+2. Hypothèses de chiffrage
+3. Tableau de cotation
+4. Détail du coût de développement
+5. Détail des intégrations
+6. Contrat de maintenance annuel
+7. Variantes commerciales
+8. Modalités commerciales
+9. Exclusions
+10. Recommandation finale
+11. Annexe A — Badges PVC élèves avec QR Code
+
+---
+
 ## 1. Résumé exécutif
 
 Cantine Connect est une plateforme digitale complète de gestion de restauration scolaire, pensée pour le contexte ivoirien : inscription et suivi des élèves, paiement Mobile Money, contrôle d'accès au réfectoire par QR Code, et communication automatisée avec les parents.
@@ -207,12 +223,12 @@ Cette offre couvre l'intégralité du cycle de mise en œuvre : cadrage, concept
 
 | | Essentielle | Standard | Premium |
 |---|---|---|---|
-| Inscription & gestion élèves | ✅ | ✅ | ✅ |
-| Paiement Mobile Money automatisé | ❌ (manuel) | ✅ CinetPay | ✅ CinetPay + direct OM/Moov |
-| Notifications SMS | ❌ | ✅ | ✅ |
-| Notifications Email | ✅ | ✅ | ✅ |
-| Application mobile | ❌ | ❌ | ✅ |
-| Analytique multi-établissements | ❌ | Basique | Avancée |
+| Inscription & gestion élèves | ✓ | ✓ | ✓ |
+| Paiement Mobile Money automatisé | ✗ (manuel) | ✓ CinetPay | ✓ CinetPay + direct OM/Moov |
+| Notifications SMS | ✗ | ✓ | ✓ |
+| Notifications Email | ✓ | ✓ | ✓ |
+| Application mobile | ✗ | ✗ | ✓ |
+| Analytique multi-établissements | ✗ | Basique | Avancée |
 | Heures d'évolution/mois incluses | 0 | 10h | 20h |
 | SLA support | Standard | Standard | Prioritaire (24h) |
 | **Prix ponctuel** | 9,5 – 10,5 M FCFA | 16,82 M FCFA | 21 – 24 M FCFA |
