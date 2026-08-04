@@ -73,11 +73,11 @@ utilisé.
 
 ![Sélecteur d'habillage](assets/03-theme-switcher.png)
 
-<table>
+<table style="page-break-inside:avoid;">
 <tr>
-<td align="center"><img src="assets/02-dashboard-thumb.png" alt="Habillage Premium"><br><strong>Premium</strong> (par défaut)<br>tons orange et vert chaleureux</td>
-<td align="center"><img src="assets/04-dashboard-corporate-thumb.png" alt="Habillage Corporatif"><br><strong>Corporatif</strong><br>fond sombre, plus sobre</td>
-<td align="center"><img src="assets/23-dashboard-moderne-thumb.png" alt="Habillage Moderne"><br><strong>Moderne</strong><br>fond blanc, dégradés bleu/orange</td>
+<td align="center"><strong>Premium</strong> (par défaut)<br>tons orange et vert chaleureux<br><img src="assets/02-dashboard-thumb.png" alt="Habillage Premium"></td>
+<td align="center"><strong>Corporatif</strong><br>fond sombre, plus sobre<br><img src="assets/04-dashboard-corporate-thumb.png" alt="Habillage Corporatif"></td>
+<td align="center"><strong>Moderne</strong><br>fond blanc, dégradés bleu/orange<br><img src="assets/23-dashboard-moderne-thumb.png" alt="Habillage Moderne"></td>
 </tr>
 </table>
 
