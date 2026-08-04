@@ -3,6 +3,7 @@ import { Box, Container, Stack, Typography, Button, Paper } from '@mui/material'
 import { alpha } from '@mui/material/styles'
 import LoginIcon   from '@mui/icons-material/Login'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
+import { useOrganisationBranding } from '../hooks/useConfig'
 
 // Motif géométrique discret d'inspiration textile ivoirienne — décoratif uniquement,
 // SVG léger généré localement (pas d'imagerie stock).
@@ -45,6 +46,7 @@ const NAV_LINKS = [
  * propre à la cantine scolaire ivoirienne (pas l'esprit institutionnel froid).
  */
 export default function PublicSplitLayout({ activePage, heroSlot, children, cardMaxWidth = 460, heroBackgroundImage }) {
+  const { nom: orgNom, logoUrl: orgLogoUrl } = useOrganisationBranding()
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       {/* ── Nav du haut ─────────────────────────────────────── */}
@@ -64,9 +66,17 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
               spacing={1}
               sx={{ textDecoration: 'none', color: 'text.primary' }}
             >
-              <Typography fontSize={26} lineHeight={1}>🍽️</Typography>
+              {orgLogoUrl ? (
+                <Box
+                  component="img" src={orgLogoUrl} alt={orgNom}
+                  sx={{ height: 30, objectFit: 'contain' }}
+                  onError={(e) => { e.target.style.display = 'none' }}
+                />
+              ) : (
+                <Typography fontSize={26} lineHeight={1}>🍽️</Typography>
+              )}
               <Typography variant="h6" fontWeight={800} letterSpacing="-0.02em" color="text.primary">
-                Cantine Connect
+                {orgNom}
               </Typography>
             </Stack>
 

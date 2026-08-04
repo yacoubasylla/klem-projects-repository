@@ -41,6 +41,22 @@ public class FileStorageService {
         return url;
     }
 
+    public String enregistrerLogo(MultipartFile fichier) {
+        String extension = extensionDe(fichier.getOriginalFilename());
+        String nomFichier = "logo-" + UUID.randomUUID() + extension;
+        Path dossier = Path.of(uploadsDir, "branding");
+        Path cible = dossier.resolve(nomFichier);
+        try {
+            Files.createDirectories(dossier);
+            fichier.transferTo(cible);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Échec de l'enregistrement du logo", e);
+        }
+        String url = "/uploads/branding/" + nomFichier;
+        log.info("Logo organisation enregistré : {}", url);
+        return url;
+    }
+
     private String extensionDe(String nomOriginal) {
         if (nomOriginal == null) return "";
         int i = nomOriginal.lastIndexOf('.');

@@ -8,6 +8,7 @@ import VisibilityIcon    from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import LockOutlinedIcon  from '@mui/icons-material/LockOutlined'
 import { useAuth } from '../../hooks/useAuth'
+import { useOrganisationBranding } from '../../hooks/useConfig'
 import { authService } from '../../services/authService'
 import apiClient from '../../services/apiClient'
 import PublicSplitLayout from '../../layouts/PublicSplitLayout'
@@ -15,6 +16,7 @@ import PublicSplitLayout from '../../layouts/PublicSplitLayout'
 export default function LoginPage() {
   const { login }  = useAuth()
   const navigate   = useNavigate()
+  const { logoUrl: orgLogoUrl } = useOrganisationBranding()
 
   const [form, setForm]             = useState({ email: '', motDePasse: '' })
   const [showPwd, setShowPwd]       = useState(false)
@@ -55,7 +57,14 @@ export default function LoginPage() {
       heroBackgroundImage={bgImage}
       heroSlot={
         <Box sx={{ py: { xs: 1, md: 3 } }}>
-          <Typography fontSize={40} lineHeight={1} mb={2}>🍽️</Typography>
+          {orgLogoUrl ? (
+            <Box
+              component="img" src={orgLogoUrl} alt="" sx={{ height: 44, mb: 2, objectFit: 'contain' }}
+              onError={(e) => { e.target.style.display = 'none' }}
+            />
+          ) : (
+            <Typography fontSize={40} lineHeight={1} mb={2}>🍽️</Typography>
+          )}
           <Typography variant="h3" sx={{ fontSize: { xs: '1.9rem', md: '2.3rem' }, mb: 2 }}>
             Content de vous revoir
           </Typography>

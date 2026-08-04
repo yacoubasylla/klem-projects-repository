@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,5 +36,11 @@ public class ConfigurationController {
             @PathVariable String cle,
             @Valid @RequestBody ModifierConfigurationRequestDTO dto) {
         return ResponseEntity.ok(ApiResponse.ok(configurationService.modifier(cle, dto.valeur())));
+    }
+
+    @PostMapping("/logo")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<ConfigurationDTO>> uploaderLogo(@RequestParam("fichier") MultipartFile fichier) {
+        return ResponseEntity.ok(ApiResponse.ok("Logo enregistré", configurationService.uploaderLogo(fichier)));
     }
 }

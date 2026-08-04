@@ -22,6 +22,7 @@ import LogoutIcon         from '@mui/icons-material/Logout'
 import MenuIcon           from '@mui/icons-material/Menu'
 import InfoOutlinedIcon  from '@mui/icons-material/InfoOutlined'
 import { useAuth }       from '../hooks/useAuth'
+import { useOrganisationBranding } from '../hooks/useConfig'
 import AProposDialog     from '../components/AProposDialog'
 import ThemeSwitcher     from '../components/ThemeSwitcher'
 
@@ -50,6 +51,7 @@ export default function MainLayout() {
   const navigate    = useNavigate()
   const location    = useLocation()
   const { user, logout } = useAuth()
+  const { nom: orgNom, logoUrl: orgLogoUrl } = useOrganisationBranding()
   const theme       = useTheme()
   const isDesktop   = useMediaQuery(theme.breakpoints.up('lg')) // ≥ 1200px
   const [mobileOpen,   setMobileOpen]   = useState(false)
@@ -134,9 +136,17 @@ export default function MainLayout() {
                 <MenuIcon />
               </IconButton>
             )}
-            <RestaurantIcon sx={{ display: { xs: 'none', sm: 'block' } }} />
+            {orgLogoUrl ? (
+              <Box
+                component="img" src={orgLogoUrl} alt={orgNom}
+                sx={{ height: 28, display: { xs: 'none', sm: 'block' }, objectFit: 'contain' }}
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+            ) : (
+              <RestaurantIcon sx={{ display: { xs: 'none', sm: 'block' } }} />
+            )}
             <Typography variant="h6" noWrap fontWeight={700}>
-              🍽️ Cantine Connect
+              {!orgLogoUrl && '🍽️ '}{orgNom}
             </Typography>
           </Stack>
 

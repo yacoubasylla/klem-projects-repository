@@ -12,6 +12,11 @@ import LoginIcon           from '@mui/icons-material/Login'
 import HowToRegIcon        from '@mui/icons-material/HowToReg'
 import PublicSplitLayout   from '../layouts/PublicSplitLayout'
 
+// Localité affichée sur la page d'accueil : paramétrable par déploiement (VITE_APP_PAYS /
+// VITE_APP_VILLE_REFERENCE), pour ne pas figer l'application sur un pays ou une ville.
+const PAYS = import.meta.env.VITE_APP_PAYS || "Côte d'Ivoire"
+const VILLE_REFERENCE = import.meta.env.VITE_APP_VILLE_REFERENCE || 'Abidjan'
+
 const ATOUTS = [
   { icon: <PaymentsIcon color="primary" />,        text: 'Paiement Mobile Money : Orange, MTN, Moov' },
   { icon: <QrCodeScannerIcon color="primary" />,    text: 'Contrôle d’accès cantine par QR Code en moins d’une seconde' },
@@ -28,7 +33,7 @@ export default function HomePage() {
         <Box sx={{ py: { xs: 1, md: 3 } }}>
           <Chip
             icon={<SchoolIcon sx={{ fontSize: 16 }} />}
-            label="Restauration scolaire — Côte d'Ivoire"
+            label={`Restauration scolaire — ${PAYS}`}
             size="small"
             sx={{ mb: 3, bgcolor: 'gold.light', color: '#5C4400', fontWeight: 700 }}
           />
@@ -57,7 +62,7 @@ export default function HomePage() {
             </Button>
           </Stack>
           <Typography variant="caption" color="text.disabled">
-            Déjà utilisé par des établissements scolaires à Abidjan
+            Déjà utilisé par des établissements scolaires à {VILLE_REFERENCE}
           </Typography>
         </Box>
       }
