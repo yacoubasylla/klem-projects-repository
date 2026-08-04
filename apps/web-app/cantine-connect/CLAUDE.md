@@ -61,11 +61,12 @@ Toutes les commandes doivent être exécutées dans leurs dossiers respectifs[ci
     *   `feat(students): implement layout-optimized tabs form for pupil creation`[cite: 4]
     *   `fix(payments): correct wave webhook signature verification payload`[cite: 4]
     *   `docs(architecture): update relational schema for access logs`[cite: 4]
-5.  **Manuel Utilisateur (`collaboration/doc/user-guide.docx`) — Mise à jour obligatoire à chaque livraison de fonctionnalité :** Avant de clore toute tâche qui change un comportement visible par l'utilisateur (nouveau module, nouvelle règle métier, nouveau champ/filtre, changement de permission par rôle), le fichier `user-guide.docx` doit être mis à jour puis reconverti en PDF (`collaboration/doc/user-guide.pdf`), les deux fichiers commités et poussés dans la même session :
-    *   Mettre à jour la ou les sections concernées du `.docx` (texte **et** captures d'écran si l'IHM a changé — captures via Playwright headless, cohérentes avec celles déjà en place).
-    *   Vérifier la cohérence des rôles/permissions annoncés dans le document avec le code réel (source de vérité : `collaboration/doc/manuel-utilisateur.md` et `collaboration/history/decision-log.md`) avant de committer.
-    *   Convertir en PDF : `soffice --headless --convert-to pdf --outdir collaboration/doc/ collaboration/doc/user-guide.docx`.
-    *   Commit dédié (`docs(user-guide): ...`) suivi d'un `git push`.
+5.  **Manuel Utilisateur — Mise à jour obligatoire à chaque livraison de fonctionnalité :** Depuis la réorganisation documentaire du 2026-08-04, les livrables client (`manuel-utilisateur.md`, `user-guide.docx`/`.pdf`, `cahier-de-recette.md`/`.docx`, `offre-financiere-cantine-connect.md`/`.pdf`, captures d'écran) ne vivent plus dans ce dépôt : ils sont édités dans `klem-labs-repository/projects/03_cantine_connect/livraison/`, qui en est la source de vérité (voir `klem-labs-repository/README.md` §1). Ce dépôt ne garde qu'une copie en lecture seule sous `docs/from-labs/livraison/`. Avant de clore toute tâche qui change un comportement visible par l'utilisateur (nouveau module, nouvelle règle métier, nouveau champ/filtre, changement de permission par rôle) :
+    *   Éditer directement `klem-labs-repository/projects/03_cantine_connect/livraison/manuel-utilisateur.md` (texte **et** captures d'écran si l'IHM a changé — captures via Playwright headless, cohérentes avec celles déjà en place, déposées dans `livraison/assets/`).
+    *   Vérifier la cohérence des rôles/permissions annoncés avec le code réel (source de vérité : `klem-labs-repository/projects/03_cantine_connect/specifications_fonctionnelles.md` et `collaboration/history/decision-log.md` de ce dépôt) avant de committer.
+    *   Régénérer `user-guide.docx`/`.pdf` depuis le `.md` mis à jour (`soffice --headless --convert-to 'pdf:writer_pdf_Export' --outdir livraison/ livraison/user-guide.docx` pour le PDF — utiliser le filtre `writer_pdf_Export`, pas `writer_web_pdf_Export`, qui ignore la taille A4).
+    *   Commit + push **dans `klem-labs-repository`** (`docs(livraison): ...`).
+    *   Rafraîchir la copie locale : `python3 platform-devsecops/scripts/klem_promote.py 03_cantine_connect` depuis `klem-labs-repository`, puis commit + push **dans ce dépôt** (`docs(from-labs): refresh copie livraison`).
 
 ---
 
