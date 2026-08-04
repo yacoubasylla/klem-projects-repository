@@ -73,17 +73,13 @@ utilisé.
 
 ![Sélecteur d'habillage](assets/03-theme-switcher.png)
 
-**Premium** (par défaut) — tons orange et vert chaleureux :
-
-![Habillage Premium](assets/02-dashboard.png)
-
-**Corporatif** — fond sombre, plus sobre :
-
-![Habillage Corporatif](assets/04-dashboard-corporate.png)
-
-**Moderne** — fond blanc, dégradés bleu/orange :
-
-![Habillage Moderne](assets/23-dashboard-moderne.png)
+<table>
+<tr>
+<td align="center"><img src="assets/02-dashboard-thumb.png" alt="Habillage Premium"><br><strong>Premium</strong> (par défaut)<br>tons orange et vert chaleureux</td>
+<td align="center"><img src="assets/04-dashboard-corporate-thumb.png" alt="Habillage Corporatif"><br><strong>Corporatif</strong><br>fond sombre, plus sobre</td>
+<td align="center"><img src="assets/23-dashboard-moderne-thumb.png" alt="Habillage Moderne"><br><strong>Moderne</strong><br>fond blanc, dégradés bleu/orange</td>
+</tr>
+</table>
 
 ---
 
