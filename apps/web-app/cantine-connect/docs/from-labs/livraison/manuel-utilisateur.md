@@ -41,14 +41,16 @@ Chaque compte utilisateur doit avoir un **numéro de cellulaire unique** (obliga
 Un parent qui n'a pas encore de compte peut soumettre une demande depuis `/demande-acces` (formulaire public en plusieurs étapes) :
 
 1. **Identité** : nom, prénom, fonction (facultatif)
-2. **Contact** : téléphone principal (obligatoire), case « Ce numéro est aussi mon WhatsApp » (sinon un second numéro WhatsApp peut être saisi), téléphone secondaire (facultatif), email (facultatif)
+2. **Contact** : téléphone principal (obligatoire), case « Ce numéro est aussi mon WhatsApp » (sinon un second numéro WhatsApp peut être saisi), téléphone secondaire (facultatif), email (facultatif). Un message rappelle qu'une notification sera envoyée par SMS et invite à vérifier le numéro saisi.
 3. **Résidence** : ville, commune (obligatoires), quartier (facultatif)
+
+Le téléphone principal, le numéro WhatsApp et le second téléphone doivent respecter le format ivoirien (10 chiffres commençant par 0, ex. `07 08 09 10 11`, indicatif `+225` optionnel) ; l'email, s'il est renseigné, doit être une adresse valide. Ce contrôle de format s'applique à la fois dans le formulaire et côté serveur.
 
 À la soumission, un écran de confirmation s'affiche : **aucun compte n'est créé à ce stade** — la demande est mise en file d'attente (statut *En attente*) pour validation par l'établissement.
 
 ### Validation par l'administrateur
 
-Écran `/demandes-acces` (ADMIN uniquement) : liste des demandes, filtrable par statut (En attente / Validées / Rejetées).
+Écran `/demandes-acces` (ADMIN uniquement) : liste des demandes, filtrable par statut (En attente / Validées / Rejetées). Chaque ligne dispose d'une icône « Voir détails » ouvrant une fiche complète du demandeur (identité, tous les téléphones, email, résidence, historique de traitement) — pour une demande en attente, cette fiche est aussi l'endroit où l'on **valide ou rejette**, afin de toujours vérifier les informations avant de créer le compte.
 
 - **Valider** : crée le compte `Utilisateur` (rôle PARENT) et le profil `Parent` associé, génère un identifiant de connexion et un mot de passe temporaire. Si des notifications email/SMS sont activées (§13 Configuration), le parent les reçoit automatiquement ; **dans tous les cas**, une boîte de dialogue affiche l'identifiant et le mot de passe générés à l'écran, à communiquer manuellement si besoin (utile tant que les notifications réelles ne sont pas configurées).
   - Si le parent n'a fourni **aucun email**, un identifiant de connexion est généré automatiquement à partir de son numéro de téléphone (format `p<téléphone>@parent.cantine-connect.ci`) — ce n'est pas une adresse email fonctionnelle, seulement un identifiant de connexion interne.

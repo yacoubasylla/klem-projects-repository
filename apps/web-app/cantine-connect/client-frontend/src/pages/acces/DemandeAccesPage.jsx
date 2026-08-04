@@ -11,17 +11,20 @@ import HowToRegIcon    from '@mui/icons-material/HowToReg'
 import PublicSplitLayout from '../../layouts/PublicSplitLayout'
 import { demandeAccesService } from '../../services/demandeAccesService'
 
-const TELEPHONE_REGEX = /^[0-9+\s-]{8,20}$/
+// Numérotation ivoirienne post-2021 : 10 chiffres commençant par 0, indicatif +225/00225
+// optionnel, séparateurs (espace, point, tiret) libres entre les chiffres.
+const TELEPHONE_REGEX = /^(\+225|00225)?[\s.-]*0(?:[\s.-]*\d){9}$/
+const MSG_TELEPHONE_INVALIDE = 'Format de téléphone invalide (10 chiffres, ex. 07 08 09 10 11)'
 
 const schema = z
   .object({
     nom: z.string().min(1, 'Le nom est obligatoire'),
     prenom: z.string().min(1, 'Le prénom est obligatoire'),
     fonction: z.string().optional(),
-    telephonePrincipal: z.string().regex(TELEPHONE_REGEX, 'Format de téléphone invalide (8 à 20 caractères)'),
+    telephonePrincipal: z.string().regex(TELEPHONE_REGEX, MSG_TELEPHONE_INVALIDE),
     memeWhatsapp: z.boolean(),
     telephoneWhatsapp: z.string().optional(),
-    telephoneSecondaire: z.string().optional(),
+    telephoneSecondaire: z.union([z.string().regex(TELEPHONE_REGEX, MSG_TELEPHONE_INVALIDE), z.literal('')]).optional(),
     email: z.union([z.string().email("Format d'email invalide"), z.literal('')]).optional(),
     ville: z.string().min(1, 'La ville est obligatoire'),
     commune: z.string().min(1, 'La commune est obligatoire'),
@@ -146,6 +149,10 @@ export default function DemandeAccesPage() {
               {step === 1 && (
                 <Stack spacing={2.5}>
                   <TextFieldCtl control={control} name="telephonePrincipal" label="Téléphone principal" errors={errors} autoFocus />
+                  <Alert severity="info" sx={{ mt: -1.5 }}>
+                    Vous recevrez une notification par SMS dès que votre demande sera traitée.
+                    Veuillez vous assurer que ce numéro est correct.
+                  </Alert>
                   <Controller
                     name="memeWhatsapp"
                     control={control}

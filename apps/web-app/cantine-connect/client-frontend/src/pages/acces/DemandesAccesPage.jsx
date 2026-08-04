@@ -10,6 +10,7 @@ import RefreshIcon      from '@mui/icons-material/Refresh'
 import CheckCircleIcon  from '@mui/icons-material/CheckCircle'
 import CancelIcon       from '@mui/icons-material/Cancel'
 import ContentCopyIcon  from '@mui/icons-material/ContentCopy'
+import VisibilityIcon   from '@mui/icons-material/Visibility'
 import { demandeAccesService } from '../../services/demandeAccesService'
 import SuccessSnackbar from '../../components/SuccessSnackbar'
 
@@ -20,6 +21,85 @@ const STATUT_CONFIG = {
 }
 
 const formatDate = (dt) => dt ? new Date(dt).toLocaleString('fr-FR') : '—'
+
+function ChampDetail({ label, value }) {
+  return (
+    <Box>
+      <Typography variant="caption" color="text.secondary">{label}</Typography>
+      <Typography variant="body2">{value || '—'}</Typography>
+    </Box>
+  )
+}
+
+function DetailsDialog({ demande, onClose, onValider, onRejeter, validatingId }) {
+  if (!demande) return null
+  return (
+    <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Détails de la demande</DialogTitle>
+      <DialogContent>
+        <Stack spacing={2} sx={{ mt: 0.5 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="h6" fontWeight={600}>{demande.prenom} {demande.nom}</Typography>
+            <Chip
+              label={STATUT_CONFIG[demande.statut]?.label ?? demande.statut}
+              color={STATUT_CONFIG[demande.statut]?.color ?? 'default'}
+              size="small"
+            />
+          </Stack>
+
+          <ChampDetail label="Fonction" value={demande.fonction} />
+
+          <Box>
+            <Typography variant="subtitle2" fontWeight={600} mb={1}>Contact</Typography>
+            <Stack spacing={1}>
+              <ChampDetail label="Téléphone principal" value={demande.telephonePrincipal} />
+              <ChampDetail
+                label="WhatsApp"
+                value={demande.telephoneWhatsapp || `${demande.telephonePrincipal} (identique au principal)`}
+              />
+              <ChampDetail label="Second téléphone" value={demande.telephoneSecondaire} />
+              <ChampDetail label="Email" value={demande.email} />
+            </Stack>
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" fontWeight={600} mb={1}>Résidence</Typography>
+            <ChampDetail
+              label="Ville / Commune / Quartier"
+              value={[demande.ville, demande.commune, demande.quartier].filter(Boolean).join(', ')}
+            />
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" fontWeight={600} mb={1}>Suivi</Typography>
+            <Stack spacing={1}>
+              <ChampDetail label="Soumise le" value={formatDate(demande.dateSoumission)} />
+              {demande.dateTraitement && <ChampDetail label="Traitée le" value={formatDate(demande.dateTraitement)} />}
+            </Stack>
+            {demande.motifRejet && <Alert severity="warning" sx={{ mt: 1.5 }}>Motif du rejet : {demande.motifRejet}</Alert>}
+          </Box>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Fermer</Button>
+        {demande.statut === 'EN_ATTENTE' && (
+          <>
+            <Button color="error" variant="outlined" onClick={() => onRejeter(demande)} startIcon={<CancelIcon />}>
+              Rejeter
+            </Button>
+            <Button
+              color="success" variant="contained" onClick={() => onValider(demande)}
+              disabled={validatingId === demande.id}
+              startIcon={validatingId === demande.id ? <CircularProgress size={16} color="inherit" /> : <CheckCircleIcon />}
+            >
+              Valider
+            </Button>
+          </>
+        )}
+      </DialogActions>
+    </Dialog>
+  )
+}
 
 function RejeterDialog({ demande, onClose, onConfirm }) {
   const [motif, setMotif]         = useState('')
@@ -98,6 +178,7 @@ export default function DemandesAccesPage() {
   const [resultatValidation, setResultatValidation] = useState(null)
   const [successMsg, setSuccessMsg] = useState('')
   const [validatingId, setValidatingId] = useState(null)
+  const [demandeDetails, setDemandeDetails] = useState(null)
 
   const charger = useCallback(async () => {
     setLoading(true); setError(null)
@@ -121,6 +202,7 @@ export default function DemandesAccesPage() {
     setValidatingId(demande.id); setActionError(null)
     try {
       const resultat = await demandeAccesService.valider(demande.id)
+      setDemandeDetails(null)
       setResultatValidation(resultat)
       setSuccessMsg('Demande validée — compte parent créé')
       charger()
@@ -135,6 +217,11 @@ export default function DemandesAccesPage() {
     await demandeAccesService.rejeter(id, motif)
     setSuccessMsg('Demande rejetée')
     charger()
+  }
+
+  const ouvrirRejetDepuisDetails = (demande) => {
+    setDemandeDetails(null)
+    setDemandeARejeter(demande)
   }
 
   return (
@@ -213,27 +300,11 @@ export default function DemandesAccesPage() {
                         <Typography variant="caption" color="text.secondary">{formatDate(d.dateSoumission)}</Typography>
                       </TableCell>
                       <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
-                        {d.statut === 'EN_ATTENTE' && (
-                          <Stack direction="row" justifyContent="center" spacing={0.5}>
-                            <Tooltip title="Valider — créer le compte parent">
-                              <span>
-                                <IconButton size="small" color="success" disabled={validatingId === d.id} onClick={() => handleValider(d)}>
-                                  {validatingId === d.id ? <CircularProgress size={18} /> : <CheckCircleIcon fontSize="small" />}
-                                </IconButton>
-                              </span>
-                            </Tooltip>
-                            <Tooltip title="Rejeter">
-                              <IconButton size="small" color="error" onClick={() => setDemandeARejeter(d)}>
-                                <CancelIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        )}
-                        {d.statut === 'REJETEE' && d.motifRejet && (
-                          <Tooltip title={d.motifRejet}>
-                            <Typography variant="caption" color="text.secondary">Motif ⓘ</Typography>
-                          </Tooltip>
-                        )}
+                        <Tooltip title={d.statut === 'EN_ATTENTE' ? 'Consulter et traiter la demande' : 'Voir les détails'}>
+                          <IconButton size="small" onClick={() => setDemandeDetails(d)}>
+                            <VisibilityIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))
@@ -255,6 +326,15 @@ export default function DemandesAccesPage() {
         />
       </Paper>
 
+      {demandeDetails && (
+        <DetailsDialog
+          demande={demandeDetails}
+          onClose={() => setDemandeDetails(null)}
+          onValider={handleValider}
+          onRejeter={ouvrirRejetDepuisDetails}
+          validatingId={validatingId}
+        />
+      )}
       {demandeARejeter && (
         <RejeterDialog demande={demandeARejeter} onClose={() => setDemandeARejeter(null)} onConfirm={handleRejeter} />
       )}

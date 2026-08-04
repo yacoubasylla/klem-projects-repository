@@ -45,17 +45,20 @@ public class DemandeAccesService {
     @Traceable(action = TypeAction.CREATE, entite = "DemandeAcces")
     @Transactional
     public DemandeAccesResponseDTO soumettre(DemandeAccesRequestDTO dto) {
+        String telephonePrincipal = normaliserTelephone(dto.telephonePrincipal());
         DemandeAcces demande = DemandeAcces.builder()
                 .nom(dto.nom())
                 .prenom(dto.prenom())
                 .fonction(dto.fonction())
-                .telephonePrincipal(dto.telephonePrincipal())
+                .telephonePrincipal(telephonePrincipal)
                 // Téléphone WhatsApp vide ⇒ identique au numéro principal
                 .telephoneWhatsapp(
                         dto.telephoneWhatsapp() != null && !dto.telephoneWhatsapp().isBlank()
-                                ? dto.telephoneWhatsapp() : dto.telephonePrincipal())
-                .telephoneSecondaire(dto.telephoneSecondaire())
-                .email(dto.email())
+                                ? normaliserTelephone(dto.telephoneWhatsapp()) : telephonePrincipal)
+                .telephoneSecondaire(
+                        dto.telephoneSecondaire() != null && !dto.telephoneSecondaire().isBlank()
+                                ? normaliserTelephone(dto.telephoneSecondaire()) : null)
+                .email(dto.email() != null && !dto.email().isBlank() ? dto.email().trim().toLowerCase() : null)
                 .ville(dto.ville())
                 .commune(dto.commune())
                 .quartier(dto.quartier())
@@ -135,6 +138,14 @@ public class DemandeAccesService {
     private DemandeAcces trouver(Long id) {
         return demandeAccesRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Demande d'accès introuvable : " + id));
+    }
+
+    // Retire les séparateurs de saisie (espace, point, tiret) pour que deux numéros identiques
+    // saisis sous des formats différents ("07 08 09 10 11" vs "0708091011") soient stockés à
+    // l'identique — condition nécessaire pour que la contrainte unique sur Utilisateur.telephone
+    // et le contrôle existsByTelephone() détectent réellement les doublons.
+    private String normaliserTelephone(String telephone) {
+        return telephone.replaceAll("[\\s.-]", "");
     }
 
     private String genererEmailSynthetique(String telephonePrincipal) {
