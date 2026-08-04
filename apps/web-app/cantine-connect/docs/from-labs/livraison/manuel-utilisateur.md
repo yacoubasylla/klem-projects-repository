@@ -26,7 +26,7 @@ parents sans email — voir §3) et un mot de passe. Il n'y a plus d'identifiant
 l'écran par défaut, pour des raisons de sécurité — ils doivent être communiqués séparément par un
 administrateur, ou reçus automatiquement quand une demande d'accès est validée (§3).
 
-Un **sélecteur d'habillage** (icône palette 🎨, visible une fois connecté, en haut de l'écran)
+Un **sélecteur d'habillage** (icône palette, visible une fois connecté, en haut de l'écran)
 permet de choisir entre trois présentations visuelles : **Premium** (par défaut, tons orange et
 vert chaleureux), **Corporatif** (fond sombre, plus sobre) et **Moderne** (fond blanc, dégradés
 bleu/orange). Le choix reste mémorisé sur l'appareil utilisé.
@@ -100,19 +100,19 @@ au reste du site tant que ce n'est pas fait.
 
 | Fonctionnalité | Administrateur | Gestionnaire | Caissier | Parent |
 |:--|:-:|:-:|:-:|:-:|
-| Tableau de bord | ✅ | ✅ | ✅ | ✅ |
-| Établissements | ✅ | ✅ | ✅ | ❌ masqué |
-| Élèves | ✅ | ✅ | ✅ | ❌ masqué |
-| **Mes enfants** (ajout par le parent lui-même) | — | — | — | ✅ |
-| Paiements — voir/lancer un paiement | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
-| Paiements — modifier/supprimer | ✅ | ❌ | ❌ | ❌ |
-| Contrôle d'accès à la cantine | ✅ | ✅ | ✅ | ❌ masqué |
-| Historique des passages | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
-| Rapports (première version) | ✅ | ✅ | ✅ | ❌ masqué |
-| Comptes utilisateurs | ✅ | ❌ | ❌ | ❌ |
-| Parents (rattacher des enfants) | ✅ | ❌ | ❌ | ❌ |
-| **Demandes d'accès** (validation) | ✅ | ❌ | ❌ | ❌ |
-| Paramètres | ✅ | ❌ | ❌ | ❌ |
+| Tableau de bord | ✓ | ✓ | ✓ | ✓ |
+| Établissements | ✓ | ✓ | ✓ | ✗ masqué |
+| Élèves | ✓ | ✓ | ✓ | ✗ masqué |
+| **Mes enfants** (ajout par le parent lui-même) | — | — | — | ✓ |
+| Paiements — voir/lancer un paiement | ✓ (tous) | ✓ (tous) | ✓ (tous) | ✓ (**ses enfants uniquement**) |
+| Paiements — modifier/supprimer | ✓ | ✗ | ✗ | ✗ |
+| Contrôle d'accès à la cantine | ✓ | ✓ | ✓ | ✗ masqué |
+| Historique des passages | ✓ (tous) | ✓ (tous) | ✓ (tous) | ✓ (**ses enfants uniquement**) |
+| Rapports (première version) | ✓ | ✓ | ✓ | ✗ masqué |
+| Comptes utilisateurs | ✓ | ✗ | ✗ | ✗ |
+| Parents (rattacher des enfants) | ✓ | ✗ | ✗ | ✗ |
+| **Demandes d'accès** (validation) | ✓ | ✗ | ✗ | ✗ |
+| Paramètres | ✓ | ✗ | ✗ | ✗ |
 
 Ces restrictions sont vérifiées par le système lui-même, pas seulement cachées à l'écran : même en
 essayant de contourner l'interface, un parent reste limité à ses propres enfants et ne peut pas
@@ -126,8 +126,13 @@ accéder aux menus réservés au personnel.
 ![Tableau de bord — habillage Premium](assets/16-dashboard-ivoirien.png)
 
 Vue d'ensemble à l'ouverture de l'application : nombre d'élèves, répartition par statut d'accès,
-paiements récents, résumé des passages du jour. Le même écran s'affiche pour tous les rôles
-connectés (le contenu s'adapte selon ce que le rôle est autorisé à voir).
+paiements récents, résumé des passages du jour.
+
+- **Administrateur / gestionnaire / caissier** : les chiffres portent sur l'ensemble des élèves.
+- **Parent** : les mêmes indicateurs (établissements, élèves, statuts, passages, paiements)
+  portent uniquement sur **ses propres enfants** — un parent d'un seul enfant verra par exemple
+  « 1 élève », pas le total de l'établissement. Un parent qui n'a encore aucun enfant rattaché
+  voit des indicateurs à zéro.
 
 ---
 
@@ -233,7 +238,7 @@ Un parent connecté accède à l'écran « Mes enfants » pour :
 ![Écran de contrôle d'accès](assets/11-scan-refectoire.png)
 
 - La lecture du QR Code d'un élève à l'entrée de la cantine confirme l'accès en moins d'une
-  seconde : ✅ accès accordé ou ❌ accès refusé (avec le motif affiché).
+  seconde : ✓ accès accordé ou ✗ accès refusé (avec le motif affiché).
 - Fonctionne même **sans connexion internet** : l'appareil garde en mémoire, pendant 24 heures,
   la liste des élèves et leur statut d'accès, et se remet à jour automatiquement dès que la
   connexion revient.
@@ -254,8 +259,8 @@ Un parent connecté accède à l'écran « Mes enfants » pour :
 - **Administrateur / gestionnaire / caissier** : historique complet, filtrable par date,
   établissement et résultat, avec recherche d'élève ; export au format tableau (CSV) ; la
   modification ou la suppression d'un passage sont réservées à l'administrateur.
-- **Parent** : ne voit que les passages de ses propres enfants ; le filtre par établissement est
-  masqué (non utile pour un parent).
+- **Parent** : ne voit que les passages de ses propres enfants ; le filtre par établissement et la
+  colonne « Établissement » du tableau sont masqués (non utiles pour un parent).
 
 ---
 
@@ -313,6 +318,10 @@ Un parent connecté accède à l'écran « Mes enfants » pour :
 
 ![Écran des paramètres](assets/14-configuration.png)
 
+Les réglages sont regroupés par thème dans des blocs dépliables (Contrôle d'accès cantine,
+Notifications, Paiements, Apparence, Organisation) — cliquer sur l'intitulé d'un bloc l'ouvre ou
+le referme.
+
 - Activer ou désactiver les notifications par email et par SMS.
 - Activer ou désactiver la mise à jour automatique des informations hors-ligne du contrôle
   d'accès (§10) — activée par défaut.
@@ -337,7 +346,7 @@ Une section « Organisation » permet d'adapter l'application à l'identité du 
   ligne (§9).
 
 Tant qu'aucune de ces informations n'est renseignée, l'application garde son apparence par défaut
-(icône 🍽️ et nom « Cantine Connect »).
+(icône par défaut et nom « Cantine Connect »).
 
 ---
 
@@ -362,4 +371,4 @@ Tant qu'aucune de ces informations n'est renseignée, l'application garde son ap
 Une fenêtre « À propos », accessible depuis le menu de l'application, rappelle les coordonnées de
 contact de l'éditeur :
 
-**KLEM Technologies & Services** — 📞 +225 07 58 89 24 77 · 📧 infos@klemtech.net
+**KLEM Technologies & Services** — Téléphone : +225 07 58 89 24 77 · Email : infos@klemtech.net
