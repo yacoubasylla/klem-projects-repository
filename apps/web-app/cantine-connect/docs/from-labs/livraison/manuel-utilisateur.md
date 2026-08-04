@@ -1,217 +1,365 @@
 # Manuel Utilisateur — Cantine Connect
 
-> Guide fonctionnel de l'application, organisé par rôle. Reflète l'état de l'application au 2026-08-04.
-> Pour les décisions techniques sous-jacentes, voir `collaboration/history/decision-log.md` (ADR-017, ADR-018) et `collaboration/history/adr/`.
+> Guide d'utilisation de l'application, organisé par rôle. À jour au 2026-08-04.
 
 ---
 
 ## 1. Page d'accueil (publique)
 
-Avant toute connexion, `/` affiche une page d'accueil publique présentant l'application : mise en avant des atouts (paiement Mobile Money, contrôle d'accès QR Code, suivi des allergies, notifications parents), avec deux actions principales :
-- **Se connecter** → `/login`
-- **Demande d'accès** → `/demande-acces`
+Avant de se connecter, toute personne qui arrive sur le site voit une page d'accueil qui présente
+l'application : ses points forts (paiement par Mobile Money, entrée à la cantine par QR Code,
+suivi des allergies, notifications aux parents), avec deux boutons principaux :
 
-Ces deux liens sont également accessibles depuis la barre de navigation en haut de la page, sur toutes les pages publiques.
+- **Se connecter** — pour les personnes qui ont déjà un compte
+- **Demande d'accès** — pour un parent qui n'a pas encore de compte
+
+Ces deux boutons sont aussi disponibles en haut de toutes les pages publiques.
 
 ---
 
 ## 2. Connexion
 
-L'accès se fait via l'écran de connexion (`/login`) avec une adresse email (ou l'identifiant généré pour les parents sans email — voir §3) et un mot de passe. Il n'y a plus d'indication des identifiants par défaut sur cet écran (retiré pour des raisons de sécurité) — les identifiants doivent être communiqués séparément par un ADMIN, ou reçus automatiquement à la validation d'une demande d'accès (§3).
+![Écran de connexion](assets/01-login.png)
 
-Un jeton de session (JWT) est conservé côté navigateur ; la déconnexion (bouton en haut à droite) l'invalide côté client.
+On se connecte avec une adresse email (ou l'identifiant qui a été donné automatiquement aux
+parents sans email — voir §3) et un mot de passe. Il n'y a plus d'identifiants affichés à
+l'écran par défaut, pour des raisons de sécurité — ils doivent être communiqués séparément par un
+administrateur, ou reçus automatiquement quand une demande d'accès est validée (§3).
 
-Un **sélecteur de thème** (icône palette 🎨, visible une fois connecté, dans la barre du haut) permet de choisir entre trois habillages visuels : **Premium** (par défaut, orange/vert chaleureux), **Corporatif** (dark, ardoise) et **Moderne** (blanc, dégradés bleu/orange). Le choix est mémorisé sur le navigateur.
+Un **sélecteur d'habillage** (icône palette 🎨, visible une fois connecté, en haut de l'écran)
+permet de choisir entre trois présentations visuelles : **Premium** (par défaut, tons orange et
+vert chaleureux), **Corporatif** (fond sombre, plus sobre) et **Moderne** (fond blanc, dégradés
+bleu/orange). Le choix reste mémorisé sur l'appareil utilisé.
 
-### Comptes de référence (un par rôle)
+![Sélecteur d'habillage](assets/03-theme-switcher.png)
+![Exemple d'habillage Corporatif](assets/04-dashboard-corporate.png)
+
+### Comptes de démonstration (un par rôle)
 
 | Rôle | Email | Mot de passe |
-|------|-------|--------------|
-| ADMIN | `admin@cantine.connect` | `admin@123` |
-| GESTIONNAIRE | `gestionnaire@cantine.connect` | `gestionnaire@123` |
-| CAISSIER | `caissier@cantine.connect` | `caissier@123` |
-| PARENT | `parent@cantine.connect` | `parent@123` |
+|:--|:--|:--|
+| Administrateur | `admin@cantine.connect` | `admin@123` |
+| Gestionnaire | `gestionnaire@cantine.connect` | `gestionnaire@123` |
+| Caissier | `caissier@cantine.connect` | `caissier@123` |
+| Parent | `parent@cantine.connect` | `parent@123` |
 
-Chaque compte utilisateur doit avoir un **numéro de cellulaire unique** (obligatoire à la création — les parents seront notifiés par SMS).
+Chaque compte doit avoir un **numéro de téléphone unique** (obligatoire à la création) — c'est le
+numéro utilisé pour envoyer les notifications par SMS aux parents.
 
 ---
 
-## 3. Demande d'accès parent (self-service)
+## 3. Demande d'accès parent (sans avoir besoin d'un compte)
 
-Un parent qui n'a pas encore de compte peut soumettre une demande depuis `/demande-acces` (formulaire public en plusieurs étapes) :
+Un parent qui n'a pas encore de compte peut faire une demande depuis la page « Demande d'accès »
+(formulaire en plusieurs étapes) :
 
 1. **Identité** : nom, prénom, fonction (facultatif)
-2. **Contact** : téléphone principal (obligatoire), case « Ce numéro est aussi mon WhatsApp » (sinon un second numéro WhatsApp peut être saisi), téléphone secondaire (facultatif), email (facultatif). Un message rappelle qu'une notification sera envoyée par SMS et invite à vérifier le numéro saisi.
+2. **Contact** : numéro de téléphone principal (obligatoire), case à cocher « Ce numéro est aussi
+   mon WhatsApp » (sinon un second numéro WhatsApp peut être saisi), second numéro de téléphone
+   (facultatif), email (facultatif). Un message rappelle qu'une notification sera envoyée par SMS
+   et invite à bien vérifier le numéro saisi.
 3. **Résidence** : ville, commune (obligatoires), quartier (facultatif)
 
-Le téléphone principal, le numéro WhatsApp et le second téléphone doivent respecter le format ivoirien (10 chiffres commençant par 0, ex. `07 08 09 10 11`, indicatif `+225` optionnel) ; l'email, s'il est renseigné, doit être une adresse valide. Ce contrôle de format s'applique à la fois dans le formulaire et côté serveur.
+Le numéro principal, le numéro WhatsApp et le second numéro doivent être au format ivoirien (10
+chiffres commençant par 0, par exemple `07 08 09 10 11`, avec l'indicatif `+225` en option) ;
+l'email, s'il est renseigné, doit être une adresse valide. Ce contrôle est fait à la fois dans le
+formulaire et vérifié une seconde fois par le système, pour éviter toute erreur de saisie.
 
-À la soumission, un écran de confirmation s'affiche : **aucun compte n'est créé à ce stade** — la demande est mise en file d'attente (statut *En attente*) pour validation par l'établissement.
+Une fois la demande envoyée, un écran de confirmation s'affiche : **aucun compte n'est créé tout
+de suite** — la demande est mise en attente jusqu'à ce que l'établissement la valide.
 
 ### Validation par l'administrateur
 
-Écran `/demandes-acces` (ADMIN uniquement) : liste des demandes, filtrable par statut (En attente / Validées / Rejetées). Chaque ligne dispose d'une icône « Voir détails » ouvrant une fiche complète du demandeur (identité, tous les téléphones, email, résidence, historique de traitement) — pour une demande en attente, cette fiche est aussi l'endroit où l'on **valide ou rejette**, afin de toujours vérifier les informations avant de créer le compte.
+Sur l'écran « Demandes d'accès » (réservé à l'administrateur), on retrouve la liste des demandes,
+que l'on peut filtrer par statut (En attente / Validées / Rejetées). Chaque ligne a un bouton
+« Voir détails » qui ouvre une fiche complète du demandeur (identité, tous les numéros de
+téléphone, email, résidence, historique du traitement) — pour une demande en attente, c'est
+depuis cette fiche que l'on **valide ou rejette**, afin de toujours vérifier les informations
+avant de créer un compte.
 
-- **Valider** : crée le compte `Utilisateur` (rôle PARENT) et le profil `Parent` associé, génère un identifiant de connexion et un mot de passe temporaire. Si des notifications email/SMS sont activées (§13 Configuration), le parent les reçoit automatiquement ; **dans tous les cas**, une boîte de dialogue affiche l'identifiant et le mot de passe générés à l'écran, à communiquer manuellement si besoin (utile tant que les notifications réelles ne sont pas configurées).
-  - Si le parent n'a fourni **aucun email**, un identifiant de connexion est généré automatiquement à partir de son numéro de téléphone (format `p<téléphone>@parent.cantine-connect.ci`) — ce n'est pas une adresse email fonctionnelle, seulement un identifiant de connexion interne.
-- **Rejeter** : motif obligatoire, conserve la demande avec son statut et le motif pour traçabilité.
+- **Valider** : crée le compte du parent, avec un identifiant de connexion et un mot de passe
+  provisoire générés automatiquement. Si les notifications par email et SMS sont activées
+  (voir §15 Configuration), le parent les reçoit automatiquement ; **dans tous les cas**, une
+  fenêtre affiche l'identifiant et le mot de passe à l'écran, pour pouvoir les communiquer
+  manuellement si besoin.
+  - Si le parent n'a donné **aucun email**, un identifiant de connexion est créé automatiquement
+    à partir de son numéro de téléphone — ce n'est pas une adresse email utilisable, seulement un
+    identifiant de connexion.
+- **Rejeter** : un motif est obligatoire ; la demande reste visible avec son statut et le motif,
+  pour garder une trace.
 
 ### Première connexion
 
-Un parent dont le compte vient d'être créé par validation **doit changer son mot de passe temporaire** dès sa première connexion — l'application le redirige automatiquement vers cet écran et bloque l'accès au reste du site tant que ce n'est pas fait.
+Un parent dont le compte vient d'être créé **doit changer son mot de passe provisoire** dès sa
+première connexion — l'application l'amène automatiquement sur cet écran et ne laisse pas accéder
+au reste du site tant que ce n'est pas fait.
 
 ---
 
-## 4. Rôles et périmètre d'accès
+## 4. Qui peut voir et faire quoi
 
-| Fonctionnalité | ADMIN | GESTIONNAIRE | CAISSIER | PARENT |
-|---|:---:|:---:|:---:|:---:|
+| Fonctionnalité | Administrateur | Gestionnaire | Caissier | Parent |
+|:--|:-:|:-:|:-:|:-:|
 | Tableau de bord | ✅ | ✅ | ✅ | ✅ |
 | Établissements | ✅ | ✅ | ✅ | ❌ masqué |
 | Élèves | ✅ | ✅ | ✅ | ❌ masqué |
-| **Mes enfants** (ajout self-service) | — | — | — | ✅ |
-| Paiements — voir/initier | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
+| **Mes enfants** (ajout par le parent lui-même) | — | — | — | ✅ |
+| Paiements — voir/lancer un paiement | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
 | Paiements — modifier/supprimer | ✅ | ❌ | ❌ | ❌ |
-| Scan Réfectoire | ✅ | ✅ | ✅ | ❌ masqué |
-| Historique des Passages | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
-| Rapports (v1 exploratoire) | ✅ | ✅ | ✅ | ❌ masqué |
-| Utilisateurs | ✅ | ❌ | ❌ | ❌ |
-| Parents (liaison enfants) | ✅ | ❌ | ❌ | ❌ |
+| Contrôle d'accès à la cantine | ✅ | ✅ | ✅ | ❌ masqué |
+| Historique des passages | ✅ (tous) | ✅ (tous) | ✅ (tous) | ✅ (**ses enfants uniquement**) |
+| Rapports (première version) | ✅ | ✅ | ✅ | ❌ masqué |
+| Comptes utilisateurs | ✅ | ❌ | ❌ | ❌ |
+| Parents (rattacher des enfants) | ✅ | ❌ | ❌ | ❌ |
 | **Demandes d'accès** (validation) | ✅ | ❌ | ❌ | ❌ |
-| Configuration | ✅ | ❌ | ❌ | ❌ |
+| Paramètres | ✅ | ❌ | ❌ | ❌ |
 
-Ces restrictions sont appliquées **côté serveur** (`@PreAuthorize`, filtrage des requêtes en base) — masquer un menu côté navigateur ne suffirait pas à protéger les données ; un parent qui interrogerait directement l'API resterait bloqué. *Exception : le module Rapports lui-même n'a pas d'endpoint dédié — il réutilise `GET /paiements`/`GET /passages`, déjà protégés (un PARENT y reste limité à ses enfants) ; seul l'accès à la page `/rapports` est filtré côté navigateur (menu masqué + redirection automatique).*
+Ces restrictions sont vérifiées par le système lui-même, pas seulement cachées à l'écran : même en
+essayant de contourner l'interface, un parent reste limité à ses propres enfants et ne peut pas
+accéder aux menus réservés au personnel.
 
 ---
 
 ## 5. Tableau de bord
 
-Vue d'ensemble : nombre d'élèves, répartition par statut d'accès, paiements récents, résumé des passages du jour. Identique pour tous les rôles connectés.
+![Tableau de bord](assets/02-dashboard.png)
+![Tableau de bord — habillage Premium](assets/16-dashboard-ivoirien.png)
+
+Vue d'ensemble à l'ouverture de l'application : nombre d'élèves, répartition par statut d'accès,
+paiements récents, résumé des passages du jour. Le même écran s'affiche pour tous les rôles
+connectés (le contenu s'adapte selon ce que le rôle est autorisé à voir).
 
 ---
 
-## 6. Établissements (ADMIN / GESTIONNAIRE / CAISSIER)
+## 6. Établissements (administrateur / gestionnaire / caissier)
 
-- Liste des établissements actifs, création (ADMIN uniquement), modification, suppression logique.
-- Dialogue « Gérer la structure » : création de niveaux et de classes en masse (ex. saisir `CP, CE1, CM1` crée 3 niveaux d'un coup), édition inline d'un niveau ou d'une classe.
-- **Délai de grâce** : un champ optionnel permet de surcharger, pour cet établissement uniquement, le délai de grâce global (7 jours par défaut, réglable en Configuration §13). Laisser vide pour utiliser la valeur globale.
-- Non accessible au rôle PARENT en direct depuis ce menu, mais la liste des établissements/classes est désormais lisible par un PARENT authentifié (nécessaire à la cascade du formulaire « Mes enfants », §8) — la création/modification reste réservée au staff.
+![Liste des établissements](assets/05-etablissements.png)
+
+- Liste des établissements actifs. La création d'un nouvel établissement est réservée à
+  l'administrateur ; la modification et la suppression (logique, sans perte de données) sont
+  possibles pour le personnel autorisé.
+- Un outil « Gérer la structure » permet de créer plusieurs niveaux et classes d'un coup (par
+  exemple taper `CP, CE1, CM1` crée les trois niveaux en une seule fois), et de les modifier
+  directement dans le tableau.
+- **Délai de grâce** : un champ optionnel permet de définir, pour cet établissement uniquement,
+  un délai différent du délai par défaut (7 jours, réglable dans les Paramètres, §15). Laisser le
+  champ vide pour garder le délai par défaut.
+- Ce menu n'est pas accessible directement à un parent, mais la liste des établissements et des
+  classes lui reste visible pour pouvoir choisir la bonne classe quand il ajoute un enfant
+  (§8) — la création ou la modification restent réservées au personnel.
 
 ---
 
-## 7. Élèves (ADMIN / GESTIONNAIRE / CAISSIER)
+## 7. Élèves (administrateur / gestionnaire / caissier)
 
-- Tableau paginé côté serveur (supporte de gros volumes).
-- **Recherche** par nom, prénom ou matricule ; filtres Établissement et Statut d'accès.
-- **Export CSV** de la page courante (bouton « CSV » dans l'en-tête).
-- Formulaire de création/modification à 3 onglets (Général / Cantine-Affectation / Contacts-Allergies) — pas de défilement vertical, adapté aux écrans compacts des gestionnaires.
-- QR Code par élève : affichage, copie du token, impression — c'est ce même QR Code qui est destiné à être imprimé sur un badge PVC physique (voir l'offre commerciale, Annexe A, pour la fabrication des badges).
-- Suppression réservée à l'ADMIN.
-- Non accessible au rôle PARENT (le parent ajoute ses propres enfants via « Mes enfants », §8).
+![Liste des élèves](assets/06-eleves-liste.png)
+
+- Liste des élèves avec pagination (reste rapide même avec un grand nombre d'élèves).
+- **Recherche** par nom, prénom ou matricule ; filtres par établissement et par statut d'accès.
+- **Export** de la liste affichée au format tableau (CSV), via le bouton dédié.
+- La création ou la modification d'un élève se fait dans un formulaire en 3 étapes, pour rester
+  clair et tenir sur un seul écran :
+
+![Fiche élève — Informations générales](assets/07-eleve-form-onglet1.png)
+![Fiche élève — Cantine et affectation](assets/08-eleve-form-onglet2.png)
+![Fiche élève — Contacts et allergies](assets/09-eleve-form-onglet3.png)
+
+- Chaque élève dispose d'un QR Code personnel : consultable, copiable, imprimable — c'est ce même
+  QR Code qui est destiné à être imprimé sur un badge plastifié remis à l'élève (voir l'offre
+  commerciale pour la fabrication des badges).
+- La suppression d'un élève est réservée à l'administrateur.
+- Ce menu n'est pas accessible à un parent (le parent ajoute ses propres enfants depuis
+  « Mes enfants », §8).
 
 ### Allergies et certificat médical
 
-- Le champ **Allergies** n'est modifiable **qu'en édition** d'une fiche déjà créée (pas à la création) : le certificat médical associé ne peut être importé qu'une fois la fiche existante (elle a besoin d'un identifiant). Créez d'abord l'élève sans allergie, puis ouvrez « Modifier » pour la déclarer.
-- En édition, le bloc **Certificat médical** (onglet Contacts/Allergies) permet d'**importer** un fichier (PDF, JPG ou PNG) — le certificat est envoyé immédiatement au serveur ; une fois chargé, un badge « Certificat fourni » apparaît avec un lien pour le consulter, et un bouton « Remplacer » pour en importer un nouveau.
-- L'enregistrement de la fiche est bloqué (message d'erreur explicite) si le champ Allergies contient du texte mais qu'aucun certificat n'a été importé.
+- Le champ **Allergies** ne peut être renseigné **qu'après la création** de la fiche de
+  l'élève, pas au moment de la création : le certificat médical qui l'accompagne ne peut être
+  ajouté qu'une fois la fiche déjà enregistrée. Il faut donc d'abord créer l'élève sans allergie,
+  puis ouvrir « Modifier » pour la déclarer.
+- Une fois en modification, un bloc **Certificat médical** permet d'**ajouter un fichier** (PDF,
+  JPG ou PNG). Une fois le fichier envoyé, un repère « Certificat fourni » apparaît avec un lien
+  pour le consulter et un bouton pour le remplacer si besoin.
+- L'enregistrement de la fiche est bloqué, avec un message clair, si le champ Allergies contient
+  du texte mais qu'aucun certificat n'a été ajouté.
 
 ---
 
-## 8. Mes enfants (PARENT — self-service)
+## 8. Mes enfants (espace parent — en libre-service)
 
-Un parent connecté accède à `/mes-enfants` (menu « Mes enfants ») pour :
+Un parent connecté accède à l'écran « Mes enfants » pour :
+
 - **Consulter** la liste de ses enfants déjà rattachés (nom, matricule, statut d'accès).
-- **Ajouter un enfant** lui-même, via un formulaire : établissement (liste déroulante), classe (se charge automatiquement une fois l'établissement choisi — cascade établissement → niveau → classe selon la configuration faite par l'ADMIN), matricule (communiqué par l'établissement à l'inscription), nom, prénom, sexe (facultatif), date de naissance (facultative), ville et commune (obligatoires), quartier (facultatif).
-- Les coordonnées de contact (nom du parent, téléphone, email) affichées côté établissement pour cet enfant sont **automatiquement reprises du compte connecté** — le parent ne les ressaisit pas.
-- Un enfant ajouté ainsi démarre avec le statut **En attente de paiement** — aucun accès cantine tant qu'un paiement n'a pas été enregistré.
+- **Ajouter un enfant** lui-même : il choisit l'établissement dans une liste déroulante, puis la
+  classe correspondante s'affiche automatiquement (les choix proposés dépendent de ce que
+  l'administrateur a déjà configuré), et renseigne le matricule (communiqué par l'établissement à
+  l'inscription), le nom, le prénom, le sexe (facultatif), la date de naissance (facultative), la
+  ville et la commune (obligatoires), le quartier (facultatif).
+- Les coordonnées du parent (nom, téléphone, email) affichées côté établissement pour cet enfant
+  sont **reprises automatiquement du compte connecté** — le parent n'a rien à ressaisir.
+- Un enfant ajouté de cette façon démarre avec le statut **En attente de paiement** — aucun accès
+  à la cantine tant qu'un paiement n'a pas été enregistré.
 
 ---
 
 ## 9. Paiements Mobile Money
 
-- **ADMIN / GESTIONNAIRE / CAISSIER** : voient toutes les transactions, peuvent initier un paiement pour n'importe quel élève (recherche par nom/prénom/matricule). L'ADMIN seul peut modifier ou supprimer une transaction.
-- **PARENT** : ne voit que les paiements de ses propres enfants ; le sélecteur d'élève du dialogue « Initier un paiement » ne propose que ses enfants (pas de recherche libre parmi tous les élèves).
-- **Périodes** : les paiements en mode Abonnement sont **trimestriels ou annuels uniquement** — pas de mensualisation.
-- Opérateurs supportés : Orange Money, MTN Money, Moov Money, Wave (via les agrégateurs CinetPay/PayDunya — voir §14).
-- **Recherche** par nom/prénom/matricule de l'élève ; filtres par statut (En attente / Accepté / Refusé / Annulé), par plage de dates (Date début/fin) et par opérateur Mobile Money — tous cumulables.
-- **Export CSV** de la page courante.
-- Une tentative d'initier un paiement pour un élève qui n'est pas son enfant est refusée par le serveur (403).
+![Écran des paiements](assets/10-paiements.png)
 
-> ℹ️ L'intégration CinetPay/PayDunya appelle réellement les API des agrégateurs (voir §14) mais **aucune clé de production n'est encore configurée** — tant que ce n'est pas fait, une tentative de paiement renverra une erreur claire (« service de paiement indisponible ou mal configuré ») plutôt qu'un lien de paiement fonctionnel.
+- **Administrateur / gestionnaire / caissier** : voient toutes les transactions et peuvent lancer
+  un paiement pour n'importe quel élève (recherche par nom, prénom ou matricule). Seul
+  l'administrateur peut modifier ou supprimer une transaction.
+- **Parent** : ne voit que les paiements de ses propres enfants ; en lançant un paiement, seuls
+  ses enfants lui sont proposés (pas de recherche libre parmi tous les élèves).
+- **Périodes de paiement** : pour un abonnement, seuls les règlements **par trimestre ou par
+  année** sont proposés — pas de paiement mensuel.
+- Opérateurs Mobile Money pris en charge : Orange Money, MTN Money, Moov Money, Wave.
+- **Recherche** par nom, prénom ou matricule de l'élève ; filtres par statut (En attente /
+  Accepté / Refusé / Annulé), par période (date de début/fin) et par opérateur — tous les filtres
+  peuvent se combiner.
+- **Export** de la liste affichée au format tableau (CSV).
+- Un parent qui tenterait de payer pour un enfant qui n'est pas le sien se voit automatiquement
+  refuser l'opération par le système.
 
----
-
-## 10. Scan Réfectoire (ADMIN / GESTIONNAIRE / CAISSIER)
-
-- Validation du QR Code d'un élève en moins d'une seconde : ✅ accordé / ❌ refusé (motif affiché).
-- Fonctionne hors-ligne via un cache local de 24h (liste des élèves actifs + statut d'accès), resynchronisé à la reconnexion.
-- Barre de statut : indicateur « En ligne »/« Hors ligne », état du cache (« Cache absent » ou « Cache : X élèves · âge »), bouton de téléchargement manuel du cache.
-- **Rafraîchissement automatique du cache** : si activé (réglage par défaut, voir §13 Configuration), le cache est téléchargé silencieusement à l'ouverture de la page si une connexion est disponible — pas besoin de cliquer manuellement. Désactivable pour repasser en téléchargement manuel uniquement.
-- Non accessible au rôle PARENT.
-
----
-
-## 11. Historique des Passages
-
-- **ADMIN / GESTIONNAIRE / CAISSIER** : historique complet, filtrable par date, établissement, résultat, recherche élève ; export CSV ; modification/suppression d'un passage réservées à l'ADMIN.
-- **PARENT** : ne voit que les passages de ses propres enfants ; le filtre « Établissement » est masqué (non pertinent pour un parent).
+> ℹ️ Le paiement en ligne est réellement connecté à un service de paiement Mobile Money, mais
+> **aucun compte marchand réel n'est encore branché** — tant que ce n'est pas fait, une tentative
+> de paiement affiche un message clair (« service de paiement indisponible ou mal configuré »)
+> plutôt qu'un lien de paiement fonctionnel.
 
 ---
 
-## 12. Utilisateurs (ADMIN uniquement)
+## 10. Contrôle d'accès à la cantine
 
-- Création d'un compte : nom, prénom, email, **numéro de cellulaire (obligatoire, unique)**, mot de passe, rôle (ADMIN, GESTIONNAIRE, CAISSIER ou PARENT).
-- Modification, changement de rôle inline, désactivation/réactivation, suppression définitive.
-- Impossible de désactiver ou supprimer le dernier compte ADMIN du système.
-- Impossible de désactiver/supprimer son propre compte.
-- **Recherche** par email, nom, prénom ou téléphone ; filtres par rôle, statut (Actif/Inactif) et plage de dates de création — tous cumulables.
+![Écran de contrôle d'accès](assets/11-scan-refectoire.png)
+
+- La lecture du QR Code d'un élève à l'entrée de la cantine confirme l'accès en moins d'une
+  seconde : ✅ accès accordé ou ❌ accès refusé (avec le motif affiché).
+- Fonctionne même **sans connexion internet** : l'appareil garde en mémoire, pendant 24 heures,
+  la liste des élèves et leur statut d'accès, et se remet à jour automatiquement dès que la
+  connexion revient.
+- Une barre d'état indique si l'appareil est « En ligne » ou « Hors ligne », l'état de ces
+  informations enregistrées à l'avance (absentes, ou datées avec le nombre d'élèves couverts), et
+  propose un bouton pour forcer la mise à jour manuellement.
+- Par défaut, ces informations se mettent à jour automatiquement en arrière-plan dès l'ouverture
+  de l'écran, si une connexion est disponible — ce comportement peut être désactivé dans les
+  Paramètres (§15) pour ne garder que la mise à jour manuelle.
+- Non accessible à un parent.
 
 ---
 
-## 13. Parents (ADMIN uniquement)
+## 11. Historique des passages
 
-- Associe un compte utilisateur de rôle PARENT à un ou plusieurs élèves.
-- **Sélection du compte parent** (dans le formulaire) : recherche par numéro de cellulaire, nom ou prénom (le compte PARENT doit déjà exister — le créer d'abord dans « Utilisateurs », ou passer par une demande d'accès validée, §3).
-- **Sélection des enfants** : recherche par matricule, nom ou prénom, sélection multiple.
-- Modification des enfants associés, suppression du lien (les élèves eux-mêmes ne sont pas supprimés).
-- **Recherche** sur la liste principale par **email OU numéro de téléphone** du compte parent (étendue au téléphone — auparavant email uniquement).
+![Historique des passages](assets/12-historique.png)
+
+- **Administrateur / gestionnaire / caissier** : historique complet, filtrable par date,
+  établissement et résultat, avec recherche d'élève ; export au format tableau (CSV) ; la
+  modification ou la suppression d'un passage sont réservées à l'administrateur.
+- **Parent** : ne voit que les passages de ses propres enfants ; le filtre par établissement est
+  masqué (non utile pour un parent).
 
 ---
 
-## 14. Rapports (ADMIN / GESTIONNAIRE / CAISSIER) — v1 exploratoire
+## 12. Comptes utilisateurs (administrateur uniquement)
 
-> Première version, destinée à recueillir des retours avant amélioration avec le client. Non accessible au rôle PARENT.
+![Liste des comptes utilisateurs](assets/13-utilisateurs.png)
 
-- Choisir une période (date début/fin) et, optionnellement, un établissement (filtre les passages uniquement), puis cliquer sur **« Générer le rapport »**.
-- Trois onglets une fois le rapport généré :
-  - **Résumé** : montant total encaissé, répartition des paiements par statut, répartition des passages par résultat, taux d'accès.
+- Création d'un compte : nom, prénom, email, **numéro de téléphone (obligatoire, unique)**, mot
+  de passe, rôle (Administrateur, Gestionnaire, Caissier ou Parent).
+- Modification, changement de rôle directement dans le tableau, désactivation/réactivation,
+  suppression définitive.
+- Impossible de désactiver ou de supprimer le tout dernier compte administrateur du système.
+- Impossible de désactiver ou de supprimer son propre compte.
+- **Recherche** par email, nom, prénom ou téléphone ; filtres par rôle, par statut (actif ou
+  inactif) et par période de création — tous combinables.
+
+---
+
+## 13. Parents (rattacher des enfants — administrateur uniquement)
+
+- Permet de rattacher un compte parent à un ou plusieurs élèves.
+- **Choix du compte parent** : recherche par numéro de téléphone, nom ou prénom (le compte doit
+  déjà exister — le créer d'abord dans « Comptes utilisateurs », ou passer par une demande
+  d'accès validée, §3).
+- **Choix des enfants** : recherche par matricule, nom ou prénom, plusieurs enfants peuvent être
+  sélectionnés à la fois.
+- Modification des enfants rattachés, suppression du lien (les fiches des élèves ne sont pas
+  supprimées pour autant).
+- **Recherche** sur la liste principale par **email ou numéro de téléphone** du compte parent.
+
+---
+
+## 14. Rapports (administrateur / gestionnaire / caissier) — première version
+
+> Première version de ce module, mise à disposition pour recueillir des retours avant amélioration.
+> Non accessible à un parent.
+
+- On choisit une période (date de début/fin) et, si besoin, un établissement (ce filtre ne
+  s'applique qu'aux passages à la cantine), puis on clique sur **« Générer le rapport »**.
+- Trois onglets s'affichent une fois le rapport généré :
+  - **Résumé** : montant total encaissé, répartition des paiements par statut, répartition des
+    passages par résultat, taux d'accès.
   - **Paiements** : liste détaillée des transactions de la période.
-  - **Passages** : liste détaillée des passages réfectoire de la période.
-- **Exporter Excel** : télécharge un classeur `.xlsx` à 3 feuilles (Résumé / Paiements / Passages) couvrant toute la période sélectionnée.
-- **Imprimer / PDF** (par onglet) : ouvre la boîte de dialogue d'impression du navigateur, limitée au contenu de l'onglet actif — utiliser « Enregistrer au format PDF » pour obtenir un fichier PDF.
-- Sur une période très volumineuse, un avertissement s'affiche si le rapport a dû être tronqué (au-delà de 10 000 lignes) : réduire la plage de dates dans ce cas.
+  - **Passages** : liste détaillée des passages à la cantine sur la période.
+- **Exporter en Excel** : télécharge un fichier avec 3 feuilles (Résumé / Paiements / Passages)
+  couvrant toute la période choisie.
+- **Imprimer / PDF** (par onglet) : ouvre la fenêtre d'impression du navigateur, limitée au
+  contenu de l'onglet affiché — choisir « Enregistrer au format PDF » pour obtenir un fichier PDF.
+- Sur une période avec beaucoup de données, un message avertit si le rapport a dû être limité (au
+  delà de 10 000 lignes) : il suffit alors de réduire la période choisie.
 
 ---
 
-## 15. Configuration (ADMIN uniquement)
+## 15. Paramètres (administrateur uniquement)
 
-- Activation/désactivation des notifications email et SMS.
-- Activation/désactivation du rafraîchissement automatique du cache hors-ligne (Scan Réfectoire) — activé par défaut.
-- Mode de paiement : `ABONNEMENT` (accès trimestriel/annuel) ou `CREDITS` (débit par repas, avec tarif configurable) — les deux modes coexistent, un établissement peut utiliser l'un ou l'autre selon l'élève.
-- Délai de grâce par défaut (7 jours), surchargeable par établissement (§6).
-- Provider de paiement actif (CinetPay ou PayDunya).
+![Écran des paramètres](assets/14-configuration.png)
+
+- Activer ou désactiver les notifications par email et par SMS.
+- Activer ou désactiver la mise à jour automatique des informations hors-ligne du contrôle
+  d'accès (§10) — activée par défaut.
+- Mode de paiement : par **abonnement** (accès pour tout le trimestre ou l'année) ou par
+  **crédits** (montant débité à chaque repas, avec un tarif réglable) — les deux modes peuvent
+  coexister, chaque élève utilisant l'un ou l'autre.
+- Délai de grâce par défaut (7 jours), qui peut être ajusté établissement par établissement (§6).
+- Service de paiement actif.
 - Image de fond personnalisée pour l'écran de connexion.
 
+### Personnalisation par établissement (image, nom, coordonnées)
+
+Une section « Organisation » permet d'adapter l'application à l'identité du client :
+
+- **Logo** : à téléverser directement depuis cet écran — il remplace l'icône par défaut en haut
+  de chaque page de l'application.
+- **Nom du client** : remplace « Cantine Connect » dans l'en-tête de l'application.
+- **Adresse / lieu**, **téléphone**, **email** : coordonnées de contact affichées comme
+  référence.
+- **Numéro Mobile Money** : numéro communiqué aux parents pour un envoi manuel d'argent — c'est
+  une information affichée aux parents, elle ne change rien au fonctionnement des paiements en
+  ligne (§9).
+
+Tant qu'aucune de ces informations n'est renseignée, l'application garde son apparence par défaut
+(icône 🍽️ et nom « Cantine Connect »).
+
 ---
 
-## 16. Paiement & notifications — état de l'intégration
+## 16. Paiement et notifications — état de la mise en service
 
-- **Paiement** : les appels vers CinetPay et PayDunya sont réels (pas une simulation) — dès que le client fournit ses identifiants marchands réels (clé API, site ID, etc.), le paiement fonctionne sans nouveau développement. Sans ces identifiants, une tentative de paiement échoue avec un message clair plutôt qu'un lien invalide.
-- **SMS** : intégration réelle avec le fournisseur Twilio. Sans compte Twilio configuré, les notifications SMS sont simplement journalisées (aucun envoi réel, aucune erreur visible pour l'utilisateur).
-- **Email** : fonctionne dès que les identifiants SMTP réels sont renseignés (ex. compte Gmail avec mot de passe d'application).
+- **Paiement** : la connexion avec le service de paiement Mobile Money est réelle, pas une
+  simulation — dès que le client fournit ses identifiants marchands réels, le paiement fonctionne
+  sans développement supplémentaire. Sans ces identifiants, une tentative de paiement échoue avec
+  un message clair plutôt qu'un lien qui ne fonctionne pas.
+- **SMS** : la connexion avec le fournisseur de SMS est réelle. Tant qu'aucun compte n'est
+  configuré, les SMS sont simplement enregistrés dans les journaux techniques (aucun envoi réel,
+  et cela ne bloque rien pour l'utilisateur).
+- **Email** : fonctionne dès que les paramètres techniques d'envoi (compte email dédié) sont
+  renseignés.
 
 ---
 
-## 17. Support
+## 17. Support et à propos
+
+![Fenêtre « À propos »](assets/15-apropos.png)
+
+Une fenêtre « À propos », accessible depuis le menu de l'application, rappelle les coordonnées de
+contact de l'éditeur :
 
 **KLEM Technologies & Services** — 📞 +225 07 58 89 24 77 · 📧 infos@klemtech.net
