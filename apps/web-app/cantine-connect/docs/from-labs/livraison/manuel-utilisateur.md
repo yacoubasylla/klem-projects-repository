@@ -50,23 +50,37 @@ numéro utilisé pour envoyer les notifications par SMS aux parents.
 
 ## 3. Demande d'accès parent (sans avoir besoin d'un compte)
 
-Un parent qui n'a pas encore de compte peut faire une demande depuis la page « Demande d'accès »
-(formulaire en plusieurs étapes) :
+Un parent qui n'a pas encore de compte peut faire une demande depuis la page « Demande d'accès »,
+accessible depuis la page d'accueil ou l'écran de connexion. C'est un formulaire simple en trois
+petites étapes, avec une barre de progression en haut pour savoir où on en est :
 
-1. **Identité** : nom, prénom, fonction (facultatif)
+![Demande d'accès — étape 1 : identité](assets/17-demande-acces-identite.png)
+
+1. **Identité** : nom, prénom, fonction (facultatif — par exemple « Maman », « Tuteur »).
+
+![Demande d'accès — étape 2 : contact](assets/18-demande-acces-contact.png)
+
 2. **Contact** : numéro de téléphone principal (obligatoire), case à cocher « Ce numéro est aussi
    mon WhatsApp » (sinon un second numéro WhatsApp peut être saisi), second numéro de téléphone
    (facultatif), email (facultatif). Un message rappelle qu'une notification sera envoyée par SMS
    et invite à bien vérifier le numéro saisi.
-3. **Résidence** : ville, commune (obligatoires), quartier (facultatif)
+
+![Demande d'accès — étape 3 : résidence](assets/19-demande-acces-residence.png)
+
+3. **Résidence** : ville, commune (obligatoires), quartier (facultatif).
 
 Le numéro principal, le numéro WhatsApp et le second numéro doivent être au format ivoirien (10
 chiffres commençant par 0, par exemple `07 08 09 10 11`, avec l'indicatif `+225` en option) ;
 l'email, s'il est renseigné, doit être une adresse valide. Ce contrôle est fait à la fois dans le
 formulaire et vérifié une seconde fois par le système, pour éviter toute erreur de saisie.
 
-Une fois la demande envoyée, un écran de confirmation s'affiche : **aucun compte n'est créé tout
-de suite** — la demande est mise en attente jusqu'à ce que l'établissement la valide.
+Une fois les trois étapes remplies, un bouton « Envoyer ma demande » termine le processus et un
+écran de confirmation s'affiche :
+
+![Demande d'accès — confirmation](assets/20-demande-acces-confirmation.png)
+
+**Aucun compte n'est créé tout de suite** — la demande est mise en attente jusqu'à ce que
+l'établissement la valide.
 
 ### Validation par l'administrateur
 
@@ -192,18 +206,33 @@ paiements récents, résumé des passages du jour.
 
 ## 8. Mes enfants (espace parent — en libre-service)
 
-Un parent connecté accède à l'écran « Mes enfants » pour :
+### Ce qui se passe quand un parent se connecte
 
-- **Consulter** la liste de ses enfants déjà rattachés (nom, matricule, statut d'accès).
-- **Ajouter un enfant** lui-même : il choisit l'établissement dans une liste déroulante, puis la
-  classe correspondante s'affiche automatiquement (les choix proposés dépendent de ce que
-  l'administrateur a déjà configuré), et renseigne le matricule (communiqué par l'établissement à
-  l'inscription), le nom, le prénom, le sexe (facultatif), la date de naissance (facultative), la
-  ville et la commune (obligatoires), le quartier (facultatif).
+Une fois connecté avec son email (ou son identifiant) et son mot de passe, un parent arrive
+d'abord sur le **Tableau de bord** (§5), avec ses propres statistiques (nombre d'enfants, statut
+d'accès, passages récents). Le menu de gauche, spécifique au rôle Parent, ne propose que quatre
+écrans : **Tableau de bord**, **Mes enfants**, **Paiements** et **Historique** — tous les menus
+réservés au personnel (Établissements, Élèves, Scan Réfectoire, Utilisateurs, etc.) sont absents.
+En cliquant sur « Mes enfants » dans ce menu, le parent arrive sur l'écran suivant :
+
+![Mes enfants — liste des enfants rattachés](assets/21-mes-enfants-liste.png)
+
+- **Consulter** la liste de ses enfants déjà rattachés : nom, matricule, statut d'accès (Autorisé,
+  En attente de paiement, Période de grâce, Suspendu).
+- **Ajouter un enfant** lui-même, via le bouton « Ajouter un enfant » qui ouvre un petit
+  formulaire :
+
+![Mes enfants — formulaire d'ajout](assets/22-mes-enfants-ajouter.png)
+
+  Le parent choisit l'établissement dans une liste déroulante, puis la classe correspondante
+  s'affiche automatiquement une fois l'établissement choisi (les choix proposés dépendent de ce
+  que l'administrateur a déjà configuré pour cet établissement), et renseigne le matricule
+  (communiqué par l'établissement à l'inscription), le nom, le prénom, le sexe (facultatif), la
+  date de naissance (facultative), la ville et la commune (obligatoires), le quartier (facultatif).
 - Les coordonnées du parent (nom, téléphone, email) affichées côté établissement pour cet enfant
   sont **reprises automatiquement du compte connecté** — le parent n'a rien à ressaisir.
 - Un enfant ajouté de cette façon démarre avec le statut **En attente de paiement** — aucun accès
-  à la cantine tant qu'un paiement n'a pas été enregistré.
+  à la cantine tant qu'un paiement n'a pas été enregistré (voir §9 pour effectuer ce paiement).
 
 ---
 
