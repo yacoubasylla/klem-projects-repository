@@ -12,7 +12,7 @@ import { useEtablissements } from '../../hooks/useEtablissements'
 import { useAuth } from '../../hooks/useAuth'
 import { exporterRapportExcel, RAPPORT_LABELS } from '../../services/rapportExportService'
 
-const { STATUT_LABELS, OPERATEUR_LABELS, RESULTAT_LABELS } = RAPPORT_LABELS
+const { STATUT_LABELS, OPERATEUR_LABELS, RESULTAT_LABELS, STATUT_ACCES_LABELS, PERIODE_LABELS, STATUT_DEMANDE_LABELS } = RAPPORT_LABELS
 
 const premierJourDuMois = () => {
   const d = new Date()
@@ -38,6 +38,7 @@ function KpiCard({ label, valeur, couleur }) {
 
 export default function RapportsPage() {
   const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN'
   const { etablissements } = useEtablissements()
 
   const [filtres, setFiltres] = useState({
@@ -49,17 +50,17 @@ export default function RapportsPage() {
   const [genere, setGenere] = useState(false)
   const [exportingExcel, setExportingExcel] = useState(false)
 
-  const { paiements, passages, resume, tronque, loading, error, generer } = useRapports()
+  const { paiements, passages, eleves, demandes, resume, acces, demandesResume, tronque, loading, error, generer } = useRapports()
 
   const handleGenerer = async () => {
-    await generer(filtres)
+    await generer(filtres, { inclureDemandes: isAdmin })
     setGenere(true)
   }
 
   const handleExportExcel = async () => {
     setExportingExcel(true)
     try {
-      await exporterRapportExcel({ periode: filtres, resume, paiements, passages })
+      await exporterRapportExcel({ periode: filtres, resume, paiements, passages, eleves, acces, demandes, demandesResume, inclureDemandes: isAdmin })
     } finally {
       setExportingExcel(false)
     }
@@ -122,7 +123,7 @@ export default function RapportsPage() {
             value={filtres.etablissementId}
             onChange={(e) => setFiltres((f) => ({ ...f, etablissementId: e.target.value }))}
             sx={{ minWidth: { xs: '100%', sm: 200 } }}
-            helperText="Filtre uniquement les passages"
+            helperText="Filtre passages, paiements et accès — pas les demandes d'accès"
           >
             <MenuItem value="">Tous les établissements</MenuItem>
             {etablissements.map((e) => (
@@ -164,10 +165,12 @@ export default function RapportsPage() {
         </Paper>
       ) : (
         <>
-          <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }} className="no-print">
+          <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }} className="no-print" variant="scrollable" allowScrollButtonsMobile>
             <Tab label="Résumé" />
             <Tab label="Paiements" />
             <Tab label="Passages" />
+            <Tab label="Accès" />
+            {isAdmin && <Tab label="Demandes d'accès" />}
           </Tabs>
 
           {/* ── Onglet Résumé ─────────────────────────────── */}
@@ -282,6 +285,86 @@ export default function RapportsPage() {
                           <TableCell>{p.etablissementNom ?? '—'}</TableCell>
                           <TableCell>{RESULTAT_LABELS[p.resultat] ?? p.resultat}</TableCell>
                           <TableCell>{p.motifRefus ?? '—'}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+              <PrintButton />
+            </Box>
+          )}
+
+          {/* ── Onglet Accès ──────────────────────────────── */}
+          {tab === 3 && (
+            <Box className="print-area">
+              <PrintHeader titre="État des accès élèves" periodeLabel="Photographie actuelle (indépendante de la période)" genereLe={genereLe} genereParLabel={genereParLabel} />
+              <Stack direction="row" spacing={2} flexWrap="wrap" gap={2} mb={2}>
+                <KpiCard label="Élèves (filtre en cours)" valeur={acces.total} />
+                <KpiCard label="Autorisés" valeur={acces.parStatut.AUTORISE ?? 0} couleur="success.main" />
+                <KpiCard label="En période de grâce" valeur={acces.parStatut.GRACE ?? 0} couleur="warning.main" />
+                <KpiCard label="Suspendus" valeur={acces.parStatut.SUSPENDU ?? 0} couleur="error.main" />
+              </Stack>
+
+              <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+                <Typography variant="subtitle2" fontWeight={600} mb={1}>Répartition par statut d'accès</Typography>
+                <Stack direction="row" spacing={3} flexWrap="wrap">
+                  {Object.entries(STATUT_ACCES_LABELS).map(([cle, label]) => (
+                    <Typography variant="body2" key={cle}>{label} : <strong>{acces.parStatut[cle] ?? 0}</strong></Typography>
+                  ))}
+                </Stack>
+              </Paper>
+
+              <Paper variant="outlined" sx={{ p: 2 }}>
+                <Typography variant="subtitle2" fontWeight={600} mb={1}>Répartition par période d'abonnement</Typography>
+                <Stack direction="row" spacing={3} flexWrap="wrap">
+                  {Object.entries(PERIODE_LABELS).map(([cle, label]) => (
+                    <Typography variant="body2" key={cle}>{label} : <strong>{acces.parPeriode[cle] ?? 0}</strong></Typography>
+                  ))}
+                </Stack>
+              </Paper>
+
+              <PrintButton />
+            </Box>
+          )}
+
+          {/* ── Onglet Demandes d'accès (ADMIN uniquement) ─── */}
+          {tab === 4 && isAdmin && (
+            <Box className="print-area">
+              <PrintHeader titre="Demandes d'accès parent" periodeLabel={periodeLabel} genereLe={genereLe} genereParLabel={genereParLabel} />
+              <Stack direction="row" spacing={2} flexWrap="wrap" gap={2} mb={2}>
+                <KpiCard label="Demandes soumises" valeur={demandesResume.total} />
+                <KpiCard label="Validées" valeur={demandesResume.parStatut.VALIDEE ?? 0} couleur="success.main" />
+                <KpiCard label="Rejetées" valeur={demandesResume.parStatut.REJETEE ?? 0} couleur="error.main" />
+                <KpiCard label="Délai moyen de traitement" valeur={demandesResume.delaiMoyenHeures != null ? `${demandesResume.delaiMoyenHeures} h` : '—'} />
+              </Stack>
+
+              <Paper variant="outlined">
+                <TableContainer>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow sx={{ bgcolor: 'action.hover' }}>
+                        <TableCell>Soumise le</TableCell>
+                        <TableCell>Demandeur</TableCell>
+                        <TableCell>Téléphone</TableCell>
+                        <TableCell>Statut</TableCell>
+                        <TableCell>Traitée le</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {demandes.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                            Aucune demande sur cette période
+                          </TableCell>
+                        </TableRow>
+                      ) : demandes.map((d) => (
+                        <TableRow key={d.id} hover>
+                          <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDateHeure(d.dateSoumission)}</TableCell>
+                          <TableCell>{d.prenom} {d.nom}</TableCell>
+                          <TableCell>{d.telephonePrincipal}</TableCell>
+                          <TableCell>{STATUT_DEMANDE_LABELS[d.statut] ?? d.statut}</TableCell>
+                          <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDateHeure(d.dateTraitement)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

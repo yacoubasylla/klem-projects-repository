@@ -17,14 +17,16 @@ public record DemandeAccesResponseDTO(
     String commune,
     String quartier,
     StatutDemande statut,
-    LocalDateTime dateSoumission
+    LocalDateTime dateSoumission,
+    LocalDateTime dateTraitement,
+    String motifRejet
 ) {
     public static DemandeAccesResponseDTO from(DemandeAcces d) {
         return new DemandeAccesResponseDTO(
             d.getId(), d.getNom(), d.getPrenom(), d.getFonction(),
             d.getTelephonePrincipal(), d.getTelephoneWhatsapp(), d.getTelephoneSecondaire(),
             d.getEmail(), d.getVille(), d.getCommune(), d.getQuartier(),
-            d.getStatut(), d.getDateSoumission()
+            d.getStatut(), d.getDateSoumission(), d.getDateTraitement(), d.getMotifRejet()
         );
     }
 }

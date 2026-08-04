@@ -1,8 +1,11 @@
 import ExcelJS from 'exceljs'
 
-const STATUT_LABELS    = { EN_ATTENTE: 'En attente', ACCEPTE: 'Accepté', REFUSE: 'Refusé', ANNULE: 'Annulé' }
-const OPERATEUR_LABELS = { ORANGE_MONEY: 'Orange Money', MTN_MONEY: 'MTN Money', MOOV_MONEY: 'Moov Money', WAVE: 'Wave' }
-const RESULTAT_LABELS  = { ACCORDE: 'Accordé', REFUSE: 'Refusé' }
+const STATUT_LABELS       = { EN_ATTENTE: 'En attente', ACCEPTE: 'Accepté', REFUSE: 'Refusé', ANNULE: 'Annulé' }
+const OPERATEUR_LABELS    = { ORANGE_MONEY: 'Orange Money', MTN_MONEY: 'MTN Money', MOOV_MONEY: 'Moov Money', WAVE: 'Wave' }
+const RESULTAT_LABELS     = { ACCORDE: 'Accordé', REFUSE: 'Refusé' }
+const STATUT_ACCES_LABELS = { EN_ATTENTE_PAIEMENT: 'En attente de paiement', AUTORISE: 'Autorisé', GRACE: 'Période de grâce', SUSPENDU: 'Suspendu' }
+const PERIODE_LABELS      = { TRIMESTRIEL: 'Trimestriel', ANNUEL: 'Annuel', NON_DEFINI: 'Non défini' }
+const STATUT_DEMANDE_LABELS = { EN_ATTENTE: 'En attente', VALIDEE: 'Validée', REJETEE: 'Rejetée' }
 
 function styleHeaderRow(ws) {
   const row = ws.getRow(1)
@@ -10,7 +13,7 @@ function styleHeaderRow(ws) {
   row.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F0E6' } } })
 }
 
-export async function exporterRapportExcel({ periode, resume, paiements, passages }) {
+export async function exporterRapportExcel({ periode, resume, paiements, passages, eleves, acces, demandes, demandesResume, inclureDemandes }) {
   const wb = new ExcelJS.Workbook()
   wb.creator = 'Cantine Connect'
   wb.created = new Date()
@@ -79,6 +82,56 @@ export async function exporterRapportExcel({ periode, resume, paiements, passage
   }))
   styleHeaderRow(wsPassages)
 
+  // ── Accès (photographie actuelle, indépendante de la période) ──────────────
+  const wsAcces = wb.addWorksheet('Accès')
+  wsAcces.columns = [
+    { header: 'Matricule', key: 'matricule', width: 14 },
+    { header: 'Élève', key: 'eleve', width: 26 },
+    { header: 'Établissement', key: 'etablissement', width: 22 },
+    { header: 'Classe', key: 'classe', width: 16 },
+    { header: "Statut d'accès", key: 'statut', width: 20 },
+    { header: 'Période abonnement', key: 'periode', width: 18 },
+  ]
+  ;(eleves ?? []).forEach((e) => wsAcces.addRow({
+    matricule:     e.matricule ?? '',
+    eleve:         `${e.prenom ?? ''} ${e.nom ?? ''}`.trim(),
+    etablissement: e.etablissementNom ?? '',
+    classe:        e.classeLibelle ?? '',
+    statut:        STATUT_ACCES_LABELS[e.statutAcces] ?? e.statutAcces,
+    periode:       PERIODE_LABELS[e.periodeAbonnement ?? 'NON_DEFINI'],
+  }))
+  styleHeaderRow(wsAcces)
+  if (acces) {
+    wsAcces.addRow({})
+    wsAcces.addRow({ matricule: `Total : ${acces.total}` })
+  }
+
+  // ── Demandes d'accès (ADMIN uniquement) ─────────────────────────────────────
+  if (inclureDemandes) {
+    const wsDemandes = wb.addWorksheet("Demandes d'accès")
+    wsDemandes.columns = [
+      { header: 'Soumise le', key: 'date', width: 18 },
+      { header: 'Demandeur', key: 'demandeur', width: 26 },
+      { header: 'Téléphone', key: 'telephone', width: 16 },
+      { header: 'Statut', key: 'statut', width: 14 },
+      { header: 'Traitée le', key: 'traitee', width: 18 },
+      { header: 'Motif de rejet', key: 'motif', width: 26 },
+    ]
+    ;(demandes ?? []).forEach((d) => wsDemandes.addRow({
+      date:      d.dateSoumission ? new Date(d.dateSoumission).toLocaleString('fr-FR') : '',
+      demandeur: `${d.prenom ?? ''} ${d.nom ?? ''}`.trim(),
+      telephone: d.telephonePrincipal ?? '',
+      statut:    STATUT_DEMANDE_LABELS[d.statut] ?? d.statut,
+      traitee:   d.dateTraitement ? new Date(d.dateTraitement).toLocaleString('fr-FR') : '',
+      motif:     d.motifRejet ?? '',
+    }))
+    styleHeaderRow(wsDemandes)
+    if (demandesResume) {
+      wsDemandes.addRow({})
+      wsDemandes.addRow({ date: `Total : ${demandesResume.total}`, demandeur: `Délai moyen : ${demandesResume.delaiMoyenHeures ?? '—'} h` })
+    }
+  }
+
   const buffer = await wb.xlsx.writeBuffer()
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -91,4 +144,4 @@ export async function exporterRapportExcel({ periode, resume, paiements, passage
   URL.revokeObjectURL(url)
 }
 
-export const RAPPORT_LABELS = { STATUT_LABELS, OPERATEUR_LABELS, RESULTAT_LABELS }
+export const RAPPORT_LABELS = { STATUT_LABELS, OPERATEUR_LABELS, RESULTAT_LABELS, STATUT_ACCES_LABELS, PERIODE_LABELS, STATUT_DEMANDE_LABELS }
