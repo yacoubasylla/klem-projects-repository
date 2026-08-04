@@ -151,17 +151,35 @@
 
 ---
 
-### ADR-017 · Refonte Premium Phase 1 — Fondations Backend (Demandes d'Accès, Délai de Grâce, Certificat Médical, Périodes d'Abonnement)
-- **Statut** : En cours — 2026-08-03 (backend écrit, non commité ; UI et validation admin non livrées)
+### ADR-017 · Refonte Premium — Fondations + UI + Parcours Parent Self-Service (Phase 1 & 2)
+- **Statut** : **Livré** — 2026-08-04 (commits `6305229`, `6d1f2c3`, `2f932b5` ; poussé sur `main`)
 - **Décision** :
-  1. Workflow de demande d'accès parent en file d'attente (`demandes_acces`, statut `EN_ATTENTE/VALIDEE/REJETEE`) plutôt qu'activation immédiate — le compte `Utilisateur`/`Parent` n'est créé qu'à la validation par un ADMIN (phase 2, non implémentée dans cette session).
-  2. Délai de grâce piloté par configuration globale + surcharge optionnelle par établissement, plutôt qu'un champ unique codé en dur.
+  1. Workflow de demande d'accès parent en file d'attente (`demandes_acces`, statut `EN_ATTENTE/VALIDEE/REJETEE`) plutôt qu'activation immédiate — le compte `Utilisateur`/`Parent` n'est créé qu'à la validation par un ADMIN. **Phase 2 livrée** : écran admin de validation/rejet (`/demandes-acces`), génération d'identifiants + mot de passe temporaire, notification (email/SMS selon coordonnées fournies), changement de mot de passe forcé à la première connexion (`Utilisateur.doitChangerMotDePasse`).
+  2. Délai de grâce piloté par configuration globale (`DELAI_GRACE_JOURS_DEFAUT`) + surcharge optionnelle par établissement, plutôt qu'un champ unique codé en dur.
   3. Contrainte allergie ⇒ certificat médical appliquée en code service (`IllegalArgumentException` → 400), pas en contrainte SQL, pour un message métier explicite via `GlobalExceptionHandler`.
   4. Le mode `CREDITS` (portefeuille prépayé) est conservé en coexistence avec les nouveaux abonnements trimestriel/annuel — la règle « pas de mensualisation » s'applique uniquement au mode `ABONNEMENT`.
-  5. Introduction d'interfaces `PaymentProvider` / `NotificationSender` pour préparer l'ajout de rails de paiement (Orange/MTN/Moov Money direct) et de canaux de notification (SMS) sans intégration marchande réelle immédiate.
-- **Contexte** : refonte visuelle et fonctionnelle demandée pour rendre l'application plus premium/crédible pour le contexte scolaire ivoirien (page d'accueil, connexion, inscription parent) + règles métier manquantes (délai de grâce non paramétrable, allergies sans justificatif, recherche parent limitée à l'email). Portée de session validée avec l'utilisateur : UI + fondations de données cette session ; workflow de validation admin complet et écrans self-service parent reportés à une phase 2.
+  5. Introduction d'interfaces `PaymentProvider` / `NotificationSender` pour découpler les rails de paiement/canaux de notification — **complétée en ADR-018** par une intégration réelle CinetPay/PayDunya/Twilio (au-delà des placeholders initialement prévus pour cette phase).
+  6. **Ajout d'enfant self-service** : le parent authentifié ajoute lui-même ses enfants (`POST /parents/moi/enfants`) avec cascade établissement→niveau→classe ; les coordonnées parent (nom/téléphone/email) sont dérivées du compte connecté, jamais saisies dans le formulaire (évite qu'un parent renseigne les coordonnées d'un tiers).
+  7. Thème visuel : nouveau thème par défaut « Premium » (chaleureux, orange/vert), avec réintroduction ultérieure du sélecteur multi-thèmes (Premium/Corporatif/Moderne) pour ne pas retirer une fonctionnalité appréciée — voir commit `c3ae1c9`.
+- **Contexte** : refonte visuelle et fonctionnelle demandée pour rendre l'application plus premium/crédible pour le contexte scolaire ivoirien (page d'accueil, connexion, inscription parent) + règles métier manquantes (délai de grâce non paramétrable, allergies sans justificatif, recherche parent limitée à l'email, désormais étendue au téléphone).
 - **Alternatives rejetées** :
   - Activation immédiate du compte parent à la soumission — rejetée : aucun contrôle admin avant l'accès, risque de faux comptes en contexte scolaire.
   - Remplacement total du mode `CREDITS` par l'abonnement — rejeté : fonctionnalité existante utilisée (repas ponctuels hors abonnement), aucune demande de suppression.
-  - Intégration immédiate d'un SDK Orange/MTN/Moov Money réel — rejetée : aucun accès marchand disponible à ce stade ; l'abstraction `PaymentProvider` permet de brancher un provider réel sans reprise du code appelant.
-- **Fichier ADR** : à créer via `./scripts/create-adr.sh` lors de la clôture de la Phase 1 (une fois l'UI livrée et vérifiée).
+  - Email obligatoire pour tout parent — rejetée : le cahier des charges exige l'email facultatif ; un email synthétique (`p<telephone>@parent.cantine-connect.ci`) est généré comme identifiant de connexion interne lorsque le parent n'en fournit pas, sans jamais l'exposer comme un email réel ni tenter d'y envoyer de courrier.
+- **Bugs découverts et corrigés pendant la vérification** :
+  - `eleves.sexe` créé en `VARCHAR(1)` (migration V13) alors qu'Hibernate 6 valide le schéma en attendant `CHAR(1)` pour une colonne `@Column(length=1)` sur un enum — empêchait le démarrage du backend (`SchemaManagementException`). Corrigé par la migration `V14` (élargissement à `VARCHAR(10)`).
+  - Endpoints `GET /etablissements` et `.../classes` portaient `@PreAuthorize("!hasRole('PARENT')")`, héritage de l'époque où seul le staff consultait ces données — bloquait en 403 la cascade établissement→classe du formulaire d'ajout d'enfant self-service. Restriction retirée sur les endpoints de lecture (écritures toujours réservées à l'ADMIN).
+- **Fichier ADR** : voir `adr/` (à créer via `./scripts/create-adr.sh` si une fiche détaillée séparée est requise pour l'archivage formel).
+
+### ADR-018 · Intégration réelle des paiements (CinetPay/PayDunya) et des notifications SMS (Twilio)
+- **Statut** : Livré — 2026-08-03 (commit `bb887ab`)
+- **Décision** :
+  1. `CinetPayProvider`/`PayDunyaProvider` appellent réellement les API de checkout des agrégateurs (`POST /v2/payment`, `POST /checkout-invoice/create`) via `java.net.http.HttpClient`, au lieu de construire une URL de paiement à la main — retenu plutôt qu'une intégration directe Orange/MTN/Moov (contrats marchands séparés non disponibles à ce stade).
+  2. Signature webhook PayDunya finalisée (comparaison `hash` reçu vs `sha512(clé privée)`), en complément de la vérification HMAC déjà en place pour CinetPay.
+  3. SMS : fournisseur Twilio retenu pour démarrer (compte d'essai disponible, API REST simple), derrière l'interface `NotificationSender` déjà posée en ADR-017 — un fournisseur local ivoirien pourra être substitué sans impact sur le code appelant.
+  4. Comportement de repli : en l'absence de clés réelles (CinetPay/PayDunya/Twilio), les appels échouent proprement (`409`/message clair côté paiement, bascule en mode journal côté SMS) plutôt que de faire planter l'application — vérifié en conditions réelles (aucune clé renseignée à ce stade).
+- **Contexte** : demande explicite du client de disposer d'une intégration paiement et notification *effective*, au-delà de l'architecture préparée en ADR-017.
+- **Alternatives rejetées** :
+  - Attendre l'obtention de vraies clés avant de coder l'appel API réel — rejetée : le code doit être prêt à fonctionner dès que les identifiants sont fournis, sans nouveau cycle de développement.
+  - SDK Twilio officiel — écarté au profit d'un appel HTTP direct (Basic Auth) pour rester cohérent avec l'approche déjà retenue pour CinetPay/PayDunya (pas de dépendance SDK supplémentaire) et garder l'abstraction facilement substituable.
+- **Non inclus dans cette phase** : commissions de transaction CinetPay/PayDunya et frais de consommation SMS réels (contractualisés séparément par le client avec les fournisseurs — voir l'offre financière, section Exclusions).

@@ -216,33 +216,92 @@ services:
 
 ---
 
-## 8. Extensions Phase 1 — Refonte Premium (en cours, backend uniquement)
+## 8. Extensions Phase 1 & 2 — Refonte Premium (livré)
 
-> Voir ADR-017 (decision-log.md). État à la date de rédaction : migrations et code
-> backend écrits en local (non commités), UI (accueil/connexion/demande d'accès) et
-> validation admin des demandes **non encore implémentées**. À ne pas considérer
-> comme livré tant que ce bandeau n'est pas retiré.
+> Voir ADR-017 et ADR-018 (`decision-log.md`). Livré et poussé sur `main`
+> (commits `6305229`, `6d1f2c3`, `2f932b5`, `bb887ab`, `c3ae1c9`).
 
-- **Demandes d'accès parent (self-service)** : nouvelle table `demandes_acces`
-  (migration `V8`) + `AccesController` (`POST /api/v1/demandes-acces`, public).
-  Persiste uniquement la demande (statut `EN_ATTENTE`) — ne crée aucun compte.
-  L'écran de validation admin et la création automatique du compte
-  `Utilisateur`(PARENT)+`Parent` sont reportés à une phase 2.
-- **Délai de grâce paramétrable** : clé de configuration globale
-  `DELAI_GRACE_JOURS_DEFAUT` (défaut 7 j) + colonne `etablissements.delai_grace_jours`
-  en surcharge optionnelle par établissement (migration `V9`). Fondation de données
-  uniquement — aucun job n'exploite encore cette valeur pour faire évoluer
-  automatiquement `Eleve.statutAcces`.
-- **Certificat médical pour allergies** : colonne `eleves.certificat_medical_url`
-  (migration `V10`). Règle appliquée dans `EleveService` (pas en contrainte SQL) :
-  `allergies` renseigné ⇒ certificat obligatoire, sinon `400 VALIDATION_ERROR`.
-- **Périodes d'abonnement** : colonne `eleves.periode_abonnement`
+### 8.1 Demandes d'accès parent (self-service) — cycle complet
+- Table `demandes_acces` (migration `V8`) + `AccesController`.
+- `POST /api/v1/demandes-acces` (public) : le parent soumet sa demande (identité,
+  téléphone principal + WhatsApp, résidence) — persiste uniquement la demande
+  (statut `EN_ATTENTE`), ne crée aucun compte.
+- `GET /api/v1/demandes-acces`, `PATCH .../valider`, `PATCH .../rejeter` (ADMIN) :
+  écran `/demandes-acces` — à la validation, création du compte
+  `Utilisateur`(rôle PARENT) + `Parent`, génération d'un mot de passe temporaire,
+  notification (email si fourni, SMS sinon), `doitChangerMotDePasse=true`.
+- Si le parent n'a pas fourni d'email, un identifiant de connexion synthétique
+  est généré (`p<téléphone>@parent.cantine-connect.ci`) — jamais présenté comme
+  un email réel, aucun envoi de mail tenté vers ce domaine.
+- Changement de mot de passe forcé à la première connexion
+  (`POST /api/v1/auth/changer-mot-de-passe`) — le front redirige automatiquement
+  tant que `doitChangerMotDePasse` est vrai.
+
+### 8.2 Espace parent self-service
+- `POST /api/v1/parents/moi/enfants` (rôle PARENT) : ajout d'un enfant par le
+  parent lui-même (matricule, identité, sexe, date de naissance, résidence),
+  avec cascade établissement→niveau→classe. Les coordonnées parent sont
+  dérivées du compte connecté (jamais saisies dans le formulaire).
+- Lecture des référentiels établissements/niveaux/classes ouverte à tous les
+  rôles authentifiés (dont PARENT) — restait bloquée par erreur en `403` avant
+  correctif (voir ADR-017, bugs découverts).
+
+### 8.3 Règles métier
+- **Délai de grâce paramétrable** : `DELAI_GRACE_JOURS_DEFAUT` (défaut 7 j,
+  config globale) + `etablissements.delai_grace_jours` en surcharge optionnelle
+  (migration `V9`).
+- **Certificat médical pour allergies** : `eleves.certificat_medical_url`
+  (migration `V10`). Règle appliquée dans `EleveService` (pas en contrainte
+  SQL) : `allergies` renseigné ⇒ certificat obligatoire, sinon
+  `400 VALIDATION_ERROR`. Upload via `POST /eleves/{id}/certificat-medical`
+  (multipart, staff), stockage disque local (`FileStorageService`).
+- **Périodes d'abonnement** : `eleves.periode_abonnement`
   (`TRIMESTRIEL`/`ANNUEL`, migration `V11`) + clés de config `TARIF_TRIMESTRE` /
-  `TARIF_ANNEE`. Le mode `CREDITS` (portefeuille prépayé) existant est conservé
-  tel quel et coexiste avec l'abonnement.
-- **Architecture paiement/notification multi-provider** : direction retenue —
-  interface `PaymentProvider` (CinetPay/PayDunya adaptés à l'interface,
-  placeholders Orange/MTN/Moov Money direct) sélectionnée via la clé de config
-  `PAIEMENT_PROVIDER_ACTIF` ; interface `NotificationSender` (email existant +
-  SMS stub/log, aucun fournisseur SMS choisi à ce stade). Pas d'intégration
-  marchande réelle dans cette phase.
+  `TARIF_ANNEE`. Le mode `CREDITS` (portefeuille prépayé) coexiste avec
+  l'abonnement.
+- **Recherche parent** étendue au téléphone (en plus de l'email) —
+  `ParentRepository.findAllWithDetailsBySearch`.
+
+### 8.4 Paiement & notifications — intégration réelle (ADR-018)
+- Interface `PaymentProvider` : `CinetPayProvider`/`PayDunyaProvider` appellent
+  réellement les API de checkout des agrégateurs (`java.net.http.HttpClient`),
+  sélection via la clé de config `PAIEMENT_PROVIDER_ACTIF`. Placeholders
+  `OrangeMoneyDirectProvider`/`MtnMoneyDirectProvider`/`MoovMoneyDirectProvider`
+  prêts pour une intégration marchande directe future.
+- Interface `NotificationSender` : `EmailNotificationSender` (SMTP existant) +
+  `SmsNotificationSender` (API REST Twilio, Basic Auth) via
+  `NotificationDispatcher`. Repli automatique en mode journal si les
+  identifiants Twilio sont absents — aucun crash.
+- Aucune clé réelle (CinetPay/PayDunya/Twilio) renseignée à ce stade : les
+  appels échouent proprement (`409` côté paiement) tant qu'elles ne sont pas
+  fournies par le client.
+
+### 8.5 Thème visuel
+- Nouveau thème par défaut « Premium » (chaleureux, orange/vert), avec
+  sélecteur multi-thèmes réactivé (Premium / Corporatif / Moderne), choix
+  mémorisé en `localStorage`.
+
+---
+
+## 9. Déploiement — État réel
+
+| Composant | Plateforme | Statut | URL |
+|---|---|---|---|
+| Frontend (`client-frontend`) | Vercel (projet `cantine-connect`) | ✅ Déployé (production) | `https://cantine-connect-swart.vercel.app` |
+| Backend (`server-backend`) | Railway (projet `celebrated-tenderness`) | ⚠️ **En échec** — voir ci-dessous | `https://cantine-connect-production.up.railway.app` |
+| Base de données | Railway (service `Postgres`, même projet) | ⚠️ **Hors ligne** | — |
+
+**Points d'attention connus (2026-08-04) :**
+- La variable Vercel `VITE_API_URL` (Production/Preview) est **vide** — le frontend déployé se rabat sur `http://localhost:8081`, non fonctionnel pour un visiteur réel tant qu'elle n'est pas renseignée avec l'URL Railway.
+- Le service Railway a été reconfiguré pour déployer depuis `klem-projects-repository` (root directory
+  `apps/web-app/cantine-connect/server-backend`, `Dockerfile` — auparavant branché sur un dépôt
+  `yacoubasylla/cantine-connect` distinct et désynchronisé). La reconfiguration de la source est confirmée
+  (repo + root directory), mais **aucun déploiement n'a pu être déclenché** : le compte Railway a un essai
+  expiré, qui bloque toute exécution de build/déploiement (CLI et API GraphQL bloquées identiquement).
+- La base Postgres Railway est arrêtée (probablement mise en veille pour inactivité par la plateforme).
+
+**Actions restantes pour un déploiement backend fonctionnel :**
+1. Sélectionner un plan payant sur le compte Railway (`yacoubasylla`).
+2. Redémarrer le service Postgres.
+3. Déclencher le déploiement (automatique au prochain `git push` sur `main`, la source étant maintenant correctement branchée, ou manuellement via `railway redeploy`).
+4. Renseigner `VITE_API_URL` sur Vercel avec l'URL Railway (`.../api/v1`) et redéployer le frontend.
