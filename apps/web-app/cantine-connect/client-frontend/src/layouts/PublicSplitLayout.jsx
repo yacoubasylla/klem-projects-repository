@@ -114,7 +114,7 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
                 flex: '1 1 55%',
                 minWidth: 0,
                 borderRadius: 6,
-                p: { xs: 3, md: heroBackgroundImage ? 4 : 0 },
+                p: { xs: 3, md: heroBackgroundImage ? 4 : 2 },
                 overflow: 'hidden',
                 ...(heroBackgroundImage && {
                   backgroundImage: (t) =>

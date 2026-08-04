@@ -30,16 +30,16 @@ const resoudreUrlLogo = (url) => (url ? (/^https?:\/\//.test(url) ? url : `${BAC
 // Configurations booléennes (toggle Switch)
 const TOGGLE_META = {
   SCAN_CAMERA_ENABLED: {
-    label:       'Scanner Caméra Réfectoire',
-    description: 'Activer la caméra du téléphone pour scanner les QR Codes directement depuis la page de contrôle accès.',
+    label:       'Scanner avec l\'appareil photo du téléphone',
+    description: 'Reconnaître les élèves à l\'entrée de la cantine avec l\'appareil photo du téléphone, sans matériel supplémentaire.',
     icon:        <QrCodeScannerIcon />,
-    category:    'Scan & Accès',
+    category:    'Contrôle d\'accès cantine',
   },
   SCAN_CACHE_AUTO_REFRESH: {
-    label:       'Rafraîchissement automatique du cache hors-ligne',
-    description: 'Télécharger automatiquement le cache de secours (24h) à l\'ouverture de la page Scan Réfectoire, si une connexion est disponible. Désactivé : le téléchargement reste possible manuellement via le bouton dédié.',
+    label:       'Fonctionnement sans connexion internet',
+    description: 'Le poste de contrôle continue à reconnaître les élèves même sans connexion internet, en téléchargeant les informations à l\'avance à chaque ouverture de la page. Désactivé : ce téléchargement reste possible manuellement.',
     icon:        <CloudSyncIcon />,
-    category:    'Scan & Accès',
+    category:    'Contrôle d\'accès cantine',
   },
   NOTIFICATIONS_EMAIL_ENABLED: {
     label:       'Notifications Email',
@@ -59,14 +59,14 @@ const TOGGLE_META = {
 const TEXT_META = {
   TARIF_REPAS: {
     label:       'Tarif par repas (FCFA)',
-    description: 'Montant débité du solde de l\'élève à chaque passage (mode CREDITS uniquement).',
+    description: 'Montant débité du solde de l\'élève à chaque passage à la cantine (uniquement si le mode « Crédits » est activé ci-dessous).',
     icon:        <AccountBalanceWalletIcon />,
     category:    'Paiements',
     type:        'number',
   },
   FOND_ECRAN_LOGIN: {
     label:       'Image de fond — page de connexion',
-    description: 'URL d\'une image (JPEG, PNG, WebP) à afficher en arrière-plan de la page de connexion.',
+    description: 'Lien vers une image à afficher en arrière-plan de la page de connexion (formats courants : JPEG, PNG, WebP).',
     icon:        <WallpaperIcon />,
     category:    'Apparence',
     type:        'url',
@@ -74,7 +74,7 @@ const TEXT_META = {
   },
   ORGANISATION_NOM: {
     label:       'Nom du client',
-    description: 'Affiché dans l\'en-tête de l\'application à la place de « Cantine Connect ».',
+    description: 'Affiché en haut de chaque page de l\'application, à la place de « Cantine Connect ».',
     icon:        <BadgeIcon />,
     category:    'Organisation',
     placeholder: 'Cantine Connect',
@@ -100,7 +100,7 @@ const TEXT_META = {
   },
   ORGANISATION_MOBILE_MONEY_NUMERO: {
     label:       'Numéro Mobile Money (réception)',
-    description: 'Numéro communiqué aux parents pour un envoi manuel (virement Mobile Money direct) — informatif uniquement, ne modifie pas le circuit de paiement CinetPay/PayDunya.',
+    description: 'Numéro donné aux parents pour un envoi manuel d\'argent — c\'est une information affichée aux parents, elle ne change pas le fonctionnement des paiements en ligne.',
     icon:        <PhoneAndroidIcon />,
     category:    'Organisation',
   },
@@ -113,7 +113,7 @@ const MODE_PAIEMENT_OPTIONS = [
 
 // Ordre d'affichage des catégories + icône d'en-tête de chaque accordéon.
 const CATEGORY_ORDER = [
-  { name: 'Scan & Accès', icon: <QrCodeScannerIcon /> },
+  { name: 'Contrôle d\'accès cantine', icon: <QrCodeScannerIcon /> },
   { name: 'Notifications', icon: <NotificationsActiveIcon /> },
   { name: 'Paiements',    icon: <AccountBalanceWalletIcon /> },
   { name: 'Apparence',    icon: <WallpaperIcon /> },
@@ -144,12 +144,11 @@ function ToggleRow({ config, meta, onToggle, saving }) {
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, wordBreak: 'break-word' }}>
               {meta.description}
             </Typography>
-            <Typography variant="caption" color="text.disabled" sx={{ mt: 0.75, display: 'block' }}>
-              Clé : <code>{config.cle}</code>
-              {config.dateModification && (
-                <> · Modifié le {new Date(config.dateModification).toLocaleString('fr-FR')}</>
-              )}
-            </Typography>
+            {config.dateModification && (
+              <Typography variant="caption" color="text.disabled" sx={{ mt: 0.75, display: 'block' }}>
+                Modifié le {new Date(config.dateModification).toLocaleString('fr-FR')}
+              </Typography>
+            )}
           </Box>
         </Stack>
         <Stack direction={{ xs: 'row', sm: 'column' }} alignItems="center" justifyContent={{ xs: 'flex-end', sm: 'flex-start' }} spacing={{ xs: 1.5, sm: 0.25 }} sx={{ flexShrink: 0 }}>
@@ -210,9 +209,6 @@ function TextRow({ config, meta, onSave }) {
               {saving ? <CircularProgress size={16} color="inherit" /> : 'Enregistrer'}
             </Button>
           </Stack>
-          <Typography variant="caption" color="text.disabled" sx={{ mt: 0.75, display: 'block' }}>
-            Clé : <code>{config.cle}</code>
-          </Typography>
         </Box>
       </Stack>
     </Paper>
@@ -251,8 +247,8 @@ function LogoUploadRow({ config, onUploaded }) {
             <Chip label="Organisation" size="small" variant="outlined" sx={{ height: 18, fontSize: '0.65rem' }} />
           </Stack>
           <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, mb: 1.5 }}>
-            Affiché dans l'en-tête de l'application, à la place de l'icône par défaut. Formats
-            image usuels (PNG, JPEG, WebP, SVG).
+            Affiché en haut de chaque page de l'application, à la place de l'icône par défaut.
+            Formats acceptés : PNG, JPEG, WebP, SVG.
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
             {url && (
@@ -311,7 +307,7 @@ export default function ConfigurationPage() {
   // meta.category au lieu de sections codées en dur.
   const renderCategoryContent = (categorie) => {
     switch (categorie) {
-      case 'Scan & Accès':
+      case 'Contrôle d\'accès cantine':
       case 'Notifications':
         return Object.entries(TOGGLE_META)
           .filter(([, meta]) => meta.category === categorie)
@@ -411,7 +407,7 @@ export default function ConfigurationPage() {
     <Box>
       <Stack direction="row" alignItems="center" spacing={1.5} mb={3}>
         <TuneIcon color="primary" />
-        <Typography variant="h5" fontWeight={600}>Configuration Système</Typography>
+        <Typography variant="h5" fontWeight={600}>Paramètres</Typography>
       </Stack>
 
       {(error || saveError) && (
