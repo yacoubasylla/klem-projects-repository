@@ -83,8 +83,9 @@ D'après la proposition commerciale initiale (`CONCEPTION.md`) :
   infrastructure 12 mois, badges PVC, formation) : **1 500 000 – 4 000 000 FCFA HT** estimés.
 - [x] Abonnement annuel (maintenance, hébergement, évolutions fonctionnelles) : **100 000 –
   300 000 FCFA HT/an** estimés.
-- [x] Frais variables à l'usage : commission sur transactions Mobile Money (~1% parent + 0,5%
-  établissement), SMS (~25 FCFA/unité), badges PVC de remplacement (500–1 000 FCFA/unité).
+- [x] Frais variables à l'usage : commission sur transactions Mobile Money (≈ 2,5 – 3,5 % par
+  transaction, prélevée directement par l'agrégateur CinetPay/PayDunya), SMS (~25 FCFA/unité),
+  badges PVC de remplacement (500–1 000 FCFA/unité).
 
 *Tarification indicative, à affiner en phase de cadrage selon le nombre d'établissements et
 d'élèves réellement engagés par le client.*

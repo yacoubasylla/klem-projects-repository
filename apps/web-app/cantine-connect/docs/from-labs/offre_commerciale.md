@@ -28,8 +28,8 @@ d'élèves suffit à le vérifier.
 | **Groupe Multi-Sites** | 15+ établissements, 10 000+ élèves | 4 000 000 FCFA HT | 300 000 FCFA HT/an | Idem Réseau Scolaire + SLA renforcé (P1 < 2h), accompagnement dédié au déploiement par vague d'établissements |
 
 Frais variables identiques sur tous les paliers, refacturés à l'usage sans marge KLEM : commission
-Mobile Money (~1 % parent + 0,5 % établissement, prélevée par l'agrégateur CinetPay/PayDunya), SMS
-(~25 FCFA/unité), badge PVC de remplacement (500–1 000 FCFA/unité).
+Mobile Money (≈ 2,5 – 3,5 % par transaction, prélevée directement par l'agrégateur CinetPay/
+PayDunya), SMS (~25 FCFA/unité), badge PVC de remplacement (500–1 000 FCFA/unité).
 
 *Tarification affinée en phase de cadrage selon le nombre exact d'établissements et d'élèves —
 cadre indicatif fondé sur la proposition commerciale du client pilote.*

@@ -199,9 +199,10 @@ Comment ils paient (mode déjà défini en `cas_metier.md` §8, pas un modèle �
   pour sécuriser la trésorerie KLEM avant déploiement complet.
 - Un **abonnement annuel** de maintenance/hébergement/évolutions (100k à 300k FCFA HT/an) —
   revenu récurrent, facturé à la reconduction.
-- Des **frais variables refacturés à l'usage** : commission sur transaction Mobile Money (~1 %
-  parent + 0,5 % établissement), SMS (~25 FCFA/unité), badges de remplacement (500-1 000 FCFA/
-  unité) — ne pèsent pas sur la marge KLEM, ils transitent via l'agrégateur.
+- Des **frais variables refacturés à l'usage** : commission sur transaction Mobile Money (≈ 2,5 –
+  3,5 % par transaction, prélevée directement par l'agrégateur), SMS (~25 FCFA/unité), badges de
+  remplacement (500-1 000 FCFA/unité) — ne pèsent pas sur la marge KLEM, ils transitent via
+  l'agrégateur.
 Le budget existe déjà chez le client (12 000 FCFA/élève/an de coût de gestion actuel, mesuré au
 pilote) : l'enjeu commercial n'est pas de créer un besoin, mais de faire signer la direction sur un
 transfert de ce budget de temps perdu/pertes vers un investissement logiciel chiffré.
@@ -222,7 +223,7 @@ transfert de ce budget de temps perdu/pertes vers un investissement logiciel chi
 Oui, dès le premier client : le modèle est déjà structuré pour ça. Investissement initial one-shot (1,5M–4M FCFA HT selon
 taille) couvre le développement/intégration/infrastructure/formation, donc le coût de mise en
 service n'est pas absorbé par KLEM ; l'abonnement annuel (100k–300k FCFA HT) couvre la maintenance
-récurrente ; les frais variables (commission transaction ~1%/0,5%, SMS, badges de remplacement)
+récurrente ; les frais variables (commission transaction ≈ 2,5 – 3,5 %, SMS, badges de remplacement)
 sont refacturés à l'usage et ne pèsent pas sur la marge KLEM. L'infrastructure PaaS (Vercel +
 Railway) minimise le coût d'exploitation et l'effort d'administration serveur, ce qui est cohérent
 avec une équipe technique restreinte. Point de vigilance : le cycle de vente institutionnel étant

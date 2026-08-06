@@ -1,12 +1,3 @@
-> ⚠️ **BROUILLON — écart de tarification non résolu, ne pas envoyer au client tel quel.**
-> Ce document chiffre le tier « Standard » à ~16,82M FCFA. Les documents de référence Labs
-> (`cas_metier.md` §8, `offre_commerciale.md`, sourcés sur la proposition commerciale initiale
-> `CONCEPTION.md`) retiennent des fourchettes très différentes : **1 500 000 – 4 000 000 FCFA HT**
-> en investissement initial et **100 000 – 300 000 FCFA HT/an** en abonnement. Décision du
-> 2026-08-04 (Yacouba SYLLA) : les fourchettes CONCEPTION.md font référence — ce document doit
-> être recalé sur ces montants (ou justifier explicitement l'écart, ex. périmètre plus large)
-> avant toute diffusion externe.
-
 # Offre Financière — Cantine Connect
 ### Solution digitale de gestion de cantine scolaire multi-établissements
 
@@ -23,10 +14,10 @@
 1. Résumé exécutif
 2. Hypothèses de chiffrage
 3. Tableau de cotation
-4. Détail du coût de développement
+4. Détail de l'investissement initial
 5. Détail des intégrations
-6. Contrat de maintenance annuel
-7. Variantes commerciales
+6. Abonnement annuel (maintenance, hébergement, évolutions)
+7. Détail des paliers commerciaux
 8. Modalités commerciales
 9. Exclusions
 10. Recommandation finale
@@ -38,15 +29,16 @@
 
 Cantine Connect est une plateforme digitale complète de gestion de restauration scolaire, pensée pour le contexte ivoirien : inscription et suivi des élèves, paiement Mobile Money, contrôle d'accès au réfectoire par QR Code, et communication automatisée avec les parents.
 
-Cette offre couvre l'intégralité du cycle de mise en œuvre : cadrage, conception, développement, intégration des paiements et des notifications, mise en production, et maintenance annuelle.
+**La plateforme est déjà conçue, développée et validée en conditions réelles** (MVP livré v1.0.0-beta, pilote en cours de généralisation sur un premier réseau scolaire — voir `cas_metier.md`). Cette offre ne chiffre donc pas une construction depuis zéro, mais l'**adaptation, l'intégration des paiements/notifications, le déploiement et l'accompagnement** de la plateforme existante pour votre réseau scolaire — ce qui permet un investissement nettement inférieur à un développement sur mesure complet, sans compromis sur le périmètre fonctionnel.
 
-**Logique de tarification** : chaque poste est chiffré en heures d'ingénierie à un taux horaire différencié selon le niveau d'expertise requis (cadrage/architecture, développement, QA), complété par des forfaits pour les intégrations tierces (paiement, SMS, email) et un contrat de maintenance annuel. Trois formules commerciales (Essentielle, Standard, Premium) permettent d'ajuster le périmètre et l'investissement au budget et à l'ambition du projet.
+**Logique de tarification** : l'investissement est structuré en **paliers par taille de réseau** (nombre d'établissements et d'élèves), et non en heures d'ingénierie détaillées — le socle applicatif étant déjà construit, le coût marginal de déploiement d'un établissement supplémentaire au sein d'un même réseau est proche de zéro (paramétrage seul). Le coût réel se concentre sur l'intégration paiement, la formation présentielle et la logistique des badges PVC, qui augmentent avec le nombre d'établissements — d'où l'écart de prix entre paliers (détail section 3).
 
 ---
 
 ## 2. Hypothèses de chiffrage
 
-**Périmètre fonctionnel retenu** (base du chiffrage — correspond à la formule *Standard*, détaillée section 7) :
+**Périmètre fonctionnel retenu** (déjà livré et opérationnel sur le pilote — voir
+`specifications_fonctionnelles.md`) :
 
 - Page d'accueil, connexion, demande d'accès parent en libre-service (validation par l'établissement, génération d'identifiants, changement de mot de passe à la première connexion)
 - Ajout d'enfants par le parent (matricule, identité, sexe, date de naissance, résidence) avec sélection cascade établissement → niveau → classe
@@ -56,195 +48,180 @@ Cette offre couvre l'intégralité du cycle de mise en œuvre : cadrage, concept
 - Délai de grâce paramétrable (7 jours par défaut, modifiable globalement ou par établissement)
 - Gestion stricte des allergies : déclaration impossible sans certificat médical d'un allergologue
 - Contrôle d'accès réfectoire par QR Code, avec cache local de secours (mode dégradé hors-ligne 24h)
-- Paiement Mobile Money via agrégateur (Orange Money, Moov Money) et suivi des transactions
+- Paiement Mobile Money via agrégateur (Orange Money, MTN, Moov Money, Wave) et suivi des transactions
 - Notifications automatiques SMS et email sur les événements clés (demande, validation, échéance, paiement, rappel)
 - Traçabilité complète des actions (journal d'audit)
 - Tableaux de bord et rapports d'activité exportables
 
-**Hypothèses de production :**
+**Hypothèses de chiffrage :**
 
 | Paramètre | Valeur retenue |
 |---|---|
-| Taux horaire moyen pondéré | 15 000 – 25 000 FCFA/h selon expertise (détail section 4) |
-| Durée estimée de développement | 10 à 12 semaines (formule Standard) |
-| Équipe | 1 lead technique + 1 à 2 développeurs + 1 QA (temps partagé) |
+| Base tarifaire | Paliers par nombre d'établissements/élèves (détail section 3) |
+| Durée de déploiement | 4 phases sur 8 semaines (cadrage → adaptation → pilote → généralisation), déjà éprouvées sur le premier réseau |
+| Équipe | 1 lead technique + support paramétrage/formation (temps partagé) |
 | Niveau de service en garantie initiale | 30 jours de correctifs gratuits post-mise en production |
 | Devise | Franc CFA (FCFA / XOF) |
 
-> ⚠️ Cette offre constitue une estimation de bonne foi établie sur la base du périmètre décrit. Toute évolution substantielle du périmètre en cours de projet fera l'objet d'un avenant chiffré séparément. Une marge d'ajustement de ±15 % peut s'appliquer au cadrage final après l'atelier de démarrage.
+> Cette offre constitue une estimation de bonne foi établie sur la base du périmètre décrit et du nombre d'établissements/élèves indiqués par le client. Toute évolution substantielle du périmètre en cours de projet (nouveau module, intégration tierce non prévue) fera l'objet d'un avenant chiffré séparément.
 
 ---
 
 ## 3. Tableau de cotation
 
-| Poste | Description | Volume estimé | Unité | Prix unitaire | Total | Récurrence |
-|---|---|---:|---|---:|---:|---|
-| Cadrage / Analyse | Ateliers de cadrage, spécifications fonctionnelles, architecture technique | 40 | heure | 25 000 FCFA | **1 000 000 FCFA** | Ponctuel |
-| Design UI/UX | Direction artistique, maquettes, système de design, parcours utilisateurs | 80 | heure | 20 000 FCFA | **1 600 000 FCFA** | Ponctuel |
-| Développement Front-end | Interfaces parent/staff/admin, formulaires, tableaux, responsive | 220 | heure | 20 000 FCFA | **4 400 000 FCFA** | Ponctuel |
-| Développement Back-end | API, règles métier, sécurité, authentification, journal d'audit | 240 | heure | 22 000 FCFA | **5 280 000 FCFA** | Ponctuel |
-| Base de données | Modélisation, migrations, indexation, optimisation des requêtes | 40 | heure | 20 000 FCFA | **800 000 FCFA** | Ponctuel |
-| QA / Tests | Tests unitaires, tests d'intégration, recette fonctionnelle | 60 | heure | 15 000 FCFA | **900 000 FCFA** | Ponctuel |
-| Déploiement initial | Mise en production, environnements, CI/CD | 24 | heure | 20 000 FCFA | **480 000 FCFA** | Ponctuel |
-| **Sous-total Développement** | | **704 h** | | | **14 460 000 FCFA** | |
-| Intégration CinetPay | API de paiement, webhooks, gestion des statuts de transaction, tests | Forfait (≈ 50h) | forfait | — | **1 000 000 FCFA** | Ponctuel |
-| Abonnement maintien CinetPay | Supervision incidents paiement, veille API/webhooks, ajustements | 1 | an | — | **400 000 FCFA** | Annuel |
-| Intégration SMS | Connexion fournisseur SMS, formatage numéros, gestion des envois | Forfait (≈ 30h) | forfait | — | **600 000 FCFA** | Ponctuel |
-| Intégration Email | Templates transactionnels, déclenchement automatique par événement | Forfait (≈ 20h) | forfait | — | **360 000 FCFA** | Ponctuel |
-| Abonnement SMS/Email annuel | Maintien technique des canaux, gestion des templates, supervision | 1 | an | — | **350 000 FCFA** | Annuel |
-| Maintenance annuelle | Correctifs, support, évolutions mineures, supervision, sécurité | 1 | an | — | **1 800 000 FCFA** | Annuel |
+L'investissement est structuré en **trois paliers par taille de réseau**, et non en heures
+d'ingénierie détaillées : le socle applicatif (portail parents, back-office, contrôle d'accès QR
+Code, paiement Mobile Money, notifications) est déjà construit et validé sur le premier réseau
+pilote — l'investissement couvre l'adaptation, l'intégration paiement, l'infrastructure de la
+première année, les badges PVC et la formation, pas une reconstruction du produit.
 
-### Totaux
+| Palier | Cible | Investissement initial (one-shot) | Abonnement annuel | Inclus |
+|---|---|---:|---:|---|
+| **École Pilote** | 1 établissement, jusqu'à 500 élèves | **1 500 000 FCFA HT** | **100 000 FCFA HT/an** | Portail parents Mobile Money, back-office, contrôle d'accès QR Code, badges PVC, formation sur site, support 5j/7 |
+| **Réseau Scolaire** *(offre de référence)* | 5 à 15 établissements, jusqu'à 3 000 élèves | **2 500 000 – 3 000 000 FCFA HT** | **200 000 FCFA HT/an** | Idem École Pilote + pilotage consolidé multi-sites, déploiement en 4 phases/8 semaines, reporting comptable centralisé |
+| **Groupe Multi-Sites** | 15+ établissements, 10 000+ élèves | **4 000 000 FCFA HT** | **300 000 FCFA HT/an** | Idem Réseau Scolaire + SLA renforcé (P1 < 2h), accompagnement dédié au déploiement par vague d'établissements |
+
+### Totaux — palier de référence (Réseau Scolaire)
 
 | | Montant |
 |---|---:|
-| **Total investissement ponctuel** (développement + intégrations) | **16 820 000 FCFA** |
-| **Total récurrent annuel** (CinetPay + SMS/Email + Maintenance) | **2 550 000 FCFA / an** |
+| **Total investissement ponctuel** | **2 500 000 – 3 000 000 FCFA HT** |
+| **Total récurrent annuel** | **200 000 FCFA HT/an** |
 
-*(Montants hors TVA le cas échéant, hors frais tiers listés section 9)*
+*(Montants hors TVA le cas échéant, hors frais tiers refacturés à l'usage — commission Mobile
+Money, SMS, badges de remplacement — listés section 9. Tarification affinée en phase de cadrage
+selon le nombre exact d'établissements et d'élèves engagés par le client.)*
 
 ---
 
-## 4. Détail du coût de développement
+## 4. Détail de l'investissement initial
 
-**Ventilation des 704 heures :**
+**Ce que couvre l'investissement one-shot, quel que soit le palier :**
 
-| Lot | Heures | Justification |
-|---|---:|---|
-| Cadrage / Analyse | 40h | Recueil du besoin, ateliers, rédaction des spécifications, choix d'architecture |
-| UI/UX | 80h | Refonte visuelle complète : accueil, connexion, inscription, tous les écrans métier |
-| Front-end | 220h | ~12 écrans/modules (accueil, auth, dashboard, élèves, établissements, paiements, scan, utilisateurs, parents, demandes d'accès, espace parent, configuration, rapports) |
-| Back-end | 240h | Auth sécurisée, moteur de règles métier, API REST complète, intégrations, audit |
-| Base de données | 40h | Modélisation relationnelle, migrations versionnées, index de performance |
-| QA / Tests | 60h | Couverture des parcours critiques (inscription, paiement, contrôle d'accès) |
-| Déploiement | 24h | Mise en production, configuration environnements, vérifications post-déploiement |
+| Poste | Description | Inclus |
+|---|---|---|
+| Adaptation du produit | Paramétrage établissements/niveaux/classes, tarifs, période de grâce, image de marque | ✓ |
+| Intégration paiement | CinetPay/PayDunya — compte marchand, webhooks, tests de bout en bout | ✓ |
+| Infrastructure (12 mois) | Hébergement cloud (Vercel + Railway), nom de domaine, monitoring | ✓ |
+| Badges PVC | Conception du gabarit + impression et distribution initiale (effectif du palier) | ✓ |
+| Formation & déploiement | Formation admin/gestionnaire, agents de cantine, guide parents — déplacements inclus | ✓ |
+| Documentation | Guides PDF, vidéos tutoriels, documentation technique (architecture, API) | ✓ |
 
-**Justification du taux horaire** : les taux appliqués (15 000 – 25 000 FCFA/h) reflètent une prestation d'ingénierie logicielle professionnelle avec revue de code, tests automatisés et documentation — cohérents avec le marché des ESN/agences digitales structurées en Côte d'Ivoire pour un projet de cette complexité (multi-rôles, multi-établissements, paiement, temps réel).
-
-**Total développement : 14 460 000 FCFA** (704 heures)
+**Pourquoi le prix augmente avec le nombre d'établissements** : le socle applicatif est
+multi-tenant et déjà construit — ajouter un établissement supplémentaire au sein d'un même réseau
+ne demande aucun nouveau développement, seulement du paramétrage. Le coût réel se concentre sur
+deux postes qui grandissent avec le réseau : la **formation présentielle** (un passage par site) et
+la **logistique des badges PVC** (impression et distribution par établissement) — c'est ce qui
+justifie l'écart de prix entre les paliers École Pilote, Réseau Scolaire et Groupe Multi-Sites
+(section 3), et non une reconstruction du produit à chaque palier.
 
 ---
 
 ## 5. Détail des intégrations
 
-### 5.1 CinetPay
+Les intégrations CinetPay/PayDunya et SMS/Email sont **incluses dans l'investissement initial de
+chaque palier** (section 3) — elles ne font pas l'objet d'une ligne de facturation séparée.
 
-| Élément | Montant |
-|---|---:|
-| Intégration technique (API, webhooks, gestion des statuts) | Inclus dans le forfait |
-| Configuration (comptes marchands test/production) | Inclus dans le forfait |
-| Tests de paiement (scénarios succès, échec, relance) | Inclus dans le forfait |
-| Mise en production | Inclus dans le forfait |
-| **Coût ponctuel d'intégration** | **1 000 000 FCFA** |
-| **Abonnement annuel de maintien** | **400 000 FCFA / an** |
+### 5.1 CinetPay / PayDunya
 
-> ⚠️ **Les commissions de transaction CinetPay ne sont pas incluses dans ce devis.** Elles sont prélevées directement par CinetPay sur chaque paiement Mobile Money (Orange Money, Moov Money) et varient généralement entre **2,5 % et 3,5 %** du montant transigé selon l'opérateur. Ces frais sont contractualisés directement entre le client et CinetPay lors de l'ouverture du compte marchand.
+- Intégration technique (API, webhooks, gestion des statuts de transaction) — inclus.
+- Configuration des comptes marchands (test/production) — inclus.
+- Tests de paiement (scénarios succès, échec, relance) — inclus.
+
+> **Les commissions de transaction CinetPay/PayDunya ne sont pas incluses dans ce devis.** Elles sont prélevées directement par l'agrégateur sur chaque paiement Mobile Money (Orange Money, MTN, Moov Money, Wave) et varient généralement entre **2,5 % et 3,5 %** du montant transigé selon l'opérateur. Ces frais sont contractualisés directement entre le client et l'agrégateur lors de l'ouverture du compte marchand — zéro marge KLEM dessus.
 
 ### 5.2 SMS / Email
 
-| Élément | Montant |
-|---|---:|
-| Intégration SMS (fournisseur, formatage, déclenchement) | Inclus dans le forfait |
-| Intégration Email (templates HTML, déclenchement) | Inclus dans le forfait |
-| **Coût ponctuel d'intégration (SMS + Email)** | **960 000 FCFA** |
-| **Abonnement annuel de maintien technique** | **350 000 FCFA / an** |
+- Intégration du fournisseur SMS (formatage, déclenchement) — inclus.
+- Intégration Email (templates transactionnels HTML, déclenchement automatique) — inclus.
 
-> ⚠️ **Les frais d'usage (consommation réelle de SMS) ne sont pas inclus.** Ils sont facturés par le fournisseur SMS au volume réellement envoyé, sur un compte prépayé au nom du client. Indicatif marché : **25 à 45 FCFA par SMS** selon l'opérateur destinataire et le fournisseur retenu. L'envoi d'email transactionnel via l'infrastructure standard n'engendre en général pas de coût significatif à ce volume d'usage.
+> **Les frais d'usage (consommation réelle de SMS) ne sont pas inclus.** Ils sont facturés au volume réellement envoyé, sur un compte prépayé au nom du client. Indicatif marché : **~25 FCFA par SMS** (fournisseur local). L'envoi d'email transactionnel via l'infrastructure standard n'engendre en général pas de coût significatif à ce volume d'usage.
 
 ---
 
-## 6. Contrat de maintenance annuel
+## 6. Abonnement annuel (maintenance, hébergement, évolutions)
 
-**Contenu inclus :**
+**Contenu inclus, à tous les paliers :**
 - Correctifs de bugs (illimités sur anomalies bloquantes)
-- Support fonctionnel par email/WhatsApp, délai de réponse sous 48h ouvrées
-- 10 heures/mois d'évolutions mineures (ajustements, petits ajouts)
-- Supervision applicative (disponibilité, erreurs critiques)
+- Hotline support 5j/7, hébergement cloud (renouvellement, bande passante, sauvegardes automatiques)
 - Mises à jour de sécurité des dépendances techniques
-- Assistance fonctionnelle à l'équipe du client (prise en main, questions d'usage)
+- Supervision applicative (disponibilité, erreurs critiques, anomalies de paiement)
+- SLA : disponibilité 99,5 % minimum, incident critique (P1) traité sous 2h ouvrables, P2 sous 8h ouvrables (SLA renforcé pour le palier Groupe Multi-Sites, voir section 3)
 
-**Coût annuel : 1 800 000 FCFA** (soit 150 000 FCFA/mois, facturation trimestrielle possible)
+**Coût annuel : selon palier (section 3)** — 100 000 FCFA/an (École Pilote), 200 000 FCFA/an (Réseau Scolaire), 300 000 FCFA/an (Groupe Multi-Sites). Facturation annuelle, trimestrielle possible sur demande.
 
-**Limites et exclusions du contrat de maintenance :**
-- N'inclut pas le développement de nouvelles fonctionnalités majeures (chiffré séparément)
-- N'inclut pas la reprise de données en cas de corruption imputable à un tiers (hébergeur, fournisseur externe)
-- Les heures d'évolution non consommées dans le mois ne sont pas reportables au-delà d'un trimestre
-- N'inclut pas les coûts d'hébergement, de SMS ou de commissions de transaction (voir section 9)
-
----
-
-## 7. Variantes commerciales
-
-### 🟢 Version Essentielle — *Démarrer rapidement, budget maîtrisé*
-
-**Périmètre :**
-- Inscription parent, ajout d'enfants, paramétrage établissements/niveaux/classes
-- Recherche parent par email et téléphone
-- Paiements trimestriels/annuels avec **confirmation manuelle par le caissier** (pas d'intégration Mobile Money automatisée)
-- Délai de grâce, gestion des allergies avec certificat
-- Notifications **email uniquement** (pas de SMS)
-- Contrôle d'accès QR Code
-
-**Prix indicatif : 9 500 000 – 10 500 000 FCFA** (ponctuel)
-**Maintenance : 900 000 FCFA/an** (correctifs + support, sans heures d'évolution incluses)
-
-**Différence clé** : pas d'intégration paiement automatisée ni de SMS — l'architecture reste conçue pour évoluer vers le Standard sans reprise du travail déjà livré.
+**Limites et exclusions de l'abonnement :**
+- N'inclut pas le développement de nouvelles fonctionnalités majeures — 1 à 2 évolutions substantielles par an peuvent être budgétées séparément, sur devis.
+- N'inclut pas la reprise de données en cas de corruption imputable à un tiers (hébergeur, fournisseur externe).
+- N'inclut pas les frais variables à l'usage (SMS, commissions de transaction, badges de remplacement — voir section 9).
 
 ---
 
-### 🔵 Version Standard — *Le périmètre complet du cahier des charges*
+## 7. Détail des paliers commerciaux
 
-**Périmètre :** l'intégralité de ce qui est décrit dans ce document (sections 3 à 6), incluant l'intégration CinetPay réelle, SMS + email, et le contrat de maintenance complet.
+### École Pilote — *Démarrer rapidement, un seul établissement*
 
-**Prix : 16 820 000 FCFA** (ponctuel) **+ 2 550 000 FCFA/an** (récurrent)
+**Cible :** 1 établissement, jusqu'à 500 élèves.
 
-**Différence clé** : paiement Mobile Money réellement opérationnel, communication automatisée complète, maintenance avec heures d'évolution incluses — la formule recommandée pour un déploiement en conditions réelles auprès des familles.
+**Inclus :** portail parents Mobile Money, back-office, contrôle d'accès QR Code, badges PVC, formation sur site, support 5j/7.
+
+**Prix : 1 500 000 FCFA HT** (ponctuel) **+ 100 000 FCFA HT/an** (récurrent)
+
+**Différence clé** : le périmètre fonctionnel complet dès ce palier (paiement Mobile Money réellement opérationnel, pas de version dégradée) — seule la taille du réseau change entre les paliers, pas les fonctionnalités.
 
 ---
 
-### 🟣 Version Premium — *Multi-établissements à l'échelle, exigence de service*
+### Réseau Scolaire — *Le profil de référence*
 
-**Périmètre :** tout le Standard, plus :
-- Intégration directe Orange Money / Moov Money (en complément de CinetPay, réduction potentielle des commissions à volume élevé)
-- Tableaux de bord analytiques avancés multi-établissements (comparaison inter-écoles, prévisionnel de recouvrement)
-- Application mobile compagnon (PWA installable ou app légère) pour les parents
-- SLA renforcé : support prioritaire, astreinte week-end, délai de réponse 24h
-- 20 heures/mois d'évolutions incluses dans la maintenance
-- Formation approfondie sur site + supports vidéo pour les équipes du client
+**Cible :** 5 à 15 établissements, jusqu'à 3 000 élèves.
 
-**Prix indicatif : 21 000 000 – 24 000 000 FCFA** (ponctuel)
-**Maintenance : 3 600 000 FCFA/an**
+**Inclus :** idem École Pilote + pilotage consolidé multi-sites, déploiement en 4 phases/8 semaines, reporting comptable centralisé.
 
-**Différence clé** : pensée pour un réseau d'établissements ou une ambition de croissance rapide, avec un niveau de service et d'analytique adapté à une exploitation à grande échelle.
+**Prix : 2 500 000 – 3 000 000 FCFA HT** (ponctuel) **+ 200 000 FCFA HT/an** (récurrent)
+
+**Différence clé** : c'est le profil du client pilote de référence (5 établissements, 600 élèves — voir `cas_metier.md`) — la formule recommandée pour un réseau scolaire multi-sites en conditions réelles.
+
+---
+
+### Groupe Multi-Sites — *À l'échelle, exigence de service*
+
+**Cible :** 15+ établissements, 10 000+ élèves.
+
+**Inclus :** idem Réseau Scolaire + SLA renforcé (incident critique P1 traité sous 2h ouvrables), accompagnement dédié au déploiement par vague d'établissements.
+
+**Prix : 4 000 000 FCFA HT** (ponctuel) **+ 300 000 FCFA HT/an** (récurrent)
+
+**Différence clé** : pensée pour un grand réseau ou une ambition de croissance rapide, avec un accompagnement de déploiement dimensionné pour de nombreux sites.
 
 ---
 
 ### Tableau comparatif synthétique
 
-| | Essentielle | Standard | Premium |
+| | École Pilote | Réseau Scolaire | Groupe Multi-Sites |
 |---|---|---|---|
-| Inscription & gestion élèves | ✓ | ✓ | ✓ |
-| Paiement Mobile Money automatisé | ✗ (manuel) | ✓ CinetPay | ✓ CinetPay + direct OM/Moov |
-| Notifications SMS | ✗ | ✓ | ✓ |
-| Notifications Email | ✓ | ✓ | ✓ |
-| Application mobile | ✗ | ✗ | ✓ |
-| Analytique multi-établissements | ✗ | Basique | Avancée |
-| Heures d'évolution/mois incluses | 0 | 10h | 20h |
-| SLA support | Standard | Standard | Prioritaire (24h) |
-| **Prix ponctuel** | 9,5 – 10,5 M FCFA | 16,82 M FCFA | 21 – 24 M FCFA |
-| **Récurrent annuel** | 0,9 M FCFA | 2,55 M FCFA | 3,6 M FCFA |
+| Établissements | 1 | 5 à 15 | 15+ |
+| Élèves | Jusqu'à 500 | Jusqu'à 3 000 | 10 000+ |
+| Paiement Mobile Money (CinetPay/PayDunya) | ✓ | ✓ | ✓ |
+| Notifications SMS + Email | ✓ | ✓ | ✓ |
+| Pilotage consolidé multi-sites | ✗ | ✓ | ✓ |
+| Reporting comptable centralisé | ✗ | ✓ | ✓ |
+| Accompagnement déploiement par vague | ✗ | ✗ | ✓ |
+| SLA support (P1) | < 2h ouvrables | < 2h ouvrables | < 2h ouvrables renforcé |
+| **Prix ponctuel** | 1,5 M FCFA | 2,5 – 3 M FCFA | 4 M FCFA |
+| **Récurrent annuel** | 100 000 FCFA | 200 000 FCFA | 300 000 FCFA |
+
+*(Tous les paliers partagent le même périmètre fonctionnel — voir section 2 — seuls la taille du réseau, l'effort de formation/logistique badges et le niveau d'accompagnement diffèrent.)*
 
 ---
 
 ## 8. Modalités commerciales
 
-- **Acompte** : 40 % à la signature du contrat (démarrage des travaux)
-- **2ᵉ versement** : 30 % à la livraison de la version de recette (front + back fonctionnels)
-- **Solde** : 30 % à la mise en production et validation finale
+- **Acompte** : 50 % à la signature du contrat (démarrage du cadrage, phase 1)
+- **Solde** : 50 % à la mise en production et validation finale (go-live, phase 4)
 - **Durée de validité de l'offre** : 30 jours à compter de la date d'émission
 - **Délai de démarrage** : sous 5 jours ouvrés après signature et réception de l'acompte
-- **Durée estimée de réalisation** : 10 à 12 semaines (formule Standard), à ajuster selon la formule retenue
-- **Facturation de la maintenance** : annuelle, trimestrielle sur demande
+- **Durée estimée de déploiement** : 4 phases sur 8 semaines (cadrage → adaptation → pilote sur un établissement → généralisation), quel que soit le palier
+- **Facturation de l'abonnement annuel** : annuelle, trimestrielle sur demande
 
 ---
 
@@ -252,26 +229,26 @@ Cette offre couvre l'intégralité du cycle de mise en œuvre : cadrage, concept
 
 Les éléments suivants **ne sont pas inclus** dans le présent devis et restent à la charge du client :
 
-- **Commissions de transaction CinetPay** (≈ 2,5 % à 3,5 % par transaction Mobile Money), prélevées directement par CinetPay
-- **Frais de consommation SMS** (facturés à l'envoi réel, ≈ 25 à 45 FCFA/SMS selon fournisseur/opérateur)
-- **Hébergement cloud** (serveur applicatif + base de données) — indicatif : 15 000 à 45 000 FCFA/mois selon dimensionnement
-- **Nom de domaine** — indicatif : 8 000 à 15 000 FCFA/an selon extension
+- **Commissions de transaction Mobile Money** (≈ 2,5 % à 3,5 % par transaction selon opérateur), prélevées directement par l'agrégateur CinetPay/PayDunya
+- **Frais de consommation SMS** (facturés à l'envoi réel, ≈ 25 FCFA/SMS indicatif, selon fournisseur retenu)
 - **Frais juridiques** (CGU, politique de confidentialité, mise en conformité réglementaire) si accompagnement souhaité
 - **Licences ou services tiers additionnels** non mentionnés explicitement dans ce document
-- **Fabrication physique des badges PVC élèves** — non incluse dans le forfait de développement, chiffrée séparément en Annexe A
+- **Badges PVC de remplacement** au-delà de l'émission initiale (perte/détérioration, nouveaux inscrits en cours d'année) — chiffrés à l'unité en Annexe A
+
+*(L'hébergement cloud et le nom de domaine sont inclus la première année dans l'investissement initial — section 4 — puis couverts par l'abonnement annuel à partir de la 2ᵉ année — section 6.)*
 
 ---
 
 ## 10. Recommandation finale
 
-**Formule conseillée : Version Standard.**
+**Palier conseillé : Réseau Scolaire.**
 
-Elle correspond exactement au périmètre fonctionnel que vous avez défini — paiement Mobile Money réellement opérationnel, communication automatisée avec les familles, et un contrat de maintenance qui inclut de la marge d'évolution mensuelle plutôt qu'un simple support réactif. C'est le niveau qui permet un déploiement crédible auprès des parents dès la première rentrée scolaire.
+Il correspond au profil du client pilote de référence (5 établissements, 600 élèves) et couvre le périmètre fonctionnel complet — paiement Mobile Money réellement opérationnel, communication automatisée avec les familles, pilotage consolidé multi-sites — avec un déploiement en 4 phases/8 semaines déjà éprouvé. C'est le niveau qui permet un déploiement crédible auprès des parents dès la première rentrée scolaire.
 
 **Angle de négociation possible avec le client :**
-- Si le budget initial est contraint, démarrer en **Essentielle** est un choix cohérent et non-risqué : l'architecture est construite pour absorber l'évolution vers le Standard (paiement automatisé, SMS) sans reprise du travail déjà livré — un investissement initial plus faible qui capitalise sur la suite.
-- Si l'ambition est un déploiement multi-établissements ou une franchise scolaire, orienter directement vers **Premium** évite une double migration technique et donne un temps d'avance sur l'analytique et le support.
-- La maintenance annuelle peut être présentée comme un investissement de continuité plutôt qu'un coût : elle sécurise la disponibilité du service pendant l'année scolaire, période où une interruption serait la plus coûteuse pour la confiance des familles.
+- Si le client ne compte qu'un seul établissement pour l'instant, démarrer en **École Pilote** est un choix cohérent et non-risqué : le socle applicatif étant déjà construit, l'extension vers Réseau Scolaire ne nécessite aucune reprise du travail déjà livré, seulement du paramétrage pour les établissements additionnels.
+- Si l'ambition est un déploiement à grande échelle (15+ établissements) ou une franchise scolaire, orienter directement vers **Groupe Multi-Sites** évite une renégociation en cours de déploiement et donne un accompagnement dimensionné dès le départ.
+- L'abonnement annuel peut être présenté comme un investissement de continuité plutôt qu'un coût : il sécurise la disponibilité du service pendant l'année scolaire, période où une interruption serait la plus coûteuse pour la confiance des familles.
 
 ---
 
