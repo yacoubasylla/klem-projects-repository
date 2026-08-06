@@ -155,7 +155,7 @@ Licences tiers (agrégateur, SMS)	Variable selon volume de transactions et SMS e
 Abonnement annuel estimé : 100 000 – 300 000 FCFA HT/an
 7.3 Frais variables à l'usage
 Service	Mode de facturation	Tarif indicatif
-Transactions Mobile Money	% prélevé sur chaque transaction parent	1% (supporté parent) + 0,5% (Cantine)
+Transactions Mobile Money	% prélevé par l'agrégateur sur chaque transaction	2,5 % à 3,5 % selon opérateur (prélevé par CinetPay/PayDunya)
 SMS notifications	À l'unité	~25 FCFA / SMS
 Badges PVC supplémentaires	À l'unité (remplacement)	500 – 1 000 FCFA / badge
 Modules complémentaires	Sur devis selon développement	Variable
