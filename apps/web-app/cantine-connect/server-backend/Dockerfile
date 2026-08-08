@@ -13,7 +13,10 @@ RUN ./mvnw clean package -DskipTests -q --no-transfer-progress
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
+RUN addgroup -S klem && adduser -S klem -G klem
 COPY --from=builder /app/target/*.jar app.jar
+RUN chown klem:klem app.jar
+USER klem
 
 EXPOSE 8081
 

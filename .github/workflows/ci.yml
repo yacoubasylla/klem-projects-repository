@@ -16,13 +16,20 @@ jobs:
         with:
           fetch-depth: 0 # Important pour que Turbo puisse comparer les commits et l'historique Git
 
-      # ☕ Configuration de l'environnement Java (Indispensable pour le backend Spring Boot 3.x)
-      - name: Setup Java 17
+      # ☕ Configuration de l'environnement Java — deux JDK côte à côte :
+      # 17 pour cantine-connect/server-backend (encore sur cette version, voir ADR
+      # 2026-08-08-adoption-directive-maitre-datasphere-perimetre.md), 21 (par défaut sur le
+      # PATH, dernier de la liste) pour les nouveaux services KLEM DataSphere conformes à
+      # KLEM_MASTER_SYSTEM_DIRECTIVE.md §3.1. Chaque JDK reste sélectionnable explicitement via
+      # $JAVA_HOME_17_X64 / $JAVA_HOME_21_X64 dans les étapes de build ci-dessous.
+      - name: Setup Java 17 & 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven' # Change en 'gradle' si ton Spring Boot utilise Gradle au lieu de Maven
+          java-version: |
+            17
+            21
+          cache: 'maven'
 
       # 📦 Configuration de pnpm et Node.js (Pour Turborepo, le Web et le Mobile)
       # Version résolue depuis "packageManager" dans package.json (source unique) — ne pas
@@ -51,8 +58,29 @@ jobs:
           echo "✅ Validation des ADR réussie."
 
       # 🚀 L'orchestration Turborepo (Compilation, Linters et Tests Unitaires en parallèle)
+      # Ne couvre que les packages Node (chacun a son propre package.json) — les modules Maven
+      # n'en ont pas et sont donc ignorés par Turbo. D'où les étapes Java dédiées ci-dessous.
       - name: Run Lint, Test and Build via Turborepo
         run: pnpm turbo run lint test build
         env:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }} # Requis si tu branches le Remote Cache de Vercel ou Turbo
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+      # ☕ Build & tests des modules Java (Maven, hors périmètre pnpm/Turborepo ci-dessus)
+      - name: Build & Test — cantine-connect/server-backend (Java 17)
+        working-directory: apps/web-app/cantine-connect/server-backend
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+        run: ./mvnw -B clean verify
+
+      - name: Build & Test — transit-ops-service (Java 21)
+        working-directory: services/transit-ops-service
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME_21_X64 }}
+        run: ./mvnw -B clean verify
+
+      - name: Build & Test — referentiel-api-service (Java 21)
+        working-directory: services/referentiel-api-service
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME_21_X64 }}
+        run: ./mvnw -B clean verify

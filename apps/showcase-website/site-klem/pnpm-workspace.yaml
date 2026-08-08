@@ -2,3 +2,9 @@ packages:
   - "web/app/themes/*"
 allowBuilds:
   esbuild: false
+
+# GHSA-mwcw-c2x4-8c55 (Dependabot #28) : nanoid < 3.3.17, tiré transitivement par postcss.
+# Pin patch-level (3.3.17, pas de plage ouverte) pour rester dans la ligne 3.3.x attendue par
+# postcss@8 — un saut vers nanoid 6.x (majeur) casserait potentiellement son API.
+overrides:
+  nanoid: '3.3.17'

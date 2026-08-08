@@ -5,3 +5,11 @@ packages:
   - 'apps/*/*'
   - 'packages/*'
   - 'services/*'
+
+# GHSA-mwcw-c2x4-8c55 (Dependabot #30/#28) : nanoid < 3.3.17, tiré transitivement par postcss.
+# Pin patch-level uniquement (3.3.17, pas une plage ouverte) pour rester dans la même ligne
+# 3.3.x que postcss@8 attend — un saut vers nanoid 6.x (majeur) casserait potentiellement
+# l'API consommée par postcss. Miroir de "pnpm.overrides" dans package.json (pnpm >=10 lit ce
+# fichier, pnpm 9.x encore épinglé ici lit package.json — les deux sont tenus synchronisés).
+overrides:
+  nanoid: '3.3.17'
