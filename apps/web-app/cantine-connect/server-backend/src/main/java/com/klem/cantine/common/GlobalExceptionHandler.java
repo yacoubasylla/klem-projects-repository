@@ -14,45 +14,50 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    record ErrorResponse(LocalDateTime timestamp, int status, String error, String message, String path) {}
+    record ErrorResponse(LocalDateTime timestamp, int status, String error, String message, String path, String requestId) {}
+
+    private static String newRequestId() {
+        return UUID.randomUUID().toString();
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            new ErrorResponse(LocalDateTime.now(), 404, "NOT_FOUND", ex.getMessage(), req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 404, "NOT_FOUND", ex.getMessage(), req.getRequestURI(), newRequestId())
         );
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            new ErrorResponse(LocalDateTime.now(), 400, "BAD_REQUEST", ex.getMessage(), req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 400, "BAD_REQUEST", ex.getMessage(), req.getRequestURI(), newRequestId())
         );
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(AccessDeniedException ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-            new ErrorResponse(LocalDateTime.now(), 403, "FORBIDDEN", "Accès refusé : droits insuffisants.", req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 403, "FORBIDDEN", "Accès refusé : droits insuffisants.", req.getRequestURI(), newRequestId())
         );
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(AuthenticationException ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-            new ErrorResponse(LocalDateTime.now(), 401, "UNAUTHORIZED", ex.getMessage(), req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 401, "UNAUTHORIZED", ex.getMessage(), req.getRequestURI(), newRequestId())
         );
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleConflict(IllegalStateException ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
-            new ErrorResponse(LocalDateTime.now(), 409, "CONFLICT", ex.getMessage(), req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 409, "CONFLICT", ex.getMessage(), req.getRequestURI(), newRequestId())
         );
     }
 
@@ -69,16 +74,18 @@ public class GlobalExceptionHandler {
             "error", "VALIDATION_ERROR",
             "message", "Données invalides",
             "details", errors,
-            "path", req.getRequestURI()
+            "path", req.getRequestURI(),
+            "requestId", newRequestId()
         );
         return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
-        log.error("Erreur interne non gérée sur {} {}", req.getMethod(), req.getRequestURI(), ex);
+        String requestId = newRequestId();
+        log.error("Erreur interne non gérée sur {} {} (requestId={})", req.getMethod(), req.getRequestURI(), requestId, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-            new ErrorResponse(LocalDateTime.now(), 500, "INTERNAL_ERROR", "Une erreur interne est survenue.", req.getRequestURI())
+            new ErrorResponse(LocalDateTime.now(), 500, "INTERNAL_ERROR", "Une erreur interne est survenue.", req.getRequestURI(), requestId)
         );
     }
 }

@@ -2,6 +2,14 @@
 
 > **Directive Système :** Ce fichier contient les règles de codage, les commandes de build et les critères de validation industriels de KLEM Technologies. Tu dois t'y conformer de manière absolue à chaque génération de code ou exécution de commande.
 
+> **Portée vs `KLEM_MASTER_SYSTEM_DIRECTIVE.md` :** ce fichier fait autorité pour les apps clients
+> existantes de ce monorepo (cantine-connect, parcauto, backend-api/FleetControl, clinic,
+> pharmacie), notamment sa règle de sécurité par session/cookie `JSESSIONID` (§2.1) et Java 17.
+> Pour tout **nouveau service KLEM DataSphere** créé sous `services/*` (Hinterland-Track,
+> KLEM Trade-X, KLEM Copilot), c'est `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §7 (OAuth2 Resource
+> Server/JWT, Java 21 LTS) qui prévaut. Contexte et alternatives écartées :
+> `collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md`.
+
 ---
 
 ## ⚡ 1. Commandes de l'Espace de Travail (Monorepo pnpm + Turbo)

@@ -1,5 +1,9 @@
 # KLEM Technologies & Services - Engineering Standards
 
+> Gabarit générique. Pour un nouveau service Java/Spring Boot de la plateforme KLEM DataSphere
+> (`services/*`), complète-le avec les règles de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` (stack, sécurité
+> OAuth2 Resource Server, structure en couches).
+
 ## 🎯 Rôle & Philosophie
 Tu agis en tant que Lead Engineer pour KLEM. Ton objectif est la robustesse, la scalabilité et la maintenabilité.
 - **Monorepo First :** Utilise les packages partagés `@klem/*` (UI, Utils) avant de créer du code spécifique.

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/transit_ops
+    username: transit_ops
+    password: transit_ops
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    com.klem.transitops: DEBUG

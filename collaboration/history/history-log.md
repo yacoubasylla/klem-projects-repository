@@ -9,6 +9,44 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-08-08] - Adoption de KLEM_MASTER_SYSTEM_DIRECTIVE.md : périmètre, gouvernance, scaffolding des produits pivots et conformité additive cantine-connect
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :**
+  - Gouvernance : `collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md` (nouveau),
+    `collaboration/history/decision-log.md` (ADR 003 indexée), `CLAUDE.md` et
+    `templates/{template_CLAUDE(maitre).md,CLAUDE_RACINE.md}` (notes de portée ajoutées),
+    `README.md` (racine) et `klem-labs-repository/GLOBAL_README.md` (référence à la directive
+    ajoutée).
+  - Scaffolding : `services/transit-ops-service/**` (nouveau, squelette Hinterland-Track — Java 21,
+    Spring Boot 3.3.5, OAuth2 Resource Server, Actuator, springdoc-openapi, Flyway, ArchUnit/
+    Testcontainers en dépendances de test) et `services/referentiel-api-service/**` (nouveau,
+    squelette KLEM Trade-X, même stack).
+  - Conformité additive : `apps/web-app/cantine-connect/server-backend/{pom.xml,
+    src/main/java/com/klem/cantine/common/GlobalExceptionHandler.java,
+    src/main/java/com/klem/cantine/common/SecurityConfig.java}` (détail dans le history-log propre
+    à cantine-connect).
+- **Description :** `KLEM_MASTER_SYSTEM_DIRECTIVE.md` v2.0 existait dans 5 emplacements du workspace
+  sans être référencé par aucun document. Un audit a montré que le workspace réel est un portefeuille
+  de projets clients hétérogènes (Java 17, trois modèles d'authentification distincts déjà en
+  production ou prévus) plus large que la seule plateforme KLEM DataSphere décrite par la directive.
+  Décision actée par ADR 003 (voir fichier ci-dessus) : la directive fait autorité pour les nouveaux
+  services KLEM DataSphere (`services/*`), les apps clients existantes gardent leur `CLAUDE.md`
+  propre, aucune architecture de production n'est remplacée silencieusement.
+  Les deux nouveaux services (`transit-ops-service`, `referentiel-api-service`) sont des squelettes
+  Sprint 0 sans logique métier (packages domaine vides, un seul endpoint réel `/actuator/health`) —
+  vérifiés par compilation, packaging et démarrage réel (PostgreSQL via conteneur Docker jetable) :
+  `/actuator/health` → `UP`, `/v3/api-docs` → 200, endpoint protégé sans token → 401. Le test
+  Testcontainers embarqué dans chaque module échoue dans cet environnement précis (incompatibilité
+  de négociation d'API entre `docker-java`/testcontainers 1.20.1 et le Docker Engine 29.7.1 très
+  récent de ce poste — client bloqué sur l'API 1.32, serveur exigeant ≥1.40) : limitation
+  d'environnement constatée, pas un défaut du scaffold, à surveiller lors du premier `mvn verify`
+  en CI/poste standard. cantine-connect (seule app avec du code de production, paiements Mobile
+  Money réels) a reçu deux ajouts sans changement de comportement : `requestId` dans les réponses
+  d'erreur et documentation OpenAPI (`/swagger-ui.html`) — 44 tests existants toujours au vert,
+  démarrage réel vérifié. Java 21, migration OAuth2 Resource Server, ArchUnit/Testcontainers et
+  refactor de couches restent des dettes documentées (ADR 003), volontairement non exécutées sans
+  cycle de non-régression dédié.
+
 ### [2026-08-02] - Message d'indisponibilité unifié pour le chatbot IA (showcase-website)
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `apps/showcase-website/site-klem/web/app/themes/klem-theme/inc/chatbot.php`,

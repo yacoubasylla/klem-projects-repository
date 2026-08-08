@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/klem_trade_x
+    username: referentiel_api
+    password: referentiel_api
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    com.klem.referentielapi: DEBUG

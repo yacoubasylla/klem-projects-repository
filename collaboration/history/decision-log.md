@@ -8,6 +8,7 @@ Ce document centralise les choix architecturaux et stratégiques majeurs pour **
 |:---|:---|:---|:---|
 | 001 | 2026-06-18 | Adoption du Monorepo (pnpm/Turborepo) | Accepté |
 | 002 | 2026-06-19 | Standardisation via CLAUDE.md hiérarchique | Accepté |
+| 003 | 2026-08-08 | Adoption de KLEM_MASTER_SYSTEM_DIRECTIVE.md et périmètre d'application | Accepté |
 
 ---
 
@@ -26,6 +27,13 @@ Ce document centralise les choix architecturaux et stratégiques majeurs pour **
 - **Conséquences :**
     - **Avantages :** Autonomie accrue de l'IA, réduction des erreurs de contexte.
     - **Dette :** Nécessite une maintenance à chaque changement majeur de stack technique.
+
+### ADR 003 : Adoption de KLEM_MASTER_SYSTEM_DIRECTIVE.md et périmètre d'application
+- **Contexte :** `KLEM_MASTER_SYSTEM_DIRECTIVE.md` v2.0 (architecture cible KLEM DataSphere — Java 21, Spring Boot 3.x, OAuth2 Resource Server) coexistait avec des `CLAUDE.md` d'apps clients déjà en production sur des conventions différentes (Java 17, trois modèles d'auth distincts), sans qu'aucun document ne relie les deux.
+- **Décision :** La directive maître fait autorité pour les nouveaux services KLEM DataSphere sous `services/*` (ex. `transit-ops-service`, `referentiel-api-service`). Les apps clients existantes gardent leur `CLAUDE.md` propre ; toute convergence est une migration dédiée et tracée, jamais un remplacement silencieux. Détail complet : `collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md`.
+- **Conséquences :**
+    - **Avantages :** la directive devient effectivement référencée depuis le reste du workspace ; le scaffolding des produits pivots peut démarrer sans casser l'existant.
+    - **Dette :** trois modèles d'authentification distincts restent en place, documentés comme dette explicite plutôt que masqués.
 
 ---
 

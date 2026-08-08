@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/klem_trade_x_test
+    username: test
+    password: test
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Résolution paresseuse (pas d'appel réseau au démarrage) — placeholder pour les tests
+          # de contexte qui ne passent pas par le filtre OAuth2.
+          issuer-uri: https://issuer.test.klem.local

@@ -1006,3 +1006,35 @@
   - `collaboration/doc/user-guide.pdf` — reconverti à l'identique après réorganisation
 - **Description :** Contenu et captures d'écran strictement inchangés, seule la position et la numérotation du module Rapports (et le décalage en cascade des sections suivantes) ont changé.
 - **Tests validés :** Vérification `python-docx` avant/après : ordre de la table des matières et des titres `Heading 1`/`Heading 2` conforme à l'ordre cible ; nombre d'images intégrées identique (24 avant, 24 après) ; relecture de la numérotation en cascade (9→14) section par section.
+
+---
+
+### [2026-08-08] - Conformité additive à KLEM_MASTER_SYSTEM_DIRECTIVE.md : requestId + OpenAPI
+
+- **Statut :** Livré / Opérationnel
+- **Contexte :** Actualisation du workspace selon `KLEM_MASTER_SYSTEM_DIRECTIVE.md` v2.0 (§6 « format d'erreur homogène avec requestId » et « OpenAPI obligatoire »). Voir
+  `klem-projects-repository/collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md`
+  pour le périmètre exact : cette app garde son propre `CLAUDE.md` comme référence de premier
+  niveau (Java 17, JWT par en-tête) — seuls des ajouts sans changement de comportement existant
+  ont été faits ici, pas de migration d'architecture.
+- **Fichiers Modifiés :**
+  - `server-backend/src/main/java/com/klem/cantine/common/GlobalExceptionHandler.java` — ajout
+    d'un champ `requestId` (UUID par requête) au record `ErrorResponse` et à la réponse de
+    validation.
+  - `server-backend/src/main/java/com/klem/cantine/common/SecurityConfig.java` — ajout de
+    `/v3/api-docs/**`, `/swagger-ui/**`, `/swagger-ui.html` à la liste des routes publiques
+    (nécessaire pour que la documentation OpenAPI ajoutée ci-dessous soit effectivement accessible).
+  - `server-backend/pom.xml` — ajout de `springdoc-openapi-starter-webmvc-ui` 2.6.0.
+- **Description :** Aucun comportement existant modifié. Vérifié : les 44 tests unitaires/service
+  existants passent toujours (`./mvnw clean test`) ; démarrage réel avec PostgreSQL (profil
+  `prod`, conteneur Docker jetable) confirmé opérationnel — `/actuator/health` → `UP`,
+  `/v3/api-docs` → 200, `/swagger-ui.html` → 302 (redirection normale springdoc) vers
+  `/swagger-ui/index.html`. Point relevé en cours de vérification (pré-existant, non introduit par
+  ce changement) : `AuthController.login`/`changerMotDePasse` construisent leur propre réponse
+  d'erreur `ApiResponse` en `catch (BadCredentialsException)` sans passer par
+  `GlobalExceptionHandler` — ces deux routes ne portent donc pas encore `requestId`. Non corrigé
+  dans cette passe (changement de flux d'authentification, hors périmètre « additif »), documenté
+  ici pour visibilité.
+- **Explicitement non fait (dette documentée, pas silencieuse) :** bump Java 17→21, migration vers
+  OAuth2 Resource Server, ajout ArchUnit/Testcontainers, refactor de couches — nécessitent un cycle
+  de non-régression dédié sur un système de paiement Mobile Money en production.
