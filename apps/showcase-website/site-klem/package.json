@@ -2,8 +2,8 @@
   "name": "klem-site",
   "private": true,
   "scripts": {
-    "build": "pnpm install --frozen-lockfile && pnpm --dir web/app/themes/klem-theme build",
-    "dev": "pnpm install --frozen-lockfile && pnpm --dir web/app/themes/klem-theme dev"
+    "build": "pnpm install --no-frozen-lockfile && pnpm --dir web/app/themes/klem-theme build",
+    "dev": "pnpm install --no-frozen-lockfile && pnpm --dir web/app/themes/klem-theme dev"
   },
   "devDependencies": {
     "turbo": "^2.9.18"
