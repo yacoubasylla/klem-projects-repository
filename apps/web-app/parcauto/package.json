@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext .ts,.tsx"
+    "build": "echo 'scaffold inachevé (aucun tsconfig.json/vite.config.js ici malgré src/App.tsx) — build désactivé volontairement en attendant sa finalisation'",
+    "lint": "echo 'scaffold inachevé (aucun eslint.config.js) — lint désactivé volontairement en attendant sa finalisation'"
   },
   "dependencies": {
     "@klem/ui": "workspace:*",

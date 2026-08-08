@@ -1,8 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
   "tasks": {
     "build": {
-      "outputs": ["dist/**"]
+      "outputs": ["web/app/themes/klem-theme/dist/**"]
     },
     "dev": {
       "cache": false,
