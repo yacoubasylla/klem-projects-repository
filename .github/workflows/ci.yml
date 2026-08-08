@@ -25,10 +25,10 @@ jobs:
           cache: 'maven' # Change en 'gradle' si ton Spring Boot utilise Gradle au lieu de Maven
 
       # 📦 Configuration de pnpm et Node.js (Pour Turborepo, le Web et le Mobile)
+      # Version résolue depuis "packageManager" dans package.json (source unique) — ne pas
+      # remettre de "version:" ici, pnpm/action-setup@v4 refuse la double spécification.
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
