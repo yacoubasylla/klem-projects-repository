@@ -69,6 +69,17 @@
   ```
   com.cantine.[domaine].[controller|service|repository|entity|dto]
   ```
+- **Format d'erreur & `requestId`** (`common/GlobalExceptionHandler`, ajouté 2026-08-08,
+  conforme à `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §6) : toute réponse d'erreur JSON
+  (`timestamp`, `status`, `error`, `message`, `path`) inclut désormais un champ `requestId`
+  (UUID généré par requête). Usage strictement technique/support : permet de retrouver la
+  trace exacte d'un incident dans les logs serveur sans corrélation approximative par
+  horodatage. **Non exposé à l'écran côté `client-frontend`** — n'apparaît dans aucun message
+  visible par l'utilisateur, donc aucune entrée dans `manuel-utilisateur.md` (pas de
+  changement de comportement utilisateur). Note : les routes `POST /api/v1/auth/login` et
+  `POST /api/v1/auth/changer-mot-de-passe` construisent leur propre réponse d'erreur dans
+  `AuthController` (`catch BadCredentialsException`) sans passer par
+  `GlobalExceptionHandler` — `requestId` absent sur ces deux routes précises.
 
 ### 2.3 Nœud de Données — PostgreSQL 16
 - **Moteur** : PostgreSQL 16 (ou MySQL comme alternative).
