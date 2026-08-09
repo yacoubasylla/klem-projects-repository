@@ -27,7 +27,7 @@
 
 ## 1. Résumé exécutif
 
-Cantine Connect est une plateforme digitale complète de gestion de restauration scolaire, pensée pour le contexte ivoirien : inscription et suivi des élèves, paiement Mobile Money, contrôle d'accès au réfectoire par QR Code, et communication automatisée avec les parents.
+Cantine Connect est une plateforme digitale complète de gestion de restauration scolaire, pensée pour le contexte ivoirien : inscription des élèves, suivi des repas et passages en temps réel (contrôle d'accès au réfectoire par QR Code), paiement Mobile Money, et communication automatisée avec les parents.
 
 **La plateforme est déjà conçue, développée et validée en conditions réelles** (MVP livré v1.0.0-beta, pilote en cours de généralisation sur un premier réseau scolaire — voir `cas_metier.md`). Cette offre ne chiffre donc pas une construction depuis zéro, mais l'**adaptation, l'intégration des paiements/notifications, le déploiement et l'accompagnement** de la plateforme existante pour votre réseau scolaire — ce qui permet un investissement nettement inférieur à un développement sur mesure complet, sans compromis sur le périmètre fonctionnel.
 
