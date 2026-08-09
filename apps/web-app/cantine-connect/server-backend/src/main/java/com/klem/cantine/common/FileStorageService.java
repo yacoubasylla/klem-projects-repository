@@ -57,6 +57,22 @@ public class FileStorageService {
         return url;
     }
 
+    public String enregistrerFondEcran(MultipartFile fichier) {
+        String extension = extensionDe(fichier.getOriginalFilename());
+        String nomFichier = "fond-ecran-" + UUID.randomUUID() + extension;
+        Path dossier = Path.of(uploadsDir, "branding");
+        Path cible = dossier.resolve(nomFichier);
+        try {
+            Files.createDirectories(dossier);
+            fichier.transferTo(cible);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Échec de l'enregistrement de l'image de fond", e);
+        }
+        String url = "/uploads/branding/" + nomFichier;
+        log.info("Image de fond page de connexion enregistrée : {}", url);
+        return url;
+    }
+
     private String extensionDe(String nomOriginal) {
         if (nomOriginal == null) return "";
         int i = nomOriginal.lastIndexOf('.');

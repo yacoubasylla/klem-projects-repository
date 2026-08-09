@@ -11,4 +11,11 @@ export const configService = {
       .post('/configurations/logo', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(r => r.data.data)
   },
+  uploaderFondEcran: (fichier) => {
+    const formData = new FormData()
+    formData.append('fichier', fichier)
+    return apiClient
+      .post('/configurations/fond-ecran-login', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then(r => r.data.data)
+  },
 }

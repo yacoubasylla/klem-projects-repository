@@ -58,4 +58,17 @@ public class ConfigurationService {
         String url = fileStorageService.enregistrerLogo(fichier);
         return modifier("ORGANISATION_LOGO_URL", url);
     }
+
+    @Transactional
+    public ConfigurationDTO uploaderFondEcran(MultipartFile fichier) {
+        if (fichier == null || fichier.isEmpty()) {
+            throw new IllegalArgumentException("Le fichier de l'image de fond est requis.");
+        }
+        String contentType = fichier.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("L'image de fond doit être une image (PNG, JPEG, WebP...).");
+        }
+        String url = fileStorageService.enregistrerFondEcran(fichier);
+        return modifier("FOND_ECRAN_LOGIN", url);
+    }
 }

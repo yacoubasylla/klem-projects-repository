@@ -13,6 +13,8 @@ import { authService } from '../../services/authService'
 import apiClient from '../../services/apiClient'
 import PublicSplitLayout from '../../layouts/PublicSplitLayout'
 
+const BACKEND_ORIGIN = (apiClient.defaults.baseURL || '').replace(/\/api\/v1\/?$/, '')
+
 export default function LoginPage() {
   const { login }  = useAuth()
   const navigate   = useNavigate()
@@ -28,8 +30,9 @@ export default function LoginPage() {
     // Fetch background image config without auth (public config endpoint)
     apiClient.get('/configurations/FOND_ECRAN_LOGIN')
       .then((res) => {
-        const url = res.data?.data?.valeur
-        if (url && url.trim()) setBgImage(url.trim())
+        const url = res.data?.data?.valeur?.trim()
+        if (!url) return
+        setBgImage(/^https?:\/\//.test(url) ? url : `${BACKEND_ORIGIN}${url}`)
       })
       .catch(() => {/* ignore — background is optional */})
   }, [])

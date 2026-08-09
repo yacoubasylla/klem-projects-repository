@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Box, Typography, Paper, Stack, Switch, Alert, CircularProgress,
   Avatar, Chip, TextField, Button, MenuItem,
@@ -25,7 +25,7 @@ import { configService } from '../../services/configService'
 import apiClient from '../../services/apiClient'
 
 const BACKEND_ORIGIN = (apiClient.defaults.baseURL || '').replace(/\/api\/v1\/?$/, '')
-const resoudreUrlLogo = (url) => (url ? (/^https?:\/\//.test(url) ? url : `${BACKEND_ORIGIN}${url}`) : '')
+const resoudreUrlMedia = (url) => (url ? (/^https?:\/\//.test(url) ? url : `${BACKEND_ORIGIN}${url}`) : '')
 
 // Configurations booléennes (toggle Switch)
 const TOGGLE_META = {
@@ -170,6 +170,10 @@ function TextRow({ config, meta, onSave }) {
   const [saving, setSaving] = useState(false)
   const dirty = draft !== config.valeur
 
+  // Resynchronise le brouillon quand la valeur change depuis l'extérieur
+  // (ex. après un import de fichier qui écrit une nouvelle valeur pour cette clé).
+  useEffect(() => { setDraft(config.valeur) }, [config.valeur])
+
   const handleSave = async () => {
     setSaving(true)
     await onSave(config.cle, draft)
@@ -218,7 +222,7 @@ function TextRow({ config, meta, onSave }) {
 function LogoUploadRow({ config, onUploaded }) {
   const [uploading, setUploading] = useState(false)
   const [error, setError]         = useState(null)
-  const url = resoudreUrlLogo(config?.valeur)
+  const url = resoudreUrlMedia(config?.valeur)
 
   const handleFichier = async (e) => {
     const fichier = e.target.files?.[0]
@@ -264,6 +268,66 @@ function LogoUploadRow({ config, onUploaded }) {
               disabled={uploading}
             >
               {url ? 'Remplacer' : 'Importer un logo'}
+              <input type="file" accept="image/*" hidden onChange={handleFichier} />
+            </Button>
+          </Stack>
+          {error && <Alert severity="error" sx={{ mt: 1.5 }}>{error}</Alert>}
+        </Box>
+      </Stack>
+    </Paper>
+  )
+}
+
+function FondEcranUploadRow({ config, onUploaded }) {
+  const [uploading, setUploading] = useState(false)
+  const [error, setError]         = useState(null)
+  const url = resoudreUrlMedia(config?.valeur)
+
+  const handleFichier = async (e) => {
+    const fichier = e.target.files?.[0]
+    e.target.value = ''
+    if (!fichier) return
+    setUploading(true); setError(null)
+    try {
+      const updated = await configService.uploaderFondEcran(fichier)
+      onUploaded(updated)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <Paper variant="outlined" sx={{ p: { xs: 1.5, sm: 2.5 }, mb: 2 }}>
+      <Stack direction="row" spacing={2} alignItems="flex-start">
+        <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25, flexShrink: 0 }}>
+          <ImageIcon />
+        </Avatar>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1} mb={0.5}>
+            <Typography variant="subtitle1" fontWeight={600}>Importer une image depuis cet ordinateur</Typography>
+            <Chip label="Apparence" size="small" variant="outlined" sx={{ height: 18, fontSize: '0.65rem' }} />
+          </Stack>
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, mb: 1.5 }}>
+            Le champ ci-dessous n'accepte qu'un lien web (une adresse commençant par
+            « https:// ») — pas un emplacement de fichier sur ton ordinateur. Pour utiliser une
+            photo qui n'est pas déjà en ligne, importe-la directement ici.
+          </Typography>
+          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+            {url && (
+              <Box
+                component="img" src={url} alt="Fond de connexion actuel"
+                sx={{ height: 64, maxWidth: 220, objectFit: 'cover', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+            )}
+            <Button
+              component="label" variant="outlined" size="small"
+              startIcon={uploading ? <CircularProgress size={16} /> : <UploadIcon />}
+              disabled={uploading}
+            >
+              {url ? 'Remplacer' : 'Importer une image'}
               <input type="file" accept="image/*" hidden onChange={handleFichier} />
             </Button>
           </Stack>
@@ -367,13 +431,16 @@ export default function ConfigurationPage() {
             if (!config) return null
             return (
               <Box key={cle}>
+                {cle === 'FOND_ECRAN_LOGIN' && (
+                  <FondEcranUploadRow config={config} onUploaded={recharger} />
+                )}
                 <TextRow config={config} meta={meta} onSave={handleSaveText} />
                 {config.valeur && (
                   <Paper variant="outlined" sx={{ p: 1.5, mb: 2, display: 'inline-block', maxWidth: '100%' }}>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>Aperçu</Typography>
                     <Box
                       component="img"
-                      src={config.valeur}
+                      src={resoudreUrlMedia(config.valeur)}
                       alt="Fond de connexion"
                       sx={{ height: 120, maxWidth: '100%', borderRadius: 1, objectFit: 'cover', display: 'block' }}
                       onError={(e) => { e.target.style.display = 'none' }}

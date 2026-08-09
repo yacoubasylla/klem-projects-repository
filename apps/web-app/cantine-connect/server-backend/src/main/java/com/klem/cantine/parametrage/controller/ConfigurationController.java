@@ -43,4 +43,10 @@ public class ConfigurationController {
     public ResponseEntity<ApiResponse<ConfigurationDTO>> uploaderLogo(@RequestParam("fichier") MultipartFile fichier) {
         return ResponseEntity.ok(ApiResponse.ok("Logo enregistré", configurationService.uploaderLogo(fichier)));
     }
+
+    @PostMapping("/fond-ecran-login")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<ConfigurationDTO>> uploaderFondEcran(@RequestParam("fichier") MultipartFile fichier) {
+        return ResponseEntity.ok(ApiResponse.ok("Image de fond enregistrée", configurationService.uploaderFondEcran(fichier)));
+    }
 }
