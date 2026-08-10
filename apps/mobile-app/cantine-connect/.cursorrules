@@ -1,0 +1,8 @@
+# Cantine Connect Mobile — Directives TypeScript & UI
+
+- TypeScript strict, jamais `any`.
+- Styling exclusivement via NativeWind (classes Tailwind `className`) — pas de StyleSheet.create ni de style inline sauf impossibilité technique (ex. props non stylables d'une lib tierce).
+- Routing : Expo Router (file-based, dossier `app/`) — pas de react-navigation manuel.
+- Ce module est un second client du `server-backend` Spring Boot existant
+  (`apps/web-app/cantine-connect/server-backend`) — n'invente jamais un
+  endpoint : vérifie son existence réelle dans le backend avant de l'appeler.

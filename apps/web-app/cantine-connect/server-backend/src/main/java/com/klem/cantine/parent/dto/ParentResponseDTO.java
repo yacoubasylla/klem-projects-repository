@@ -3,8 +3,10 @@ package com.klem.cantine.parent.dto;
 import com.klem.cantine.eleve.entity.Eleve;
 import com.klem.cantine.parent.entity.Parent;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public record ParentResponseDTO(
     Long id,
@@ -16,10 +18,12 @@ public record ParentResponseDTO(
     List<EnfantDTO> enfants,
     LocalDateTime createdAt
 ) {
-    public record EnfantDTO(Long id, String matricule, String nom, String prenom, String statutAcces, String classeLibelle) {
+    public record EnfantDTO(Long id, String matricule, String nom, String prenom, String statutAcces,
+                             String classeLibelle, UUID qrCodeToken, BigDecimal solde) {
         public static EnfantDTO from(Eleve e) {
             return new EnfantDTO(e.getId(), e.getMatricule(), e.getNom(), e.getPrenom(), e.getStatutAcces().name(),
-                    e.getClasse() != null ? e.getClasse().getLibelle() : null);
+                    e.getClasse() != null ? e.getClasse().getLibelle() : null,
+                    e.getQrCodeToken(), e.getSolde());
         }
     }
 
