@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
+import { Box, CircularProgress } from '@mui/material'
 import MainLayout from './layouts/MainLayout'
-import HomePage from './pages/HomePage'
+import { useAuth } from './hooks/useAuth'
 import LoginPage from './pages/auth/LoginPage'
 import ChangerMotDePassePage from './pages/auth/ChangerMotDePassePage'
 import DemandeAccesPage from './pages/acces/DemandeAccesPage'
@@ -20,11 +21,29 @@ import ConfigurationPage    from './pages/configuration/ConfigurationPage'
 import PassagesPage         from './pages/passages/PassagesPage'
 import ParentsPage          from './pages/parents/ParentsPage'
 import RapportsPage         from './pages/rapports/RapportsPage'
+import HomePage             from './pages/HomePage'
+
+// Racine : session active -> tableau de bord directement ; aucune session ->
+// page d'accueil publique (vitrine), qui reste le point d'entrée pour un
+// visiteur non connecté.
+function RootRedirect() {
+  const { isAuthenticated, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />
+}
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/demande-acces" element={<DemandeAccesPage />} />
       <Route

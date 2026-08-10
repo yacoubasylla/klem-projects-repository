@@ -22,6 +22,7 @@ import LogoutIcon         from '@mui/icons-material/Logout'
 import MenuIcon           from '@mui/icons-material/Menu'
 import InfoOutlinedIcon  from '@mui/icons-material/InfoOutlined'
 import { useAuth }       from '../hooks/useAuth'
+import { useInactivityLogout } from '../hooks/useInactivityLogout'
 import { useOrganisationBranding } from '../hooks/useConfig'
 import AProposDialog     from '../components/AProposDialog'
 import ThemeSwitcher     from '../components/ThemeSwitcher'
@@ -57,13 +58,15 @@ export default function MainLayout() {
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const [aProposOpen,  setAProposOpen]  = useState(false)
 
+  useInactivityLogout()
+
   // Mot de passe temporaire non encore changé — bloque l'accès au reste de
   // l'app tant que le changement n'est pas fait (voir ChangerMotDePassePage).
   if (user?.doitChangerMotDePasse) {
     return <Navigate to="/changer-mot-de-passe" replace />
   }
 
-  const handleLogout = () => { logout(); navigate('/login', { replace: true }) }
+  const handleLogout = () => { logout(); navigate('/', { replace: true }) }
 
   const handleNav = (path) => {
     navigate(path)

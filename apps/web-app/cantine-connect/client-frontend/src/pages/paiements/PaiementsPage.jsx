@@ -99,7 +99,13 @@ function InitierDialog({ open, onClose, onSubmit, isParent }) {
       setLdEleves(true)
       parentService.getMoi()
         .then((moi) => setOptEleves(
-          (moi?.enfants ?? []).map((e) => ({ id: e.id, label: `${e.prenom} ${e.nom} — ${e.matricule}` }))
+          (moi?.enfants ?? []).map((e) => ({
+            id: e.id,
+            matricule: e.matricule,
+            nomComplet: `${e.prenom} ${e.nom}`,
+            classeLibelle: e.classeLibelle ?? '—',
+            label: `${e.matricule} — ${e.prenom} ${e.nom}`,
+          }))
         ))
         .catch(() => setOptEleves([]))
         .finally(() => setLdEleves(false))
@@ -117,7 +123,10 @@ function InitierDialog({ open, onClose, onSubmit, isParent }) {
         setOptEleves(
           res.content.map((e) => ({
             id: e.id,
-            label: `${e.prenom} ${e.nom} — ${e.classeLibelle ?? e.etablissementNom ?? '?'}`,
+            matricule: e.matricule,
+            nomComplet: `${e.prenom} ${e.nom}`,
+            classeLibelle: e.classeLibelle ?? e.etablissementNom ?? '—',
+            label: `${e.matricule} — ${e.prenom} ${e.nom}`,
           }))
         )
       } catch { setOptEleves([]) }
@@ -188,7 +197,7 @@ function InitierDialog({ open, onClose, onSubmit, isParent }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={isParent ? 'Votre enfant *' : 'Élève *'}
+                    label={isParent ? 'Votre enfant *' : 'Élève (nom ou matricule) *'}
                     size="small"
                     slotProps={{
                       ...params.slotProps,
@@ -205,6 +214,25 @@ function InitierDialog({ open, onClose, onSubmit, isParent }) {
                   />
                 )}
               />
+
+              {form.eleve && (
+                <Paper variant="outlined" sx={{ p: 1.5, bgcolor: 'action.hover' }}>
+                  <Stack direction="row" spacing={3} flexWrap="wrap">
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" display="block">Matricule</Typography>
+                      <Typography variant="body2" fontWeight={600}>{form.eleve.matricule ?? '—'}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" display="block">Nom et prénom</Typography>
+                      <Typography variant="body2" fontWeight={600}>{form.eleve.nomComplet ?? '—'}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" display="block">Classe</Typography>
+                      <Typography variant="body2" fontWeight={600}>{form.eleve.classeLibelle ?? '—'}</Typography>
+                    </Box>
+                  </Stack>
+                </Paper>
+              )}
 
               <FormControl size="small" fullWidth>
                 <InputLabel>Opérateur *</InputLabel>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useLocation } from 'react-router'
 import {
   Box, Typography, TextField, Button, Stack, Alert, CircularProgress,
   InputAdornment, IconButton, Divider,
@@ -18,6 +18,7 @@ const BACKEND_ORIGIN = (apiClient.defaults.baseURL || '').replace(/\/api\/v1\/?$
 export default function LoginPage() {
   const { login }  = useAuth()
   const navigate   = useNavigate()
+  const location   = useLocation()
   const { logoUrl: orgLogoUrl } = useOrganisationBranding()
 
   const [form, setForm]             = useState({ email: '', motDePasse: '' })
@@ -25,6 +26,9 @@ export default function LoginPage() {
   const [loading, setLoading]       = useState(false)
   const [error, setError]           = useState(null)
   const [bgImage, setBgImage]       = useState(null)
+  const [notice]                    = useState(
+    location.state?.reason === 'inactivite' ? 'Vous avez été déconnecté(e) pour inactivité.' : null
+  )
 
   useEffect(() => {
     // Fetch background image config without auth (public config endpoint)
@@ -85,6 +89,12 @@ export default function LoginPage() {
             Connexion à votre espace
           </Typography>
         </Stack>
+
+        {notice && !error && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {notice}
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>

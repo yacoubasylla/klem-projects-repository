@@ -111,25 +111,28 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
             <Box
               sx={{
                 position: 'relative',
-                flex: '1 1 55%',
+                flex: '1 1 60%',
                 minWidth: 0,
+                minHeight: { xs: 320, md: 480 },
+                display: 'flex',
+                alignItems: 'flex-end',
                 borderRadius: 6,
                 p: { xs: 3, md: heroBackgroundImage ? 4 : 2 },
                 overflow: 'hidden',
                 ...(heroBackgroundImage && {
                   backgroundImage: (t) =>
-                    `linear-gradient(160deg, ${alpha(t.palette.background.default, 0.94)} 0%, ${alpha(t.palette.background.default, 0.75)} 55%, ${alpha(t.palette.background.default, 0.55)} 100%), url(${heroBackgroundImage})`,
+                    `linear-gradient(0deg, ${alpha(t.palette.background.default, 0.92)} 0%, ${alpha(t.palette.background.default, 0.65)} 35%, ${alpha(t.palette.background.default, 0.15)} 70%, ${alpha(t.palette.background.default, 0)} 100%), url(${heroBackgroundImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }),
               }}
             >
               {!heroBackgroundImage && <DecorativePattern />}
-              <Box sx={{ position: 'relative' }}>{heroSlot}</Box>
+              <Box sx={{ position: 'relative', width: '100%' }}>{heroSlot}</Box>
             </Box>
 
             {/* Carte d'action */}
-            <Box sx={{ flex: '1 1 45%', display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' } }}>
+            <Box sx={{ flex: '1 1 40%', display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' } }}>
               <Paper
                 elevation={0}
                 sx={{
