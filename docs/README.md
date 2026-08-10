@@ -6,7 +6,7 @@ KLEM vit déjà à deux endroits dans ce dépôt, et la dupliquer ici ne ferait 
 | Où | Quoi |
 |---|---|
 | [`../collaboration/context/CONTEXT.md`](../collaboration/context/CONTEXT.md) | Vision produit, alignement métier, règles globales KLEM |
-| [`../collaboration/doc/architectures.md`](../collaboration/doc/architectures.md) | Topologie des nœuds, sécurité réseau, infrastructure de production |
+| [`../collaboration/doc/architecture.md`](../collaboration/doc/architecture.md) | Topologie des nœuds, sécurité réseau, infrastructure de production |
 | [`../collaboration/doc/specifications.md`](../collaboration/doc/specifications.md) | Schémas PostgreSQL, spécifications d'API |
 | [`../collaboration/doc/workflows.md`](../collaboration/doc/workflows.md) | Diagrammes d'états opérationnels et cycles de vie |
 | [`../collaboration/history/`](../collaboration/history/) | Registre des décisions, historique chronologique, ADR |

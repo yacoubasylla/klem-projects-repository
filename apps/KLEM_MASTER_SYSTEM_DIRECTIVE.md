@@ -145,6 +145,13 @@ FastAPI est autorisé pour ces services spécialisés, mais Spring Boot reste le
 - aucun iframe legacy pour les rapports ;
 - aucun secret dans le bundle client.
 
+**Périmètre :** cette référence Next.js couvre les applications internes/back-office de la
+plateforme KLEM DataSphere (`apps/admin`, `apps/copilot`). Pour la couche présentation des apps
+clients grand public (`apps/web-app/*` + `apps/mobile-app/*` de `klem-projects-repository`) ayant
+un besoin réel de parité native Android/iOS, c'est `SYSTEM_INSTRUCTIONS.md` (Expo SDK 51+/Expo
+Router v3/NativeWind v4, « Universal App First ») qui prévaut — voir
+`klem-projects-repository/collaboration/history/adr/2026-08-10-adoption-system-instructions-universal-app-expo.md`.
+
 ### 3.4 Données
 
 - PostgreSQL : données transactionnelles ;

@@ -9,6 +9,12 @@
 > KLEM Trade-X, KLEM Copilot), c'est `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §7 (OAuth2 Resource
 > Server/JWT, Java 21 LTS) qui prévaut. Contexte et alternatives écartées :
 > `collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md`.
+>
+> **UI mobile/client (Expo/React Native) :** pour la couche présentation des apps clients
+> (`apps/web-app/*` + `apps/mobile-app/*`) ayant un besoin réel de parité native Android/iOS,
+> `SYSTEM_INSTRUCTIONS.md` (Expo SDK 51+/Expo Router v3/NativeWind v4, « Universal App First »)
+> prévaut sur la §2.2 ci-dessous, qui reste la référence pour les frontends web existants tant
+> qu'ils n'ont pas été migrés. Contexte : `collaboration/history/adr/2026-08-10-adoption-system-instructions-universal-app-expo.md`.
 
 ---
 
