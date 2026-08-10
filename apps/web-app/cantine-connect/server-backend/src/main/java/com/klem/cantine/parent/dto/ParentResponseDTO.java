@@ -12,12 +12,14 @@ public record ParentResponseDTO(
     String nom,
     String prenom,
     String email,
+    String telephone,
     List<EnfantDTO> enfants,
     LocalDateTime createdAt
 ) {
-    public record EnfantDTO(Long id, String matricule, String nom, String prenom, String statutAcces) {
+    public record EnfantDTO(Long id, String matricule, String nom, String prenom, String statutAcces, String classeLibelle) {
         public static EnfantDTO from(Eleve e) {
-            return new EnfantDTO(e.getId(), e.getMatricule(), e.getNom(), e.getPrenom(), e.getStatutAcces().name());
+            return new EnfantDTO(e.getId(), e.getMatricule(), e.getNom(), e.getPrenom(), e.getStatutAcces().name(),
+                    e.getClasse() != null ? e.getClasse().getLibelle() : null);
         }
     }
 
@@ -31,6 +33,7 @@ public record ParentResponseDTO(
                 p.getUtilisateur().getNom(),
                 p.getUtilisateur().getPrenom(),
                 p.getUtilisateur().getEmail(),
+                p.getUtilisateur().getTelephone(),
                 enfants,
                 p.getCreatedAt()
         );

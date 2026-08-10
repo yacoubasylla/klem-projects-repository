@@ -279,6 +279,7 @@ export default function ParentsPage() {
               <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>#</TableCell>
               <TableCell>Parent</TableCell>
               <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Email</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Téléphone (WhatsApp)</TableCell>
               <TableCell>Enfants inscrits</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -286,13 +287,13 @@ export default function ParentsPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                   <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
             ) : parents.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 4, color: 'text.secondary' }}>
                   Aucun compte parent enregistré
                 </TableCell>
               </TableRow>
@@ -303,11 +304,14 @@ export default function ParentsPage() {
                   <TableCell>
                     <Typography variant="body2" fontWeight={600}>{p.prenom} {p.nom}</Typography>
                     <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'block', sm: 'none' }, wordBreak: 'break-word' }}>
-                      #{p.id} · {p.email}
+                      #{p.id} · {p.email} · {p.telephone}
                     </Typography>
                   </TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                     <Typography variant="body2" color="text.secondary">{p.email}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                    <Typography variant="body2" color="text.secondary">{p.telephone}</Typography>
                   </TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
