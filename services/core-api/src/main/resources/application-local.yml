@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/klem_core
+    username: core_api
+    password: core_api
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    com.klem.coreapi: DEBUG
