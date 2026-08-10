@@ -28,10 +28,25 @@ KLEM Copilot) — jamais l'inverse.
 > `TenantService.createTenant` → `IdentityService.inviteUser` → `AuthorizationService.assignRole(ADMIN)`
 > — si l'une des trois échoue, aucune n'est persistée. Pas de table propre (pas de
 > {@code workflow_execution}) : l'atomicité vient entièrement de `@Transactional`, suffisant pour un
-> enchaînement synchrone court. 1 endpoint (`POST /api/v1/workflows/tenant-onboarding`). 80 tests
-> dont 73 exécutables et verts dans cet environnement (7 tests Testcontainers non exécutables ici,
-> limite d'environnement — voir `AGENTS.md`). Événements de domaine in-process (pas encore pontés
-> vers Kafka — dépendance non introduite, voir §5). Le point ouvert §4 est tranché par
+> enchaînement synchrone court. 1 endpoint (`POST /api/v1/workflows/tenant-onboarding`).
+>
+> **Pont Kafka livré** (`audit.infrastructure.messaging.PortfolioEventPublisher`) : écoute les six
+> événements de domaine déjà publiés par `tenant`/`identity`/`authorization` — un second abonné
+> indépendant d'`AuditService`, pas un appel entre les deux — et publie un message par événement sur
+> le cluster Kafka partagé du portefeuille (enveloppe `shared_architecture/data_pipeline/specifications_techniques.md`
+> §2.1 : `eventId`, `eventType`, `source`, `aggregateType`, `aggregateId`, `metadata.tenantId`,
+> `schemaVersion`), après commit uniquement (`AFTER_COMMIT`, même garantie transactionnelle que la
+> persistance d'audit). Topics : `tenant.created`, `tenant.status.changed`, `user.invited`,
+> `user.activated`, `role.assigned`, `role.revoked` — noms de topics transverses, sans préfixe
+> produit (§5). `eventId` est désormais généré une seule fois à la source (dans
+> `TenantService`/`IdentityService`/`AuthorizationService`), partagé entre l'entrée d'audit et le
+> message Kafka du même fait réel — corrigé à cette occasion (c'était auparavant régénéré séparément
+> par chaque consommateur, rendant toute corrélation illusoire).
+>
+> 85 tests dont 77 exécutables et verts dans cet environnement (8 tests Testcontainers non
+> exécutables ici — **confirmé être une limite de l'environnement, pas du code** : le client Docker
+> de ce bac à sable expose l'API 1.32, Testcontainers exige au minimum 1.40, message d'erreur
+> explicite à l'appui — voir `AGENTS.md`). Le point ouvert §4 est tranché par
 > [`2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md`](../../collaboration/history/adr/2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md).
 >
 > **Raffinements d'architecture, découverts en implémentant, pas anticipés** — deux exceptions
@@ -232,21 +247,23 @@ côté Keycloak (protocol mapper par royaume) avant la mise en production du dom
 ## Prochaine étape
 
 **Les cinq domaines métier cadrés dans ce document sont tous livrés** — `tenant`, `identity`,
-`referential`, `authorization` (système d'enregistrement uniquement), `audit`, `workflow`. Le
-Sprint des tranches verticales prévu par ce cadrage est complet. Ce qui reste ne relève plus d'un
-nouveau domaine, mais de deux chantiers d'infrastructure externe, tous deux **bloqués faute
-d'environnement réel pour les vérifier** — ne pas les construire contre des mocks seuls :
+`referential`, `authorization` (système d'enregistrement uniquement), `audit`, `workflow` — **et le
+pont Kafka portefeuille l'est aussi désormais**. Le Sprint des tranches verticales prévu par ce
+cadrage est complet. Ce qui reste :
 
 1. **Client Keycloak Admin API** — pour combler la lacune `authorization` (synchronisation des
-   rôles vers les claims JWT). Bloqué tant qu'un royaume Keycloak réel avec des identifiants
-   d'administration n'existe pas.
-2. **Pont Kafka** (`tenant.created`, `user.invited`, `role.assigned`, etc.) — nécessite d'abord la
-   dépendance `spring-kafka`, à confirmer explicitement (voir `AGENTS.md`), puis un cluster Kafka
-   accessible pour vérifier réellement la publication. `AuditService` reste le meilleur point
-   d'ancrage : il écoute déjà tous les événements du portefeuille, il suffirait d'y ajouter la
-   publication Kafka à côté de la persistance actuelle.
+   rôles vers les claims JWT). **Toujours bloqué** faute d'un royaume Keycloak réel avec des
+   identifiants d'administration pour le vérifier — contrairement au pont Kafka, ce chantier ne
+   suffit pas à contourner avec Testcontainers (la configuration realm/client/protocol-mapper est le
+   cœur du problème, pas seulement l'absence d'un broker/base de données éphémère).
+2. **Réconcilier les deux enveloppes d'événement documentées** dans le dépôt —
+   `PortfolioEvent`/`data_pipeline/specifications_techniques.md` §2.1 (retenue ici) vs la forme plus
+   plate de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §10 — avec Fleet-Advance et Hinterland-Track pour
+   confirmer qu'un seul format doit prévaloir sur le cluster partagé (voir Javadoc de
+   `PortfolioEvent`). Pas tranché unilatéralement ici : `core-api` est un nouveau venu sur le
+   cluster, pas l'autorité qui a écrit `data_pipeline/specifications_techniques.md`.
 
-Au-delà de ces deux chantiers, toute extension relève d'une décision produit plutôt que d'un
+Au-delà de ces deux points, toute extension relève d'une décision produit plutôt que d'un
 prolongement mécanique du cadrage (nouveaux endpoints sur un domaine existant, nouveau domaine hors
 périmètre §1/§2 — auquel cas repartir du cadrage en six points comme ce document l'a fait pour
 `core-api` lui-même).

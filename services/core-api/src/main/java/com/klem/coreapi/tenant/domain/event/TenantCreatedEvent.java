@@ -6,11 +6,11 @@ import java.util.UUID;
 /**
  * Événement de domaine, publié via {@code ApplicationEventPublisher} (Spring, in-process).
  * <p>
- * Ne correspond pas encore à une publication Kafka : la dépendance {@code spring-kafka} n'est pas
- * introduite dans ce Sprint (voir {@code AGENTS.md}, « demander confirmation avant... d'introduire
- * une dépendance à un topic Kafka partagé »). Le pont vers l'événement portefeuille {@code tenant.created}
- * (README.md §5) est un consommateur de cet événement Spring à ajouter quand cette dépendance sera
- * approuvée — ne pas le construire par anticipation.
+ * {@code eventId} est généré une seule fois, à la source, pour rester stable entre les deux
+ * consommateurs cross-domaine : {@code AuditService} (persistance) et
+ * {@code PortfolioEventPublisher} (publication Kafka) — sans cette stabilité, l'entrée d'audit et
+ * le message Kafka du même fait réel porteraient deux identifiants différents, rendant illusoire
+ * toute déduplication côté consommateur Kafka en aval.
  */
-public record TenantCreatedEvent(UUID tenantId, String name, Instant occurredAt) {
+public record TenantCreatedEvent(UUID eventId, UUID tenantId, String name, Instant occurredAt) {
 }

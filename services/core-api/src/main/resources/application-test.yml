@@ -13,3 +13,8 @@ spring:
           # Résolution paresseuse (pas d'appel réseau au démarrage) — placeholder pour les tests
           # de contexte qui ne passent pas par le filtre OAuth2.
           issuer-uri: https://issuer.test.klem.local
+  kafka:
+    # Placeholder — les tests qui publient réellement (Testcontainers KafkaContainer) écrasent
+    # cette valeur via @DynamicPropertySource, comme spring.datasource.url. Les slices @WebMvcTest
+    # n'instancient pas KafkaTemplate (bean web-only exclu), cette valeur ne les concerne pas.
+    bootstrap-servers: localhost:9092

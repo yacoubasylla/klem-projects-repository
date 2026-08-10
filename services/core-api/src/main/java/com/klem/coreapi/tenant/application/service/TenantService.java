@@ -33,7 +33,7 @@ public class TenantService {
     public Tenant createTenant(String name, String sector) {
         Tenant tenant = Tenant.create(name, sector);
         tenantRepository.save(tenant);
-        events.publishEvent(new TenantCreatedEvent(tenant.getId(), tenant.getName(), Instant.now()));
+        events.publishEvent(new TenantCreatedEvent(UUID.randomUUID(), tenant.getId(), tenant.getName(), Instant.now()));
         return tenant;
     }
 
@@ -60,7 +60,7 @@ public class TenantService {
         tenant.changeStatus(newStatus);
         tenantRepository.save(tenant);
         if (previousStatus != newStatus) {
-            events.publishEvent(new TenantStatusChangedEvent(tenantId, previousStatus, newStatus, Instant.now()));
+            events.publishEvent(new TenantStatusChangedEvent(UUID.randomUUID(), tenantId, previousStatus, newStatus, Instant.now()));
         }
         return tenant;
     }

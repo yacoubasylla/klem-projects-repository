@@ -7,9 +7,10 @@ toutes implémentées** : `tenant`, `identity` (provisionnement JIT), `referenti
 seed Flyway), `authorization` (système d'enregistrement des rôles — **pas** de synchronisation
 Keycloak, voir README.md « Lacune connue »), `audit` (écoute les événements des autres domaines,
 journal append-only paginé), `workflow` (orchestration transactionnelle `tenant` → `identity` →
-`authorization`, ex. `onboardTenant`). 80 tests, 73 exécutables et verts dans cet environnement.
-**Ce cadrage est terminé** — ce qui reste (client Keycloak Admin API, pont Kafka) est bloqué faute
-d'environnement réel pour le vérifier, voir README.md « Prochaine étape ». Détail exact : voir
+`authorization`, ex. `onboardTenant`). **Le pont Kafka portefeuille est également livré**
+(`audit.infrastructure.messaging.PortfolioEventPublisher`). 85 tests, 77 exécutables et verts dans
+cet environnement. Il ne reste qu'un seul chantier cadré non fait — le client Keycloak Admin API,
+toujours bloqué faute de royaume réel — voir README.md « Prochaine étape ». Détail exact : voir
 l'en-tête de [`README.md`](./README.md) — **ne pas se fier à ce résumé seul**, il peut dater ;
 vérifier `git log`/le contenu réel des packages avant toute hypothèse sur l'état d'un domaine donné.
 
@@ -39,7 +40,9 @@ produit vers `core-api`, jamais l'inverse.
 Le domaine `authorization` est implémenté côté enregistrement (base de données) mais **la
 synchronisation Keycloak elle-même reste à construire** — voir README.md « Lacune connue » et
 « Prochaine étape ». Une attribution de rôle faite aujourd'hui via l'API n'a donc aucun effet réel
-sur les autorisations vérifiées par les autres services tant que ce pont n'existe pas.
+sur les autorisations vérifiées par les autres services tant que ce pont n'existe pas. Ne pas
+confondre avec le pont **Kafka** (livré) — deux chantiers distincts, l'un bloqué par l'absence
+d'environnement Keycloak réel, l'autre non (Testcontainers suffit, comme pour PostgreSQL).
 
 ## Deux services frères déjà scaffoldés — le patron déjà appliqué aux six domaines
 
@@ -81,10 +84,11 @@ d'architecture » pour le détail de chaque exemption et pourquoi.
 ## Commandes
 
 ```bash
-./mvnw clean verify        # build + tests (7 tests Testcontainers/contexte complet nécessitent
+./mvnw clean verify        # build + tests (8 tests Testcontainers/contexte complet nécessitent
                             # Docker : CoreApiApplicationTests, WorkflowServiceIntegrationTest,
+                            # PortfolioEventPublisherIntegrationTest (Kafka + PostgreSQL),
                             # {Tenant,Identity,Referential,Authorization,Audit}JpaRepositoryIntegrationTest)
-./mvnw -Dtest='!*ApplicationTests,!*IntegrationTest' test   # tests rapides sans Docker (73/80)
+./mvnw -Dtest='!*ApplicationTests,!*IntegrationTest' test   # tests rapides sans Docker (77/85)
 ./mvnw spring-boot:run     # démarrage local (profil "local"), port 8083
 curl http://localhost:8083/actuator/health
 ```
@@ -112,11 +116,14 @@ curl http://localhost:8083/actuator/health
 
 ## Demander confirmation avant
 
-- d'introduire `spring-kafka` ou de publier sur un topic Kafka partagé (les événements de domaine
-  actuels restent in-process, pas encore pontés, voir README.md §5) ;
 - d'écrire un client Keycloak Admin API contre des identifiants/royaume simulés — sans royaume réel,
   ce code ne serait pas vérifiable et ne doit pas être présenté comme fonctionnel (voir README.md
-  « Lacune connue (`authorization`) ») ;
+  « Lacune connue (`authorization`) »). Contrairement au pont Kafka (livré, vérifié par
+  Testcontainers), ce chantier-là reste réellement bloqué ;
+- d'ajouter un nouveau topic Kafka ou de modifier l'enveloppe `PortfolioEvent` sans vérifier d'abord
+  laquelle des deux formes documentées (`data_pipeline/specifications_techniques.md` §2.1 vs
+  `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §10) fait réellement foi sur le cluster partagé — voir README.md
+  « Prochaine étape » ;
 - d'introduire une dépendance à un autre service `services/*` ;
 - de modifier le contrat OAuth2/JWT (`SecurityConfig`) hérité de `KLEM_MASTER_SYSTEM_DIRECTIVE.md`.
 

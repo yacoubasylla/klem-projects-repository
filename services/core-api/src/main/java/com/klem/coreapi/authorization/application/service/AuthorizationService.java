@@ -71,7 +71,7 @@ public class AuthorizationService {
 
         RoleAssignment assignment = RoleAssignment.grant(tenantId, userId, roleCode);
         roleAssignmentRepository.save(assignment);
-        events.publishEvent(new RoleAssignedEvent(tenantId, userId, roleCode, Instant.now()));
+        events.publishEvent(new RoleAssignedEvent(UUID.randomUUID(), tenantId, userId, roleCode, Instant.now()));
         return assignment;
     }
 
@@ -82,6 +82,6 @@ public class AuthorizationService {
                 .orElseThrow(() -> new RoleAssignmentNotFoundException(userId, tenantId, roleCode));
 
         roleAssignmentRepository.delete(assignment);
-        events.publishEvent(new RoleRevokedEvent(tenantId, userId, roleCode, Instant.now()));
+        events.publishEvent(new RoleRevokedEvent(UUID.randomUUID(), tenantId, userId, roleCode, Instant.now()));
     }
 }

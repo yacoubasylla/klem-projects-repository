@@ -55,13 +55,15 @@ class AuditServiceTest {
 
     @Test
     void on_tenantCreatedEvent_captures_entry_with_tenant_and_payload() {
+        UUID eventId = UUID.randomUUID();
         UUID tenantId = UUID.randomUUID();
-        auditService.on(new TenantCreatedEvent(tenantId, "Boutiki pilote", Instant.now()));
+        auditService.on(new TenantCreatedEvent(eventId, tenantId, "Boutiki pilote", Instant.now()));
 
         ArgumentCaptor<AuditEntry> captor = ArgumentCaptor.forClass(AuditEntry.class);
         verify(auditEntryRepository).save(captor.capture());
         AuditEntry entry = captor.getValue();
 
+        assertThat(entry.getEventId()).isEqualTo(eventId);
         assertThat(entry.getEventType()).isEqualTo("tenant.created");
         assertThat(entry.getTenantId()).isEqualTo(tenantId);
         assertThat(entry.getAggregateId()).isEqualTo(tenantId);
@@ -71,7 +73,7 @@ class AuditServiceTest {
     @Test
     void on_userActivatedEvent_captures_entry_without_tenant() {
         UUID userId = UUID.randomUUID();
-        auditService.on(new UserActivatedEvent(userId, "kc-sub-1", Instant.now()));
+        auditService.on(new UserActivatedEvent(UUID.randomUUID(), userId, "kc-sub-1", Instant.now()));
 
         ArgumentCaptor<AuditEntry> captor = ArgumentCaptor.forClass(AuditEntry.class);
         verify(auditEntryRepository).save(captor.capture());
@@ -86,7 +88,7 @@ class AuditServiceTest {
     void on_userInvitedEvent_captures_entry_with_tenant() {
         UUID userId = UUID.randomUUID();
         UUID tenantId = UUID.randomUUID();
-        auditService.on(new UserInvitedEvent(userId, tenantId, "invite@klem.tech", Instant.now()));
+        auditService.on(new UserInvitedEvent(UUID.randomUUID(), userId, tenantId, "invite@klem.tech", Instant.now()));
 
         ArgumentCaptor<AuditEntry> captor = ArgumentCaptor.forClass(AuditEntry.class);
         verify(auditEntryRepository).save(captor.capture());
@@ -98,7 +100,7 @@ class AuditServiceTest {
     void on_roleAssignedEvent_captures_entry_with_role_in_payload() {
         UUID tenantId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        auditService.on(new RoleAssignedEvent(tenantId, userId, RoleCode.CHAUFFEUR, Instant.now()));
+        auditService.on(new RoleAssignedEvent(UUID.randomUUID(), tenantId, userId, RoleCode.CHAUFFEUR, Instant.now()));
 
         ArgumentCaptor<AuditEntry> captor = ArgumentCaptor.forClass(AuditEntry.class);
         verify(auditEntryRepository).save(captor.capture());

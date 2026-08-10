@@ -5,6 +5,7 @@ import com.klem.coreapi.tenant.domain.model.TenantStatus;
 import java.time.Instant;
 import java.util.UUID;
 
-/** Même remarque que {@link TenantCreatedEvent} — événement Spring in-process, pas encore Kafka. */
-public record TenantStatusChangedEvent(UUID tenantId, TenantStatus previousStatus, TenantStatus newStatus, Instant occurredAt) {
+/** Même remarque que {@link TenantCreatedEvent} sur {@code eventId}. */
+public record TenantStatusChangedEvent(UUID eventId, UUID tenantId, TenantStatus previousStatus,
+                                        TenantStatus newStatus, Instant occurredAt) {
 }

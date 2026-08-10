@@ -16,12 +16,9 @@ import java.util.UUID;
  * Une entrée du journal d'audit — append-only, jamais modifiée ni supprimée après écriture
  * (`shared_architecture/data_pipeline/specifications_techniques.md` §2.1, table {@code event_log}).
  * <p>
- * {@code eventId} est généré ici, au moment de la capture — les événements de domaine in-process
- * actuels ({@code TenantCreatedEvent}, etc.) n'en portent pas (contrairement à l'enveloppe Kafka du
- * portefeuille, qui elle exige un {@code eventId} porté par le producteur). Pas de déduplication
- * réelle possible tant que cette tranche reste in-process : un même événement Spring n'est livré
- * qu'une fois à chaque listener, la contrainte d'unicité sur {@code eventId} est donc une
- * préparation au pont Kafka futur, pas une protection active aujourd'hui.
+ * {@code eventId} est celui généré à la source par le domaine émetteur (ex.
+ * {@code TenantCreatedEvent.eventId()}), pas régénéré ici — c'est ce qui permet de corréler cette
+ * entrée avec le message Kafka du même fait réel publié par {@code PortfolioEventPublisher}.
  */
 @Entity
 @Table(name = "audit_entry")
@@ -66,8 +63,9 @@ public class AuditEntry {
         this.payload = payload;
     }
 
-    public static AuditEntry capture(String eventType, UUID tenantId, UUID aggregateId, Instant occurredAt, String payloadJson) {
-        return new AuditEntry(UUID.randomUUID(), UUID.randomUUID(), eventType, tenantId, aggregateId,
+    public static AuditEntry capture(UUID eventId, String eventType, UUID tenantId, UUID aggregateId,
+                                      Instant occurredAt, String payloadJson) {
+        return new AuditEntry(UUID.randomUUID(), eventId, eventType, tenantId, aggregateId,
                 occurredAt, Instant.now(), payloadJson);
     }
 }

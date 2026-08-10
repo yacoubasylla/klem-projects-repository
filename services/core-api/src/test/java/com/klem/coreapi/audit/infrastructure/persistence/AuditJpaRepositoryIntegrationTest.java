@@ -42,9 +42,9 @@ class AuditJpaRepositoryIntegrationTest {
     @Test
     void save_and_query_by_tenant_paginated() {
         UUID tenantId = UUID.randomUUID();
-        auditEntryRepository.save(AuditEntry.capture("tenant.created", tenantId, tenantId, Instant.now(), "{}"));
-        auditEntryRepository.save(AuditEntry.capture("tenant.status.changed", tenantId, tenantId, Instant.now(), "{}"));
-        auditEntryRepository.save(AuditEntry.capture("user.activated", null, UUID.randomUUID(), Instant.now(), "{}"));
+        auditEntryRepository.save(AuditEntry.capture(UUID.randomUUID(), "tenant.created", tenantId, tenantId, Instant.now(), "{}"));
+        auditEntryRepository.save(AuditEntry.capture(UUID.randomUUID(), "tenant.status.changed", tenantId, tenantId, Instant.now(), "{}"));
+        auditEntryRepository.save(AuditEntry.capture(UUID.randomUUID(), "user.activated", null, UUID.randomUUID(), Instant.now(), "{}"));
 
         Page<AuditEntry> page = auditEntryRepository.findByTenantId(tenantId, PageRequest.of(0, 10));
 

@@ -45,44 +45,44 @@ public class AuditService {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(TenantCreatedEvent event) {
-        capture("tenant.created", event.tenantId(), event.tenantId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "tenant.created", event.tenantId(), event.tenantId(), event.occurredAt(), event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(TenantStatusChangedEvent event) {
-        capture("tenant.status.changed", event.tenantId(), event.tenantId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "tenant.status.changed", event.tenantId(), event.tenantId(), event.occurredAt(), event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(UserInvitedEvent event) {
-        capture("user.invited", event.tenantId(), event.userId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "user.invited", event.tenantId(), event.userId(), event.occurredAt(), event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(UserActivatedEvent event) {
         // Pas de tenantId : l'activation d'un compte n'est pas scopée à un tenant particulier
         // (un utilisateur peut appartenir à plusieurs tenants) — voir README.md identity §1.
-        capture("user.activated", null, event.userId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "user.activated", null, event.userId(), event.occurredAt(), event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(RoleAssignedEvent event) {
-        capture("role.assigned", event.tenantId(), event.userId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "role.assigned", event.tenantId(), event.userId(), event.occurredAt(), event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(RoleRevokedEvent event) {
-        capture("role.revoked", event.tenantId(), event.userId(), event.occurredAt().toEpochMilli(), event);
+        capture(event.eventId(), "role.revoked", event.tenantId(), event.userId(), event.occurredAt(), event);
     }
 
     public Page<AuditEntry> getEntries(UUID tenantId, Pageable pageable) {
         return auditEntryRepository.findByTenantId(tenantId, pageable);
     }
 
-    private void capture(String eventType, UUID tenantId, UUID aggregateId, long occurredAtEpochMilli, Object event) {
+    private void capture(UUID eventId, String eventType, UUID tenantId, UUID aggregateId,
+                          java.time.Instant occurredAt, Object event) {
         String payload = serialize(event);
-        AuditEntry entry = AuditEntry.capture(
-                eventType, tenantId, aggregateId, java.time.Instant.ofEpochMilli(occurredAtEpochMilli), payload);
+        AuditEntry entry = AuditEntry.capture(eventId, eventType, tenantId, aggregateId, occurredAt, payload);
         auditEntryRepository.save(entry);
     }
 

@@ -53,7 +53,7 @@ class AuditControllerWebMvcTest {
 
     @Test
     void list_with_platform_admin_role_returns_paginated_entries() throws Exception {
-        AuditEntry entry = AuditEntry.capture("tenant.created", tenantId, tenantId, Instant.now(), "{\"name\":\"X\"}");
+        AuditEntry entry = AuditEntry.capture(UUID.randomUUID(), "tenant.created", tenantId, tenantId, Instant.now(), "{\"name\":\"X\"}");
         when(auditService.getEntries(any(), any()))
                 .thenReturn(new PageImpl<>(List.of(entry), PageRequest.of(0, 20), 1));
 

@@ -68,7 +68,7 @@ public class IdentityService {
             user.linkToKeycloakSubject(keycloakSubject);
             userRepository.save(user);
             activatePendingMemberships(user.getId());
-            events.publishEvent(new UserActivatedEvent(user.getId(), keycloakSubject, Instant.now()));
+            events.publishEvent(new UserActivatedEvent(UUID.randomUUID(), user.getId(), keycloakSubject, Instant.now()));
             return user;
         }
 
@@ -105,7 +105,7 @@ public class IdentityService {
 
         TenantMembership membership = TenantMembership.invite(user.getId(), tenantId);
         membershipRepository.save(membership);
-        events.publishEvent(new UserInvitedEvent(user.getId(), tenantId, email, Instant.now()));
+        events.publishEvent(new UserInvitedEvent(UUID.randomUUID(), user.getId(), tenantId, email, Instant.now()));
         return membership;
     }
 
