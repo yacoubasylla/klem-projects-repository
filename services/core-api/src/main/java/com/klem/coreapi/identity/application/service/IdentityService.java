@@ -90,6 +90,16 @@ public class IdentityService {
         return membershipRepository.findByUserIdAndTenantId(userId, tenantId).isPresent();
     }
 
+    /**
+     * Même motif — utilisé par {@code authorization.infrastructure.messaging.KeycloakRoleSyncPublisher}
+     * pour savoir s'il existe un compte Keycloak à synchroniser. Vide si l'utilisateur est encore
+     * {@code INVITED} (jamais authentifié) — la synchronisation doit alors être différée jusqu'à
+     * {@code UserActivatedEvent}, pas échouer silencieusement ni inventer un identifiant.
+     */
+    public Optional<String> getKeycloakSubject(UUID userId) {
+        return userRepository.findById(userId).map(User::getKeycloakSubject);
+    }
+
     @Transactional
     public TenantMembership inviteUser(UUID tenantId, String email, String displayName) {
         if (!tenantService.tenantExists(tenantId)) {

@@ -43,14 +43,14 @@ KLEM Copilot) — jamais l'inverse.
 > message Kafka du même fait réel — corrigé à cette occasion (c'était auparavant régénéré séparément
 > par chaque consommateur, rendant toute corrélation illusoire).
 >
-> 85 tests dont 77 exécutables et verts dans cet environnement (8 tests Testcontainers non
+> 94 tests dont 85 exécutables et verts dans cet environnement (9 tests Testcontainers non
 > exécutables ici — **confirmé être une limite de l'environnement, pas du code** : le client Docker
 > de ce bac à sable expose l'API 1.32, Testcontainers exige au minimum 1.40, message d'erreur
 > explicite à l'appui — voir `AGENTS.md`). Le point ouvert §4 est tranché par
 > [`2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md`](../../collaboration/history/adr/2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md).
 >
-> **Raffinements d'architecture, découverts en implémentant, pas anticipés** — deux exceptions
-> ciblées à la règle « chaque domaine reste isolé des autres », toutes deux vérifiées par
+> **Raffinements d'architecture, découverts en implémentant, pas anticipés** — trois exceptions
+> ciblées à la règle « chaque domaine reste isolé des autres », toutes vérifiées par
 > `PackageBoundaryRulesTest` (14 règles) : (1) `audit` peut dépendre spécifiquement des classes
 > `domain.event` des autres domaines (ex. `TenantCreatedEvent`) — un événement de domaine est le
 > point d'intégration public intentionnel d'un domaine, contrairement à
@@ -58,7 +58,9 @@ KLEM Copilot) — jamais l'inverse.
 > qu'orchestrateur privilégié (rien ne dépend de lui, règle 6), peut en plus lire `domain.model` de
 > `tenant`/`identity`/`authorization` (ex. `Tenant.getId()`) — nécessaire pour enchaîner les étapes,
 > à la différence du motif `tenantExists`/`isMemberOfTenant` (peer-à-peer, resté restreint à un
-> booléen).
+> booléen) ; (3) `authorization` peut, en plus de son accès peer-à-peer déjà établi à `identity`,
+> écouter `identity.domain.event.UserActivatedEvent` — `KeycloakRoleSyncPublisher` en a besoin pour
+> rattraper la synchronisation des rôles d'un utilisateur qui vient de lier son compte Keycloak.
 >
 > **Lacune connue (`authorization`)** : ce Sprint implémente uniquement le système d'enregistrement
 > des rôles en base côté `core-api`. Il n'y a **aucune synchronisation vers Keycloak** — tant
@@ -69,6 +71,26 @@ KLEM Copilot) — jamais l'inverse.
 > `PLATFORM_ADMIN`, le rôle qui protège les endpoints d'administration de `core-api` lui-même, reste
 > volontairement hors de ce système (accordé hors bande côté Keycloak) pour éviter un problème
 > d'amorçage — voir Javadoc de `RoleCode`.
+>
+> **Client Keycloak Admin API livré** (`authorization.infrastructure.messaging`) :
+> `KeycloakRoleSyncClient` (jeton client-credentials mis en cache, résolution de rôle par nom,
+> attribution/retrait via `/admin/realms/{realm}/users/{userId}/role-mappings/realm`) et
+> `KeycloakRoleSyncPublisher`, un abonné à `RoleAssignedEvent`/`RoleRevokedEvent` **et**
+> `UserActivatedEvent` (identity) — nécessaire car un rôle peut être attribué à un utilisateur
+> encore `INVITED`, sans compte Keycloak : la synchronisation est alors différée et rattrapée en
+> bloc à l'activation. `RoleAssignmentRepository.findByUserId` et
+> `IdentityService.getKeycloakSubject` ajoutés à cette occasion.
+>
+> **Important, à ne pas manquer avant toute mise en production** : `KeycloakRoleSyncClientTest` et
+> `KeycloakRoleSyncPublisherTest` (mock/Mockito) sont vérifiés et verts. `KeycloakRoleSyncIntegrationTest`,
+> lui, **n'a jamais pu être exécuté dans aucun environnement disponible** — contrairement aux autres
+> tests Testcontainers du dépôt (patron identique déjà éprouvé sur PostgreSQL/Kafka, où seul le
+> *démarrage du conteneur* échoue ici), celui-ci construit lui-même, par code, un royaume Keycloak de
+> test complet (rôles, client de provisionnement, permission `manage-users`) à partir de la
+> documentation de l'API Admin — jamais vérifié empiriquement. Et même une fois exécuté avec succès,
+> ce royaume reste une **hypothèse** de la structure du futur royaume KLEM DataSphere réel, pas une
+> copie de sa configuration effective (qui n'existe pas encore) — voir Javadoc de la classe. À
+> exécuter et corriger en priorité dès qu'un Docker à jour (API ≥ 1.40) est disponible.
 >
 > **Lacune connue** (documentée dans la Javadoc de `IdentityService.getOrProvisionCurrentUser`) :
 > si l'e-mail d'un JWT correspond à un utilisateur déjà lié à un autre `sub` Keycloak (changement
@@ -247,23 +269,30 @@ côté Keycloak (protocol mapper par royaume) avant la mise en production du dom
 ## Prochaine étape
 
 **Les cinq domaines métier cadrés dans ce document sont tous livrés** — `tenant`, `identity`,
-`referential`, `authorization` (système d'enregistrement uniquement), `audit`, `workflow` — **et le
-pont Kafka portefeuille l'est aussi désormais**. Le Sprint des tranches verticales prévu par ce
-cadrage est complet. Ce qui reste :
+`referential`, `authorization` (y compris la synchronisation Keycloak), `audit`, `workflow` — **et
+le pont Kafka portefeuille l'est aussi désormais**. Le Sprint des tranches verticales prévu par ce
+cadrage est complet, code compris pour les deux chantiers d'infrastructure externe. Ce qui reste :
 
-1. **Client Keycloak Admin API** — pour combler la lacune `authorization` (synchronisation des
-   rôles vers les claims JWT). **Toujours bloqué** faute d'un royaume Keycloak réel avec des
-   identifiants d'administration pour le vérifier — contrairement au pont Kafka, ce chantier ne
-   suffit pas à contourner avec Testcontainers (la configuration realm/client/protocol-mapper est le
-   cœur du problème, pas seulement l'absence d'un broker/base de données éphémère).
-2. **Réconcilier les deux enveloppes d'événement documentées** dans le dépôt —
+1. **Exécuter `KeycloakRoleSyncIntegrationTest` pour de vrai** — priorité n°1 avant toute confiance
+   dans `KeycloakRoleSyncClient`/`KeycloakRoleSyncPublisher`. Ce test n'a jamais tourné dans aucun
+   environnement disponible pendant son écriture (voir en-tête, encadré) ; le bootstrap Keycloak
+   qu'il exécute est écrit à partir de la documentation de l'API Admin, pas vérifié. Dès qu'un Docker
+   à jour (API ≥ 1.40) est disponible, le lancer et corriger ce qui casse avant de considérer ce
+   client comme fiable.
+2. **Confronter le royaume de test hypothétique au vrai royaume KLEM DataSphere**, une fois qu'il
+   existe — rôles réalistes au-delà des 7 valeurs de `RoleCode`, permissions du client de
+   provisionnement au plus juste (`manage-users` est plus large que nécessaire, voir Javadoc de
+   `KeycloakRoleSyncIntegrationTest`), royaume d'administration éventuellement distinct du royaume
+   applicatif (hypothèse simplificatrice actuelle : un seul royaume, voir Javadoc de
+   `KeycloakAdminProperties`).
+3. **Réconcilier les deux enveloppes d'événement documentées** dans le dépôt —
    `PortfolioEvent`/`data_pipeline/specifications_techniques.md` §2.1 (retenue ici) vs la forme plus
    plate de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §10 — avec Fleet-Advance et Hinterland-Track pour
    confirmer qu'un seul format doit prévaloir sur le cluster partagé (voir Javadoc de
    `PortfolioEvent`). Pas tranché unilatéralement ici : `core-api` est un nouveau venu sur le
    cluster, pas l'autorité qui a écrit `data_pipeline/specifications_techniques.md`.
 
-Au-delà de ces deux points, toute extension relève d'une décision produit plutôt que d'un
+Au-delà de ces trois points, toute extension relève d'une décision produit plutôt que d'un
 prolongement mécanique du cadrage (nouveaux endpoints sur un domaine existant, nouveau domaine hors
 périmètre §1/§2 — auquel cas repartir du cadrage en six points comme ce document l'a fait pour
 `core-api` lui-même).

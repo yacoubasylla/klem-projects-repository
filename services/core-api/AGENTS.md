@@ -3,16 +3,20 @@
 ## Statut réel de ce dossier — à vérifier avant toute action
 
 Sprint 0 scaffoldé (câblage sécurité/OpenAPI/Actuator) **et les six tranches verticales cadrées
-toutes implémentées** : `tenant`, `identity` (provisionnement JIT), `referential` (lecture seule,
-seed Flyway), `authorization` (système d'enregistrement des rôles — **pas** de synchronisation
-Keycloak, voir README.md « Lacune connue »), `audit` (écoute les événements des autres domaines,
-journal append-only paginé), `workflow` (orchestration transactionnelle `tenant` → `identity` →
-`authorization`, ex. `onboardTenant`). **Le pont Kafka portefeuille est également livré**
-(`audit.infrastructure.messaging.PortfolioEventPublisher`). 85 tests, 77 exécutables et verts dans
-cet environnement. Il ne reste qu'un seul chantier cadré non fait — le client Keycloak Admin API,
-toujours bloqué faute de royaume réel — voir README.md « Prochaine étape ». Détail exact : voir
-l'en-tête de [`README.md`](./README.md) — **ne pas se fier à ce résumé seul**, il peut dater ;
-vérifier `git log`/le contenu réel des packages avant toute hypothèse sur l'état d'un domaine donné.
+toutes implémentées, y compris les deux ponts d'infrastructure externe (Kafka, Keycloak Admin
+API)** : `tenant`, `identity` (provisionnement JIT), `referential` (lecture seule, seed Flyway),
+`authorization` (enregistrement des rôles **+** synchronisation Keycloak via
+`KeycloakRoleSyncClient`/`KeycloakRoleSyncPublisher`), `audit` (écoute les événements des autres
+domaines, journal append-only paginé **+** pont Kafka portefeuille via `PortfolioEventPublisher`),
+`workflow` (orchestration transactionnelle `tenant` → `identity` → `authorization`, ex.
+`onboardTenant`). 94 tests, 85 exécutables et verts dans cet environnement.
+**Réserve importante à ne pas ignorer** : `KeycloakRoleSyncIntegrationTest` (le seul test de ce
+dépôt jamais exécuté dans aucun environnement pendant son écriture — bootstrap Keycloak écrit à
+partir de la documentation, pas vérifié empiriquement) est prioritaire à faire tourner dès qu'un
+Docker à jour est disponible, avant de faire confiance à ce client — voir README.md en-tête et
+« Prochaine étape ». Détail exact : voir l'en-tête de [`README.md`](./README.md) — **ne pas se fier
+à ce résumé seul**, il peut dater ; vérifier `git log`/le contenu réel des packages avant toute
+hypothèse sur l'état d'un domaine donné.
 
 ## Périmètre — tranché, voir `README.md` pour le détail complet
 
@@ -37,12 +41,11 @@ produit vers `core-api`, jamais l'inverse.
 **Point ouvert tranché** : les autres services DataSphere lisent les permissions via les claims JWT
 (synchronisées vers Keycloak), pas d'appel synchrone à `core-api` — voir ADR
 [`2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md`](../../collaboration/history/adr/2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md).
-Le domaine `authorization` est implémenté côté enregistrement (base de données) mais **la
-synchronisation Keycloak elle-même reste à construire** — voir README.md « Lacune connue » et
-« Prochaine étape ». Une attribution de rôle faite aujourd'hui via l'API n'a donc aucun effet réel
-sur les autorisations vérifiées par les autres services tant que ce pont n'existe pas. Ne pas
-confondre avec le pont **Kafka** (livré) — deux chantiers distincts, l'un bloqué par l'absence
-d'environnement Keycloak réel, l'autre non (Testcontainers suffit, comme pour PostgreSQL).
+Le code qui alimente ces claims (`KeycloakRoleSyncClient`/`KeycloakRoleSyncPublisher`) est écrit et
+compile, mais **son test contre un vrai Keycloak n'a jamais tourné** (voir README.md en-tête) — ne
+pas le déclarer fiable avant cette exécution. Le royaume de test qu'il construit est en outre une
+hypothèse écrite pour ce Sprint, pas une copie du royaume KLEM DataSphere réel, qui n'existe pas
+encore.
 
 ## Deux services frères déjà scaffoldés — le patron déjà appliqué aux six domaines
 
@@ -52,19 +55,20 @@ six domaines de `core-api` (`tenant`, `identity`, `referential`, `authorization`
 `workflow`) suivent déjà ce patron — le reproduire à l'identique pour toute extension future plutôt
 que d'en inventer un nouveau.
 
-Trois motifs de dépendance inter-domaine établis pendant ce Sprint :
+Motifs de dépendance inter-domaine établis pendant ce Sprint :
 - **Lecture peer-à-peer** (`authorization → tenant`, `authorization → identity`) : passer par une
   méthode étroite de `application.service` (ex. `TenantService.tenantExists`,
-  `IdentityService.isMemberOfTenant`), jamais par `domain.model`/`domain.exception` de l'autre
-  domaine.
-- **Écoute passive** (`audit ← domain.event` de `tenant`/`identity`/`authorization`) : dépendre
-  uniquement de la classe d'événement elle-même via `@TransactionalEventListener`, jamais de
-  `domain.model`/`application`/`infrastructure`.
+  `IdentityService.isMemberOfTenant`, `IdentityService.getKeycloakSubject`), jamais par
+  `domain.model`/`domain.exception` de l'autre domaine.
+- **Écoute passive** (`audit ← domain.event` de `tenant`/`identity`/`authorization` ;
+  `authorization ← identity.domain.event.UserActivatedEvent`, pour
+  `KeycloakRoleSyncPublisher`) : dépendre uniquement de la classe d'événement elle-même via
+  `@TransactionalEventListener`, jamais de `domain.model`/`application`/`infrastructure`.
 - **Orchestration privilégiée** (`workflow → tenant`/`identity`/`authorization`) : seul `workflow`
   peut lire directement `domain.model` d'un autre domaine (ex. `Tenant.getId()`), parce que rien ne
   dépend de `workflow` en retour (pas de couplage circulaire possible).
 
-Les trois sont vérifiés par `PackageBoundaryRulesTest` (14 règles) — voir README.md « Raffinements
+Tous vérifiés par `PackageBoundaryRulesTest` (14 règles) — voir README.md « Raffinements
 d'architecture » pour le détail de chaque exemption et pourquoi.
 
 - **Stack** : Java 21 LTS, Spring Boot 3.3.x (voir `<parent>` de leur `pom.xml`), Spring Security
@@ -84,11 +88,13 @@ d'architecture » pour le détail de chaque exemption et pourquoi.
 ## Commandes
 
 ```bash
-./mvnw clean verify        # build + tests (8 tests Testcontainers/contexte complet nécessitent
+./mvnw clean verify        # build + tests (9 tests Testcontainers/contexte complet nécessitent
                             # Docker : CoreApiApplicationTests, WorkflowServiceIntegrationTest,
                             # PortfolioEventPublisherIntegrationTest (Kafka + PostgreSQL),
+                            # KeycloakRoleSyncIntegrationTest (Keycloak + PostgreSQL — jamais exécuté,
+                            # voir README.md, priorité n°1 avant confiance dans ce client),
                             # {Tenant,Identity,Referential,Authorization,Audit}JpaRepositoryIntegrationTest)
-./mvnw -Dtest='!*ApplicationTests,!*IntegrationTest' test   # tests rapides sans Docker (77/85)
+./mvnw -Dtest='!*ApplicationTests,!*IntegrationTest' test   # tests rapides sans Docker (85/94)
 ./mvnw spring-boot:run     # démarrage local (profil "local"), port 8083
 curl http://localhost:8083/actuator/health
 ```
@@ -116,10 +122,12 @@ curl http://localhost:8083/actuator/health
 
 ## Demander confirmation avant
 
-- d'écrire un client Keycloak Admin API contre des identifiants/royaume simulés — sans royaume réel,
-  ce code ne serait pas vérifiable et ne doit pas être présenté comme fonctionnel (voir README.md
-  « Lacune connue (`authorization`) »). Contrairement au pont Kafka (livré, vérifié par
-  Testcontainers), ce chantier-là reste réellement bloqué ;
+- de déployer ou de présenter `KeycloakRoleSyncClient`/`KeycloakRoleSyncPublisher` comme fiables
+  avant que `KeycloakRoleSyncIntegrationTest` ait réellement tourné avec succès — ce code n'a jamais
+  été exercé contre un vrai Keycloak (voir README.md en-tête) ;
+- de modifier les permissions du client `core-api-provisioning` ou la structure du royaume de test
+  sans relire la Javadoc de `KeycloakRoleSyncIntegrationTest` — c'est une hypothèse écrite, pas une
+  spécification confirmée ;
 - d'ajouter un nouveau topic Kafka ou de modifier l'enveloppe `PortfolioEvent` sans vérifier d'abord
   laquelle des deux formes documentées (`data_pipeline/specifications_techniques.md` §2.1 vs
   `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §10) fait réellement foi sur le cluster partagé — voir README.md

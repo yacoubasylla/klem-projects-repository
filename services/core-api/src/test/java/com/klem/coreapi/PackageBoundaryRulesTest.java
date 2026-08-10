@@ -124,10 +124,17 @@ class PackageBoundaryRulesTest {
                     .should().onlyBeAccessed().byAnyPackage("..coreapi.tenant..", "..coreapi.audit..")
                     .allowEmptyShould(true);
 
+    // authorization ajouté ici en implémentant le client Keycloak Admin API :
+    // KeycloakRoleSyncPublisher (authorization.infrastructure.messaging) doit écouter
+    // UserActivatedEvent pour rattraper la synchronisation des rôles d'un utilisateur qui vient de
+    // s'activer (un rôle peut être attribué avant que l'utilisateur n'ait jamais de compte
+    // Keycloak — voir Javadoc de IdentityService#getKeycloakSubject). Toujours pas de dépendance
+    // dans l'autre sens : identity ne connaît ni authorization ni Keycloak (règle 4).
     @ArchTest
-    static final ArchRule identity_events_are_only_accessed_from_identity_or_audit =
+    static final ArchRule identity_events_are_only_accessed_from_identity_audit_or_authorization =
             classes().that().resideInAPackage("..coreapi.identity.domain.event..")
-                    .should().onlyBeAccessed().byAnyPackage("..coreapi.identity..", "..coreapi.audit..")
+                    .should().onlyBeAccessed().byAnyPackage(
+                            "..coreapi.identity..", "..coreapi.audit..", "..coreapi.authorization..")
                     .allowEmptyShould(true);
 
     @ArchTest

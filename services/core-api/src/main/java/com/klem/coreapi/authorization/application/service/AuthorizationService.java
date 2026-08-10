@@ -24,12 +24,10 @@ import java.util.UUID;
  * étroites respectives (README.md §4 : {@code identity ← authorization}, {@code tenant ← authorization}),
  * jamais de leurs {@code domain.model}/{@code domain.exception} (voir {@code PackageBoundaryRulesTest}).
  * <p>
- * <b>Périmètre de cette tranche</b> : système d'enregistrement des rôles côté {@code core-api}
- * uniquement. La synchronisation vers Keycloak (claim {@code roles} du JWT, voir l'ADR
- * {@code 2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md}) n'est **pas**
- * implémentée ici — elle suppose un royaume Keycloak réel et des identifiants d'administration,
- * invérifiables dans ce Sprint. Tant qu'elle n'existe pas, une attribution faite ici n'a aucun
- * effet sur les autorisations réellement appliquées par les autres services DataSphere.
+ * La synchronisation vers Keycloak (claim {@code roles} du JWT, voir l'ADR
+ * {@code 2026-08-10-autorisation-core-api-claims-jwt-vs-appel-synchrone.md}) vit dans
+ * {@code authorization.infrastructure.messaging.KeycloakRoleSyncPublisher}, un abonné aux
+ * événements publiés ici — {@code AuthorizationService} lui-même ne connaît pas Keycloak.
  */
 @Service
 @Transactional(readOnly = true)
@@ -55,6 +53,16 @@ public class AuthorizationService {
             throw new UnknownTenantException(tenantId);
         }
         return roleAssignmentRepository.findByTenantId(tenantId);
+    }
+
+    /**
+     * Toutes les attributions d'un utilisateur, tous tenants confondus — utilisé par
+     * {@code KeycloakRoleSyncPublisher} pour la synchronisation de rattrapage au moment où un
+     * utilisateur {@code INVITED} s'active (lie son premier {@code sub} Keycloak) : ses rôles ont
+     * pu être attribués avant qu'il n'ait de compte Keycloak à synchroniser.
+     */
+    public List<RoleAssignment> getRoleAssignmentsForUser(UUID userId) {
+        return roleAssignmentRepository.findByUserId(userId);
     }
 
     @Transactional

@@ -15,5 +15,7 @@ public interface RoleAssignmentRepository {
 
     List<RoleAssignment> findByTenantId(UUID tenantId);
 
+    List<RoleAssignment> findByUserId(UUID userId);
+
     Optional<RoleAssignment> findByTenantIdAndUserIdAndRoleCode(UUID tenantId, UUID userId, RoleCode roleCode);
 }

@@ -27,6 +27,13 @@ spring:
         # (shared_architecture/data_pipeline/specifications_techniques.md §2.1, enveloppe portable).
         spring.json.add.type.headers: false
 
+keycloak:
+  admin:
+    base-url: ${KEYCLOAK_ADMIN_BASE_URL:http://localhost:8080}
+    realm: ${KEYCLOAK_ADMIN_REALM:klem-datasphere}
+    client-id: ${KEYCLOAK_ADMIN_CLIENT_ID:core-api-provisioning}
+    client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET:}
+
 server:
   port: ${SERVER_PORT:8083}
 

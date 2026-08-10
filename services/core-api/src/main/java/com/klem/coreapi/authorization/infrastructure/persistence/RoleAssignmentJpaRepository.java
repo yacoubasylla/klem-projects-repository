@@ -15,5 +15,8 @@ interface RoleAssignmentJpaRepository extends JpaRepository<RoleAssignment, UUID
     List<RoleAssignment> findByTenantId(UUID tenantId);
 
     @Override
+    List<RoleAssignment> findByUserId(UUID userId);
+
+    @Override
     Optional<RoleAssignment> findByTenantIdAndUserIdAndRoleCode(UUID tenantId, UUID userId, RoleCode roleCode);
 }

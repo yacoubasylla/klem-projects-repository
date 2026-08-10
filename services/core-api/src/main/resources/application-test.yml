@@ -18,3 +18,12 @@ spring:
     # cette valeur via @DynamicPropertySource, comme spring.datasource.url. Les slices @WebMvcTest
     # n'instancient pas KafkaTemplate (bean web-only exclu), cette valeur ne les concerne pas.
     bootstrap-servers: localhost:9092
+
+keycloak:
+  admin:
+    # Même remarque que Kafka ci-dessus : KeycloakRoleSyncIntegrationTest écrase base-url/realm/
+    # client-id/client-secret via @DynamicPropertySource contre un vrai conteneur Keycloak.
+    base-url: http://localhost:8080
+    realm: klem-datasphere-test
+    client-id: core-api-provisioning
+    client-secret: test-secret
