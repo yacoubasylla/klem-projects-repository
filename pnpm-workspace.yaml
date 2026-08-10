@@ -11,5 +11,25 @@ packages:
 # 3.3.x que postcss@8 attend — un saut vers nanoid 6.x (majeur) casserait potentiellement
 # l'API consommée par postcss. Miroir de "pnpm.overrides" dans package.json (pnpm >=10 lit ce
 # fichier, pnpm 9.x encore épinglé ici lit package.json — les deux sont tenus synchronisés).
+# Dependabot #52/#53/#44/#55 : postcss < 8.5.23, tiré transitivement par le toolchain
+# Expo/Metro (@expo/metro-config). Plancher en gamme 8.x, même ligne majeure que l'existant.
+#
+# Dependabot #31 : send < 0.19.0, tiré transitivement par @expo/cli. 0.19.2 coexistait déjà
+# ailleurs dans l'arbre pour d'autres consommateurs — simple convergence vers la version déjà
+# validée, pas une nouvelle ligne.
+#
+# Dependabot #38/#40/#41/#42/#43 : @xmldom/xmldom < 0.8.13, tiré transitivement par
+# @expo/plist (0.7.13). 0.9.10 coexistait déjà ailleurs dans l'arbre — plancher pour converger
+# vers une version déjà présente plutôt qu'une pin isolée.
+#
+# tar (6.2.1, Dependabot #32-37/#47-51/#54, cacache/@expo/cli), uuid (7.0.3/8.3.2,
+# Dependabot #45, xcode), turbo-stream (2.4.1, Dependabot #46, @remix-run/server-runtime) et
+# fast-xml-parser (4.5.7, Dependabot #39, @react-native-community/cli-platform-*) ne sont PAS
+# corrigés ici : leurs versions patchées impliquent un saut de version majeure (tar 6→7,
+# uuid 7/8→11, turbo-stream 2→3, fast-xml-parser 4→5) — laissés ouverts volontairement plutôt
+# que forcés à l'aveugle. image-size (Dependabot #56/#57) n'a aucun correctif publié à ce jour.
 overrides:
   nanoid: '3.3.17'
+  postcss: '>=8.5.23'
+  send: '>=0.19.2'
+  '@xmldom/xmldom': '>=0.8.13'
