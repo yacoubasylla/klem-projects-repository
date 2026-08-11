@@ -1,0 +1,41 @@
+name: klem_ref_bot — ingestion planifiée (Trade-X)
+
+# Job dédié planifié, distinct du pipeline CI principal (push/PR) — conforme à
+# specifications_techniques.md §5 : "un job dédié planifié (scheduled) pour l'exécution
+# périodique du script d'ingestion klem_ref_bot hors du service applicatif principal".
+#
+# Statut réel : ce workflow exécute la suite de tests (garde-fou de non-régression) mais
+# n'invoque PAS encore une ingestion réelle — le téléchargement depuis une source institutionnelle
+# (GUCE CI, Douanes CI...) n'est pas implémenté dans ce Sprint (voir
+# services/referentiel-api-service/ingestion/klem_ref_bot/README.md, "Statut réel de ce Sprint").
+# À étendre avec une étape d'invocation réelle de `python -m klem_ref_bot.main` une fois cette
+# capacité ajoutée — ne pas la simuler ici en attendant.
+on:
+  schedule:
+    - cron: "0 4 * * *" # quotidien, 04:00 UTC — cadence provisoire, à ajuster selon la fraîcheur
+                         # réelle des sources institutionnelles une fois l'ingestion réelle en place
+  workflow_dispatch: {} # déclenchement manuel pour vérification ponctuelle
+
+jobs:
+  klem-ref-bot-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/referentiel-api-service/ingestion/klem_ref_bot
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: services/referentiel-api-service/ingestion/klem_ref_bot/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: PYTHONPATH=. pytest tests/ -v
