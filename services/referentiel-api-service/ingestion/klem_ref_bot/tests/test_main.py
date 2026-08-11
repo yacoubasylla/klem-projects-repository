@@ -115,3 +115,57 @@ def test_run_douanes_ci_page_skips_db_entirely_when_all_entries_already_known():
     assert exit_code == 0
     mock_propose_many.assert_not_called()
     mock_save.assert_not_called()  # rien de nouveau -> pas de raison de réécrire le checkpoint
+
+
+def test_run_commerce_ci_fetches_extracts_and_proposes_all_entries():
+    fake_pages = {"lois": "<html>lois</html>", "arretes": "<html>arretes</html>", "decrets": "<html>decrets</html>"}
+    fake_proposals = [
+        ExtractedTexteReglementaire(titre="A", type="décret", date_publication=None,
+                                     reference="2022-601", domaine=None, url_source="https://commerce.gouv.ci/a.pdf"),
+    ]
+
+    with patch("klem_ref_bot.main.fetcher.fetch_commerce_gouv_ci_categories", return_value=fake_pages) as mock_fetch, \
+         patch("klem_ref_bot.main.commerce_gouv_ci_extractor.extract_from_listing_html",
+               side_effect=[fake_proposals, [], []]) as mock_extract, \
+         patch("klem_ref_bot.main.checkpoint.load_seen_urls", return_value=set()), \
+         patch("klem_ref_bot.main.checkpoint.save_seen_urls") as mock_save, \
+         patch("klem_ref_bot.main.propose_many", return_value=["id-1"]) as mock_propose_many:
+        exit_code = main.run(["--commerce-ci"])
+
+    assert exit_code == 0
+    mock_fetch.assert_called_once()
+    assert mock_extract.call_count == 3
+    mock_propose_many.assert_called_once_with(fake_proposals)
+    mock_save.assert_called_once()  # checkpoint mis à jour uniquement après un insert réussi
+
+
+def test_run_commerce_ci_fails_cleanly_when_no_entries_found():
+    fake_pages = {"lois": "<html></html>", "arretes": "<html></html>", "decrets": "<html></html>"}
+
+    with patch("klem_ref_bot.main.fetcher.fetch_commerce_gouv_ci_categories", return_value=fake_pages), \
+         patch("klem_ref_bot.main.commerce_gouv_ci_extractor.extract_from_listing_html", return_value=[]), \
+         patch("klem_ref_bot.main.propose_many") as mock_propose_many:
+        exit_code = main.run(["--commerce-ci"])
+
+    assert exit_code == 1
+    mock_propose_many.assert_not_called()
+
+
+def test_run_commerce_ci_skips_db_entirely_when_all_entries_already_known():
+    fake_pages = {"lois": "<html></html>", "arretes": "<html></html>", "decrets": "<html>decrets</html>"}
+    fake_proposals = [
+        ExtractedTexteReglementaire(titre="A", type="décret", date_publication=None,
+                                     reference="2022-601", domaine=None, url_source="https://commerce.gouv.ci/a.pdf"),
+    ]
+
+    with patch("klem_ref_bot.main.fetcher.fetch_commerce_gouv_ci_categories", return_value=fake_pages), \
+         patch("klem_ref_bot.main.commerce_gouv_ci_extractor.extract_from_listing_html",
+               side_effect=[[], [], fake_proposals]), \
+         patch("klem_ref_bot.main.checkpoint.load_seen_urls", return_value={"https://commerce.gouv.ci/a.pdf"}), \
+         patch("klem_ref_bot.main.checkpoint.save_seen_urls") as mock_save, \
+         patch("klem_ref_bot.main.propose_many") as mock_propose_many:
+        exit_code = main.run(["--commerce-ci"])
+
+    assert exit_code == 0
+    mock_propose_many.assert_not_called()
+    mock_save.assert_not_called()  # rien de nouveau -> pas de raison de réécrire le checkpoint

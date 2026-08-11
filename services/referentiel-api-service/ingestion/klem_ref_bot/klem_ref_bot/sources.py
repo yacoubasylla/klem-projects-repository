@@ -20,7 +20,8 @@ from urllib.parse import urlparse
 ALLOWED_SOURCE_DOMAINS = frozenset(
     {
         "douanes.ci",  # Douanes CI — vérifié public, structure réelle capturée (voir fixtures/)
-        "commerce.gouv.ci",  # Portail économie & commerce extérieur ivoirien — pas encore vérifié
+        "commerce.gouv.ci",  # Vérifié public le 2026-08-11 (robots.txt ouvert), structure réelle
+                              # capturée (extraction/commerce_gouv_ci_extractor.py, fixtures/)
         "bceao.int",  # BCEAO — taux de change, référentiels normatifs (source normative, pas table)
     }
 )

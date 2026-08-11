@@ -1,16 +1,20 @@
 """Point d'entrée CLI de klem_ref_bot — orchestre extraction puis proposition en base.
 
-Deux modes :
+Trois modes :
 - Document local unique (--pdf/--html) : ne fait aucune requête réseau, extraction heuristique
   générique (extraction/heuristics.py).
 - Liste réelle douanes.ci (--douanes-ci-page) : fait une vraie requête HTTP (klem_ref_bot.fetcher)
   contre https://www.douanes.ci/info/textes-reglementaires, extraction structurée dédiée
   (extraction/douanes_ci_extractor.py), propose TOUTES les fiches trouvées sur la page.
+- Textes juridiques commerce.gouv.ci (--commerce-ci) : fait de vraies requêtes HTTP contre les 3
+  catégories Lois/Arrêtés/Décrets (extraction/commerce_gouv_ci_extractor.py), déduplication par URL
+  de document (checkpoint.filter_new_by_url — pas par numero, cf. checkpoint.py).
 
 Usage :
     python -m klem_ref_bot.main --pdf chemin/vers/texte.pdf --url-source https://douanes.ci/x
     python -m klem_ref_bot.main --html chemin/vers/page.html --url-source https://commerce.gouv.ci/x
     python -m klem_ref_bot.main --douanes-ci-page 0
+    python -m klem_ref_bot.main --commerce-ci
 """
 
 import argparse
@@ -21,7 +25,7 @@ import psycopg2
 
 from klem_ref_bot import checkpoint, db, fetcher
 from klem_ref_bot.config import MissingConfigError, load_database_config
-from klem_ref_bot.extraction import douanes_ci_extractor, html_extractor, pdf_extractor
+from klem_ref_bot.extraction import commerce_gouv_ci_extractor, douanes_ci_extractor, html_extractor, pdf_extractor
 from klem_ref_bot.models import ExtractedTexteReglementaire
 from klem_ref_bot.sources import is_allowed_source
 
@@ -34,6 +38,10 @@ def build_parser() -> argparse.ArgumentParser:
     source.add_argument("--douanes-ci-page", metavar="N", type=int,
                          help="Récupère et propose toutes les fiches de la page N (0-indexée) de "
                               "https://www.douanes.ci/info/textes-reglementaires — vraie requête réseau")
+    source.add_argument("--commerce-ci", action="store_true",
+                         help="Récupère et propose les Lois/Arrêtés/Décrets de "
+                              "https://www.commerce.gouv.ci/publications/sous-categorie/{34,35,36} "
+                              "— vraies requêtes réseau")
     parser.add_argument("--url-source", metavar="URL", default=None,
                          help="URL d'origine du document (--pdf/--html uniquement), pour traçabilité "
                               "— validée contre la liste blanche des sources autorisées si fournie")
@@ -72,6 +80,8 @@ def run(argv: Optional[list] = None) -> int:
 
     if args.douanes_ci_page is not None:
         return _run_douanes_ci_page(args.douanes_ci_page)
+    if args.commerce_ci:
+        return _run_commerce_ci()
     return _run_single_document(args)
 
 
@@ -130,6 +140,51 @@ def _run_douanes_ci_page(page: int) -> int:
     checkpoint.save(checkpoint.update(state, proposals))
 
     print(f"{len(entry_ids)} proposition(s) créée(s) en statut PROPOSEE (page {page}, "
+          f"{already_known} déjà connue(s) ignorée(s)) :")
+    for entry_id, proposal in zip(entry_ids, proposals):
+        print(f"  {entry_id} — {proposal.type} {proposal.reference} : {proposal.titre!r}")
+    return 0
+
+
+def _run_commerce_ci() -> int:
+    try:
+        pages_html = fetcher.fetch_commerce_gouv_ci_categories()
+    except fetcher.UnauthorizedSourceError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+
+    all_proposals = []
+    for category, html in pages_html.items():
+        category_proposals = commerce_gouv_ci_extractor.extract_from_listing_html(html)
+        all_proposals.extend(category_proposals)
+        print(f"  {category} : {len(category_proposals)} fiche(s) trouvée(s)")
+
+    if not all_proposals:
+        print("Aucune fiche trouvée sur les 3 catégories — structure de page inattendue ?", file=sys.stderr)
+        return 1
+
+    seen_urls = checkpoint.load_seen_urls()
+    proposals = checkpoint.filter_new_by_url(all_proposals, seen_urls)
+    already_known = len(all_proposals) - len(proposals)
+
+    if not proposals:
+        print(f"{already_known} fiche(s) déjà proposée(s) lors d'un run précédent (checkpoint) — "
+              f"rien de nouveau sur les 3 catégories.")
+        return 0
+
+    try:
+        entry_ids = propose_many(proposals)
+    except MissingConfigError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    except psycopg2.OperationalError as error:
+        print(f"Connexion à la base impossible : {error}", file=sys.stderr)
+        return 1
+
+    # Le checkpoint n'est mis à jour QU'APRÈS un insert réussi — même contrat que _run_douanes_ci_page.
+    checkpoint.save_seen_urls(checkpoint.update_seen_urls(seen_urls, proposals))
+
+    print(f"{len(entry_ids)} proposition(s) créée(s) en statut PROPOSEE (commerce.gouv.ci, "
           f"{already_known} déjà connue(s) ignorée(s)) :")
     for entry_id, proposal in zip(entry_ids, proposals):
         print(f"  {entry_id} — {proposal.type} {proposal.reference} : {proposal.titre!r}")

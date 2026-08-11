@@ -47,10 +47,12 @@ jobs:
       - name: Run tests
         run: PYTHONPATH=. pytest tests/ -v
 
-      - name: Restaurer le checkpoint de déduplication
+      - name: Restaurer les checkpoints de déduplication
         uses: actions/cache/restore@v4
         with:
-          path: services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+          path: |
+            services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+            services/referentiel-api-service/ingestion/klem_ref_bot/.state/commerce_gouv_ci_checkpoint.json
           key: klem-ref-bot-checkpoint-${{ github.run_id }}
           restore-keys: |
             klem-ref-bot-checkpoint-
@@ -61,9 +63,17 @@ jobs:
           KLEM_REF_BOT_DATABASE_URL: ${{ secrets.KLEM_REF_BOT_DATABASE_URL }}
         run: python -m klem_ref_bot.main --douanes-ci-page 0
 
-      - name: Sauvegarder le checkpoint de déduplication
+      - name: Ingestion réelle — commerce.gouv.ci (Lois/Arrêtés/Décrets)
+        if: ${{ secrets.KLEM_REF_BOT_DATABASE_URL != '' }}
+        env:
+          KLEM_REF_BOT_DATABASE_URL: ${{ secrets.KLEM_REF_BOT_DATABASE_URL }}
+        run: python -m klem_ref_bot.main --commerce-ci
+
+      - name: Sauvegarder les checkpoints de déduplication
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+          path: |
+            services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+            services/referentiel-api-service/ingestion/klem_ref_bot/.state/commerce_gouv_ci_checkpoint.json
           key: klem-ref-bot-checkpoint-${{ github.run_id }}

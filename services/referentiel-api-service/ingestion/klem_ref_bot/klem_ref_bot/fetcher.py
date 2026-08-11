@@ -6,10 +6,15 @@ auditer en un seul endroit.
 
 Respecte le `Crawl-delay: 10` du robots.txt de douanes.ci (vérifié réellement le 2026-08-11,
 Drupal 7) — voir `DEFAULT_CRAWL_DELAY_SECONDS`.
+
+commerce.gouv.ci : `robots.txt` vérifié réellement le 2026-08-11 (`User-agent: *` / `Disallow:`
+vide) — aucun `Crawl-delay` imposé par la source. `COMMERCE_GOUV_CI_CRAWL_DELAY_SECONDS` est donc
+une politesse auto-imposée (pas une contrainte du site) entre les 3 requêtes de catégorie d'un même
+run, pour rester un client HTTP raisonnable.
 """
 
 import time
-from typing import Optional
+from typing import Dict, Optional
 
 import requests
 
@@ -20,6 +25,17 @@ DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_CRAWL_DELAY_SECONDS = 10  # robots.txt douanes.ci — ne pas descendre sous cette valeur
 
 DOUANES_CI_TEXTES_REGLEMENTAIRES_BASE_URL = "https://www.douanes.ci/info/textes-reglementaires"
+
+# Sous-catégories "Textes juridiques" réellement observées sur commerce.gouv.ci le 2026-08-11 —
+# menu Publications > Textes juridiques. Chaque page liste tous ses documents en un seul GET
+# (pagination client-side, voir extraction/commerce_gouv_ci_extractor.py).
+COMMERCE_GOUV_CI_PUBLICATIONS_BASE_URL = "https://www.commerce.gouv.ci/publications/sous-categorie"
+COMMERCE_GOUV_CI_CATEGORIES = {
+    "lois": 34,
+    "arretes": 35,
+    "decrets": 36,
+}
+COMMERCE_GOUV_CI_CRAWL_DELAY_SECONDS = 3  # politesse auto-imposée, pas un robots.txt Crawl-delay
 
 
 class UnauthorizedSourceError(RuntimeError):
@@ -54,5 +70,30 @@ def fetch_douanes_ci_listing_pages(*, max_pages: int, crawl_delay_seconds: int =
     for page in range(max_pages):
         pages_html.append(fetch_douanes_ci_listing_page(page))
         if page < max_pages - 1:
+            time.sleep(crawl_delay_seconds)
+    return pages_html
+
+
+def fetch_commerce_gouv_ci_category_page(category: str) -> str:
+    """`category` : une clé de `COMMERCE_GOUV_CI_CATEGORIES` ("lois", "arretes", "decrets")."""
+    if category not in COMMERCE_GOUV_CI_CATEGORIES:
+        raise ValueError(
+            f"Catégorie commerce.gouv.ci inconnue : {category!r} — attendu l'une de "
+            f"{sorted(COMMERCE_GOUV_CI_CATEGORIES)}"
+        )
+    category_id = COMMERCE_GOUV_CI_CATEGORIES[category]
+    return fetch_url(f"{COMMERCE_GOUV_CI_PUBLICATIONS_BASE_URL}/{category_id}")
+
+
+def fetch_commerce_gouv_ci_categories(
+    *, crawl_delay_seconds: int = COMMERCE_GOUV_CI_CRAWL_DELAY_SECONDS
+) -> Dict[str, str]:
+    """Récupère les 3 catégories "Textes juridiques" (lois, arrêtés, décrets), en respectant un
+    délai de politesse entre requêtes. À n'utiliser que pour un vrai run planifié."""
+    categories = sorted(COMMERCE_GOUV_CI_CATEGORIES)
+    pages_html = {}
+    for index, category in enumerate(categories):
+        pages_html[category] = fetch_commerce_gouv_ci_category_page(category)
+        if index < len(categories) - 1:
             time.sleep(crawl_delay_seconds)
     return pages_html
