@@ -17,7 +17,7 @@
     <artifactId>referentiel-api-service</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>referentiel-api-service</name>
-    <description>KLEM Trade-X — service unique MVP (référentiel TEC, codes SH, procédures douanières), conforme à KLEM_MASTER_SYSTEM_DIRECTIVE.md</description>
+    <description>KLEM Trade-X — service unique MVP (référentiel réglementaire et procédural : textes réglementaires, procédures, opérations commerciales, documents requis), conforme à KLEM_MASTER_SYSTEM_DIRECTIVE.md</description>
 
     <properties>
         <java.version>21</java.version>
