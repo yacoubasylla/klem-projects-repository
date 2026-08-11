@@ -51,16 +51,20 @@ autre que `PROPOSEE`, jamais de publication directe. Validation humaine systéma
   modèle de sécurité. **Vérifié réellement** : deux exécutions successives de
   `--douanes-ci-page 0` contre un vrai PostgreSQL — la première insère 10 fiches et écrit le
   checkpoint, la seconde (après le délai `robots.txt` de 10s) les reconnaît toutes comme déjà
-  connues et n'insère rien (`0 nouvelle proposition, 10 déjà connue(s)`). Reste ouvert : la
-  persistance du fichier de checkpoint **entre deux runs planifiés** sur un runner GitHub Actions
-  éphémère (voir commentaire dans le workflow CI) — pas un problème pour une exécution manuelle
-  locale, où le fichier reste sur disque entre deux invocations.
+  connues et n'insère rien (`0 nouvelle proposition, 10 déjà connue(s)`).
+- **Exécution planifiée réelle — câblée, secret manquant.** Le workflow
+  (`.github/workflows/klem-ref-bot-scheduled.yml`) invoque désormais
+  `python -m klem_ref_bot.main --douanes-ci-page 0` pour de vrai, avec persistance du fichier de
+  checkpoint entre deux runs via `actions/cache` (clé unique par run + `restore-keys` en préfixe,
+  puisqu'un cache GitHub Actions est immuable une fois écrit — pas de clé fixe réutilisable). L'étape
+  d'ingestion est gardée par `if: secrets.KLEM_REF_BOT_DATABASE_URL != ''` : no-op silencieux tant
+  que ce secret n'est pas configuré sur ce dépôt GitHub (seul point encore manquant, hors de portée
+  de ce dépôt de code — voir "Provisionnement" ci-dessous).
 - **Pas fait** : extraction pour `ProcedureMetier`/`DocumentRequis`/`OperationCommerce` — seule
   `TexteReglementaire` correspond au triplet "titre, type, date, domaine" décrit par la spec §4.2 ;
   les trois autres entités auraient besoin d'heuristiques ou d'un extracteur dédié par source une
-  fois une source pertinente identifiée. Exécution planifiée réelle (le workflow CI est câblé mais
-  nécessite des secrets DB non fournis ici, et la persistance du checkpoint entre deux runs
-  planifiés sur un runner éphémère — voir déduplication ci-dessus et le workflow CI).
+  fois une source pertinente identifiée. Structure réelle de `commerce.gouv.ci` (dans la liste
+  blanche mais jamais vérifiée, contrairement à `douanes.ci`).
 
 ## Installation
 

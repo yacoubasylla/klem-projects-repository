@@ -4,19 +4,19 @@ name: klem_ref_bot — ingestion planifiée (Trade-X)
 # specifications_techniques.md §5 : "un job dédié planifié (scheduled) pour l'exécution
 # périodique du script d'ingestion klem_ref_bot hors du service applicatif principal".
 #
-# Statut réel : ce workflow exécute la suite de tests (garde-fou de non-régression) mais
-# n'invoque PAS encore `python -m klem_ref_bot.main --douanes-ci-page N` en conditions réelles,
-# bien que cette capacité existe et soit vérifiée manuellement de bout en bout — y compris la
-# déduplication par checkpoint local (klem_ref_bot/checkpoint.py, voir README) qui empêche de
-# reproposer les mêmes documents à chaque run. Deux points d'infrastructure restent avant
-# d'activer une étape d'ingestion réelle ici :
-#   1. KLEM_REF_BOT_DATABASE_URL (secret DB du compte klem_ref_bot_ingestion) n'est pas configuré
-#      sur ce dépôt GitHub.
-#   2. Le fichier de checkpoint (KLEM_REF_BOT_CHECKPOINT_PATH) doit persister entre deux exécutions
-#      planifiées — un runner GitHub Actions est éphémère. Utiliser actions/cache/restore +
-#      actions/cache/save autour de ce fichier une fois l'étape d'ingestion ajoutée ; ne pas
-#      ajouter ces étapes de cache avant l'étape d'ingestion elle-même (cache non exploité sinon).
-# Ne pas ajouter l'étape d'ingestion réelle avant que ces deux points soient résolus.
+# Statut réel : l'étape d'ingestion réelle (`--douanes-ci-page 0`) est câblée ci-dessous, avec
+# persistance du checkpoint de déduplication (klem_ref_bot/checkpoint.py, voir README) entre deux
+# exécutions planifiées via actions/cache — un runner GitHub Actions est éphémère, le fichier ne
+# survivrait pas d'un run à l'autre sans ça. Motif de la clé de cache unique par run
+# (`klem-ref-bot-checkpoint-${{ github.run_id }}`) plutôt qu'une clé fixe : `actions/cache/save`
+# refuse de réécrire une clé déjà existante (cache immuable côté GitHub) — la clé unique par run
+# contourne ça, `restore-keys` (préfixe) retrouve la sauvegarde la plus récente au run suivant.
+#
+# Reste un point d'infrastructure hors de portée de ce dépôt : KLEM_REF_BOT_DATABASE_URL (secret
+# DB du compte klem_ref_bot_ingestion à droits restreints, voir README "Provisionnement") doit être
+# configuré dans les secrets GitHub Actions de ce dépôt — l'étape d'ingestion est gardée par
+# `if: secrets.KLEM_REF_BOT_DATABASE_URL != ''` pour rester un no-op silencieux tant qu'il ne l'est
+# pas, plutôt que d'échouer bruyamment à chaque run planifié.
 on:
   schedule:
     - cron: "0 4 * * *" # quotidien, 04:00 UTC — cadence provisoire, à ajuster selon la fraîcheur
@@ -46,3 +46,24 @@ jobs:
 
       - name: Run tests
         run: PYTHONPATH=. pytest tests/ -v
+
+      - name: Restaurer le checkpoint de déduplication
+        uses: actions/cache/restore@v4
+        with:
+          path: services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+          key: klem-ref-bot-checkpoint-${{ github.run_id }}
+          restore-keys: |
+            klem-ref-bot-checkpoint-
+
+      - name: Ingestion réelle — douanes.ci (page 0)
+        if: ${{ secrets.KLEM_REF_BOT_DATABASE_URL != '' }}
+        env:
+          KLEM_REF_BOT_DATABASE_URL: ${{ secrets.KLEM_REF_BOT_DATABASE_URL }}
+        run: python -m klem_ref_bot.main --douanes-ci-page 0
+
+      - name: Sauvegarder le checkpoint de déduplication
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: services/referentiel-api-service/ingestion/klem_ref_bot/.state/douanes_ci_checkpoint.json
+          key: klem-ref-bot-checkpoint-${{ github.run_id }}
