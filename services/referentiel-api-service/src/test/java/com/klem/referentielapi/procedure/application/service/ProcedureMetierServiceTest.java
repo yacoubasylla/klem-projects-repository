@@ -7,12 +7,14 @@ import com.klem.referentielapi.procedure.domain.exception.TexteAlreadyAssociated
 import com.klem.referentielapi.procedure.domain.exception.UnknownTexteReglementaireException;
 import com.klem.referentielapi.procedure.domain.model.ProcedureMetier;
 import com.klem.referentielapi.procedure.domain.model.ProcedureTexte;
+import com.klem.referentielapi.shared.domain.event.EntryProposedEvent;
 import com.klem.referentielapi.textereglementaire.application.service.TexteReglementaireService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,20 +40,24 @@ class ProcedureMetierServiceTest {
     @Mock
     private TexteReglementaireService texteReglementaireService;
 
+    @Mock
+    private ApplicationEventPublisher events;
+
     private ProcedureMetierService service;
 
     @BeforeEach
     void setUp() {
-        service = new ProcedureMetierService(procedureRepository, procedureTexteRepository, texteReglementaireService);
+        service = new ProcedureMetierService(procedureRepository, procedureTexteRepository, texteReglementaireService, events);
         lenient().when(procedureRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
-    void propose_creates_procedure_in_proposee_status() {
+    void propose_creates_procedure_in_proposee_status_and_publishes_event() {
         ProcedureMetier procedure = service.propose("Import véhicules", "IMP-VEH", "desc", "Douanes, GUCE", "editeur-1");
 
         assertThat(procedure.getNom()).isEqualTo("Import véhicules");
         assertThat(procedure.getCode()).isEqualTo("IMP-VEH");
+        verify(events).publishEvent(any(EntryProposedEvent.class));
     }
 
     @Test

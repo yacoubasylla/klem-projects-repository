@@ -12,11 +12,15 @@ import com.klem.referentielapi.operationcommerce.domain.model.OperationDocument;
 import com.klem.referentielapi.operationcommerce.domain.model.TypeOperation;
 import com.klem.referentielapi.procedure.application.service.ProcedureMetierService;
 import com.klem.referentielapi.shared.domain.StatutPublication;
+import com.klem.referentielapi.shared.domain.event.EntryProposedEvent;
+import com.klem.referentielapi.shared.domain.event.EntryStatusChangedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,19 +34,24 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class OperationCommerceService {
 
+    private static final String AGGREGATE_TYPE = "operationCommerce";
+
     private final OperationCommerceRepository operationRepository;
     private final OperationDocumentRepository operationDocumentRepository;
     private final ProcedureMetierService procedureMetierService;
     private final DocumentRequisService documentRequisService;
+    private final ApplicationEventPublisher events;
 
     public OperationCommerceService(OperationCommerceRepository operationRepository,
                                      OperationDocumentRepository operationDocumentRepository,
                                      ProcedureMetierService procedureMetierService,
-                                     DocumentRequisService documentRequisService) {
+                                     DocumentRequisService documentRequisService,
+                                     ApplicationEventPublisher events) {
         this.operationRepository = operationRepository;
         this.operationDocumentRepository = operationDocumentRepository;
         this.procedureMetierService = procedureMetierService;
         this.documentRequisService = documentRequisService;
+        this.events = events;
     }
 
     @Transactional
@@ -50,7 +59,10 @@ public class OperationCommerceService {
         if (!procedureMetierService.exists(procedureId)) {
             throw new UnknownProcedureMetierException(procedureId);
         }
-        return operationRepository.save(OperationCommerce.propose(nom, code, type, procedureId, createdBy));
+        OperationCommerce operation = operationRepository.save(OperationCommerce.propose(nom, code, type, procedureId, createdBy));
+        events.publishEvent(new EntryProposedEvent(
+                UUID.randomUUID(), AGGREGATE_TYPE, operation.getId(), operation.getCode(), createdBy, Instant.now()));
+        return operation;
     }
 
     public OperationCommerce get(UUID id) {
@@ -70,8 +82,13 @@ public class OperationCommerceService {
     @Transactional
     public OperationCommerce changeStatus(UUID id, StatutPublication newStatus, String actorSubject) {
         OperationCommerce operation = get(id);
+        StatutPublication previousStatus = operation.getStatut();
         operation.changeStatus(newStatus, actorSubject);
-        return operationRepository.save(operation);
+        operationRepository.save(operation);
+        events.publishEvent(new EntryStatusChangedEvent(
+                UUID.randomUUID(), AGGREGATE_TYPE, operation.getId(), operation.getCode(),
+                previousStatus, newStatus, actorSubject, Instant.now()));
+        return operation;
     }
 
     @Transactional

@@ -1,14 +1,18 @@
 package com.klem.referentielapi.textereglementaire.application.service;
 
 import com.klem.referentielapi.shared.domain.StatutPublication;
+import com.klem.referentielapi.shared.domain.event.EntryProposedEvent;
+import com.klem.referentielapi.shared.domain.event.EntryStatusChangedEvent;
 import com.klem.referentielapi.textereglementaire.application.port.TexteReglementaireRepository;
 import com.klem.referentielapi.textereglementaire.domain.exception.TexteReglementaireNotFoundException;
 import com.klem.referentielapi.textereglementaire.domain.model.TexteReglementaire;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -20,10 +24,14 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class TexteReglementaireService {
 
-    private final TexteReglementaireRepository repository;
+    private static final String AGGREGATE_TYPE = "texteReglementaire";
 
-    public TexteReglementaireService(TexteReglementaireRepository repository) {
+    private final TexteReglementaireRepository repository;
+    private final ApplicationEventPublisher events;
+
+    public TexteReglementaireService(TexteReglementaireRepository repository, ApplicationEventPublisher events) {
         this.repository = repository;
+        this.events = events;
     }
 
     @Transactional
@@ -32,7 +40,10 @@ public class TexteReglementaireService {
                                        String createdBy) {
         TexteReglementaire texte = TexteReglementaire.propose(
                 titre, type, datePublication, reference, domaine, urlSource, createdBy);
-        return repository.save(texte);
+        repository.save(texte);
+        events.publishEvent(new EntryProposedEvent(
+                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getType(), createdBy, Instant.now()));
+        return texte;
     }
 
     public TexteReglementaire get(UUID id) {
@@ -47,8 +58,13 @@ public class TexteReglementaireService {
     @Transactional
     public TexteReglementaire changeStatus(UUID id, StatutPublication newStatus, String actorSubject) {
         TexteReglementaire texte = get(id);
+        StatutPublication previousStatus = texte.getStatut();
         texte.changeStatus(newStatus, actorSubject);
-        return repository.save(texte);
+        repository.save(texte);
+        events.publishEvent(new EntryStatusChangedEvent(
+                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getType(),
+                previousStatus, newStatus, actorSubject, Instant.now()));
+        return texte;
     }
 
     /**

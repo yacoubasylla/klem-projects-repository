@@ -2,6 +2,8 @@ package com.klem.referentielapi.textereglementaire.application.service;
 
 import com.klem.referentielapi.shared.domain.InvalidStatutTransitionException;
 import com.klem.referentielapi.shared.domain.StatutPublication;
+import com.klem.referentielapi.shared.domain.event.EntryProposedEvent;
+import com.klem.referentielapi.shared.domain.event.EntryStatusChangedEvent;
 import com.klem.referentielapi.textereglementaire.application.port.TexteReglementaireRepository;
 import com.klem.referentielapi.textereglementaire.domain.exception.TexteReglementaireNotFoundException;
 import com.klem.referentielapi.textereglementaire.domain.model.TexteReglementaire;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -19,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,16 +31,19 @@ class TexteReglementaireServiceTest {
     @Mock
     private TexteReglementaireRepository repository;
 
+    @Mock
+    private ApplicationEventPublisher events;
+
     private TexteReglementaireService service;
 
     @BeforeEach
     void setUp() {
-        service = new TexteReglementaireService(repository);
+        service = new TexteReglementaireService(repository, events);
         lenient().when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
-    void propose_creates_texte_in_proposee_status() {
+    void propose_creates_texte_in_proposee_status_and_publishes_event() {
         TexteReglementaire texte = service.propose(
                 "Note de procédure import véhicules", "circulaire", LocalDate.of(2026, 1, 15),
                 "REF-2026-001", "import", "https://douanes.ci/notes/2026-001", "editeur-1");
@@ -44,6 +51,7 @@ class TexteReglementaireServiceTest {
         assertThat(texte.getStatut()).isEqualTo(StatutPublication.PROPOSEE);
         assertThat(texte.getCreatedBy()).isEqualTo("editeur-1");
         assertThat(texte.getValidatedBy()).isNull();
+        verify(events).publishEvent(any(EntryProposedEvent.class));
     }
 
     @Test
@@ -56,7 +64,7 @@ class TexteReglementaireServiceTest {
     }
 
     @Test
-    void changeStatus_from_proposee_to_en_revision_succeeds_without_validation_stamp() {
+    void changeStatus_from_proposee_to_en_revision_succeeds_and_publishes_event() {
         TexteReglementaire texte = TexteReglementaire.propose(
                 "Titre", "loi", null, null, null, null, "editeur-1");
         when(repository.findById(texte.getId())).thenReturn(Optional.of(texte));
@@ -65,6 +73,7 @@ class TexteReglementaireServiceTest {
 
         assertThat(updated.getStatut()).isEqualTo(StatutPublication.EN_REVISION);
         assertThat(updated.getValidatedBy()).isNull();
+        verify(events).publishEvent(any(EntryStatusChangedEvent.class));
     }
 
     @Test

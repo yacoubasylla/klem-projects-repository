@@ -11,11 +11,13 @@ import com.klem.referentielapi.operationcommerce.domain.model.OperationCommerce;
 import com.klem.referentielapi.operationcommerce.domain.model.OperationDocument;
 import com.klem.referentielapi.operationcommerce.domain.model.TypeOperation;
 import com.klem.referentielapi.procedure.application.service.ProcedureMetierService;
+import com.klem.referentielapi.shared.domain.event.EntryProposedEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,12 +46,15 @@ class OperationCommerceServiceTest {
     @Mock
     private DocumentRequisService documentRequisService;
 
+    @Mock
+    private ApplicationEventPublisher events;
+
     private OperationCommerceService service;
 
     @BeforeEach
     void setUp() {
         service = new OperationCommerceService(
-                operationRepository, operationDocumentRepository, procedureMetierService, documentRequisService);
+                operationRepository, operationDocumentRepository, procedureMetierService, documentRequisService, events);
         lenient().when(operationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
@@ -65,7 +70,7 @@ class OperationCommerceServiceTest {
     }
 
     @Test
-    void propose_succeeds_when_procedure_exists() {
+    void propose_succeeds_when_procedure_exists_and_publishes_event() {
         UUID procedureId = UUID.randomUUID();
         when(procedureMetierService.exists(procedureId)).thenReturn(true);
 
@@ -73,6 +78,7 @@ class OperationCommerceServiceTest {
 
         assertThat(operation.getCode()).isEqualTo("IMP-VEH");
         assertThat(operation.getProcedureId()).isEqualTo(procedureId);
+        verify(events).publishEvent(any(EntryProposedEvent.class));
     }
 
     @Test

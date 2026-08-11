@@ -20,6 +20,17 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OIDC_ISSUER_URI}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        # N'embarque pas le nom de classe Java dans l'en-tête __TypeId__ — un consommateur d'un
+        # autre langage/service ne connaît pas com.klem.referentielapi.*, seul le JSON compte
+        # (shared_architecture/data_pipeline/specifications_techniques.md §2.1, enveloppe portable,
+        # même convention que core-api).
+        spring.json.add.type.headers: false
 
 server:
   port: ${SERVER_PORT:8082}
