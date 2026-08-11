@@ -94,6 +94,9 @@ class PortfolioEventPublisherIntegrationTest {
                 .contains("\"source\":\"referentiel-api-service\"")
                 .contains("\"aggregateType\":\"texteReglementaire\"")
                 .contains(texte.getId().toString())
-                .contains("Note de procédure import véhicules");
+                // "code" de l'événement générique = TexteReglementaire.reference (pas de champ
+                // "code" propre à ce domaine, voir TexteReglementaireService#propose) — pas le
+                // titre, qui ne fait pas partie du payload minimal de l'événement.
+                .contains("\"code\":\"REF-2026-001\"");
     }
 }

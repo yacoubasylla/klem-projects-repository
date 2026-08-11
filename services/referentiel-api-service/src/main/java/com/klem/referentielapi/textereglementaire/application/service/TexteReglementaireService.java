@@ -42,7 +42,7 @@ public class TexteReglementaireService {
                 titre, type, datePublication, reference, domaine, urlSource, createdBy);
         repository.save(texte);
         events.publishEvent(new EntryProposedEvent(
-                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getType(), createdBy, Instant.now()));
+                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getReference(), createdBy, Instant.now()));
         return texte;
     }
 
@@ -62,7 +62,7 @@ public class TexteReglementaireService {
         texte.changeStatus(newStatus, actorSubject);
         repository.save(texte);
         events.publishEvent(new EntryStatusChangedEvent(
-                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getType(),
+                UUID.randomUUID(), AGGREGATE_TYPE, texte.getId(), texte.getReference(),
                 previousStatus, newStatus, actorSubject, Instant.now()));
         return texte;
     }
