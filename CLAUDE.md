@@ -68,6 +68,29 @@ Pour agir sur une seule application sans impacter le reste du monorepo :
 *   **Conventions SQL :** Tables et colonnes en `snake_case` (ex: `date_creation`, `statut_vehicule`). Les clés primaires techniques utilisent le type `BIGSERIAL` ou `UUID`.
 *   **Pipelines Temps Réel :** Les schémas de messages transitant par Apache Kafka doivent être documentés. Les traitements Apache Spark doivent être optimisés pour éviter les *shuffles* mémoire inutiles.
 
+### 🟣 2.4 Convention de Nommage : Code en Anglais / Explications en Français
+*   **Identifiants de code en anglais.** Noms de classes, composants React, variables, fonctions,
+    fichiers, entités JPA/ORM et endpoints API doivent être rédigés en anglais, conformes aux
+    standards du langage concerné (Java, React/TypeScript, PostgreSQL). Exemple :
+    `elevesPage` → `studentsPage`, `EtablissementService` → `SchoolService`.
+*   **Explications en français.** Commentaires de code, documentation Markdown, messages de commit
+    Git et texte affiché à l'utilisateur (UI) restent impérativement en français.
+*   **Non-régression stricte — `cantine-connect` en particulier.** `cantine-connect` a été
+    développé initialement avec des identifiants en français (packages `com.klem.cantine.eleve`,
+    `com.klem.cantine.etablissement`, entités `Eleve`, `Etablissement`, `Utilisateur`,
+    `PassageRefectoire`, pages `/eleves`, `/etablissements`, etc.). **Il est strictement interdit
+    de modifier ce code existant qui fonctionne, ou d'effectuer des remplacements aveugles
+    (rename en masse) qui risqueraient de casser l'application.** Cette règle de nommage
+    s'applique uniquement :
+    - aux **nouveaux fichiers** (nouvelle classe, nouveau composant, nouvelle entité) ;
+    - aux **nouvelles fonctionnalités** ajoutées à un module existant ;
+    - aux **refactorisations explicitement demandées** par un ticket ou l'utilisateur, jamais de
+      façon incidente en marge d'une autre tâche.
+*   **Portée.** S'applique à toutes les applications de ce dépôt, présentes et futures. Pour le
+    dictionnaire français → anglais spécifique à `cantine-connect`, voir
+    `klem-labs-repository/projects/03_cantine_connect/specifications_techniques.md`, section
+    « Conventions de Nommage & Dictionnaire Technique ».
+
 ---
 
 ## 🔄 3. Processus de Clôture et Livraisons de Tâches
