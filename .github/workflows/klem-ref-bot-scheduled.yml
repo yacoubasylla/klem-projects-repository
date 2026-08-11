@@ -5,11 +5,18 @@ name: klem_ref_bot — ingestion planifiée (Trade-X)
 # périodique du script d'ingestion klem_ref_bot hors du service applicatif principal".
 #
 # Statut réel : ce workflow exécute la suite de tests (garde-fou de non-régression) mais
-# n'invoque PAS encore une ingestion réelle — le téléchargement depuis une source institutionnelle
-# (GUCE CI, Douanes CI...) n'est pas implémenté dans ce Sprint (voir
-# services/referentiel-api-service/ingestion/klem_ref_bot/README.md, "Statut réel de ce Sprint").
-# À étendre avec une étape d'invocation réelle de `python -m klem_ref_bot.main` une fois cette
-# capacité ajoutée — ne pas la simuler ici en attendant.
+# n'invoque PAS encore `python -m klem_ref_bot.main --douanes-ci-page N` en conditions réelles,
+# bien que cette capacité existe et soit vérifiée manuellement de bout en bout — y compris la
+# déduplication par checkpoint local (klem_ref_bot/checkpoint.py, voir README) qui empêche de
+# reproposer les mêmes documents à chaque run. Deux points d'infrastructure restent avant
+# d'activer une étape d'ingestion réelle ici :
+#   1. KLEM_REF_BOT_DATABASE_URL (secret DB du compte klem_ref_bot_ingestion) n'est pas configuré
+#      sur ce dépôt GitHub.
+#   2. Le fichier de checkpoint (KLEM_REF_BOT_CHECKPOINT_PATH) doit persister entre deux exécutions
+#      planifiées — un runner GitHub Actions est éphémère. Utiliser actions/cache/restore +
+#      actions/cache/save autour de ce fichier une fois l'étape d'ingestion ajoutée ; ne pas
+#      ajouter ces étapes de cache avant l'étape d'ingestion elle-même (cache non exploité sinon).
+# Ne pas ajouter l'étape d'ingestion réelle avant que ces deux points soient résolus.
 on:
   schedule:
     - cron: "0 4 * * *" # quotidien, 04:00 UTC — cadence provisoire, à ajuster selon la fraîcheur

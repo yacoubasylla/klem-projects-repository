@@ -10,14 +10,14 @@ def test_extract_texte_reglementaire_from_real_html_file():
     html_path = os.path.join(FIXTURES_DIR, "procedure_export_cacao.html")
 
     result = html_extractor.extract_texte_reglementaire_from_file(
-        html_path, url_source="https://guce.ci/notes/export-cacao"
+        html_path, url_source="https://commerce.gouv.ci/notes/export-cacao"
     )
 
     assert result.titre == "Note relative à la procédure d'exportation du cacao"
     assert result.date_publication == date(2026, 2, 3)
     assert result.reference == "EXP-2026-014"
     assert result.domaine == "export"
-    assert result.url_source == "https://guce.ci/notes/export-cacao"
+    assert result.url_source == "https://commerce.gouv.ci/notes/export-cacao"
 
 
 def test_titre_prefers_h1_over_title_tag():

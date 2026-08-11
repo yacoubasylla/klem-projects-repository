@@ -18,5 +18,5 @@ def test_rejects_explicitly_closed_system_even_if_similar_looking():
 
 
 def test_rejects_domain_that_merely_contains_a_whitelisted_domain_as_substring():
-    # ex. "guce.ci.attacker.example" ne doit pas passer parce qu'il contient "guce.ci"
-    assert is_allowed_source("https://guce.ci.attacker.example/phishing") is False
+    # ex. "douanes.ci.attacker.example" ne doit pas passer parce qu il contient "douanes.ci"
+    assert is_allowed_source("https://douanes.ci.attacker.example/phishing") is False
