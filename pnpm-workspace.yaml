@@ -9,8 +9,11 @@ packages:
 # GHSA-mwcw-c2x4-8c55 (Dependabot #30/#28) : nanoid < 3.3.17, tiré transitivement par postcss.
 # Pin patch-level uniquement (3.3.17, pas une plage ouverte) pour rester dans la même ligne
 # 3.3.x que postcss@8 attend — un saut vers nanoid 6.x (majeur) casserait potentiellement
-# l'API consommée par postcss. Miroir de "pnpm.overrides" dans package.json (pnpm >=10 lit ce
-# fichier, pnpm 9.x encore épinglé ici lit package.json — les deux sont tenus synchronisés).
+# l'API consommée par postcss. Miroir de "pnpm.overrides" dans package.json — vérifié par test
+# réel (retrait temporaire du bloc package.json -> les versions vulnérables reviennent malgré
+# ce fichier inchangé) que c'est bien package.json qui fait foi avec le pnpm 9.0.0 installé ici,
+# malgré le WARN "pnpm field in package.json is no longer read" que pnpm émet parfois (message
+# trompeur pour cette version). Les deux fichiers sont tenus synchronisés par précaution.
 # Dependabot #52/#53/#44/#55 : postcss < 8.5.23, tiré transitivement par le toolchain
 # Expo/Metro (@expo/metro-config). Plancher en gamme 8.x, même ligne majeure que l'existant.
 #
@@ -22,14 +25,29 @@ packages:
 # @expo/plist (0.7.13). 0.9.10 coexistait déjà ailleurs dans l'arbre — plancher pour converger
 # vers une version déjà présente plutôt qu'une pin isolée.
 #
-# tar (6.2.1, Dependabot #32-37/#47-51/#54, cacache/@expo/cli), uuid (7.0.3/8.3.2,
-# Dependabot #45, xcode), turbo-stream (2.4.1, Dependabot #46, @remix-run/server-runtime) et
-# fast-xml-parser (4.5.7, Dependabot #39, @react-native-community/cli-platform-*) ne sont PAS
-# corrigés ici : leurs versions patchées impliquent un saut de version majeure (tar 6→7,
-# uuid 7/8→11, turbo-stream 2→3, fast-xml-parser 4→5) — laissés ouverts volontairement plutôt
-# que forcés à l'aveugle. image-size (Dependabot #56/#57) n'a aucun correctif publié à ce jour.
+# Dependabot #32-37/#47-51/#54 : tar <= 7.5.20, tiré transitivement par cacache/@expo/cli
+# (apps/mobile-app/cantine-connect uniquement — toolchain de build Expo, jamais dans un bundle
+# livré). Plancher 7.5.21, même ligne majeure que la version déjà résolue (7.x, pas un saut
+# depuis 6.x comme initialement supposé).
+#
+# Dependabot #45 : uuid < 11.1.1, tiré transitivement par xcode (@expo/config-plugins). uuid
+# 11.x est ESM-only (rupture d'API publique) mais xcode ne fait qu'appeler `uuid.v4()` en
+# interne côté build — vérifié compatible par un build réel avant d'être ajouté ici.
+#
+# Dependabot #46 : turbo-stream < 3.0.0, tiré transitivement par @remix-run/server-runtime
+# (dépendance d'@expo/server, toolchain de dev-server Expo Router, pas de code livré).
+#
+# Dependabot #39 : fast-xml-parser < 5.7.0, tiré transitivement par
+# @react-native-community/cli-platform-*. CLI de build React Native, jamais dans un bundle.
+#
+# image-size (Dependabot #56/#57, <= 2.0.2, metro) reste ouvert : aucun correctif publié à ce
+# jour (dernière version npm = 2.0.2, toujours dans la plage vulnérable).
 overrides:
   nanoid: '3.3.17'
   postcss: '>=8.5.23'
   send: '>=0.19.2'
   '@xmldom/xmldom': '>=0.8.13'
+  tar: '>=7.5.21'
+  uuid: '>=11.1.1'
+  turbo-stream: '>=3.0.0'
+  fast-xml-parser: '>=5.7.0'
