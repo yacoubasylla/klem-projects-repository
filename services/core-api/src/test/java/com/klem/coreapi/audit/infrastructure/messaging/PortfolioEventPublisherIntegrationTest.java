@@ -63,7 +63,12 @@ class PortfolioEventPublisherIntegrationTest {
 
     @Test
     void createTenant_publishes_a_real_message_on_the_tenant_created_topic() {
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("test-portfolio-events", "true", kafka.getBootstrapServers());
+        // Ordre réel de KafkaTestUtils.consumerProps : (brokerAddresses, group, autoCommit) — pas
+        // (group, autoCommit, brokers). Bug découvert en corrigeant le test équivalent de
+        // referentiel-api-service (ConfigException réel en CI : le broker se retrouvait affecté à
+        // enable.auto.commit) ; ce test-ci n'a jamais tourné puisque core-api n'est pas dans le
+        // pipeline CI monorepo — corrigé par précaution avant toute exécution réelle.
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(kafka.getBootstrapServers(), "test-portfolio-events", "true");
         consumerProps.put("key.deserializer", StringDeserializer.class);
         consumerProps.put("value.deserializer", StringDeserializer.class);
         consumerProps.put("auto.offset.reset", "earliest");

@@ -69,7 +69,11 @@ class PortfolioEventPublisherIntegrationTest {
 
     @Test
     void propose_publishes_a_real_message_on_the_texteReglementaire_proposed_topic() {
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("test-portfolio-events", "true", kafka.getBootstrapServers());
+        // Ordre réel de KafkaTestUtils.consumerProps : (brokerAddresses, group, autoCommit) — pas
+        // (group, autoCommit, brokers). Bug constaté par exécution réelle en CI : le broker se
+        // retrouvait affecté à enable.auto.commit, provoquant un ConfigException au démarrage du
+        // consumer.
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(kafka.getBootstrapServers(), "test-portfolio-events", "true");
         consumerProps.put("key.deserializer", StringDeserializer.class);
         consumerProps.put("value.deserializer", StringDeserializer.class);
         consumerProps.put("auto.offset.reset", "earliest");
