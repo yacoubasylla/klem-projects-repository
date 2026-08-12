@@ -14,9 +14,13 @@ name: klem_ref_bot — ingestion planifiée (Trade-X)
 #
 # Reste un point d'infrastructure hors de portée de ce dépôt : KLEM_REF_BOT_DATABASE_URL (secret
 # DB du compte klem_ref_bot_ingestion à droits restreints, voir README "Provisionnement") doit être
-# configuré dans les secrets GitHub Actions de ce dépôt — l'étape d'ingestion est gardée par
-# `if: secrets.KLEM_REF_BOT_DATABASE_URL != ''` pour rester un no-op silencieux tant qu'il ne l'est
-# pas, plutôt que d'échouer bruyamment à chaque run planifié.
+# configuré dans les secrets GitHub Actions de ce dépôt — l'étape d'ingestion est gardée par le
+# step "check_db" (le contexte `secrets` n'est pas accessible directement dans un `if:` de step,
+# uniquement dans `env:`/`run:` — voir https://docs.github.com/en/actions/learn-github-actions/contexts#context-availability)
+# pour rester un no-op silencieux tant qu'il ne l'est pas, plutôt que d'échouer bruyamment à chaque
+# run planifié. Ce détournement a lui-même cassé la validation du fichier entier de 2026-08-11 à
+# 2026-08-12 (chaque push affichait un échec "workflow file issue", 0 job exécuté, name replié sur
+# le chemin du fichier faute de pouvoir lire le `name:` — diagnostiqué avec `actionlint`).
 on:
   schedule:
     - cron: "0 4 * * *" # quotidien, 04:00 UTC — cadence provisoire, à ajuster selon la fraîcheur
@@ -47,6 +51,15 @@ jobs:
       - name: Run tests
         run: PYTHONPATH=. pytest tests/ -v
 
+      - name: Vérifier la disponibilité de KLEM_REF_BOT_DATABASE_URL
+        id: check_db
+        run: |
+          if [ -n "${{ secrets.KLEM_REF_BOT_DATABASE_URL }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Restaurer les checkpoints de déduplication
         uses: actions/cache/restore@v4
         with:
@@ -58,13 +71,13 @@ jobs:
             klem-ref-bot-checkpoint-
 
       - name: Ingestion réelle — douanes.ci (page 0)
-        if: ${{ secrets.KLEM_REF_BOT_DATABASE_URL != '' }}
+        if: steps.check_db.outputs.available == 'true'
         env:
           KLEM_REF_BOT_DATABASE_URL: ${{ secrets.KLEM_REF_BOT_DATABASE_URL }}
         run: python -m klem_ref_bot.main --douanes-ci-page 0
 
       - name: Ingestion réelle — commerce.gouv.ci (Lois/Arrêtés/Décrets)
-        if: ${{ secrets.KLEM_REF_BOT_DATABASE_URL != '' }}
+        if: steps.check_db.outputs.available == 'true'
         env:
           KLEM_REF_BOT_DATABASE_URL: ${{ secrets.KLEM_REF_BOT_DATABASE_URL }}
         run: python -m klem_ref_bot.main --commerce-ci
