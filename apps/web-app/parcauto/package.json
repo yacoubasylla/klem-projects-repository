@@ -8,6 +8,7 @@
     "lint": "echo 'scaffold inachevé (aucun eslint.config.js) — lint désactivé volontairement en attendant sa finalisation'"
   },
   "dependencies": {
+    "@klem/license": "workspace:*",
     "@klem/ui": "workspace:*",
     "@klem/utils": "workspace:*",
     "react": "^19.0.0",

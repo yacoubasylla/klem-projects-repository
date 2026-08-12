@@ -216,6 +216,9 @@ importers:
 
   apps/web-app/parcauto:
     dependencies:
+      '@klem/license':
+        specifier: workspace:*
+        version: link:../../../packages/license
       '@klem/ui':
         specifier: workspace:*
         version: link:../../../packages/ui
@@ -235,6 +238,15 @@ importers:
       vite:
         specifier: latest
         version: 8.1.5(@types/node@26.2.0)(jiti@1.21.7)(terser@5.49.2)(yaml@2.9.0)
+
+  packages/license:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.18
+      react:
+        specifier: ^19.0.0
+        version: 19.2.8
 
   packages/ui:
     dependencies:

@@ -119,6 +119,23 @@ dans l'application cible via l'espace de nommage du workspace :
     — données injectées via props/contextes configurables.
 *   Documentation JSDoc/TSDoc en **français** au-dessus des interfaces et fonctions principales.
 
+### 🔐 2.5.1 Vérification de licence (`@klem/license`)
+*   Package dédié à la vérification de clé de licence KLEM (`KTS_LICENSE_KEY`, signature ECDSA
+    P-256 via Web Crypto, aucun secret partagé côté client). Une application qui souhaite
+    afficher son statut de licence s'encapsule avec
+    `<KlemProvider licenseKey={...} appId="mon-app"><App /></KlemProvider>`.
+*   **Mode avertissement seul (décision KLEM du 2026-08-12) :** `KlemProvider` ne bloque **jamais**
+    le rendu, quel que soit le statut (absente/expirée/invalide/mauvaise app) — il journalise
+    (`console.warn`) et affiche une bannière non bloquante uniquement en développement. Ne pas
+    faire évoluer ce comportement vers un blocage sans validation explicite, tant que les
+    applications existantes (`cantine-connect`, `parcauto`) n'ont pas de vraie clé configurée.
+*   Les composants de `@klem/ui` restent indépendants de `@klem/license` (pas de logique métier
+    dans `packages/ui`, cf. règle d'or de `packages/ui/CLAUDE.md`) : l'intégration se fait au
+    niveau racine de l'application, pas à l'intérieur des composants UI eux-mêmes.
+*   Namespace des packages : reste `@klem/*` pour l'instant (`@klem/ui`, `@klem/utils`,
+    `@klem/license`…) — un éventuel rebranding vers `@kts/*`/`Kts*` a été explicitement écarté
+    comme chantier séparé, à ne pas entreprendre sans nouvelle demande explicite.
+
 ---
 
 ## 🔄 3. Processus de Clôture et Livraisons de Tâches
