@@ -24,3 +24,7 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Contenu généré à l'exécution (uploads clients, médias WordPress) — jamais versionné,
+# reste sur le disque/volume du serveur (ex: server-backend/uploads/, site-klem/web/app/uploads/)
+uploads/
