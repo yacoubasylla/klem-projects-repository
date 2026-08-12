@@ -1,6 +1,6 @@
 Dans la vie d'un projet technologique chez Klem Technologies & Services, un ADR n'est pas un simple document administratif qu'on rédige pour le plaisir. C'est un acte de gouvernance.
 
-Pour que cet outil reste efficace et ne devienne pas une corvée pour vos deux développeurs, voici les règles chirurgicales pour savoir quand le déclencher, comment le rédiger et comment le conserver.
+Pour que cet outil reste efficace et ne devienne pas une corvée pour vos développeurs, voici les règles chirurgicales pour savoir quand le déclencher, comment le rédiger et comment le conserver.
 
 1. Le "Quand" : Le test d'éligibilité d'un ADR
 Tous les choix techniques ne méritent pas un ADR. Si un développeur choisit de nommer une fonction calculateTotal() plutôt que computeTotal(), c'est du style, pas de l'architecture.
@@ -9,7 +9,7 @@ Vous devez créer un ADR uniquement face à une décision significative. Une dé
 
 Le coût de retour en arrière est élevé : S'il faut plus de 3 jours de refactoring pour changer d'avis dans 6 mois (ex: choix du provider de paiement Mobile Money, choix de la structure de la base de données).
 
-Impact transverse : La décision force les deux développeurs à changer leur manière de coder (ex: interdire les appels API directs dans les composants React et imposer des Hooks personnalisés).
+Impact transverse : La décision force les développeurs à changer leur manière de coder (ex: interdire les appels API directs dans les composants React et imposer des Hooks personnalisés).
 
 Contrainte de rupture (Breaking Change) : Changement d'une dépendance majeure ou d'une version de framework (ex: passage de Java 17 à Java 21).
 
