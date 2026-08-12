@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="Diagramme de composants">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Cantine-Connect &#8212; Diagramme de composants" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="620" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" value="L&#233;gende" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;verticalAlign=top;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="" style="rounded=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="legend">
+          <mxGeometry x="10" y="30" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1t" value="Frontend" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="26" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="" style="rounded=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="legend">
+          <mxGeometry x="10" y="54" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2t" value="Monolithe modulaire (Spring Boot)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="50" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="" style="rounded=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="legend">
+          <mxGeometry x="10" y="78" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3t" value="Donn&#233;es / stockage" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="74" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" value="" style="rounded=0;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;" vertex="1" parent="legend">
+          <mxGeometry x="10" y="102" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5t" value="Externe / hors p&#233;rim&#232;tre" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="98" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Frontend -->
+        <mxCell id="fe" value="React.js 18 + Vite (SPA)&#10;/admin &#8226; /parents &#8226; /scan&#10;(lazy loading par module)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="300" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Backend monolith -->
+        <mxCell id="be" value="cantine-connect-service&#10;(monolithe modulaire Spring Boot)&#10;auth &#8226; eleve &#8226; etablissement &#8226; paiement &#8226; scan &#8226; audit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="380" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Data store -->
+        <mxCell id="pg" value="PostgreSQL 16&#10;(etablissement_id, action_log &#233;criture seule)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="580" y="300" width="260" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- External -->
+        <mxCell id="ext1" value="CinetPay / PayDunya&#10;(Orange/MTN/Moov/Wave, carte)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="120" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ext2" value="SMS / E-mail&#10;(Spring Mail, notifications)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="220" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" value="REST / JWT (Bearer)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="fe" target="be">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="JPA / Hibernate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="be" target="pg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="paiement (webhook HMAC)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#666666;" edge="1" parent="1" source="be" target="ext1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="confirmations, rappels, alertes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#666666;" edge="1" parent="1" source="be" target="ext2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

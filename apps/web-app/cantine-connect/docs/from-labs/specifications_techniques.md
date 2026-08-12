@@ -18,6 +18,7 @@
 6. [Points d'attention R&D](#6-points-dattention-rd)
 7. [Feuille de route technique (vers la généralisation multi-établissements)](#7-feuille-de-route-technique-vers-la-généralisation-multi-établissements)
 8. [Diagrammes d'architecture](#8-diagrammes-darchitecture)
+9. [Conventions de Nommage & Dictionnaire Technique](#9-conventions-de-nommage--dictionnaire-technique)
 
 ## 1. Choix Globaux de la Stack Technologique
 
@@ -219,3 +220,73 @@ couplage à deux fournisseurs cloud distincts est un choix assumé de rapidité 
 pour un lancement pilote (section 6), pas une contrainte définitive.
 
 Source éditable : `architecture_deploiement.drawio`.
+
+---
+
+## 9. Conventions de Nommage & Dictionnaire Technique
+
+> Règle de portefeuille : voir `klem-labs-repository/CLAUDE.md` et
+> `klem-projects-repository/CLAUDE.md` section 2.4. Code en anglais, commentaires/documentation en
+> français.
+>
+> **Non-régression :** le code applicatif existant de `cantine-connect` a été développé avec des
+> identifiants en français (packages `com.klem.cantine.eleve`, `com.klem.cantine.etablissement`,
+> entités `Eleve`, `Etablissement`, `PassageRefectoire`, pages `/eleves`, `/etablissements`, etc. —
+> voir liste ci-dessous). **Ce code existant n'est pas renommé.** Ce dictionnaire fixe le
+> vocabulaire anglais à utiliser pour les nouveaux fichiers, nouvelles fonctionnalités et
+> refactorisations explicitement demandées uniquement.
+
+### 9.1 Domaine métier — entités (`server-backend/.../entity/`)
+
+| Terme métier (FR) | Identifiant existant (FR, non modifié) | Équivalent anglais pour le nouveau code |
+|---|---|---|
+| Élève | `Eleve` | `Student` |
+| Établissement | `Etablissement` | `School` |
+| Niveau (scolaire) | `Niveau` | `GradeLevel` |
+| Classe | `Classe` | `Class` / `Classroom` |
+| Parent | `Parent` | `Parent` (déjà anglais) |
+| Utilisateur | `Utilisateur` | `User` |
+| Rôle | `Role` | `Role` (déjà anglais) |
+| Transaction de paiement | `TransactionPaiement` | `PaymentTransaction` |
+| Statut de paiement | `StatutPaiement` | `PaymentStatus` |
+| Opérateur Mobile Money | `OperateurMobileMoney` | `MobileMoneyOperator` |
+| Résultat de scan | `ResultatScan` | `ScanResult` |
+| Passage réfectoire | `PassageRefectoire` | `CafeteriaCheckIn` |
+| Motif de refus | `MotifRefus` | `RejectionReason` |
+| Statut d'accès | `StatutAcces` | `AccessStatus` |
+| Sexe | `Sexe` | `Gender` |
+| Régime alimentaire | `RegimeAlimentaire` | `DietaryRequirement` |
+| Période d'abonnement | `PeriodeAbonnement` | `SubscriptionPeriod` |
+| Configuration | `Configuration` | `Configuration` (déjà anglais) |
+| Demande d'accès | `DemandeAcces` | `AccessRequest` |
+| Statut de demande | `StatutDemande` | `RequestStatus` |
+| Journal d'action | `ActionLog` | `ActionLog` (déjà anglais) |
+| Type d'action | `TypeAction` | `ActionType` |
+
+### 9.2 Pages Frontend (`client-frontend/src/pages/`)
+
+| Répertoire existant (FR, non modifié) | Équivalent anglais pour le nouveau code |
+|---|---|
+| `eleves` | `students` |
+| `etablissements` | `schools` |
+| `paiements` | `payments` |
+| `parents` | `parents` (déjà anglais) |
+| `passages` | `checkIns` |
+| `utilisateurs` | `users` |
+| `acces` | `access` |
+| `rapports` | `reports` |
+| `configuration` | `settings` |
+| `moi` | `profile` |
+| `auth` | `auth` (déjà anglais) |
+| `scan` | `scan` (déjà anglais) |
+
+### 9.3 Vocabulaire métier général (au-delà du code existant)
+
+Termes réutilisables pour de futures fonctionnalités (abonnements, facturation) non encore
+présentes dans le code :
+
+| Terme métier (FR) | Équivalent anglais |
+|---|---|
+| Repas | `Meal` |
+| Abonnement | `Subscription` |
+| Cotisation | `Fee` |
