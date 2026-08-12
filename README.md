@@ -9,57 +9,42 @@ Ce monorepo est orchestré par **Turborepo** et structuré pour isoler stricteme
 ### Arborescence du Répertoire
 
 KLEM-REPO/
-├── .github/                     # Workflows d'intégration et de déploiement continus (CI/CD)
-├── .claude/                     # Configuration avancée et extensions pour Claude Code
-│   ├── commands/                # Macros et scripts de commandes personnalisées
-│   │   ├── startup.md           # Commande /startup : Initialisation et alignement du contexte
-│   │   ├── update.md            # Commande /update : Resynchronisation du contexte en cours de session
-│   │   └── install.md           # Commande /morning : Routine de démarrage de journée des développeurs
-│   ├── agents/                  # Macros et scripts de commandes personnalisées
-│   │   └── security-scanner.md  # Agent /secu : Initialisation et alignement du contexte
-│   │   
-│   ├── skills/                  # Capacités et outils spécifiques exécutés par l'IA
-│   │    └── recherche-actualites/# Outil autonome de veille technologique et légale
-│   ├── hooks/                   # lifecycle hook scripts
-│   │   └── security-check.sh
-│   │   
-│   │   
-│   └── settings.json            # project permissions
-├── apps/                        # Applications autonomes et déployables (Exécutables)
-│   ├── backend-api/             # API Core Spring Boot 3.x & Logique métier du parc automobile
-│   ├── mobile-app/              # Application mobile multiplateforme (Chauffeurs / Livreurs)
-│   ├── showcase-website/        # Site vitrine et infographies de KLEM Technologies
-│   └── web-app/                 # Dashboard d'administration Enterprise ERP (React / MUI)
-├── services/                    # Réservé : microservices backend indépendants (voir services/README.md)
-├── infrastructure/               # Réservé : Docker/Terraform/Kubernetes une fois le VPS provisionné
+├── .github/                     # Workflows CI/CD réels (ci.yml, klem-ref-bot-scheduled.yml) — voir .github/README.md
+├── .claude/                     # settings.local.json uniquement (permissions locales)
+├── commands/                    # Commandes /startup, /update, /prime (racine, pas dans .claude/)
+├── apps/                        # Applications autonomes et déployables
+│   ├── backend-api/             # Non démarré — ne contient qu'un README décrivant l'architecture cible
+│   ├── mobile-app/               # Expo/React Native — cantine-connect (scaffold livré)
+│   ├── showcase-website/        # site-klem (WordPress, réel), site-veone (vide)
+│   └── web-app/                 # 4 apps distinctes : cantine-connect (pilote), parcauto, clinic (vide), pharmacie (vide)
+├── services/                    # 3 services KLEM DataSphere réels — core-api, referentiel-api-service, transit-ops-service (voir services/README.md)
+├── infrastructure/               # Réservé : Docker/Terraform/Kubernetes une fois le VPS provisionné (toujours vide, voir infrastructure/*/README.md)
 ├── docs/                        # Index léger vers collaboration/ et knowledges/ (pas une 3e arborescence)
 ├── collaboration/               # Base de connaissances projet partagée humain/IA
 │   ├── context/
 │   │   └── CONTEXT.md           # Vision produit, alignement métier et règles globales KLEM
 │   ├── doc/
-│   │   ├── architectures.md     # Topologie des nœuds, sécurité des flux et infrastructure prod
+│   │   ├── architecture.md      # Topologie des nœuds, sécurité des flux et infrastructure prod
 │   │   ├── specifications.md    # Schémas de base de données PostgreSQL et spécifications API
 │   │   └── workflows.md         # Diagrammes d'états et cycles de vie opérationnels du parc
 │   └── history/
 │       ├── decision-log.md      # Registre historique des arbitrages stratégiques
 │       ├── history-log.md       # Journal chronologique des livraisons et des tâches accomplies
-│       └── adr/                 # Architecture Decision Records (Format standardisé)
-│           ├── 2026-06-18-adoption-monorepo.md
-│           └── 2026-06-19-choix-strategie-securite.md
-├── knowledges/                  # Renseignements externes et documentation brute
-│   ├── output/                  # Rapports générés, logs consolidés et données nettoyées
+│       └── adr/                 # Architecture Decision Records (Format standardisé, ~13 fichiers à ce jour)
+├── knowledges/                  # Dropbox de documents externes (voir knowledges/README.md — ne pas confondre avec knowledge/ racine du workspace)
 │   ├── raw/                     # Documents bruts non structurés (PDFs, exports comptables, décrets)
-│   └── wiki/                    # Base de connaissances interne et procédures de l'entreprise
+│   └── wiki/                    # Vide par défaut, peuplé à la demande
 ├── packages/                    # Modules partagés et réutilisables au sein du monorepo
-│   ├── config/                  # Configurations transverses partagées (ESLint, TSConfig, Prettier)
-│   ├── ui/                      # Design System KLEM (Composants MUI packagés : KlemTable, KlemButton)
-│   └── utils/                   # Librairies de fonctions utilitaires, validateurs et helpers communs
+│   ├── config/                  # Vide aujourd'hui — ESLint/TSConfig/Prettier partagés prévus mais pas encore écrits
+│   ├── data-utils/               # Vide aujourd'hui
+│   ├── ui/                      # @klem/ui — un seul composant réel (KlemButton) à ce stade
+│   └── utils/                   # @klem/utils — structure prête
 ├── scripts/                     # Scripts d'automatisation de l'infrastructure locale
 │   ├── README.md                # Guide d'utilisation des outils en ligne de commande
 │   └── create-adr.sh            # Script Bash de génération automatisée de fichier ADR
-├── templates/                   # Squelettes de code et modèles de fichiers standardisés
+├── templates/                   # Gabarits CLAUDE.md par type d'app + package.json/app.package.json
 ├── .cursorrules                 # Instructions de contextualisation pour l'éditeur Cursor
-├── .turbo.json                  # Configuration du cache et des pipelines de build Turborepo
+├── turbo.json                   # Configuration du cache et des pipelines de build Turborepo
 ├── CLAUDE.md                    # Guide de survie et règles de développement strictes pour l'IA
 └── package.json                 # Racine de configuration des workspaces pnpm
 
@@ -68,18 +53,18 @@ KLEM-REPO/
 
 | **`Composant / Dossier`**  | **`Rôle Fonctionnel & Technique`**  |
 | :--- | :--- |
-| **`apps/web-app/`** | Application web de gestion d'entreprise (ERP/Back-office). Permet aux gestionnaires de flottes de suivre le parc à l'aide d'une interface desktop MUI riche. |
-| **`apps/backend-api/`** | Cœur du système. Centralise la logique métier, l'accès sécurisé à PostgreSQL, l'authentification par cookies étanches, et l'intégration avec le nœud IA `ai.koog`. |
-| **`apps/mobile-app/`** | Interface terrain épurée "Mobile-First" dédiée aux chauffeurs et livreurs pour la saisie des états des lieux, des incidents, et le suivi du portefeuille. |
-| **`apps/showcase-website/`** | Site internet institutionnel de KLEM Technologies servant de vitrine commerciale et de support marketing. |
+| **`apps/web-app/`** | 4 applications web client distinctes (React/MUI) : `cantine-connect` (pilote, MVP livré), `parcauto` (gestion de parc), `clinic` et `pharmacie` (dossiers vides, non démarrés). |
+| **`apps/backend-api/`** | **Non démarré.** Ne contient qu'un README décrivant l'architecture cible (Spring Boot, PostgreSQL) pour le futur backend de `parcauto`/FleetControl — aucun code réel aujourd'hui. |
+| **`apps/mobile-app/`** | Applications mobile/PWA Expo/React Native — `cantine-connect` (scaffold Expo Router/NativeWind livré) à ce stade. |
+| **`apps/showcase-website/`** | Sites internet institutionnels — `site-klem` (WordPress, réel) et `site-veone` (dossier vide, non démarré). |
 | **`collaboration/context/`** | Fichiers d'alignement stratégique. Contient la vision de l'entreprise et la culture métier indispensables à la bonne compréhension globale de l'IA. |
 | **`collaboration/doc/`** | Documentation technique et fonctionnelle d'ingénierie (Spécifications de tables, contrats d'API, architecture réseau). |
 | **`collaboration/history/`** | Traçabilité de l'évolution du projet. Stocke l'historique des modifications, les commits de clôture de tâches, et les dossiers d'arbitrage d'architecture (ADR). |
-| **`knowledges/`** | Espace de stockage des intrants externes bruts (lois de finances, documentations d'API externes) à indexer et analyser pour enrichir le système. |
+| **`knowledges/`** | Dropbox de documents externes bruts (lois de finances, documentations d'API externes) à faire analyser par un agent — pas une base de connaissances maintenue (voir `knowledges/README.md`). |
 | **`packages/`** | Bibliothèque interne au monorepo permettant de mutualiser le code (le design system UI partagé, les types stricts TypeScript et les configurations de build). |
 | **`scripts/`** | Outils de commodité pour les développeurs (génération de squelettes, automatisation de tâches Docker, sauvegardes DB). |
 | **`templates/`** | Modèles de structures de fichiers imposés pour conserver une uniformité parfaite lors de l'ajout de nouvelles fonctionnalités. |
-| **`.claude/`** | Couche logicielle d'extension de Claude Code (commandes de session `/startup`, `/morning`, outils d'automatisation spécifiques au projet). |
+| **`.claude/`** | Permissions locales (`settings.local.json`) uniquement. Les commandes de session (`/startup`, `/update`, `/prime`) vivent dans `commands/` à la racine, pas ici. |
 
 
 ### Les 5 fichiers clés à comprendre
@@ -199,5 +184,5 @@ Pour l'équipe de développement et les assistants IA, voici ce qu'il faut reten
 ## Pour toute question, contactez le Lead Développeur ou consultez le CLAUDE.md à la racine.
 
 ### Contact technique
-- Lead Développeur: Yacouba SYLLZ
-- email/WhatsApp: ciyasyl@gmail/+225 0554025100
+- Lead Développeur: Yacouba SYLLA
+- email/WhatsApp: ciyasyl@gmail.com / +225 0554025100

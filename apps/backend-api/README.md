@@ -1,6 +1,11 @@
 # FleetControl Backend - Spring Boot API
 
-API RESTful gérant l'intelligence métier de FleetControl.
+> **Statut : non démarré.** Ce dossier ne contient encore que ce README — aucun code Spring Boot
+> réel n'existe ici (vérifié : le dossier est vide à part ce fichier). Ce qui suit décrit
+> l'architecture **cible** à respecter le jour où l'implémentation commence, pas l'état actuel.
+
+API RESTful destinée à gérer l'intelligence métier de FleetControl (`apps/web-app/parcauto`, qui
+n'a aujourd'hui aucun backend propre).
 
 ## 🛠️ Stack Technique
 - Java 17 / Spring Boot 3.x

@@ -12,7 +12,9 @@ Avant de l'utiliser pour la première fois, vous devez :
     ```bash
 ./scripts/create-adr.sh choix-workflow-mission
 
-Cela créera automatiquement le fichier docs/adr/2026-06-18-choix-workflow-mission.md avec le titre pré-rempli et la structure prête à être complétée.
+Cela créera automatiquement le fichier `collaboration/history/adr/2026-06-18-choix-workflow-mission.md`
+(pas `docs/adr/` — ce chemin a changé, voir `FILENAME` dans le script) avec le titre pré-rempli et
+la structure prête à être complétée.
 
 ### Pourquoi ce petit script va vous changer la vie :
 - Standardisation forcée : Toute l'équipe utilisera exactement la même structure de document.

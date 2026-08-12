@@ -10,8 +10,8 @@ KLEM vit déjà à deux endroits dans ce dépôt, et la dupliquer ici ne ferait 
 | [`../collaboration/doc/specifications.md`](../collaboration/doc/specifications.md) | Schémas PostgreSQL, spécifications d'API |
 | [`../collaboration/doc/workflows.md`](../collaboration/doc/workflows.md) | Diagrammes d'états opérationnels et cycles de vie |
 | [`../collaboration/history/`](../collaboration/history/) | Registre des décisions, historique chronologique, ADR |
-| [`../knowledges/wiki/`](../knowledges/wiki/) | Base de connaissances interne et procédures |
-| [`../knowledges/raw/`](../knowledges/raw/) | Renseignements externes bruts (PDF, exports réglementaires) à indexer |
+| [`../knowledges/wiki/`](../knowledges/wiki/) | Synthèses structurées à partir de `raw/` — vide par défaut, peuplé à la demande |
+| [`../knowledges/raw/`](../knowledges/raw/) | Dropbox de documents externes bruts (PDF, exports réglementaires) à faire analyser par un agent |
 
 ## Documentation inter-dépôts (Labs)
 

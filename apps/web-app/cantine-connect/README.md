@@ -63,9 +63,13 @@ cantine-connect/
 │   ├── src/main/java/com/klem/cantine/
 │   │   ├── auth/             # Authentification JWT
 │   │   ├── dashboard/        # Statistiques globales
+│   │   ├── actionlog/        # Traçabilité inaltérable (AOP)
 │   │   ├── eleve/            # Gestion des élèves
 │   │   ├── etablissement/    # Établissements & Classes
 │   │   ├── paiement/         # Transactions Mobile Money
+│   │   ├── notification/     # Notifications (rappels d'échéance, etc.)
+│   │   ├── parametrage/      # Paramètres tarifs & période de grâce
+│   │   ├── parent/           # Comptes parents ↔ élèves
 │   │   ├── scan/             # Passages réfectoire + QR Code
 │   │   └── common/           # ApiResponse, GlobalExceptionHandler
 │   ├── Dockerfile            # Multi-stage (JDK→JRE alpine)
@@ -76,8 +80,13 @@ cantine-connect/
 │   ├── doc/                  # Architecture, specs, workflows
 │   └── history/              # Logs de livraisons et ADR
 │
-└── documentations/           # Manuels et cahier de recette (PDF)
+└── docs/from-labs/           # Copie en lecture seule des livrables clients
+                               # (source de vérité : klem-labs-repository/projects/03_cantine_connect/)
 ```
+
+**Client mobile/PWA** : un second client (Expo Router, Android/iOS/PWA) du même `server-backend`
+existe sous [`../../mobile-app/cantine-connect/`](../../mobile-app/cantine-connect/CLAUDE.md) —
+projet séparé, ne remplace pas ce client web qui reste la référence de production.
 
 ---
 

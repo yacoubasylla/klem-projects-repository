@@ -33,13 +33,13 @@ C'est la règle d'or : On ne modifie jamais un ADR validé dans le passé. Si, d
 3. Le "Où" : La conservation dans le Monorepo
 Pour que Claude Code et vos équipes y accèdent instantanément, les ADR doivent être stockés selon une convention de nommage stricte.
 
-Emplacement : claude-collaboration/history/
+Emplacement (ce projet) : `collaboration/history/adr/`. Deux ADR concernant parcauto existent
+aujourd'hui à la racine du monorepo (`collaboration/history/adr/`), pas encore dans ce
+sous-dossier — voir le README de `apps/web-app/parcauto/` pour les liens réels.
 
-Format du nom de fichier : ADR-[Numéro]-[titre-en-minuscules].md
+Format du nom de fichier réellement en usage : `AAAA-MM-JJ-titre-en-minuscules.md`
 
-Exemple : ADR-001-choix-postgresql.md
-
-Exemple : ADR-002-commissions-chauffeurs-immutables.md
+Exemple : `2026-06-18-choix-gestion-parc-workflow.md`
 
 L'avantage avec Claude Code
 En centralisant les ADR à cet endroit, la commande /startup que nous avons configurée permet à Claude, au début de chaque session, de lire en quelques millisecondes l'intégralité des décisions passées. L'IA ne vous proposera jamais une solution technique qui va à l'encontre d'un ADR validé.

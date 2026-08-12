@@ -1,9 +1,9 @@
 # Gestion de Parc Auto - KLEM Technologies & Services
 
 ## Présentation
-Ce projet constitue le cœur métier de la gestion de flotte automobile pour KLEM Technologies. Il permet le pilotage des missions, le suivi de la maintenance des véhicules et l'automatisation des workflows via l'intégration d'agents IA (ai.koog).
+Ce projet vise à devenir le cœur métier de la gestion de flotte automobile pour KLEM Technologies (pilotage des missions, suivi de la maintenance des véhicules, automatisation des workflows via l'intégration d'agents IA `ai.koog`) — **c'est aujourd'hui un scaffold non fonctionnel**, pas une application livrée : `src/App.tsx` est le seul fichier source, il n'existe ni `tsconfig.json` ni `vite.config.js`, et `package.json` désactive volontairement `build`/`lint` en attendant que le scaffold soit finalisé (voir les scripts du `package.json`).
 
-Monorepo d'entreprise pour la gestion globale de parc automobile (Suivi, Course, Location, Livraison, Maintenance, Finances).
+Périmètre métier visé (non implémenté) : Suivi, Course, Location, Livraison, Maintenance, Finances.
 
 ## 🚀 Prérequis Système
 - **Node.js** : v18 ou supérieure
@@ -16,7 +16,7 @@ Le projet fait partie du monorepo KLEM-Core. Il consomme les packages partagés 
 
 - `apps/` : Les livrables et applications autonomes déployables.
 - `packages/` : Les briques de code et configurations partagées entre les applications.
-- `claude-collaboration/` : Gouvernance, mémoire et invites (prompts) de l'IA.
+- `collaboration/` : Gouvernance, mémoire et invites (prompts) de l'IA (le dossier réel s'appelle `collaboration/`, pas `claude-collaboration/`).
 
 ## 🛠️ Commandes Globales
 Exécuter ces commandes depuis la racine du monorepo :
@@ -37,10 +37,13 @@ Toute modification doit faire l'objet d'une branche `feat/` ou `bugfix/` et d'un
 ## Décisions Architecturales (ADR)
 Toutes les décisions techniques majeures ayant impacté le développement de ce module sont documentées et accessibles à la racine du monorepo. Nous vous invitons à les consulter avant toute modification structurelle :
 
-*   [ADR 001 - Choix de l'architecture de gestion de flotte](/docs/adr/2026-06-18-choix-gestion-parc-workflow.md)
-*   [ADR 002 - Stratégie d'intégration de l'agent IA (ai.koog)](/docs/adr/2026-06-XX-integration-ia-koog.md)
+*   [ADR - Choix de l'architecture de gestion de flotte](../../../collaboration/history/adr/2026-06-18-choix-gestion-parc-workflow.md)
+*   Stratégie d'intégration de l'agent IA (`ai.koog`) — pas encore rédigée (aucun fichier ADR
+    correspondant n'existe à ce jour ; à créer avant d'implémenter réellement l'intégration).
 
-*(Si vous prenez une nouvelle décision architecturale, veuillez créer un nouveau fichier ADR dans `docs/adr/` et mettre à jour cette liste).*
+*(Pour une nouvelle décision architecturale, créer un fichier ADR dans
+`collaboration/history/adr/` — soit ici pour une décision propre à parcauto, soit à la racine du
+monorepo pour une décision transverse — et mettre à jour cette liste).*
 
 ## Workflow de développement
 - **Branches :** `feature/nom-fonctionnalité` -> `develop` -> `main`.
