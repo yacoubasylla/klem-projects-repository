@@ -53,7 +53,7 @@ Cantine-Connect est aujourd'hui un **monolithe modulaire** : un unique service S
 déployable, structuré en packages étanches par domaine (`auth`, `eleve`, `etablissement`,
 `paiement`, `scan`, `audit`, `common`), chacun respectant la même chaîne
 `Controller → Service → Repository → Entity` et l'obligation de DTO aux frontières. Conformément à
-`shared_architecture/microservices_&_delivery/specifications_techniques.md`, c'est une étape de trajectoire
+`shared_architecture/standards/microservices_&_delivery/specifications_techniques.md`, c'est une étape de trajectoire
 assumée et non un écart : le produit est encore au stade MVP/premier pilote, et ce découpage en
 modules internes rend une extraction future en services indépendants directe si le volume le
 justifie (voir feuille de route, section 7, point 6).
@@ -182,7 +182,7 @@ classées par priorité pour accompagner la croissance du nombre d'établissemen
    naturels : `paiement-service` pour isoler la charge des webhooks agrégateurs, `scan-service`
    pour isoler la charge de validation temps réel côté réfectoire), à déclencher par la charge
    mesurée ou un besoin de cycle de déploiement distinct — pas par anticipation, conformément à la
-   trajectoire de décomposition du standard `shared_architecture/microservices_&_delivery/specifications_techniques.md`.
+   trajectoire de décomposition du standard `shared_architecture/standards/microservices_&_delivery/specifications_techniques.md`.
 7. **Mise à l'échelle horizontale (Citus)** : non pertinent à l'échelle actuelle (pilote sur
    quelques établissements) ; à réévaluer uniquement si Cantine-Connect devait un jour servir un
    grand nombre de réseaux scolaires clients distincts sur une même instance PostgreSQL — voir

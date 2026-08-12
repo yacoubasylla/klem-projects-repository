@@ -26,7 +26,7 @@ valide pour `apps/backend-api` le jour où il aura du code, mais n'est pas ce qu
 
 ## Si un domaine d'`apps/backend-api` doit un jour être extrait
 
-Selon `shared_architecture/microservices_&_delivery/specifications_techniques.md` dans le dépôt
+Selon `shared_architecture/standards/microservices_&_delivery/specifications_techniques.md` dans le dépôt
 Labs :
 
 1. `git mv apps/backend-api/<domain-package> services/<service-name>` (préserve l'historique).

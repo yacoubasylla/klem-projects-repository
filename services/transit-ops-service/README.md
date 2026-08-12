@@ -7,7 +7,7 @@ surestaries — corridors Abidjan-Bamako et Abidjan-Ouagadougou).
 > entité JPA. Il prouve que le build, la sécurité OAuth2 Resource Server, l'observabilité et
 > l'OpenAPI sont correctement câblés avant la première tranche verticale (base de données →
 > service → API → interface), conformément à la méthodologie décrite dans
-> `klem-labs-repository/shared_architecture/microservices_&_delivery/specifications_techniques.md`.
+> `klem-labs-repository/shared_architecture/standards/microservices_&_delivery/specifications_techniques.md`.
 
 Référence fonctionnelle et technique complète :
 `klem-labs-repository/projects/02_hinterland_track/specifications_techniques.md`.

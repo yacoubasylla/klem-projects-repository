@@ -43,7 +43,7 @@ directive décrit seule :
    créés sous `services/*` (à commencer par `transit-ops-service` et `referentiel-api-service`,
    scaffoldés dans la foulée de cette ADR — squelettes buildables sans logique métier, une
    tranche verticale à la fois, conformément à la méthodologie de
-   `shared_architecture/microservices_&_delivery/specifications_techniques.md`).
+   `shared_architecture/standards/microservices_&_delivery/specifications_techniques.md`).
 2. Les apps clients existantes (cantine-connect, parcauto, backend-api/FleetControl, clinic,
    pharmacie) **gardent leur `CLAUDE.md` propre** comme référence de premier niveau. La directive
    maître n'y est pas appliquée rétroactivement par écrasement — toute convergence future

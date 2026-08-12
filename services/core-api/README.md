@@ -121,7 +121,7 @@ KLEM Copilot) — jamais l'inverse.
 | Reporting spécialisé | Moteur hybride de rapports du service produit qui le sert (voir `../../../knowledge/04-backend-spring-boot.md`) — `core-api` ne fournit que le contrat d'erreur/pagination commun, pas la génération de rapports elle-même. |
 | Intégrations métier non centrales | Connecteurs Mobile Money, télématique, EDI douanier, etc. — restent dans leur service produit (`shared_architecture/billing_&_payments/`, `data_pipeline/`). |
 | Scripts R&D | `klem-labs-repository` exclusivement — jamais dans ce dépôt de production. |
-| Infrastructure non liée au domaine | Provisioning Terraform/K8s, pipelines CI/CD génériques — `infra/`, `shared_architecture/deployment_ci_cd/`, pas un service applicatif. |
+| Infrastructure non liée au domaine | Provisioning Terraform/K8s, pipelines CI/CD génériques — `infra/`, `shared_architecture/standards/deployment_ci_cd/`, pas un service applicatif. |
 | Référentiels métier spécialisés d'un produit | TEC/codes SH/devises BCEAO → `referentiel-api-service` (KLEM Trade-X) ; référentiel réglementaire douanier → Clear-Comply. `core-api` ne les duplique jamais. |
 
 ## 3. Découpage des packages (package-by-feature, `com.klem.coreapi`)
