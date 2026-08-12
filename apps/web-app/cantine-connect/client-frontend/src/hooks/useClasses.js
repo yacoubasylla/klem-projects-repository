@@ -6,13 +6,15 @@ export function useClasses(etablissementId) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!etablissementId) { setClasses([]); return }
-    setLoading(true)
-    etablissementService
-      .getClasses(etablissementId)
-      .then(setClasses)
-      .catch(() => setClasses([]))
-      .finally(() => setLoading(false))
+    queueMicrotask(() => {
+      if (!etablissementId) { setClasses([]); return }
+      setLoading(true)
+      etablissementService
+        .getClasses(etablissementId)
+        .then(setClasses)
+        .catch(() => setClasses([]))
+        .finally(() => setLoading(false))
+    })
   }, [etablissementId])
 
   return { classes, loading }

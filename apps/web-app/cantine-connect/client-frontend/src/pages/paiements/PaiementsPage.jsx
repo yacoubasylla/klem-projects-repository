@@ -94,28 +94,33 @@ function InitierDialog({ open, onClose, onSubmit, isParent }) {
   const [loadingEleves, setLdEleves]  = useState(false)
 
   useEffect(() => {
-    if (!open) { setForm(FORM_INIT); setFErr(null); setUrl(null); setInputEleve(''); setOptEleves([]); return }
-    if (isParent) {
-      setLdEleves(true)
-      parentService.getMoi()
-        .then((moi) => setOptEleves(
-          (moi?.enfants ?? []).map((e) => ({
-            id: e.id,
-            matricule: e.matricule,
-            nomComplet: `${e.prenom} ${e.nom}`,
-            classeLibelle: e.classeLibelle ?? '—',
-            label: `${e.matricule} — ${e.prenom} ${e.nom}`,
-          }))
-        ))
-        .catch(() => setOptEleves([]))
-        .finally(() => setLdEleves(false))
-    }
+    queueMicrotask(() => {
+      if (!open) { setForm(FORM_INIT); setFErr(null); setUrl(null); setInputEleve(''); setOptEleves([]); return }
+      if (isParent) {
+        setLdEleves(true)
+        parentService.getMoi()
+          .then((moi) => setOptEleves(
+            (moi?.enfants ?? []).map((e) => ({
+              id: e.id,
+              matricule: e.matricule,
+              nomComplet: `${e.prenom} ${e.nom}`,
+              classeLibelle: e.classeLibelle ?? '—',
+              label: `${e.matricule} — ${e.prenom} ${e.nom}`,
+            }))
+          ))
+          .catch(() => setOptEleves([]))
+          .finally(() => setLdEleves(false))
+      }
+    })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, isParent])
 
   useEffect(() => {
     if (isParent) return
-    if (inputEleve.length < 2) { setOptEleves([]); return }
+    if (inputEleve.length < 2) {
+      queueMicrotask(() => setOptEleves([]))
+      return
+    }
     const timer = setTimeout(async () => {
       setLdEleves(true)
       try {
@@ -301,11 +306,13 @@ function ModifierDialog({ paiement, onClose, onSubmit }) {
   const [err, setErr] = useState(null)
 
   useEffect(() => {
-    if (paiement) setForm({
-      statut:          paiement.statut,
-      montant:         paiement.montant,
-      operateur:       paiement.operateur,
-      telephonePayeur: paiement.telephonePayeur ?? '',
+    queueMicrotask(() => {
+      if (paiement) setForm({
+        statut:          paiement.statut,
+        montant:         paiement.montant,
+        operateur:       paiement.operateur,
+        telephonePayeur: paiement.telephonePayeur ?? '',
+      })
     })
   }, [paiement])
 
@@ -400,7 +407,7 @@ export default function PaiementsPage() {
 
   const handleDelete = async () => {
     setDeleting(true)
-    try { await supprimer(deleteTarget.id) } catch (e) { /* swallow */ }
+    try { await supprimer(deleteTarget.id) } catch { /* swallow */ }
     finally { setDeleting(false); setDeleteTarget(null) }
   }
 

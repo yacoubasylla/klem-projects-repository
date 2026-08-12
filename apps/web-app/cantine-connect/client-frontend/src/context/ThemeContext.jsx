@@ -1,7 +1,6 @@
-import { createContext, useContext, useState } from 'react'
+import { useState } from 'react'
 import { safeStorage } from '../services/safeStorage'
-
-const ThemeModeContext = createContext(null)
+import { ThemeModeContext } from './ThemeModeContextObject'
 
 const STORAGE_KEY = 'klem-theme'
 const DEFAULT_THEME = 'premium'
@@ -25,5 +24,3 @@ export function ThemeModeProvider({ children }) {
     </ThemeModeContext.Provider>
   )
 }
-
-export const useThemeMode = () => useContext(ThemeModeContext)

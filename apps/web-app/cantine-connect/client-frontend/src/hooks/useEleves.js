@@ -8,7 +8,7 @@ export function useEleves(filtres = {}) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const filtresKey = JSON.stringify(filtres)
 
   const charger = useCallback(async () => {
@@ -27,10 +27,10 @@ export function useEleves(filtres = {}) {
     } finally {
       setLoading(false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [page, rowsPerPage, filtresKey])
 
-  useEffect(() => { charger() }, [charger])
+  useEffect(() => { queueMicrotask(charger) }, [charger])
 
   const creer = async (dto) => {
     const created = await eleveService.creer(dto)

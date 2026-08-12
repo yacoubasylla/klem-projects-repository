@@ -4,7 +4,6 @@ import {
   Box, Typography, Button, Stack, TextField,
   List, ListItem, ListItemText, Divider,
   CircularProgress, Alert, Chip, IconButton, Collapse, Tooltip,
-  InputAdornment,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -276,7 +275,7 @@ export default function GestionStructureDialog({ open, onClose, etablissement })
     }
   }, [etablissement])
 
-  useEffect(() => { if (open) chargerNiveaux() }, [open, chargerNiveaux])
+  useEffect(() => { queueMicrotask(() => { if (open) chargerNiveaux() }) }, [open, chargerNiveaux])
 
   const handleAddNiveau = async () => {
     const noms = newNiveau.split(',').map((s) => s.trim()).filter(Boolean)

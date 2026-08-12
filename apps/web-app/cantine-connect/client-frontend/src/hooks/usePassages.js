@@ -44,7 +44,7 @@ export function usePassages() {
     }
   }, [filtres, page, rowsPerPage])
 
-  useEffect(() => { charger() }, [charger])
+  useEffect(() => { queueMicrotask(charger) }, [charger])
 
   const setFiltre = (name, value) => {
     const next = { ...filtres, [name]: value }

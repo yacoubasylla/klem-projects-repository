@@ -19,7 +19,7 @@ export function useDashboard() {
     }
   }, [])
 
-  useEffect(() => { charger() }, [charger])
+  useEffect(() => { queueMicrotask(charger) }, [charger])
 
   return { stats, loading, error, recharger: charger }
 }

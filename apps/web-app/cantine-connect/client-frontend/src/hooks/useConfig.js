@@ -22,7 +22,7 @@ export function useConfigurations() {
     }
   }, [])
 
-  useEffect(() => { charger() }, [charger])
+  useEffect(() => { queueMicrotask(charger) }, [charger])
 
   const modifier = async (cle, valeur) => {
     const updated = await configService.modifier(cle, valeur)

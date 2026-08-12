@@ -57,21 +57,26 @@ function ParentFormDialog({ open, onClose, onSuccess, editTarget }) {
 
   // Remise à zéro à chaque ouverture
   useEffect(() => {
-    if (open) {
-      setSelectedParent(null)
-      setSelectedEleves(editTarget ? (editTarget.enfants ?? []) : [])
-      setParentInput('')
-      setParentOptions([])
-      setEleveInput('')
-      setEleveOptions([])
-      setErr(null)
-    }
+    queueMicrotask(() => {
+      if (open) {
+        setSelectedParent(null)
+        setSelectedEleves(editTarget ? (editTarget.enfants ?? []) : [])
+        setParentInput('')
+        setParentOptions([])
+        setEleveInput('')
+        setEleveOptions([])
+        setErr(null)
+      }
+    })
   }, [open, editTarget])
 
   // Recherche d'élèves avec debounce 300ms
   useEffect(() => {
     const q = eleveInput?.trim()
-    if (!q) { setEleveOptions([]); return }
+    if (!q) {
+      queueMicrotask(() => setEleveOptions([]))
+      return
+    }
     let active = true
     const timer = setTimeout(() => {
       setEleveLoading(true)

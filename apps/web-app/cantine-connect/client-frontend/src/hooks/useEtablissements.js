@@ -20,7 +20,7 @@ export function useEtablissements(enabled = true) {
     }
   }, [enabled])
 
-  useEffect(() => { charger() }, [charger])
+  useEffect(() => { queueMicrotask(charger) }, [charger])
 
   const creer = async (dto) => {
     const created = await etablissementService.creer(dto)

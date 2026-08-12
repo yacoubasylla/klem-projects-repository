@@ -1,8 +1,7 @@
-import { createContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import apiClient from '../services/apiClient'
 import { safeStorage } from '../services/safeStorage'
-
-export const AuthContext = createContext(null)
+import { AuthContext } from './AuthContextObject'
 
 const TOKEN_KEY = 'cc_token'
 const USER_KEY  = 'cc_user'
@@ -12,18 +11,20 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = safeStorage.getItem(TOKEN_KEY)
-    const saved = safeStorage.getItem(USER_KEY)
-    if (token && saved) {
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      try {
-        setUser(JSON.parse(saved))
-      } catch {
-        safeStorage.removeItem(TOKEN_KEY)
-        safeStorage.removeItem(USER_KEY)
+    queueMicrotask(() => {
+      const token = safeStorage.getItem(TOKEN_KEY)
+      const saved = safeStorage.getItem(USER_KEY)
+      if (token && saved) {
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        try {
+          setUser(JSON.parse(saved))
+        } catch {
+          safeStorage.removeItem(TOKEN_KEY)
+          safeStorage.removeItem(USER_KEY)
+        }
       }
-    }
-    setLoading(false)
+      setLoading(false)
+    })
   }, [])
 
   const login = (authResponse) => {

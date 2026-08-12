@@ -4,7 +4,7 @@ import {
 } from '@mui/material'
 import PaletteIcon from '@mui/icons-material/Palette'
 import CheckIcon   from '@mui/icons-material/Check'
-import { useThemeMode } from '../context/ThemeContext'
+import { useThemeMode } from '../hooks/useThemeMode'
 import { THEME_META }   from '../theme/themes'
 
 export default function ThemeSwitcher() {

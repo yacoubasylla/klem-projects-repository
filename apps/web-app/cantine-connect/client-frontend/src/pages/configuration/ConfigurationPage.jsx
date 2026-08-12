@@ -172,7 +172,7 @@ function TextRow({ config, meta, onSave }) {
 
   // Resynchronise le brouillon quand la valeur change depuis l'extérieur
   // (ex. après un import de fichier qui écrit une nouvelle valeur pour cette clé).
-  useEffect(() => { setDraft(config.valeur) }, [config.valeur])
+  useEffect(() => { queueMicrotask(() => setDraft(config.valeur)) }, [config.valeur])
 
   const handleSave = async () => {
     setSaving(true)
