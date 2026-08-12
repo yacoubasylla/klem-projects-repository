@@ -1,4 +1,4 @@
-# ADR : Adoption de KLEM_MASTER_SYSTEM_DIRECTIVE.md et périmètre d'application
+# ADR : Adoption de MASTER_SYSTEM_DIRECTIVE.md et périmètre d'application
 
 - **Date :** 2026-08-08
 - **Statut :** Accepté
@@ -6,7 +6,7 @@
 
 ## Contexte
 
-`KLEM_MASTER_SYSTEM_DIRECTIVE.md` v2.0 a été introduit dans le workspace (copies identiques à la
+`MASTER_SYSTEM_DIRECTIVE.md` v2.0 a été introduit dans le workspace (copies identiques à la
 racine, dans `klem-labs-repository`, dans `klem-projects-repository`, dans
 `klem-projects-repository/apps`, et dans `apps/web-app/cantine-connect`). Il décrit
 l'architecture cible d'une plateforme unifiée « KLEM DataSphere » (produits pivots
@@ -39,7 +39,7 @@ directive décrit seule :
 
 ## Décision
 
-1. `KLEM_MASTER_SYSTEM_DIRECTIVE.md` fait autorité pour les **nouveaux services KLEM DataSphere**
+1. `MASTER_SYSTEM_DIRECTIVE.md` fait autorité pour les **nouveaux services KLEM DataSphere**
    créés sous `services/*` (à commencer par `transit-ops-service` et `referentiel-api-service`,
    scaffoldés dans la foulée de cette ADR — squelettes buildables sans logique métier, une
    tranche verticale à la fois, conformément à la méthodologie de
@@ -49,7 +49,7 @@ directive décrit seule :
    maître n'y est pas appliquée rétroactivement par écrasement — toute convergence future
    (Java 21, OAuth2 Resource Server) sera une migration dédiée, testée et tracée par app, jamais
    un remplacement silencieux d'une architecture en production.
-3. Les contradictions entre `KLEM_MASTER_SYSTEM_DIRECTIVE.md` et les règles racine
+3. Les contradictions entre `MASTER_SYSTEM_DIRECTIVE.md` et les règles racine
    (`CLAUDE.md`, gabarits `templates/template_CLAUDE(maitre).md` et `templates/CLAUDE_RACINE.md`)
    sont résolues **par portée, pas par écrasement** : une note y renvoie vers la directive maître
    §7 comme référence pour tout nouveau service `services/*` de type KLEM DataSphere, la règle
@@ -68,7 +68,7 @@ directive décrit seule :
   écartée — laisserait une dérive documentaire non tracée (aucun fichier ne référençait encore la
   directive) et retarderait indéfiniment le scaffolding des produits pivots déjà « prêts pour
   MVP » depuis la phase Labs.
-- **Faire de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` la seule source de vérité et supprimer les règles
+- **Faire de `MASTER_SYSTEM_DIRECTIVE.md` la seule source de vérité et supprimer les règles
   contradictoires des `CLAUDE.md` existants** : écartée — ces règles sont directement implémentées
   dans du code en production (ex. filtre JWT de cantine-connect) ; les supprimer sans migration de
   code correspondante créerait un CLAUDE.md mensonger par rapport au comportement réel.

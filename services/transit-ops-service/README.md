@@ -17,7 +17,7 @@ Décision et périmètre d'application de la directive maître :
 
 ## Stack
 
-Conforme à `KLEM_MASTER_SYSTEM_DIRECTIVE.md` : Java 21 LTS, Spring Boot 3.3.x, Spring Security
+Conforme à `MASTER_SYSTEM_DIRECTIVE.md` : Java 21 LTS, Spring Boot 3.3.x, Spring Security
 OAuth2 Resource Server (JWT), Spring Data JPA, PostgreSQL, Flyway, springdoc-openapi, Actuator,
 JUnit 5 + Testcontainers + ArchUnit.
 

@@ -33,7 +33,7 @@ claims JWT (synchronisées vers Keycloak), pas d'appel synchrone à `core-api` �
 
 ## Patron déjà appliqué aux six domaines — le reproduire, ne pas en inventer un nouveau
 
-Frères déjà scaffoldés au même patron `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §5 :
+Frères déjà scaffoldés au même patron `MASTER_SYSTEM_DIRECTIVE.md` §5 :
 `services/transit-ops-service` (Hinterland-Track), `services/referentiel-api-service` (Trade-X).
 
 Trois motifs de dépendance inter-domaine établis, vérifiés par `PackageBoundaryRulesTest`
@@ -78,7 +78,7 @@ sophistication technique.
 ## Demander confirmation avant
 
 - d'introduire une dépendance à un autre service `services/*` ;
-- de modifier le contrat OAuth2/JWT (`SecurityConfig`) hérité de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` ;
+- de modifier le contrat OAuth2/JWT (`SecurityConfig`) hérité de `MASTER_SYSTEM_DIRECTIVE.md` ;
 - de déclarer la synchronisation Keycloak « fonctionnelle » sans avoir fait tourner
   `KeycloakRoleSyncIntegrationTest` dans un environnement Docker réel.
 

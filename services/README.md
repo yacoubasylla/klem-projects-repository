@@ -1,7 +1,7 @@
 # services/
 
 **Microservices backend indépendants KLEM DataSphere** (Java 21 / Spring Boot 3.x, conformes à
-`KLEM_MASTER_SYSTEM_DIRECTIVE.md`). N'est plus vide : trois services réels y vivent.
+`MASTER_SYSTEM_DIRECTIVE.md`). N'est plus vide : trois services réels y vivent.
 
 ## Contenu actuel
 
@@ -12,7 +12,7 @@
 | [`transit-ops-service/`](./transit-ops-service/README.md) | Cœur MVP Hinterland-Track (suivi GPS, conteneurs, ETA) | Sprint 0 — squelette de démarrage, aucune logique métier encore |
 
 Note de trajectoire : ces trois services sont nés directement sous `services/` (build neuf suivant
-`KLEM_MASTER_SYSTEM_DIRECTIVE.md`), **pas** par extraction d'un domaine depuis `apps/backend-api` —
+`MASTER_SYSTEM_DIRECTIVE.md`), **pas** par extraction d'un domaine depuis `apps/backend-api` —
 ce dernier reste un dossier séparé, toujours non démarré (voir `apps/backend-api/README.md`). La
 trajectoire « extraire un domaine du monolithe existant vers `services/` » décrite plus bas reste
 valide pour `apps/backend-api` le jour où il aura du code, mais n'est pas ce qui s'est passé ici.

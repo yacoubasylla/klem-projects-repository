@@ -287,7 +287,7 @@ cadrage est complet, code compris pour les deux chantiers d'infrastructure exter
    `KeycloakAdminProperties`).
 3. **Réconcilier les deux enveloppes d'événement documentées** dans le dépôt —
    `PortfolioEvent`/`data_pipeline/specifications_techniques.md` §2.1 (retenue ici) vs la forme plus
-   plate de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §10 — avec Fleet-Advance et Hinterland-Track pour
+   plate de `MASTER_SYSTEM_DIRECTIVE.md` §10 — avec Fleet-Advance et Hinterland-Track pour
    confirmer qu'un seul format doit prévaloir sur le cluster partagé (voir Javadoc de
    `PortfolioEvent`). Pas tranché unilatéralement ici : `core-api` est un nouveau venu sur le
    cluster, pas l'autorité qui a écrit `data_pipeline/specifications_techniques.md`.

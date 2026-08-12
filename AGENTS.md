@@ -3,7 +3,7 @@
 ## Hiérarchie
 
 Hérite de `../AGENTS.md`. Conflit : instruction utilisateur → `AGENTS.md` local au service/app →
-cet `AGENTS.md` → `CLAUDE.md`/`SYSTEM_INSTRUCTIONS.md`/`KLEM_MASTER_SYSTEM_DIRECTIVE.md` (selon la
+cet `AGENTS.md` → `CLAUDE.md`/`SYSTEM_INSTRUCTIONS.md`/`MASTER_SYSTEM_DIRECTIVE.md` (selon la
 strate) → `../knowledge/*`.
 
 ## Rôle de ce dépôt
@@ -16,7 +16,7 @@ l'implémentation produit ici pour un projet encore en cadrage côté Labs.
 
 | Strate | Document faisant autorité | Résumé |
 |---|---|---|
-| Services `services/*` neufs (KLEM DataSphere : Hinterland-Track, Trade-X, KLEM Copilot) | [`KLEM_MASTER_SYSTEM_DIRECTIVE.md`](./KLEM_MASTER_SYSTEM_DIRECTIVE.md) | Java 21 LTS, Spring Boot 3.x, OAuth2 Resource Server/JWT |
+| Services `services/*` neufs (KLEM DataSphere : Hinterland-Track, Trade-X, KLEM Copilot) | [`MASTER_SYSTEM_DIRECTIVE.md`](./MASTER_SYSTEM_DIRECTIVE.md) | Java 21 LTS, Spring Boot 3.x, OAuth2 Resource Server/JWT |
 | Apps clients existantes (cantine-connect, parcauto, backend-api/FleetControl, clinic, pharmacie) | [`CLAUDE.md`](./CLAUDE.md) | Java 17, sessions `JSESSIONID`, React/MUI |
 | Couche présentation mobile + web (`apps/web-app/*`, `apps/mobile-app/*`) | [`SYSTEM_INSTRUCTIONS.md`](./SYSTEM_INSTRUCTIONS.md) | Expo SDK 51+/Expo Router v3, Universal App First |
 

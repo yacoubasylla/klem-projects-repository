@@ -13,7 +13,7 @@ DataSphere (`services/core-api/README.md`, cadrage §1). Les autres services Dat
 (`transit-ops-service`/Hinterland-Track, `referentiel-api-service`/KLEM Trade-X, et les futurs
 services) doivent, à chaque requête protégée, savoir si l'appelant a la permission d'agir.
 
-`KLEM_MASTER_SYSTEM_DIRECTIVE.md` §7 a déjà acté que chaque service Spring Boot est un OAuth2
+`MASTER_SYSTEM_DIRECTIVE.md` §7 a déjà acté que chaque service Spring Boot est un OAuth2
 Resource Server **indépendant** qui valide lui-même le JWT (signature, issuer, audience,
 expiration, `nbf`, scopes, rôles, permissions, contexte tenant) — sans préciser, au moment de ce
 cadrage, **d'où viennent** les scopes/rôles/permissions présents dans ce JWT une fois que
@@ -37,7 +37,7 @@ Mécanisme :
    les rôles/permissions de l'utilisateur dans l'access token JWT au moment de son émission.
 3. Chaque service DataSphere (y compris `core-api` lui-même pour ses propres endpoints protégés)
    continue de valider le JWT **localement**, exactement comme déjà cadré par
-   `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §7 — aucun appel réseau à `core-api` n'est nécessaire pour
+   `MASTER_SYSTEM_DIRECTIVE.md` §7 — aucun appel réseau à `core-api` n'est nécessaire pour
    qu'un autre service prenne une décision d'autorisation.
 4. `core-api` expose malgré tout `GET /api/v1/users/me` en lecture — utilisé par les frontends pour
    afficher les rôles/permissions effectifs de l'utilisateur courant, **jamais** consulté par un
@@ -62,7 +62,7 @@ Mécanisme :
 ## Conséquences
 
 - **Avantages :**
-  - Cohérent avec le modèle déjà acté (`KLEM_MASTER_SYSTEM_DIRECTIVE.md` §7) — aucune dérogation à
+  - Cohérent avec le modèle déjà acté (`MASTER_SYSTEM_DIRECTIVE.md` §7) — aucune dérogation à
     documenter côté services existants.
   - Aucun point de défaillance unique introduit par `core-api` sur le chemin de requête des autres
     services ; chaque service reste scalable horizontalement sans dépendance runtime croisée.

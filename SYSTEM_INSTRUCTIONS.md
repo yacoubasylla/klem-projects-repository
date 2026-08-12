@@ -41,7 +41,7 @@ klem-projects-repository/
 │           ├── CLAUDE.md               # Directives CLI locales
 │           └── CONCEPTION.md           # Documentation fonctionnelle & tarifs
 ├── CLAUDE.md                           # Directives racine du monorepo
-└── KLEM_MASTER_SYSTEM_DIRECTIVE.md
+└── MASTER_SYSTEM_DIRECTIVE.md
 
 ## 4. DIRECTIVES STRICTES D'EXÉCUTION (GARDE-FOUS)
 Zero-iFrame Policy : Interdiction stricte d'intégrer des iframe ou vues Web encapsulées (WebView) pour les fonctionnalités de cœur métier. Tout doit être rendu en composants natifs React Native/PWA.

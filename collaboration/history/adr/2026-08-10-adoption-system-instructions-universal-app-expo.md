@@ -19,13 +19,13 @@ mobile/PWA`), sans ADR ni référence depuis un `CLAUDE.md` ou un README — la 
 uniquement comme fichier local non versionné, invisible dans l'historique git.
 
 Elle entre en tension directe avec deux documents déjà en vigueur :
-- `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16, qui fixe Next.js 14+/TypeScript comme frontend de
+- `MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16, qui fixe Next.js 14+/TypeScript comme frontend de
   référence pour la plateforme KLEM DataSphere ;
 - `CLAUDE.md` (racine `klem-projects-repository`) §2.2, qui fixe React.js/TypeScript/MUI comme
   référence pour les apps clients existantes (cantine-connect, parcauto, clinic, pharmacie).
 - La ligne « Backends Applicatifs : FastAPI (Python) & Spring Boot (Java) » de
   `SYSTEM_INSTRUCTIONS.md` place les deux sur un pied d'égalité, ce qui contredit
-  `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §3.1/§3.2 (Spring Boot backend de référence, FastAPI réservé
+  `MASTER_SYSTEM_DIRECTIVE.md` §3.1/§3.2 (Spring Boot backend de référence, FastAPI réservé
   aux services Python isolés — RAG, embeddings, scoring ML).
 
 ## Décision
@@ -42,12 +42,12 @@ Elle entre en tension directe avec deux documents déjà en vigueur :
    l'ADR `2026-08-08-adoption-directive-maitre-datasphere-perimetre.md` a déjà posé côté backend.
    Les nouvelles apps mobiles (comme `apps/mobile-app/cantine-connect`) démarrent directement sur
    Expo.
-3. `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16 (Next.js) reste la référence pour les applications
+3. `MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16 (Next.js) reste la référence pour les applications
    **internes/back-office** de la plateforme KLEM DataSphere (`apps/admin`, `apps/copilot` au sens
    de sa §4.2) qui n'ont pas de besoin de build natif mobile — ce ne sont pas des apps « clients »
    au sens de la présente décision.
 4. La ligne « Backends Applicatifs » de `SYSTEM_INSTRUCTIONS.md` n'est **pas** adoptée telle
-   quelle : elle reste supplantée par `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §3.1/§3.2 et par
+   quelle : elle reste supplantée par `MASTER_SYSTEM_DIRECTIVE.md` §3.1/§3.2 et par
    `CLAUDE.md` §2.1 déjà en vigueur (Spring Boot/Java reste le backend de référence ; FastAPI/
    Python reste réservé aux services isolés RAG/ML). Seule la partie UI/mobile de
    `SYSTEM_INSTRUCTIONS.md` est actée par cette ADR.
@@ -62,7 +62,7 @@ Elle entre en tension directe avec deux documents déjà en vigueur :
   scaffold est un travail réel déjà commité (`feat(mobile): scaffold Cantine Connect mobile/PWA`,
   2026-08-10) ; le défaire sans raison produit détruirait du travail valide pour un désaccord
   purement documentaire.
-- **Remplacer `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16 entièrement par Expo/RN** : écartée — la
+- **Remplacer `MASTER_SYSTEM_DIRECTIVE.md` §3.3/§16 entièrement par Expo/RN** : écartée — la
   plateforme DataSphere (apps internes, back-office) n'a pas de besoin mobile natif démontré ;
   imposer Expo partout serait une sur-ingénierie non justifiée pour ces surfaces.
 - **Adopter aussi la ligne backend de `SYSTEM_INSTRUCTIONS.md` (FastAPI à égalité avec Spring
@@ -74,7 +74,7 @@ Elle entre en tension directe avec deux documents déjà en vigueur :
 
 - **Avantages :** la stratégie mobile déjà en cours d'exécution devient traçable et discoverable
   (référencée depuis les `CLAUDE.md`/README plutôt que de vivre dans un fichier local) ; les deux
-  directives (`KLEM_MASTER_SYSTEM_DIRECTIVE.md`, `SYSTEM_INSTRUCTIONS.md`) coexistent par périmètre
+  directives (`MASTER_SYSTEM_DIRECTIVE.md`, `SYSTEM_INSTRUCTIONS.md`) coexistent par périmètre
   clair au lieu de se contredire silencieusement, suivant le même principe que l'ADR du 8 août.
 - **Risques/Dettes :** deux stacks frontend distinctes coexistent désormais dans le portefeuille
   (Next.js pour l'interne, Expo/RN pour le client) — dette de cohérence documentée ici plutôt que

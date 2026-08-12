@@ -70,7 +70,7 @@
   com.cantine.[domaine].[controller|service|repository|entity|dto]
   ```
 - **Format d'erreur & `requestId`** (`common/GlobalExceptionHandler`, ajouté 2026-08-08,
-  conforme à `KLEM_MASTER_SYSTEM_DIRECTIVE.md` §6) : toute réponse d'erreur JSON
+  conforme à `MASTER_SYSTEM_DIRECTIVE.md` §6) : toute réponse d'erreur JSON
   (`timestamp`, `status`, `error`, `message`, `path`) inclut désormais un champ `requestId`
   (UUID généré par requête). Usage strictement technique/support : permet de retrouver la
   trace exacte d'un incident dans les logs serveur sans corrélation approximative par

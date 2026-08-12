@@ -81,7 +81,7 @@ KLEM-REPO/
 - **`/collaboration/history/HISTORY.md`** (ou `history-log.md`)
   **Le journal de bord vivant du projet** : C'est la mémoire à long terme des sessions de développement. Il recense de manière chronologique toutes les avancées majeures, les tâches clôturées et l'état actuel du workspace. Complété rigoureusement à la fin de chaque sprint, il permet à l'IA de reprendre le travail exactement là où la session précédente s'était arrêtée, sans perte de contexte.
 
-- **`KLEM_MASTER_SYSTEM_DIRECTIVE.md`**
+- **`MASTER_SYSTEM_DIRECTIVE.md`**
   **L'architecture cible de la plateforme KLEM DataSphere** : décrit la stack de référence (Java 21 LTS, Spring Boot 3.x, Next.js) et les standards (sécurité OAuth2 Resource Server, observabilité, tests) pour les produits pivots Hinterland-Track, KLEM Trade-X et KLEM Copilot, développés sous `services/`. Ne remplace pas les `CLAUDE.md` des apps clients existantes (`apps/web-app/*`, `apps/backend-api`) — voir `collaboration/history/adr/2026-08-08-adoption-directive-maitre-datasphere-perimetre.md` pour le périmètre exact.
 
 

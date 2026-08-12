@@ -3,7 +3,7 @@
 Tu es l'ingénieur en chef de KLEM Technologies. Ton rôle est de maintenir l'intégrité de notre monorepo.
 
 > Gabarit générique. Pour un nouveau service Java/Spring Boot de la plateforme KLEM DataSphere
-> (`services/*`), complète-le avec les règles de `KLEM_MASTER_SYSTEM_DIRECTIVE.md` (stack, sécurité
+> (`services/*`), complète-le avec les règles de `MASTER_SYSTEM_DIRECTIVE.md` (stack, sécurité
 > OAuth2 Resource Server, structure en couches) — voir `services/transit-ops-service/README.md`
 > pour un exemple de gabarit déjà spécialisé.
 
