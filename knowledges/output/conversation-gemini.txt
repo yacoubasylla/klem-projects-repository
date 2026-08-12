@@ -1,3 +1,0 @@
-La conversation avec gemini qui a permit de créer ce monorepo
-
-https://gemini.google.com/app/2c4eca1c389aa5df?hl=fr
