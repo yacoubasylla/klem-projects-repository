@@ -16,7 +16,7 @@ import PersonAddIcon     from '@mui/icons-material/PersonAdd'
 import MoreVertIcon      from '@mui/icons-material/MoreVert'
 import { useUtilisateurs } from '../../hooks/useUtilisateurs'
 import { useAuth }          from '../../hooks/useAuth'
-import SuccessSnackbar      from '../../components/SuccessSnackbar'
+import { SuccessSnackbar }  from '@klem/ui'
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 

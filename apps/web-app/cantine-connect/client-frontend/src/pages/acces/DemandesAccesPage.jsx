@@ -12,7 +12,7 @@ import CancelIcon       from '@mui/icons-material/Cancel'
 import ContentCopyIcon  from '@mui/icons-material/ContentCopy'
 import VisibilityIcon   from '@mui/icons-material/Visibility'
 import { demandeAccesService } from '../../services/demandeAccesService'
-import SuccessSnackbar from '../../components/SuccessSnackbar'
+import { SuccessSnackbar } from '@klem/ui'
 
 const STATUT_CONFIG = {
   EN_ATTENTE: { label: 'En attente', color: 'warning' },

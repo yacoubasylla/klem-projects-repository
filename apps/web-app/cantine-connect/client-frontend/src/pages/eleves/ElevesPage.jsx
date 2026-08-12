@@ -23,7 +23,7 @@ import { useEtablissements } from '../../hooks/useEtablissements'
 import { useAuth } from '../../hooks/useAuth'
 import { useConfigValeur } from '../../hooks/useConfig'
 import StatutBadge from '../../components/StatutBadge'
-import SuccessSnackbar from '../../components/SuccessSnackbar'
+import { SuccessSnackbar } from '@klem/ui'
 import EleveFormDialog from './EleveFormDialog'
 
 const formatSolde = (val) =>

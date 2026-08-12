@@ -13,7 +13,7 @@ import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom'
 import { useParents }          from '../../hooks/useParents'
 import { utilisateurService }  from '../../services/utilisateurService'
 import { eleveService }        from '../../services/eleveService'
-import SuccessSnackbar         from '../../components/SuccessSnackbar'
+import { SuccessSnackbar }     from '@klem/ui'
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 

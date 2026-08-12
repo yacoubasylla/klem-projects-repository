@@ -8,7 +8,17 @@ Application d'entreprise critique de gestion intégrale de restauration scolaire
 Toutes les commandes doivent être exécutées dans leurs dossiers respectifs[cite: 8].
 
 ### ⚛️ Front-end (`client-frontend/`)[cite: 6]
-*   **Installation des dépendances** : `npm install`[cite: 8]
+> **Membre du workspace pnpm racine depuis 2026-08-12** (entrée explicite dans
+> `pnpm-workspace.yaml`) pour pouvoir consommer `@klem/ui`/`@klem/utils` en dépendance
+> `workspace:*` réelle (symlink), plutôt que des composants dupliqués localement — cf. §2.5 de
+> `CLAUDE.md` racine. `npm install`/`package-lock.json` locaux sont **obsolètes** : installer
+> depuis la racine du monorepo (`pnpm install`), pas depuis ce dossier. `dev`/`build`/`lint`
+> restent utilisables tels quels une fois l'install faite (ce sont des scripts Vite locaux), en
+> pnpm (`pnpm --filter client-frontend dev`) ou en `npm run dev` directement dans ce dossier.
+> ⚠️ **Config Vercel non revalidée** : `vercel.json` déclare encore `"buildCommand": "npm run
+> build"` — à revoir (installCommand/Root Directory côté projet Vercel) avant le prochain déploiement,
+> pour que le build Vercel résolve bien `@klem/ui` via le workspace pnpm.
+*   **Installation des dépendances** : `pnpm install` (depuis la racine du monorepo)[cite: 8]
 *   **Mode Développement Local** : `npm run dev`[cite: 8]
 *   **Build de Production** : `npm run build`[cite: 8]
 *   **Linting & Formatage** : `npm run lint`[cite: 8]

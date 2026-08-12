@@ -5,6 +5,14 @@ packages:
   - 'apps/*/*'
   - 'packages/*'
   - 'services/*'
+  # cantine-connect/client-frontend est un cran plus profond (le dossier
+  # apps/web-app/cantine-connect ci-dessus n'est qu'un scaffold wrapper) : entrée explicite
+  # nécessaire pour que ce frontend puisse consommer @klem/ui/@klem/utils en dépendance
+  # workspace:* réelle (symlink), au lieu de composants dupliqués localement. Historiquement
+  # installé en npm autonome (package-lock.json local, build Vercel via `npm run build`) --
+  # voir apps/web-app/cantine-connect/CLAUDE.md et vercel.json, à revalider côté config Vercel
+  # (installCommand/Root Directory) avant le prochain déploiement.
+  - 'apps/web-app/cantine-connect/client-frontend'
 
 # GHSA-mwcw-c2x4-8c55 (Dependabot #30/#28) : nanoid < 3.3.17, tiré transitivement par postcss.
 # Pin patch-level uniquement (3.3.17, pas une plage ouverte) pour rester dans la même ligne

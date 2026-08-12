@@ -93,6 +93,34 @@ Pour agir sur une seule application sans impacter le reste du monorepo :
 
 ---
 
+## 🟠 2.5 Architecture Monorepo : Règle Package-First (`packages/`)
+
+**Interdiction** de développer un composant UI, une fonction utilitaire ou une configuration à
+vocation générique/réutilisable directement dans un dossier applicatif (`apps/*/*` ou
+`services/*`). **Obligation** de le créer, l'exporter et le maintenir dans `packages/` :
+*   `packages/ui/` (`@klem/ui`) — Composants React / Material UI (boutons, modales, tables,
+    layouts, badges de statut, notifications).
+*   `packages/data-utils/` — Formateurs, parseurs, calculateurs métier, validateurs (Zod/Yup).
+*   `packages/utils/` (`@klem/utils`) — Fonctions helper JS/TS pures (dates, chaînes, tokens).
+*   `packages/config/` — Configurations partagées (TSConfig, ESLint, Tailwind, build scripts).
+
+**Avant de créer** un composant UI, une fonction utilitaire ou un plugin dans une application
+(`apps/`), vérifie s'il existe déjà dans `packages/`. S'il n'existe pas et qu'il est réutilisable
+(aucune logique métier, aucun couplage à une API ou un state global spécifique), crée-le d'abord
+dans le package concerné, exporte-le dans son `src/index.ts` (barrel export), puis importe-le
+dans l'application cible via l'espace de nommage du workspace :
+`import { KlemButton } from '@klem/ui';`.
+
+**Règles pour tout nouvel élément de `packages/` :**
+*   Fichiers/fonctions/props en **anglais** (`StudentCard.tsx`, `useStudentData.ts`) — PascalCase
+    pour les composants React, camelCase pour les hooks/fonctions — cf. §2.4.
+*   Export centralisé obligatoire via `packages/<nom>/src/index.ts`.
+*   Typage TypeScript strict (`interface`), zéro couplage à une API ou un state global applicatif
+    — données injectées via props/contextes configurables.
+*   Documentation JSDoc/TSDoc en **français** au-dessus des interfaces et fonctions principales.
+
+---
+
 ## 🔄 3. Processus de Clôture et Livraisons de Tâches
 
 Avant de déclarer une tâche comme "terminée" et de redonner la main à l'utilisateur, l'agent IA doit obligatoirement valider les 4 étapes suivantes :

@@ -9,7 +9,7 @@ import ChildCareIcon   from '@mui/icons-material/ChildCare'
 import { parentService } from '../../services/parentService'
 import { useEtablissements } from '../../hooks/useEtablissements'
 import { useClasses } from '../../hooks/useClasses'
-import SuccessSnackbar from '../../components/SuccessSnackbar'
+import { SuccessSnackbar } from '@klem/ui'
 
 const STATUT_CONFIG = {
   EN_ATTENTE_PAIEMENT: { label: 'En attente de paiement', color: 'warning' },
