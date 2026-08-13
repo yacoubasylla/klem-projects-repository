@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: billing-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/klem_billing}
+    username: ${DB_USERNAME:billing_service}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER_URI}
+
+billing:
+  aggregators:
+    cinetpay:
+      base-url: ${CINETPAY_BASE_URL:https://api-checkout.cinetpay.com}
+      api-key: ${CINETPAY_API_KEY:}
+      api-secret: ${CINETPAY_API_SECRET:}
+      site-id: ${CINETPAY_SITE_ID:}
+    paydunya:
+      base-url: ${PAYDUNYA_BASE_URL:https://app.paydunya.com/api/v1}
+      api-key: ${PAYDUNYA_API_KEY:}
+      api-secret: ${PAYDUNYA_API_SECRET:}
+    fedapay:
+      base-url: ${FEDAPAY_BASE_URL:https://api.fedapay.com}
+      api-key: ${FEDAPAY_API_KEY:}
+      api-secret: ${FEDAPAY_API_SECRET:}
+    bizao:
+      base-url: ${BIZAO_BASE_URL:https://api.bizao.com}
+      api-key: ${BIZAO_API_KEY:}
+      api-secret: ${BIZAO_API_SECRET:}
+  direct-operators:
+    wave:
+      base-url: ${WAVE_BASE_URL:https://api.wave.com}
+      client-id: ${WAVE_CLIENT_ID:}
+      client-secret: ${WAVE_CLIENT_SECRET:}
+      merchant-code: ${WAVE_MERCHANT_CODE:}
+    orange-money:
+      base-url: ${ORANGE_MONEY_BASE_URL:https://api.orange.com}
+      client-id: ${ORANGE_MONEY_CLIENT_ID:}
+      client-secret: ${ORANGE_MONEY_CLIENT_SECRET:}
+      merchant-code: ${ORANGE_MONEY_MERCHANT_CODE:}
+    mtn-mobile-money:
+      base-url: ${MTN_MOMO_BASE_URL:https://api.mtn.com}
+      client-id: ${MTN_MOMO_CLIENT_ID:}
+      client-secret: ${MTN_MOMO_CLIENT_SECRET:}
+      merchant-code: ${MTN_MOMO_MERCHANT_CODE:}
+    moov-money:
+      base-url: ${MOOV_MONEY_BASE_URL:https://api.moov-africa.com}
+      client-id: ${MOOV_MONEY_CLIENT_ID:}
+      client-secret: ${MOOV_MONEY_CLIENT_SECRET:}
+      merchant-code: ${MOOV_MONEY_MERCHANT_CODE:}
+
+server:
+  port: ${SERVER_PORT:8085}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

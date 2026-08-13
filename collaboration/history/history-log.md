@@ -9,6 +9,29 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-08-13] - Introduction de `services/billing-service` (Jalon 0 clos, Jalons 1/2 codés)
+- **Statut :** Livré / Opérationnel (code non encore validé par un pilote réel en production)
+- **Fichiers Modifiés :**
+  - `services/billing-service/` (nouveau service Spring Boot 3.3.5 / Java 21) : agrégat
+    `Transaction` et machine à états, contrat `PaymentProvider` implémenté par 4 agrégateurs
+    (CinetPay, Bizao, Fedapay, PayDunya) et 4 opérateurs en API directe (Wave, Orange Money, MTN
+    Mobile Money, Moov Money), API REST (`TransactionController`, `WebhookController`), migration
+    Flyway `V1__init_billing_schema.sql`, tests unitaires (13/13 verts, `mvn test`).
+  - `collaboration/history/adr/2026-08-13-introduction-billing-service.md` (nouveau).
+  - Côté `klem-labs-repository` : `shared_architecture/billing_&_payments/{readme.md,
+    specifications_techniques.md}` (audit + machine à états, contrat API, scope PCI-DSS, jalons
+    MVP/V1/V2, Jalon 0 clos), `projects/03_cantine_connect/specifications_techniques.md` (dérogation
+    documentée à la règle de gouvernance n°1).
+- **Description :** Audit du module transverse `billing_&_payments`, jusqu'ici documenté sans
+  contrat technique concret ni jalons de mise en œuvre. Jalon 0 clos : Yacouba Sylla désigné
+  mainteneur transverse, écart `cantine_connect` (intégration paiement déjà en production, livraison
+  client imminente) tranché par dérogation documentée plutôt que migration — voir l'ADR pour le
+  détail. Code des Jalons 1 (MVP, CinetPay) et 2 (V1, multi-opérateur/agrégateur complet) écrit dans
+  la foulée ; `cantine_connect` non touché (vérifié). Reste dû avant mise en production : validation
+  par un premier projet consommateur réel (candidats : `07_boutiki`, `01_clear_comply`,
+  `05_fleet_advance`, `10_dispo_link`), et confirmation des contrats de payload/signature par
+  opérateur/agrégateur contre une documentation API réelle ou un compte sandbox.
+
 ### [2026-08-08] - Adoption de KLEM_MASTER_SYSTEM_DIRECTIVE.md : périmètre, gouvernance, scaffolding des produits pivots et conformité additive cantine-connect
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :**
