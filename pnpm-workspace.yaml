@@ -15,7 +15,9 @@ packages:
   - 'apps/web-app/cantine-connect/client-frontend'
 
 # GHSA-mwcw-c2x4-8c55 (Dependabot #30/#28) : nanoid < 3.3.17, tiré transitivement par postcss.
-# Pin patch-level uniquement (3.3.17, pas une plage ouverte) pour rester dans la même ligne
+# GHSA-2v37-7h3g-55p8 (Dependabot #62/#63, détectée 2026-08-13) : nanoid < 3.3.18 — boucle
+# infinie possible si un générateur personnalisé reçoit une taille de 0. Pin relevé à 3.3.18.
+# Pin patch-level uniquement (3.3.18, pas une plage ouverte) pour rester dans la même ligne
 # 3.3.x que postcss@8 attend — un saut vers nanoid 6.x (majeur) casserait potentiellement
 # l'API consommée par postcss. Miroir de "pnpm.overrides" dans package.json — vérifié par test
 # réel (retrait temporaire du bloc package.json -> les versions vulnérables reviennent malgré
@@ -51,7 +53,7 @@ packages:
 # image-size (Dependabot #56/#57, <= 2.0.2, metro) reste ouvert : aucun correctif publié à ce
 # jour (dernière version npm = 2.0.2, toujours dans la plage vulnérable).
 overrides:
-  nanoid: '3.3.17'
+  nanoid: '3.3.18'
   postcss: '>=8.5.23'
   send: '>=0.19.2'
   '@xmldom/xmldom': '>=0.8.13'
