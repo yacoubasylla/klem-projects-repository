@@ -5,7 +5,7 @@
 > **Dernière mise à jour :** 2026-07-09
 > **Statut de validation :** Prêt pour MVP (v1.0.0-beta livrée)
 > **Public visé :** Techniciens — architecture, stack et choix d'implémentation.
-> **Dépôt applicatif :** `apps/web-app/cantine-connect` (monorepo `klem-repo`)
+> **Dépôt applicatif :** `apps/web-app/cantine-connect` (monorepo `klem-projects-repository`)
 
 ---
 

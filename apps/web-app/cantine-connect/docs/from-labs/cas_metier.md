@@ -3,7 +3,7 @@
 > **Code Projet :** CTN-SCOL
 > **Statut R&D :** 🚀 Pilote (MVP livré v1.0.0-beta, déploiement premier établissement en cours)
 > **Dernière mise à jour :** 2026-07-09
-> **Dépôt applicatif :** `apps/web-app/cantine-connect` (monorepo `klem-repo`)
+> **Dépôt applicatif :** `apps/web-app/cantine-connect` (monorepo `klem-projects-repository`)
 > **Public visé :** Décideurs — validation stratégique initiale.
 
 ## Sommaire
