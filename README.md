@@ -1,4 +1,4 @@
-# Guide d'installation et de démarrage : KLEM-REPO
+# Guide d'installation et de démarrage : KLEM-PROJECTS-REPOSITORY
 
 Bienvenue dans l'espace de travail central de KLEM Technologies. Ce monorepo contient l'ensemble de nos briques logicielles, allant des applications métiers aux outils de traitement de données (Big Data).
 
@@ -8,7 +8,7 @@ Ce monorepo est orchestré par **Turborepo** et structuré pour isoler stricteme
 
 ### Arborescence du Répertoire
 
-KLEM-REPO/
+KLEM-PROJECTS-REPOSITORY/
 ├── .github/                     # Workflows CI/CD réels (ci.yml, klem-ref-bot-scheduled.yml) — voir .github/README.md
 ├── .claude/                     # settings.local.json uniquement (permissions locales)
 ├── commands/                    # Commandes /startup, /update, /prime (racine, pas dans .claude/)
