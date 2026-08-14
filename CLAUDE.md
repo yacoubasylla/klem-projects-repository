@@ -171,3 +171,37 @@ feat(scope): ... pour une nouvelle fonctionnalité.
 fix(scope): ... pour la résolution d'un bug.
 
 docs(scope): ... pour les modifications de documentation.
+
+---
+
+## 🔀 4. Workflow Git : Branche + Pull Request obligatoires (code)
+
+**Règle (actée le 2026-08-14) :** tout changement sous `services/`, `apps/` ou `packages/` passe
+par une branche puis une Pull Request vers `main` — plus de push direct sur `main` pour du code.
+Portée : ce dépôt (`klem-projects-repository`) uniquement. `klem-labs-repository` reste purement
+documentaire (pas de code applicatif, voir son propre `CLAUDE.md`) et continue en push direct sur
+`master`.
+
+1. **Créer une branche** depuis `main` à jour :
+   - Rattachée à un ticket Redmine d'un projet : `feature/<CODE-PROJET>-<ID-Redmine>-description`
+     ou `bugfix/<CODE-PROJET>-<ID-Redmine>-description` (`<CODE-PROJET>` = Code Projet du
+     `cas_metier.md` concerné, ex. `CC-AUDIT`, `HT-CORRIDOR`) — format vérifié par le workflow
+     réutilisable `branch-naming-check.yml` de `klem-labs-repository`
+     (`platform-devsecops/adr/0008-verification-convention-branche-pr.md`).
+   - Changement transverse sans ticket (governance, CI, package partagé, dépendances) :
+     `chore/description` ou `docs/description`.
+2. **Committer et pousser la branche** (jamais `main` directement) : `git push -u origin <branche>`.
+3. **Ouvrir la Pull Request** : `gh pr create --title "..." --body "..."` — le corps résume ce qui
+   change et pourquoi (pas juste quoi), suit le processus de clôture ci-dessus (§3) pour le
+   contenu.
+4. **Laisser passer la CI** (`ci.yml`, déjà déclenché sur `pull_request` vers `main`/`develop`) —
+   ne jamais proposer de fusionner une PR dont la CI est rouge ou encore en cours.
+5. **Fusion** : décision humaine explicite (ou confirmation explicite du demandeur), jamais
+   automatique côté agent — squash-merge par défaut pour garder un historique `main` linéaire par
+   PR. Supprimer la branche après fusion.
+
+**Non automatisé** : forcer techniquement ce workflow (bloquer le push direct sur `main`, exiger la
+CI avant fusion) nécessite d'activer la protection de branche GitHub (« Require pull request before
+merging », « Require status checks to pass ») — un geste d'administration manuel sur ce dépôt, non
+faisable depuis un fichier de règles. Tant que ce n'est pas activé, cette règle reste une
+convention à respecter, pas une contrainte techniquement bloquée.
