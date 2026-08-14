@@ -125,7 +125,11 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
                 overflow: 'hidden',
                 ...(heroBackgroundImage && {
                   backgroundImage: (t) =>
-                    `linear-gradient(0deg, ${alpha(t.palette.background.default, 0.92)} 0%, ${alpha(t.palette.background.default, 0.65)} 35%, ${alpha(t.palette.background.default, 0.15)} 70%, ${alpha(t.palette.background.default, 0)} 100%), url(${heroBackgroundImage})`,
+                    // heroBackgroundImage peut être une data URI SVG (Vite encode les guillemets
+                    // simples des attributs XML tels quels) : url() DOIT être mis entre guillemets,
+                    // sinon la moindre apostrophe casse le parsing CSS et toute la déclaration
+                    // background-image est silencieusement rejetée par le navigateur.
+                    `linear-gradient(0deg, ${alpha(t.palette.background.default, 0.92)} 0%, ${alpha(t.palette.background.default, 0.65)} 35%, ${alpha(t.palette.background.default, 0.15)} 70%, ${alpha(t.palette.background.default, 0)} 100%), url("${heroBackgroundImage}")`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }),
