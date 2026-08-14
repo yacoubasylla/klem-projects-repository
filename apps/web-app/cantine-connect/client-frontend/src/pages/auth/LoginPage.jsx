@@ -12,6 +12,7 @@ import { useOrganisationBranding } from '../../hooks/useConfig'
 import { authService } from '../../services/authService'
 import apiClient from '../../services/apiClient'
 import PublicSplitLayout from '../../layouts/PublicSplitLayout'
+import defaultHeroImage from '../../assets/login-hero-default.svg'
 
 const BACKEND_ORIGIN = (apiClient.defaults.baseURL || '').replace(/\/api\/v1\/?$/, '')
 
@@ -25,7 +26,9 @@ export default function LoginPage() {
   const [showPwd, setShowPwd]       = useState(false)
   const [loading, setLoading]       = useState(false)
   const [error, setError]           = useState(null)
-  const [bgImage, setBgImage]       = useState(null)
+  // Image de secours empaquetée dans le frontend, utilisée tant que la config backend
+  // (FOND_ECRAN_LOGIN) n'a pas répondu ou est indisponible — remplacée dès que l'appel aboutit.
+  const [bgImage, setBgImage]       = useState(defaultHeroImage)
   const [notice]                    = useState(
     location.state?.reason === 'inactivite' ? 'Vous avez été déconnecté(e) pour inactivité.' : null
   )
