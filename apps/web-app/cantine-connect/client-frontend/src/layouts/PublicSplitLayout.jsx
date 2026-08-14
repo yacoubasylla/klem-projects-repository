@@ -117,7 +117,11 @@ export default function PublicSplitLayout({ activePage, heroSlot, children, card
                 display: 'flex',
                 alignItems: 'flex-end',
                 borderRadius: 6,
-                p: { xs: 3, md: heroBackgroundImage ? 4 : 2 },
+                // Le padding doit rester >= au borderRadius (6 * theme.shape.borderRadius = 24px)
+                // : avec overflow hidden, un padding plus petit que le rayon d'arrondi laisse le
+                // contenu proche des coins (badge en haut, légende en bas) tomber dans la zone de
+                // découpe de l'arrondi -- visible en Firefox, pas en Chromium (bug réel constaté).
+                p: { xs: 3, md: heroBackgroundImage ? 4 : 3 },
                 overflow: 'hidden',
                 ...(heroBackgroundImage && {
                   backgroundImage: (t) =>
