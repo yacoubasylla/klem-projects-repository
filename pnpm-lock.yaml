@@ -143,7 +143,7 @@ importers:
       '@fontsource/inter':
         specifier: ^5.3.0
         version: 5.3.0
-      '@fontsource/plus-jakarta-sans':
+      '@fontsource/questrial':
         specifier: ^5.3.0
         version: 5.3.0
       '@hookform/resolvers':
@@ -1104,7 +1104,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.18.31':
     resolution: {integrity: sha512-v9llw9fT3Uv+TCM6Xllo54t672CuYtinEQZ2LPJ2EJsCwuTc4Cd2gXQaouuIVD21VoeGQnr5JtJuWbF97sBKzQ==}
@@ -1197,8 +1197,8 @@ packages:
   '@fontsource/inter@5.3.0':
     resolution: {integrity: sha512-RofMylZmjlJEfELXeNHFWBRcSs75rGU/6bV2S2jfnvv/3rPXPGe0LgUJTklcHZ9lM4OZmAVFhcJPnACfb91A3g==}
 
-  '@fontsource/plus-jakarta-sans@5.3.0':
-    resolution: {integrity: sha512-9WRw3G74Ve4cyPApAZSXLPY5DiLOZXDn7Q7dIBjFBpA0Pj56ljDItEdy2UUajjJxRuTg2HkMLO5C3K2nAQORWg==}
+  '@fontsource/questrial@5.3.0':
+    resolution: {integrity: sha512-3ewssxQBpTbNPRl87y7R8qwJ+F2uXnBBFnqz3kv7Mu+J5vki0iw8FDpOy9U29CaGkTKvVvu4WpfdFOiE2OFgvA==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -7635,7 +7635,7 @@ snapshots:
 
   '@fontsource/inter@5.3.0': {}
 
-  '@fontsource/plus-jakarta-sans@5.3.0': {}
+  '@fontsource/questrial@5.3.0': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.8.0)':
     dependencies:

@@ -1,9 +1,16 @@
 import { createTheme } from '@mui/material/styles'
 
+// Police des titres du site vitrine KLEM (site-klem, classe utilitaire `font-heading`).
+const headingFontFamily = '"Questrial", "Inter", "Roboto", "Helvetica", "Arial", sans-serif'
+
 const baseTypography = {
   fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-  h5: { fontWeight: 700 },
-  h6: { fontWeight: 700 },
+  h1: { fontFamily: headingFontFamily },
+  h2: { fontFamily: headingFontFamily },
+  h3: { fontFamily: headingFontFamily },
+  h4: { fontFamily: headingFontFamily },
+  h5: { fontFamily: headingFontFamily, fontWeight: 700 },
+  h6: { fontFamily: headingFontFamily, fontWeight: 700 },
   subtitle1: { fontWeight: 600 },
   button: { fontWeight: 600 },
 }
@@ -53,12 +60,12 @@ const premium = createTheme({
 
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 800, letterSpacing: '-0.02em' },
-    h2: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 800, letterSpacing: '-0.02em' },
-    h3: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 700, letterSpacing: '-0.01em' },
-    h4: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 700, letterSpacing: '-0.01em' },
-    h5: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 700 },
-    h6: { fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif', fontWeight: 700 },
+    h1: { fontFamily: headingFontFamily, fontWeight: 800, letterSpacing: '-0.02em' },
+    h2: { fontFamily: headingFontFamily, fontWeight: 800, letterSpacing: '-0.02em' },
+    h3: { fontFamily: headingFontFamily, fontWeight: 700, letterSpacing: '-0.01em' },
+    h4: { fontFamily: headingFontFamily, fontWeight: 700, letterSpacing: '-0.01em' },
+    h5: { fontFamily: headingFontFamily, fontWeight: 700 },
+    h6: { fontFamily: headingFontFamily, fontWeight: 700 },
     subtitle1: { fontWeight: 600 },
     button: { fontWeight: 700 },
   },
@@ -328,8 +335,8 @@ const modern = createTheme({
   },
   typography: {
     ...baseTypography,
-    h5: { fontWeight: 800, letterSpacing: '-0.03em' },
-    h6: { fontWeight: 700, letterSpacing: '-0.02em' },
+    h5: { fontFamily: headingFontFamily, fontWeight: 800, letterSpacing: '-0.03em' },
+    h6: { fontFamily: headingFontFamily, fontWeight: 700, letterSpacing: '-0.02em' },
   },
   shape: { borderRadius: 16 },
   components: {
