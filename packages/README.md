@@ -4,7 +4,10 @@ Ce dossier centralise le code, les types et les configurations transversaux à t
 
 ## 📁 Structure des Packages
 - **`ui/`** (`@klem/ui`) : composants graphiques partagés (`KlemButton`, `ErrorBoundary`,
-  `SuccessSnackbar`, exportés via `src/index.ts`), le reste du design system reste à construire.
+  `SuccessSnackbar`, exportés via `src/index.ts`) et socle de thème (`klemHeadingFontFamily`,
+  `klemHeadingTypography` — police Questrial des titres du site vitrine site-klem, à consommer
+  dans le `typography` d'un `createTheme()` MUI ; l'app doit charger la police elle-même via
+  `@fontsource/questrial`), le reste du design system reste à construire.
 - **`utils/`** (`@klem/utils`) : fonctions utilitaires partagées (structure prête, `src/index.ts`).
 - **`license/`** (`@klem/license`) : vérification de clé de licence KLEM (`KTS_LICENSE_KEY`),
   signature ECDSA P-256 via Web Crypto, exposé via `<KlemProvider licenseKey appId>` +

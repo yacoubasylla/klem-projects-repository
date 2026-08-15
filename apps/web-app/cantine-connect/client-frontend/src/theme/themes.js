@@ -1,7 +1,5 @@
 import { createTheme } from '@mui/material/styles'
-
-// Police des titres du site vitrine KLEM (site-klem, classe utilitaire `font-heading`).
-const headingFontFamily = '"Questrial", "Inter", "Roboto", "Helvetica", "Arial", sans-serif'
+import { klemHeadingFontFamily as headingFontFamily } from '@klem/ui'
 
 const baseTypography = {
   fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
