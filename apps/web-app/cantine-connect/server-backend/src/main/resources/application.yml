@@ -92,6 +92,20 @@ paiement:
     token: ${PAYDUNYA_TOKEN:token_test}
     mode: ${PAYDUNYA_MODE:test}
     verify-signature: ${PAYDUNYA_VERIFY_SIGNATURE:false}
+  orange-money:
+    client-id: ${ORANGE_MONEY_CLIENT_ID:client_test}
+    client-secret: ${ORANGE_MONEY_CLIENT_SECRET:secret_test}
+    merchant-key: ${ORANGE_MONEY_MERCHANT_KEY:cle_marchand_test}
+    webhook-secret: ${ORANGE_MONEY_WEBHOOK_SECRET:}
+    verify-signature: ${ORANGE_MONEY_VERIFY_SIGNATURE:false}
+
+# ── Contrat unifié multi-providers (PaymentStrategy) ──────
+# Provider utilisé par défaut sur /api/v2/canteen-payments/initiate quand aucun
+# provider explicite n'est fourni dans la requête. Valeurs possibles : voir
+# com.klem.cantine.paiement.strategy.enums.PaymentProviderType.
+klem:
+  payment:
+    default-provider: ${KLEM_PAYMENT_DEFAULT_PROVIDER:CINETPAY}
 
 # ── URLs publiques (callbacks paiement, liens dans les notifications) ────
 app:

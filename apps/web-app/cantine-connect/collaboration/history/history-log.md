@@ -1038,3 +1038,31 @@
 - **Explicitement non fait (dette documentée, pas silencieuse) :** bump Java 17→21, migration vers
   OAuth2 Resource Server, ajout ArchUnit/Testcontainers, refactor de couches — nécessitent un cycle
   de non-régression dédié sur un système de paiement Mobile Money en production.
+
+### [2026-08-18] - Contrat de paiement unifié multi-providers (Strategy Pattern) + intégration Orange Money
+
+- **Statut :** Livré / Opérationnel (51/51 tests verts, dont 44 existants inchangés — non-régression vérifiée)
+- **Fichiers Modifiés :**
+  - Nouveaux : `server-backend/src/main/java/com/klem/cantine/paiement/strategy/{PaymentStrategy,
+    dto/PaymentRequestDto,dto/PaymentResponseDto,dto/WebhookPayloadDto,enums/PaymentProviderType,
+    enums/PaymentStatus,exception/PaymentProviderException,impl/OrangeMoneyPaymentStrategy,
+    impl/package-info}.java`, `paiement/service/{PaymentStrategyFactory,CanteenPaymentService,
+    CanteenPaymentServiceImpl}.java`, `paiement/controller/CanteenPaymentController.java`,
+    tests `PaymentStrategyFactoryTest`/`CanteenPaymentServiceImplTest`.
+  - Modifiés (additifs uniquement, aucune méthode existante touchée) :
+    `paiement/provider/CinetPayProvider.java` (implémente en plus `PaymentStrategy`),
+    `paiement/config/PaiementProperties.java` (bloc `orangeMoney`), `common/SecurityConfig.java`
+    (route publique du nouveau webhook), `application.yml` (config Orange Money +
+    `klem.payment.default-provider`), `pom.xml` (dépendance `spring-boot-starter-webflux`).
+- **Description :** Passage de l'intégration paiement (jusqu'ici CinetPay/PayDunya de facto,
+  sélection par config `PAIEMENT_PROVIDER_ACTIF`) à une architecture Strategy Pattern
+  multi-providers dynamique : `PaymentStrategy` (initiation, webhook, statut, signature),
+  `PaymentStrategyFactory` (résolution par `PaymentProviderType`), nouveau service façade
+  `CanteenPaymentServiceImpl` exposé sous `/api/v2/canteen-payments/**` (coexiste avec
+  `/api/v1/paiements` inchangé, même table `transactions_paiement`). `OrangeMoneyPaymentStrategy`
+  est une intégration réelle (OAuth2 client_credentials, jeton mis en cache, appel Webpayment CI
+  via `WebClient`) ; structure d'ajout de `MtnMoMoPaymentStrategy`/`WavePaymentStrategy` sans
+  modification du code existant documentée dans `paiement.strategy.impl.package-info`. Détail des
+  alternatives écartées et de la correction de portée (le mandat de refactor initial ciblait à tort
+  `services/core-api`, service KLEM DataSphere sans rapport avec Cantine Connect) :
+  `collaboration/history/adr/2026-08-18-payment-strategy-multi-providers-orange-money.md`.

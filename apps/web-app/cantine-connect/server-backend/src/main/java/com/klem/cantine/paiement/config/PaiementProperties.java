@@ -13,6 +13,7 @@ public class PaiementProperties {
 
     private CinetPayProps cinetpay = new CinetPayProps();
     private PayDunyaProps paydunya = new PayDunyaProps();
+    private OrangeMoneyProps orangeMoney = new OrangeMoneyProps();
 
     @Getter
     @Setter
@@ -32,6 +33,23 @@ public class PaiementProperties {
         private String token;
         // "test" (sandbox-api) ou "live" (api) — détermine l'hôte PayDunya appelé.
         private String mode = "test";
+        private boolean verifySignature = false;
+    }
+
+    /**
+     * Intégration marchande directe Orange Money Webpayment CI (OAuth2 client_credentials).
+     * Remplace, une fois les identifiants marchands obtenus, le placeholder historique
+     * {@code OrangeMoneyDirectProvider}.
+     */
+    @Getter
+    @Setter
+    public static class OrangeMoneyProps {
+        private String clientId;
+        private String clientSecret;
+        private String merchantKey;
+        private String authUrl = "https://api.orange.com/oauth/v3/token";
+        private String webpaymentUrl = "https://api.orange.com/orange-money-webpay/ci/v1/webpayment";
+        private String webhookSecret;
         private boolean verifySignature = false;
     }
 }

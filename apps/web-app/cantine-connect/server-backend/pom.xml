@@ -33,6 +33,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- ── Client HTTP réactif WebClient (paiement multi-providers) ──
+             Utilisé uniquement comme client HTTP (OrangeMoneyPaymentStrategy) ; la présence
+             conjointe de spring-boot-starter-web fait que Spring Boot conserve un serveur
+             Servlet/MVC classique (WebApplicationType.SERVLET), pas de bascule en réactif.
+             Voir collaboration/history/adr/ pour la décision associée. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <!-- ── Persistance JPA / PostgreSQL ──────────────── -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

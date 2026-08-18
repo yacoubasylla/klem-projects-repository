@@ -183,3 +183,14 @@
   - Attendre l'obtention de vraies clés avant de coder l'appel API réel — rejetée : le code doit être prêt à fonctionner dès que les identifiants sont fournis, sans nouveau cycle de développement.
   - SDK Twilio officiel — écarté au profit d'un appel HTTP direct (Basic Auth) pour rester cohérent avec l'approche déjà retenue pour CinetPay/PayDunya (pas de dépendance SDK supplémentaire) et garder l'abstraction facilement substituable.
 - **Non inclus dans cette phase** : commissions de transaction CinetPay/PayDunya et frais de consommation SMS réels (contractualisés séparément par le client avec les fournisseurs — voir l'offre financière, section Exclusions).
+
+---
+
+### ADR-019 · Contrat de paiement unifié multi-providers (Strategy Pattern) et intégration Orange Money
+- **Statut** : Accepté — 2026-08-18
+- **Décision** : Nouveau contrat `PaymentStrategy` (`paiement.strategy`) — initiation, webhook, vérification de statut, validation de signature — additif à l'ancien `PaymentProvider` : `CinetPayProvider` implémente les deux, sans qu'aucune de ses méthodes existantes ne soit modifiée. `PaymentStrategyFactory` indexe les stratégies par `PaymentProviderType` (repli sur `klem.payment.default-provider`). Nouveau service façade `CanteenPaymentServiceImpl`/`CanteenPaymentController` sous `/api/v2/canteen-payments/**`, coexistant avec `/api/v1/paiements` et partageant la même table `transactions_paiement`. `OrangeMoneyPaymentStrategy` : intégration OAuth2 client_credentials réelle via `WebClient` (`spring-boot-starter-webflux`, utilisé uniquement comme client HTTP — l'app reste Spring MVC).
+- **Contexte** : accès marchand Orange Money obtenu, nécessitant un contrat plus riche que `PaymentProvider` (webhook, statut, signature). Ajouter un fournisseur devient un ajout de classe pur (principe Ouvert/Fermé), sans modifier la factory ni le service façade.
+- **Alternatives rejetées** :
+  - Réécrire `CinetPayProvider`/`PayDunyaProvider` en `WebClient` pour homogénéiser — rejetée : intégrations de paiement réelles en production, réécriture sans nécessité fonctionnelle = risque de régression pour un gain cosmétique.
+  - Remplacer `PaymentProvider` par `PaymentStrategy` (rename en masse) — rejetée, contraire à la règle de non-régression du `CLAUDE.md` racine (§2.4).
+- **Fichier ADR** : `adr/2026-08-18-payment-strategy-multi-providers-orange-money.md`
