@@ -11,4 +11,10 @@ export const authService = {
     apiClient
       .post('/auth/changer-mot-de-passe', { motDePasseActuel, nouveauMotDePasse })
       .then((r) => r.data),
+
+  demanderOtpParent: (whatsappNumber) =>
+    apiClient.post('/parents/otp/send', { whatsappNumber }).then((r) => r.data),
+
+  verifierOtpParent: (whatsappNumber, otpCode) =>
+    apiClient.post('/parents/otp/verify', { whatsappNumber, otpCode }).then((r) => r.data.data),
 };

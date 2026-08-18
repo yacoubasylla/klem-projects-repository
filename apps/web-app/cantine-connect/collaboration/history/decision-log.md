@@ -194,3 +194,15 @@
   - Réécrire `CinetPayProvider`/`PayDunyaProvider` en `WebClient` pour homogénéiser — rejetée : intégrations de paiement réelles en production, réécriture sans nécessité fonctionnelle = risque de régression pour un gain cosmétique.
   - Remplacer `PaymentProvider` par `PaymentStrategy` (rename en masse) — rejetée, contraire à la règle de non-régression du `CLAUDE.md` racine (§2.4).
 - **Fichier ADR** : `adr/2026-08-18-payment-strategy-multi-providers-orange-money.md`
+
+---
+
+### ADR-020 · Connexion parent par OTP (sans compte à la volée) et gestion complète des enfants
+- **Statut** : Accepté — 2026-08-18
+- **Décision** : L'OTP (WhatsApp/SMS/Email) authentifie un compte PARENT déjà approuvé (recherché par téléphone) — il ne crée jamais de compte ni d'enfant à la volée. Un numéro sans compte reçoit une erreur explicite invitant à soumettre la demande d'accès existante (`/demande-acces`, inchangée). Une fois vérifié, délivre le même jeton qu'une connexion par mot de passe, donnant accès aux endpoints parent déjà existants. Gestion des enfants étendue côté parent (`PUT`/`DELETE /parents/moi/enfants/{id}`, nouveaux) en réutilisant `EleveService`/`Parent` existants — vérification de propriété. Matricule (`E<ANNÉE><RANG>`) généré automatiquement à la création (upsert atomique PostgreSQL), immuable ensuite, saisie manuelle retirée.
+- **Contexte** : mandat d'accès parent par OTP + gestion enfants ; le wizard OTP tel que décrit littéralement (numéro vérifié = accès direct) réintroduisait un risque de faux comptes déjà explicitement écarté par une décision antérieure (activation immédiate sans contrôle admin, rejetée pour risque de faux comptes en contexte scolaire).
+- **Alternatives rejetées** :
+  - OTP = accès instantané sans compte préalable (mandat initial) — rejetée, risque déjà écarté.
+  - Nouveau module `Student` parallèle à `Eleve`/`Parent` — rejetée, aurait dupliqué le modèle de données et la logique métier déjà branchés sur `Eleve` (paiement, scan, notifications).
+  - Redis pour le stockage OTP dès cette itération — écarté (topologie mono-instance actuelle), stockage en mémoire derrière l'interface `OtpStore`, remplaçable sans impact.
+- **Fichier ADR** : `adr/2026-08-18-connexion-parent-otp-gestion-enfants.md`

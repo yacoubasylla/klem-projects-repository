@@ -15,9 +15,8 @@ public record EleveRequestDTO(
     @NotNull(message = "La classe est obligatoire")
     Long classeId,
 
-    @NotBlank(message = "Le matricule est obligatoire")
-    String matricule,
-
+    // Pas de matricule ici : généré automatiquement à la création (MatriculeGenerator),
+    // immuable ensuite — voir EleveService.creer/modifier.
     @NotBlank(message = "Le nom est obligatoire")
     String nom,
 

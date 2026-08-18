@@ -24,7 +24,8 @@ public class NotificationDispatcher {
     public void envoyer(String emailDestinataire, String telephoneDestinataire, String sujet, String corps) {
         Map<String, String> destinatairesParCanal = Map.of(
                 "EMAIL", emailDestinataire != null ? emailDestinataire : "",
-                "SMS", telephoneDestinataire != null ? telephoneDestinataire : ""
+                "SMS", telephoneDestinataire != null ? telephoneDestinataire : "",
+                "WHATSAPP", telephoneDestinataire != null ? telephoneDestinataire : ""
         );
         senders.stream()
                 .filter(NotificationSender::estActif)

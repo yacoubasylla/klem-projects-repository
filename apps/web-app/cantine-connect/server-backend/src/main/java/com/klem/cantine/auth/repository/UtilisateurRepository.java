@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
 
     Optional<Utilisateur> findByEmailAndActifTrue(String email);
+    Optional<Utilisateur> findByTelephoneAndRoleAndActifTrue(String telephone, Role role);
     boolean existsByEmail(String email);
     boolean existsByTelephone(String telephone);
     long countByRoleAndActifTrue(Role role);
