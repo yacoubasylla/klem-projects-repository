@@ -51,7 +51,7 @@ export default function HomePage() {
               variant="contained" size="large" startIcon={<HowToRegIcon />}
               sx={{ px: 4, py: 1.4, borderRadius: 999, whiteSpace: 'nowrap' }}
             >
-              Demande d'accès parent
+              Accès Parent
             </Button>
             <Button
               component={RouterLink} to="/login"

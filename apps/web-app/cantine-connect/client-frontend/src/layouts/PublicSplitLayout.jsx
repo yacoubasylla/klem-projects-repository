@@ -36,7 +36,7 @@ function DecorativePattern() {
 
 const NAV_LINKS = [
   { key: 'login', label: 'Se connecter', to: '/login', variant: 'outlined', icon: <LoginIcon /> },
-  { key: 'acces', label: "Demande d'accès", to: '/demande-acces', variant: 'contained', icon: <HowToRegIcon /> },
+  { key: 'acces', label: 'Accès Parent', to: '/demande-acces', variant: 'contained', icon: <HowToRegIcon /> },
 ]
 
 /**
