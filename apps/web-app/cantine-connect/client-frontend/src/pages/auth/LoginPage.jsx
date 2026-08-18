@@ -152,18 +152,12 @@ export default function LoginPage() {
           </Stack>
         </form>
 
-        <Typography variant="body2" color="text.secondary" textAlign="center" mt={2}>
-          <Box component="a" href="/acces-otp" sx={{ color: 'primary.main', fontWeight: 700, textDecoration: 'none' }}>
-            Se connecter avec un code WhatsApp/SMS →
-          </Box>
-        </Typography>
-
         <Divider sx={{ my: 3 }} />
 
         <Typography variant="body2" color="text.secondary" textAlign="center">
-          Vous êtes parent et n'avez pas encore de compte ?{' '}
+          Vous êtes parent ?{' '}
           <Box component="a" href="/demande-acces" sx={{ color: 'primary.main', fontWeight: 700, textDecoration: 'none' }}>
-            Faites une demande d'accès
+            Accès Parent (code WhatsApp/SMS) →
           </Box>
         </Typography>
       </Box>

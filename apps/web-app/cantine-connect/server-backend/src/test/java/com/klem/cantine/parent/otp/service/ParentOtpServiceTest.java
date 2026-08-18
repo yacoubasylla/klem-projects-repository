@@ -6,13 +6,15 @@ import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.auth.repository.UtilisateurRepository;
 import com.klem.cantine.auth.service.JwtService;
 import com.klem.cantine.notification.NotificationDispatcher;
+import com.klem.cantine.parent.entity.Parent;
 import com.klem.cantine.parent.otp.OtpStore;
-import jakarta.persistence.EntityNotFoundException;
+import com.klem.cantine.parent.repository.ParentRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -29,12 +31,15 @@ import static org.mockito.Mockito.when;
 class ParentOtpServiceTest {
 
     @Mock private UtilisateurRepository utilisateurRepository;
+    @Mock private ParentRepository parentRepository;
     @Mock private OtpStore otpStore;
     @Mock private NotificationDispatcher notificationDispatcher;
     @Mock private JwtService jwtService;
+    @Mock private PasswordEncoder passwordEncoder;
 
     private ParentOtpService service() {
-        return new ParentOtpService(utilisateurRepository, otpStore, notificationDispatcher, jwtService);
+        return new ParentOtpService(
+                utilisateurRepository, parentRepository, otpStore, notificationDispatcher, jwtService, passwordEncoder);
     }
 
     private Utilisateur parent(String telephone) {
@@ -45,34 +50,34 @@ class ParentOtpServiceTest {
     }
 
     @Test
-    void envoyerOtp_compteParentActifTrouve_genereEtDispatcheLeCode() {
+    void envoyerOtp_compteExistant_dispatcheSurLEmailDuCompte() {
         Utilisateur u = parent("+225700000001");
         when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000001", Role.PARENT))
                 .thenReturn(Optional.of(u));
 
-        service().envoyerOtp("0700000001");
+        service().envoyerOtp("0700000001", "autre@example.com");
 
         var codeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(otpStore).enregistrer(eq("+225700000001"), codeCaptor.capture());
+        verify(otpStore).enregistrer(eq("+225700000001"), codeCaptor.capture(), eq("autre@example.com"));
         assertThat(codeCaptor.getValue()).matches("\\d{6}");
         verify(notificationDispatcher).envoyer(eq("awa@example.com"), eq("+225700000001"), anyString(), anyString());
     }
 
     @Test
-    void envoyerOtp_numeroSansCompteParentActif_leveEntityNotFound() {
+    void envoyerOtp_numeroSansCompte_dispatcheSurLEmailFourni() {
         when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue(anyString(), eq(Role.PARENT)))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service().envoyerOtp("0700000099"))
-                .isInstanceOf(EntityNotFoundException.class);
+        service().envoyerOtp("0700000099", "nouveau@example.com");
 
-        verify(otpStore, never()).enregistrer(anyString(), anyString());
+        verify(otpStore).enregistrer(eq("+225700000099"), anyString(), eq("nouveau@example.com"));
+        verify(notificationDispatcher).envoyer(eq("nouveau@example.com"), eq("+225700000099"), anyString(), anyString());
     }
 
     @Test
-    void verifierOtp_codeValide_retourneUnJetonDeSession() {
+    void verifierOtp_compteExistant_retourneUnJetonDeSessionSansCreerDeCompte() {
         Utilisateur u = parent("+225700000001");
-        when(otpStore.verifierEtInvalider("+225700000001", "123456")).thenReturn(true);
+        when(otpStore.verifierEtInvalider("+225700000001", "123456")).thenReturn(Optional.of("awa@example.com"));
         when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000001", Role.PARENT))
                 .thenReturn(Optional.of(u));
         when(jwtService.generateToken(u)).thenReturn("jwt-token");
@@ -81,12 +86,53 @@ class ParentOtpServiceTest {
         AuthResponseDTO response = service().verifierOtp("0700000001", "123456");
 
         assertThat(response.token()).isEqualTo("jwt-token");
-        assertThat(response.role()).isEqualTo("PARENT");
+        verify(utilisateurRepository, never()).save(any());
+        verify(parentRepository, never()).save(any());
+    }
+
+    @Test
+    void verifierOtp_numeroSansCompte_creeLeCompteParentEtLeProfil() {
+        when(otpStore.verifierEtInvalider("+225700000099", "123456"))
+                .thenReturn(Optional.of("nouveau@example.com"));
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000099", Role.PARENT))
+                .thenReturn(Optional.empty());
+        when(utilisateurRepository.existsByEmail("nouveau@example.com")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hash");
+        when(utilisateurRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(jwtService.generateToken(any())).thenReturn("jwt-token");
+        when(jwtService.getExpirationMs()).thenReturn(3_600_000L);
+
+        AuthResponseDTO response = service().verifierOtp("0700000099", "123456");
+
+        assertThat(response.token()).isEqualTo("jwt-token");
+        var utilisateurCaptor = ArgumentCaptor.forClass(Utilisateur.class);
+        verify(utilisateurRepository).save(utilisateurCaptor.capture());
+        assertThat(utilisateurCaptor.getValue().getTelephone()).isEqualTo("+225700000099");
+        assertThat(utilisateurCaptor.getValue().getEmail()).isEqualTo("nouveau@example.com");
+        assertThat(utilisateurCaptor.getValue().getRole()).isEqualTo(Role.PARENT);
+
+        var parentCaptor = ArgumentCaptor.forClass(Parent.class);
+        verify(parentRepository).save(parentCaptor.capture());
+        assertThat(parentCaptor.getValue().getUtilisateur()).isEqualTo(utilisateurCaptor.getValue());
+    }
+
+    @Test
+    void verifierOtp_emailDejaUtiliseParUnAutreCompte_leveIllegalState() {
+        when(otpStore.verifierEtInvalider("+225700000099", "123456"))
+                .thenReturn(Optional.of("deja-pris@example.com"));
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000099", Role.PARENT))
+                .thenReturn(Optional.empty());
+        when(utilisateurRepository.existsByEmail("deja-pris@example.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> service().verifierOtp("0700000099", "123456"))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(utilisateurRepository, never()).save(any());
     }
 
     @Test
     void verifierOtp_codeInvalide_leveIllegalArgument() {
-        when(otpStore.verifierEtInvalider(eq("+225700000001"), anyString())).thenReturn(false);
+        when(otpStore.verifierEtInvalider(eq("+225700000001"), anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service().verifierOtp("0700000001", "000000"))
                 .isInstanceOf(IllegalArgumentException.class);

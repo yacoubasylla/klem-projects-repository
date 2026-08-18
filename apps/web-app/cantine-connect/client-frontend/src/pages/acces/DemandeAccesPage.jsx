@@ -1,89 +1,73 @@
-import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { useState, useEffect, useRef } from 'react'
 import {
-  Box, Typography, TextField, Button, Stack, Alert, CircularProgress,
-  Stepper, Step, StepLabel, FormControlLabel, Checkbox,
+  Box, Typography, TextField, Button, Stack, Alert, CircularProgress, Container,
+  Stepper, Step, StepLabel,
 } from '@mui/material'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import HowToRegIcon    from '@mui/icons-material/HowToReg'
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
+import { useAuth } from '../../hooks/useAuth'
+import { authService } from '../../services/authService'
 import PublicSplitLayout from '../../layouts/PublicSplitLayout'
-import { demandeAccesService } from '../../services/demandeAccesService'
+import MesEnfantsPage from '../moi/MesEnfantsPage'
+import defaultHeroImage from '../../assets/login-hero-default.svg'
 
-// Numérotation ivoirienne post-2021 : 10 chiffres commençant par 0, indicatif +225/00225
-// optionnel, séparateurs (espace, point, tiret) libres entre les chiffres.
-const TELEPHONE_REGEX = /^(\+225|00225)?[\s.-]*0(?:[\s.-]*\d){9}$/
-const MSG_TELEPHONE_INVALIDE = 'Format de téléphone invalide (10 chiffres, ex. 07 08 09 10 11)'
+const RENVOI_DELAI_SECONDES = 60
 
-const schema = z
-  .object({
-    nom: z.string().min(1, 'Le nom est obligatoire'),
-    prenom: z.string().min(1, 'Le prénom est obligatoire'),
-    fonction: z.string().optional(),
-    telephonePrincipal: z.string().regex(TELEPHONE_REGEX, MSG_TELEPHONE_INVALIDE),
-    memeWhatsapp: z.boolean(),
-    telephoneWhatsapp: z.string().optional(),
-    telephoneSecondaire: z.union([z.string().regex(TELEPHONE_REGEX, MSG_TELEPHONE_INVALIDE), z.literal('')]).optional(),
-    email: z.union([z.string().email("Format d'email invalide"), z.literal('')]).optional(),
-    ville: z.string().min(1, 'La ville est obligatoire'),
-    commune: z.string().min(1, 'La commune est obligatoire'),
-    quartier: z.string().optional(),
-  })
-  .refine(
-    (data) => data.memeWhatsapp || TELEPHONE_REGEX.test(data.telephoneWhatsapp ?? ''),
-    { message: 'Renseignez le numéro WhatsApp ou cochez la case ci-dessus', path: ['telephoneWhatsapp'] },
-  )
+/**
+ * Accès parent par OTP (remplace l'ancien formulaire "Demande d'accès" avec validation admin,
+ * décision du 2026-08-18) : le parent saisit son numéro WhatsApp et son email, reçoit un code
+ * par WhatsApp/SMS/Email, puis le code lui donne directement accès à la gestion de ses enfants
+ * (page 2) — le compte est créé à la volée s'il n'existait pas encore.
+ */
+function ParentOtpStep({ onVerified }) {
+  const [whatsappNumber, setWhatsappNumber] = useState('')
+  const [email, setEmail] = useState('')
+  const [otpCode, setOtpCode] = useState('')
+  const [codeEnvoye, setCodeEnvoye] = useState(false)
+  const [sendingCode, setSendingCode] = useState(false)
+  const [verifying, setVerifying] = useState(false)
+  const [error, setError] = useState(null)
+  const [compteACours, setCompteACours] = useState(0)
+  const timerRef = useRef(null)
 
-const STEPS = [
-  { label: 'Identité',   fields: ['nom', 'prenom', 'fonction'] },
-  { label: 'Contact',    fields: ['telephonePrincipal', 'memeWhatsapp', 'telephoneWhatsapp', 'telephoneSecondaire', 'email'] },
-  { label: 'Résidence',  fields: ['ville', 'commune', 'quartier'] },
-]
+  useEffect(() => () => clearInterval(timerRef.current), [])
 
-export default function DemandeAccesPage() {
-  const [step, setStep]         = useState(0)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
-  const [envoyee, setEnvoyee]   = useState(false)
-
-  const { control, handleSubmit, trigger, watch, formState: { errors } } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      nom: '', prenom: '', fonction: '',
-      telephonePrincipal: '', memeWhatsapp: true, telephoneWhatsapp: '', telephoneSecondaire: '', email: '',
-      ville: '', commune: '', quartier: '',
-    },
-  })
-
-  const memeWhatsapp = watch('memeWhatsapp')
-
-  const suivant = async () => {
-    const ok = await trigger(STEPS[step].fields)
-    if (ok) setStep((s) => Math.min(s + 1, STEPS.length - 1))
-  }
-  const precedent = () => setStep((s) => Math.max(s - 1, 0))
-
-  const onSubmit = async (data) => {
-    setLoading(true); setError(null)
-    try {
-      await demandeAccesService.soumettre({
-        nom: data.nom,
-        prenom: data.prenom,
-        fonction: data.fonction || null,
-        telephonePrincipal: data.telephonePrincipal,
-        telephoneWhatsapp: data.memeWhatsapp ? null : data.telephoneWhatsapp,
-        telephoneSecondaire: data.telephoneSecondaire || null,
-        email: data.email || null,
-        ville: data.ville,
-        commune: data.commune,
-        quartier: data.quartier || null,
+  const demarrerCompteACours = () => {
+    setCompteACours(RENVOI_DELAI_SECONDES)
+    clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setCompteACours((s) => {
+        if (s <= 1) { clearInterval(timerRef.current); return 0 }
+        return s - 1
       })
-      setEnvoyee(true)
-    } catch (err) {
-      setError(err.message || "Échec de l'envoi de la demande")
+    }, 1000)
+  }
+
+  const handleObtenirCode = async () => {
+    if (!whatsappNumber.trim()) { setError('Le numéro WhatsApp/téléphone est obligatoire'); return }
+    if (!email.trim()) { setError("L'email est obligatoire"); return }
+    setSendingCode(true); setError(null)
+    try {
+      await authService.demanderOtpParent(whatsappNumber.trim(), email.trim())
+      setCodeEnvoye(true)
+      demarrerCompteACours()
+    } catch (e) {
+      setError(e.message)
     } finally {
-      setLoading(false)
+      setSendingCode(false)
+    }
+  }
+
+  const handleVerifier = async (e) => {
+    e.preventDefault()
+    if (otpCode.trim().length !== 6) { setError('Le code de vérification est obligatoire'); return }
+    setVerifying(true); setError(null)
+    try {
+      const authResponse = await authService.verifierOtpParent(whatsappNumber.trim(), otpCode.trim())
+      onVerified(authResponse)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setVerifying(false)
     }
   }
 
@@ -91,131 +75,110 @@ export default function DemandeAccesPage() {
     <PublicSplitLayout
       activePage="acces"
       cardMaxWidth={600}
+      heroBackgroundImage={defaultHeroImage}
       heroSlot={
         <Box sx={{ py: { xs: 1, md: 3 } }}>
+          <Typography fontSize={40} lineHeight={1} mb={2}>📱</Typography>
           <Typography variant="h3" sx={{ fontSize: { xs: '1.9rem', md: '2.3rem' }, mb: 2 }}>
-            Rejoignez Cantine Connect
+            Accès Parent
           </Typography>
-          <Typography variant="h6" sx={{ fontWeight: 400, color: 'text.secondary', maxWidth: 460, mb: 3 }}>
-            Quelques informations suffisent pour lancer votre demande. Une fois validée par
-            l'établissement, vous recevrez vos identifiants de connexion.
+          <Typography variant="h6" sx={{ fontWeight: 400, color: 'text.secondary', maxWidth: 460 }}>
+            Renseignez votre numéro WhatsApp et votre email, saisissez le code reçu, et gérez
+            immédiatement vos enfants — aucun compte à créer séparément.
           </Typography>
-          <Stack spacing={1.5}>
-            {['Vérification par l’établissement avant activation', 'Identifiants envoyés dès validation', 'Ajout de vos enfants ensuite depuis votre espace'].map((t) => (
-              <Stack key={t} direction="row" spacing={1.25} alignItems="flex-start">
-                <CheckCircleIcon color="secondary" fontSize="small" sx={{ mt: 0.3 }} />
-                <Typography variant="body2" color="text.secondary">{t}</Typography>
-              </Stack>
-            ))}
-          </Stack>
         </Box>
       }
     >
       <Box sx={{ p: { xs: 3, sm: 4 } }}>
-        {envoyee ? (
-          <Stack alignItems="center" textAlign="center" spacing={2} py={3}>
-            <CheckCircleIcon color="secondary" sx={{ fontSize: 56 }} />
-            <Typography variant="h6" fontWeight={700}>Demande envoyée !</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Votre demande d'accès a bien été transmise. L'établissement va l'examiner et
-              vous contactera avec vos identifiants de connexion dès validation.
-            </Typography>
-            <Button href="/" variant="outlined" sx={{ mt: 1, borderRadius: 999 }}>
-              Retour à l'accueil
-            </Button>
-          </Stack>
-        ) : (
-          <>
-            <Stack direction="row" alignItems="center" spacing={1} mb={3}>
-              <HowToRegIcon fontSize="small" color="primary" />
-              <Typography variant="subtitle1" fontWeight={700}>Demande d'accès parent</Typography>
-            </Stack>
+        <Stack direction="row" alignItems="center" spacing={1} mb={2.5}>
+          <SmsOutlinedIcon fontSize="small" color="primary" />
+          <Typography variant="subtitle1" fontWeight={700}>Demande d'accès parent</Typography>
+        </Stack>
 
-            <Stepper activeStep={step} alternativeLabel sx={{ mb: 3.5 }}>
-              {STEPS.map((s) => <Step key={s.label}><StepLabel>{s.label}</StepLabel></Step>)}
-            </Stepper>
+        <Stepper activeStep={codeEnvoye ? 1 : 0} sx={{ mb: 3 }}>
+          <Step><StepLabel>Numéro &amp; email</StepLabel></Step>
+          <Step><StepLabel>Vérification</StepLabel></Step>
+        </Stepper>
 
-            {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {step === 0 && (
-                <Stack spacing={2.5}>
-                  <TextFieldCtl control={control} name="nom" label="Nom" errors={errors} autoFocus />
-                  <TextFieldCtl control={control} name="prenom" label="Prénom" errors={errors} />
-                  <TextFieldCtl control={control} name="fonction" label="Fonction (optionnel)" errors={errors} />
-                </Stack>
-              )}
+        <form onSubmit={handleVerifier}>
+          <Stack spacing={2.5}>
+            <TextField
+              label="Numéro WhatsApp / téléphone"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value)}
+              fullWidth
+              autoFocus
+              disabled={codeEnvoye}
+              placeholder="07 00 00 00 01"
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              fullWidth
+              disabled={codeEnvoye}
+            />
 
-              {step === 1 && (
-                <Stack spacing={2.5}>
-                  <TextFieldCtl control={control} name="telephonePrincipal" label="Téléphone principal" errors={errors} autoFocus />
-                  <Alert severity="info" sx={{ mt: -1.5 }}>
-                    Vous recevrez une notification par SMS dès que votre demande sera traitée.
-                    Veuillez vous assurer que ce numéro est correct.
-                  </Alert>
-                  <Controller
-                    name="memeWhatsapp"
-                    control={control}
-                    render={({ field }) => (
-                      <FormControlLabel
-                        control={<Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-                        label="Ce numéro est aussi mon WhatsApp"
-                      />
-                    )}
-                  />
-                  {!memeWhatsapp && (
-                    <TextFieldCtl control={control} name="telephoneWhatsapp" label="Numéro WhatsApp" errors={errors} />
-                  )}
-                  <TextFieldCtl control={control} name="telephoneSecondaire" label="Second téléphone (optionnel)" errors={errors} />
-                  <TextFieldCtl control={control} name="email" label="Email (optionnel)" errors={errors} type="email" />
-                </Stack>
-              )}
-
-              {step === 2 && (
-                <Stack spacing={2.5}>
-                  <TextFieldCtl control={control} name="ville" label="Ville" errors={errors} autoFocus />
-                  <TextFieldCtl control={control} name="commune" label="Commune" errors={errors} />
-                  <TextFieldCtl control={control} name="quartier" label="Quartier (optionnel)" errors={errors} />
-                </Stack>
-              )}
-
-              <Stack direction="row" justifyContent="space-between" mt={4}>
-                <Button onClick={precedent} disabled={step === 0} sx={{ visibility: step === 0 ? 'hidden' : 'visible' }}>
-                  Précédent
+            {!codeEnvoye ? (
+              <Button
+                variant="contained" size="large" fullWidth
+                onClick={handleObtenirCode} disabled={sendingCode}
+                sx={{ py: 1.4, mt: 0.5, borderRadius: 999 }}
+              >
+                {sendingCode ? <CircularProgress size={22} color="inherit" /> : 'Obtenir le code'}
+              </Button>
+            ) : (
+              <>
+                <TextField
+                  label="Code de vérification (OTP)"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  fullWidth
+                  autoFocus
+                  slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 6 } }}
+                />
+                <Button
+                  type="submit" variant="contained" size="large" fullWidth
+                  disabled={verifying || otpCode.length !== 6}
+                  sx={{ py: 1.4, borderRadius: 999 }}
+                >
+                  {verifying ? <CircularProgress size={22} color="inherit" /> : 'Suivant'}
                 </Button>
-                {step < STEPS.length - 1 ? (
-                  <Button variant="contained" onClick={suivant} sx={{ px: 4, borderRadius: 999 }}>
-                    Suivant
-                  </Button>
-                ) : (
-                  <Button type="submit" variant="contained" disabled={loading} sx={{ px: 4, borderRadius: 999 }}>
-                    {loading ? <CircularProgress size={22} color="inherit" /> : 'Envoyer ma demande'}
-                  </Button>
-                )}
-              </Stack>
-            </form>
-          </>
-        )}
+                <Button
+                  variant="text" size="small" fullWidth
+                  disabled={compteACours > 0 || sendingCode}
+                  onClick={handleObtenirCode}
+                >
+                  {compteACours > 0 ? `Renvoyer le code (${compteACours}s)` : 'Renvoyer le code'}
+                </Button>
+              </>
+            )}
+          </Stack>
+        </form>
       </Box>
     </PublicSplitLayout>
   )
 }
 
-function TextFieldCtl({ control, name, label, errors, ...rest }) {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <TextField
-          {...field}
-          label={label}
-          fullWidth
-          error={Boolean(errors[name])}
-          helperText={errors[name]?.message}
-          {...rest}
-        />
-      )}
-    />
-  )
+export default function DemandeAccesPage() {
+  const { login } = useAuth()
+  const [verifie, setVerifie] = useState(false)
+
+  const handleVerified = (authResponse) => {
+    login(authResponse)
+    setVerifie(true)
+  }
+
+  if (verifie) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <MesEnfantsPage />
+      </Container>
+    )
+  }
+
+  return <ParentOtpStep onVerified={handleVerified} />
 }

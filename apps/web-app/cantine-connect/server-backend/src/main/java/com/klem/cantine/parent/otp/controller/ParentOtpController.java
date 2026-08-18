@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Connexion parent par OTP (WhatsApp/SMS/Email) — public, sans JWT (voir SecurityConfig).
- * Ne crée jamais de compte : un numéro sans compte PARENT actif reçoit une erreur explicite
- * (404) invitant à soumettre une demande d'accès (`POST /api/v1/demandes-acces`).
+ * Accès parent par OTP (WhatsApp/SMS/Email) — public, sans JWT (voir SecurityConfig). Remplace
+ * le formulaire "Demande d'accès" avec validation admin : vérifier le code crée le compte parent
+ * à la volée si ce numéro n'en a pas encore (voir {@link ParentOtpService}).
  */
 @RestController
 @RequestMapping("/api/v1/parents/otp")
@@ -23,7 +23,7 @@ public class ParentOtpController {
 
     @PostMapping("/send")
     public ResponseEntity<ApiResponse<?>> envoyer(@Valid @RequestBody ParentOtpRequestDto dto) {
-        parentOtpService.envoyerOtp(dto.whatsappNumber());
+        parentOtpService.envoyerOtp(dto.whatsappNumber(), dto.email());
         return ResponseEntity.ok(ApiResponse.ok("Code de vérification envoyé", null));
     }
 

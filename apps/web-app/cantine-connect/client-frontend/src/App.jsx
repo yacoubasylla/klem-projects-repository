@@ -7,7 +7,6 @@ import LoginPage from './pages/auth/LoginPage'
 import ChangerMotDePassePage from './pages/auth/ChangerMotDePassePage'
 import DemandeAccesPage from './pages/acces/DemandeAccesPage'
 import DemandesAccesPage from './pages/acces/DemandesAccesPage'
-import ParentOtpAccessPage from './pages/acces/ParentOtpAccessPage'
 import MesEnfantsPage from './pages/moi/MesEnfantsPage'
 import DashboardPage from './pages/DashboardPage'
 import EtablissementsPage from './pages/etablissements/EtablissementsPage'
@@ -46,7 +45,6 @@ export default function App() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/acces-otp" element={<ParentOtpAccessPage />} />
       <Route path="/demande-acces" element={<DemandeAccesPage />} />
       <Route
         path="/changer-mot-de-passe"
