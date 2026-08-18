@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,28 +26,29 @@ public class InMemoryOtpStore implements OtpStore {
 
     private final Map<String, Entree> entrees = new ConcurrentHashMap<>();
 
-    private record Entree(String code, Instant expiration, AtomicInteger tentatives) {}
+    private record Entree(String code, String email, Instant expiration, AtomicInteger tentatives) {}
 
     @Override
-    public void enregistrer(String cle, String code) {
-        entrees.put(cle, new Entree(code, Instant.now().plus(DUREE_VALIDITE), new AtomicInteger(0)));
+    public void enregistrer(String cle, String code, String email) {
+        entrees.put(cle, new Entree(code, email, Instant.now().plus(DUREE_VALIDITE), new AtomicInteger(0)));
     }
 
     @Override
-    public boolean verifierEtInvalider(String cle, String code) {
+    public Optional<String> verifierEtInvalider(String cle, String code) {
         Entree entree = entrees.get(cle);
         if (entree == null || Instant.now().isAfter(entree.expiration())) {
             entrees.remove(cle);
-            return false;
+            return Optional.empty();
         }
         if (entree.tentatives().incrementAndGet() > TENTATIVES_MAX) {
             entrees.remove(cle);
-            return false;
+            return Optional.empty();
         }
         boolean valide = entree.code().equals(code);
         if (valide) {
             entrees.remove(cle);
+            return Optional.ofNullable(entree.email());
         }
-        return valide;
+        return Optional.empty();
     }
 }

@@ -1101,3 +1101,29 @@
   n'existait à faire coïncider. Détail et alternatives écartées (portée initiale erronée vers
   `apps/03_cantine_connect`/`services/core-api`, `@kts/ui` vs `@klem/ui`, Redis vs mémoire) :
   `collaboration/history/adr/2026-08-18-connexion-parent-otp-gestion-enfants.md`.
+
+### [2026-08-18] - L'OTP remplace "Demande d'accès" : plus de validation admin préalable
+
+- **Statut :** Livré / Opérationnel (68/68 tests backend verts, `npm run lint`/`build` propres)
+- **Fichiers Modifiés :**
+  - Backend : `parent/otp/service/ParentOtpService.java` (réécrit — fonctionne pour un numéro
+    inconnu, crée `Utilisateur`+`Parent` à la vérification si besoin), `parent/otp/OtpStore.java`
+    + `InMemoryOtpStore.java` (conservent l'email soumis le temps de la vérification),
+    `parent/otp/dto/ParentOtpRequestDto.java` (+`email`),
+    `parent/otp/controller/ParentOtpController.java`, tests réécrits
+    (`ParentOtpServiceTest`, `InMemoryOtpStoreTest`).
+  - Frontend : `pages/acces/DemandeAccesPage.jsx` réécrit entièrement (l'ancien stepper Identité/
+    Contact/Résidence retiré, remplacé par le flux OTP à 2 pages : numéro+email+code, puis
+    `<MesEnfantsPage />` intégré directement) ; `pages/acces/ParentOtpAccessPage.jsx` **supprimé**
+    (fusionné dans `DemandeAccesPage.jsx`) ; `App.jsx` (route `/acces-otp` retirée) ;
+    `pages/auth/LoginPage.jsx` (liens consolidés vers `/demande-acces`) ;
+    `services/authService.js` (`demanderOtpParent` prend désormais l'email).
+- **Description :** Instruction explicite et directe du porteur du projet le même jour ("pour des
+  questions de facilité") — remplace le choix pris quelques heures plus tôt (ADR-020, contrôle
+  admin préservé) : vérifier le code OTP crée désormais le compte parent à la volée (aucun
+  nom/prénom collecté, valeurs génériques modifiables ensuite par un ADMIN) et donne accès
+  immédiat à la gestion des enfants — plus de redirection vers une validation admin. Risque
+  anti-fraude anciennement écarté (`decision-log.md`) explicitement réassumé par le porteur du
+  projet, pas une régression silencieuse. Le back-office de validation des demandes d'accès
+  (`DemandeAccesService`/`AccesController`/`DemandesAccesPage.jsx`) n'est pas supprimé mais devient
+  orphelin. Détail complet : `collaboration/history/adr/2026-08-18-otp-remplace-demande-acces-validation-admin.md`.

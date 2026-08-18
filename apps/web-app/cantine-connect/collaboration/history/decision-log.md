@@ -206,3 +206,15 @@
   - Nouveau module `Student` parallèle à `Eleve`/`Parent` — rejetée, aurait dupliqué le modèle de données et la logique métier déjà branchés sur `Eleve` (paiement, scan, notifications).
   - Redis pour le stockage OTP dès cette itération — écarté (topologie mono-instance actuelle), stockage en mémoire derrière l'interface `OtpStore`, remplaçable sans impact.
 - **Fichier ADR** : `adr/2026-08-18-connexion-parent-otp-gestion-enfants.md`
+
+---
+
+### ADR-021 · L'accès OTP remplace le formulaire "Demande d'accès" avec validation admin
+- **Statut** : Accepté — 2026-08-18
+- **Décision** : Instruction explicite et directe du porteur du projet ("pour des questions de facilité") — le formulaire public "Demande d'accès" (`/demande-acces`, ex-stepper Identité/Contact/Résidence) est remplacé par le flux OTP à deux pages : numéro WhatsApp + email → code → vérification, qui crée le compte PARENT à la volée si ce numéro n'en avait pas encore (aucun nom/prénom collecté, valeurs génériques) puis affiche directement la gestion des enfants. Remplace explicitement le contrôle admin préalable acté en ADR-020 (même journée) et dans une décision antérieure.
+- **Contexte** : capture d'écran fournie pointant explicitement `DemandeAccesPage.jsx` comme le formulaire à modifier, avec consigne de ne garder que numéro + email.
+- **Alternatives rejetées** :
+  - Garder le contrôle admin, juste ajouter le champ email au flux OTP existant — rejetée, contredit l'instruction reçue.
+  - Conserver les deux formulaires en parallèle (`/demande-acces` avec validation ET `/acces-otp` sans) — rejetée, source de confusion et contredit l'instruction pointant explicitement `DemandeAccesPage.jsx`.
+- **Risque assumé explicitement** : perte du contrôle anti-fraude admin (ADR-020/décision antérieure) — décision du porteur du projet, pas une régression silencieuse. Le back-office de validation (`DemandeAccesService`/`AccesController`/`DemandesAccesPage.jsx`) n'est pas supprimé mais devient orphelin (plus appelé par le frontend public).
+- **Fichier ADR** : `adr/2026-08-18-otp-remplace-demande-acces-validation-admin.md`
