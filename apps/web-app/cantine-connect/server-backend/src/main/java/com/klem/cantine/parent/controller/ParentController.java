@@ -3,6 +3,7 @@ package com.klem.cantine.parent.controller;
 import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.common.ApiResponse;
 import com.klem.cantine.eleve.dto.AjoutEnfantRequestDTO;
+import com.klem.cantine.eleve.dto.ModifierEnfantRequestDTO;
 import com.klem.cantine.eleve.service.EleveService;
 import com.klem.cantine.parent.dto.ParentRequestDTO;
 import com.klem.cantine.parent.dto.ParentResponseDTO;
@@ -61,6 +62,24 @@ public class ParentController {
             @AuthenticationPrincipal Utilisateur principal) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created(eleveService.creerViaParent(principal, dto)));
+    }
+
+    @PutMapping("/moi/enfants/{eleveId}")
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<ApiResponse<?>> modifierEnfant(
+            @PathVariable Long eleveId,
+            @Valid @RequestBody ModifierEnfantRequestDTO dto,
+            @AuthenticationPrincipal Utilisateur principal) {
+        return ResponseEntity.ok(ApiResponse.ok(eleveService.modifierViaParent(principal, eleveId, dto)));
+    }
+
+    @DeleteMapping("/moi/enfants/{eleveId}")
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<Void> desactiverEnfant(
+            @PathVariable Long eleveId,
+            @AuthenticationPrincipal Utilisateur principal) {
+        eleveService.desactiverViaParent(principal, eleveId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping

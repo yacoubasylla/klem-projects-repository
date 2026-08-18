@@ -152,6 +152,12 @@ export default function LoginPage() {
           </Stack>
         </form>
 
+        <Typography variant="body2" color="text.secondary" textAlign="center" mt={2}>
+          <Box component="a" href="/acces-otp" sx={{ color: 'primary.main', fontWeight: 700, textDecoration: 'none' }}>
+            Se connecter avec un code WhatsApp/SMS →
+          </Box>
+        </Typography>
+
         <Divider sx={{ my: 3 }} />
 
         <Typography variant="body2" color="text.secondary" textAlign="center">

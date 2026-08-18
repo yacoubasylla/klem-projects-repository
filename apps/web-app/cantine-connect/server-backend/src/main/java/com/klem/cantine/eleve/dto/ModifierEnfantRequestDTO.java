@@ -6,12 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
- * Ajout d'un enfant par le parent lui-même, depuis son espace authentifié.
- * Les coordonnées du parent (nom, téléphone, email) sont dérivées du compte
- * connecté — jamais saisies ici (évite qu'un parent renseigne les
- * coordonnées d'un tiers).
+ * Modification d'un enfant par le parent lui-même, depuis son espace authentifié.
+ * Mêmes champs que {@link AjoutEnfantRequestDTO} — le matricule n'y figure pas :
+ * généré une seule fois à la création, immuable ensuite.
  */
-public record AjoutEnfantRequestDTO(
+public record ModifierEnfantRequestDTO(
 
     @NotNull(message = "L'établissement est obligatoire")
     Long etablissementId,
@@ -19,7 +18,6 @@ public record AjoutEnfantRequestDTO(
     @NotNull(message = "La classe est obligatoire")
     Long classeId,
 
-    // Pas de matricule ici : généré automatiquement à la création (MatriculeGenerator).
     @NotBlank(message = "Le nom est obligatoire")
     String nom,
 

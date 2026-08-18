@@ -6,6 +6,7 @@ import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.eleve.dto.AjoutEnfantRequestDTO;
 import com.klem.cantine.eleve.dto.EleveRequestDTO;
 import com.klem.cantine.eleve.dto.EleveResponseDTO;
+import com.klem.cantine.eleve.dto.ModifierEnfantRequestDTO;
 import com.klem.cantine.eleve.entity.Eleve;
 import com.klem.cantine.eleve.entity.RegimeAlimentaire;
 import com.klem.cantine.eleve.entity.StatutAcces;
@@ -21,6 +22,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class EleveService {
     private final PassageRefectoireRepository passageRefectoireRepository;
     private final FileStorageService fileStorageService;
     private final ParentRepository parentRepository;
+    private final MatriculeGenerator matriculeGenerator;
 
     public Page<EleveResponseDTO> lister(Long etablissementId, Long classeId, StatutAcces statut, String search, Pageable pageable) {
         String statutStr = statut != null ? statut.name() : null;
@@ -52,9 +55,6 @@ public class EleveService {
     @Traceable(action = TypeAction.CREATE, entite = "Eleve")
     @Transactional
     public EleveResponseDTO creer(EleveRequestDTO dto) {
-        if (eleveRepository.existsByMatricule(dto.matricule())) {
-            throw new IllegalArgumentException("Le matricule '" + dto.matricule() + "' est déjà utilisé.");
-        }
         validerAllergieCertifiee(dto.allergies(), dto.certificatMedicalUrl());
 
         var etablissement = etablissementRepository.findById(dto.etablissementId())
@@ -65,7 +65,7 @@ public class EleveService {
         Eleve eleve = Eleve.builder()
                 .etablissement(etablissement)
                 .classe(classe)
-                .matricule(dto.matricule())
+                .matricule(matriculeGenerator.genererMatricule())
                 .nom(dto.nom())
                 .prenom(dto.prenom())
                 .dateNaissance(dto.dateNaissance())
@@ -95,10 +95,6 @@ public class EleveService {
     @Traceable(action = TypeAction.CREATE, entite = "Eleve")
     @Transactional
     public EleveResponseDTO creerViaParent(Utilisateur parentPrincipal, AjoutEnfantRequestDTO dto) {
-        if (eleveRepository.existsByMatricule(dto.matricule())) {
-            throw new IllegalArgumentException("Le matricule '" + dto.matricule() + "' est déjà utilisé.");
-        }
-
         var etablissement = etablissementRepository.findById(dto.etablissementId())
                 .orElseThrow(() -> new EntityNotFoundException("Établissement introuvable : " + dto.etablissementId()));
         var classe = classeRepository.findById(dto.classeId())
@@ -109,7 +105,7 @@ public class EleveService {
         Eleve eleve = Eleve.builder()
                 .etablissement(etablissement)
                 .classe(classe)
-                .matricule(dto.matricule())
+                .matricule(matriculeGenerator.genererMatricule())
                 .nom(dto.nom())
                 .prenom(dto.prenom())
                 .sexe(dto.sexe())
@@ -130,6 +126,60 @@ public class EleveService {
     }
 
     /**
+     * Modification d'un enfant par le parent lui-même — mêmes champs que l'ajout
+     * self-service (matricule exclu, immuable). Réservé aux enfants rattachés au
+     * profil {@link Parent} du principal, voir {@link #verifierProprietaire}.
+     */
+    @Traceable(action = TypeAction.UPDATE, entite = "Eleve")
+    @Transactional
+    public EleveResponseDTO modifierViaParent(Utilisateur parentPrincipal, Long eleveId, ModifierEnfantRequestDTO dto) {
+        Eleve eleve = eleveRepository.findByIdActive(eleveId)
+                .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + eleveId));
+        verifierProprietaire(parentPrincipal, eleve);
+
+        var etablissement = etablissementRepository.findById(dto.etablissementId())
+                .orElseThrow(() -> new EntityNotFoundException("Établissement introuvable : " + dto.etablissementId()));
+        var classe = classeRepository.findById(dto.classeId())
+                .orElseThrow(() -> new EntityNotFoundException("Classe introuvable : " + dto.classeId()));
+
+        eleve.setEtablissement(etablissement);
+        eleve.setClasse(classe);
+        eleve.setNom(dto.nom());
+        eleve.setPrenom(dto.prenom());
+        eleve.setSexe(dto.sexe());
+        eleve.setDateNaissance(dto.dateNaissance());
+        eleve.setVille(dto.ville());
+        eleve.setCommune(dto.commune());
+        eleve.setQuartier(dto.quartier());
+
+        return EleveResponseDTO.from(eleveRepository.save(eleve));
+    }
+
+    /**
+     * Désactivation (soft delete) d'un enfant par le parent lui-même — jamais de
+     * suppression définitive côté parent, réservée à l'ADMIN via {@link #supprimerDefinitivement}.
+     */
+    @Traceable(action = TypeAction.DELETE, entite = "Eleve")
+    @Transactional
+    public void desactiverViaParent(Utilisateur parentPrincipal, Long eleveId) {
+        Eleve eleve = eleveRepository.findByIdActive(eleveId)
+                .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + eleveId));
+        verifierProprietaire(parentPrincipal, eleve);
+        eleve.setActif(false);
+        eleveRepository.save(eleve);
+    }
+
+    private void verifierProprietaire(Utilisateur parentPrincipal, Eleve eleve) {
+        Parent parent = parentRepository.findByUtilisateurId(parentPrincipal.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Profil parent introuvable"));
+        boolean estSonEnfant = parent.getEnfants().stream()
+                .anyMatch(e -> e.getId().equals(eleve.getId()));
+        if (!estSonEnfant) {
+            throw new AccessDeniedException("Vous ne pouvez modifier que vos propres enfants");
+        }
+    }
+
+    /**
      * Règle métier : une allergie ne peut être déclarée que sur présentation d'un
      * certificat médical d'un médecin allergologue.
      */
@@ -147,9 +197,6 @@ public class EleveService {
         Eleve eleve = eleveRepository.findByIdActive(id)
                 .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + id));
 
-        if (!eleve.getMatricule().equals(dto.matricule()) && eleveRepository.existsByMatricule(dto.matricule())) {
-            throw new IllegalArgumentException("Le matricule '" + dto.matricule() + "' est déjà utilisé.");
-        }
         // Le certificat déjà archivé sur la fiche (upload séparé) reste valide si le
         // formulaire ne fournit pas de nouvelle valeur.
         String certificatEffectif = dto.certificatMedicalUrl() != null
@@ -159,8 +206,9 @@ public class EleveService {
         var classe = classeRepository.findById(dto.classeId())
                 .orElseThrow(() -> new EntityNotFoundException("Classe introuvable : " + dto.classeId()));
 
+        // Le matricule est généré une seule fois à la création et reste immuable ensuite
+        // (référencé par le QR code, les scans et l'historique des paiements).
         eleve.setClasse(classe);
-        eleve.setMatricule(dto.matricule());
         eleve.setNom(dto.nom());
         eleve.setPrenom(dto.prenom());
         eleve.setDateNaissance(dto.dateNaissance());

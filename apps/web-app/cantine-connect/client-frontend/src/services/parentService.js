@@ -19,6 +19,12 @@ export const parentService = {
   ajouterEnfant: (data) =>
     apiClient.post('/parents/moi/enfants', data).then((r) => r.data.data),
 
+  modifierEnfant: (eleveId, data) =>
+    apiClient.put(`/parents/moi/enfants/${eleveId}`, data).then((r) => r.data.data),
+
+  desactiverEnfant: (eleveId) =>
+    apiClient.delete(`/parents/moi/enfants/${eleveId}`).then((r) => r.data),
+
   supprimer: (id) =>
     apiClient.delete(`/parents/${id}`).then((r) => r.data),
 }

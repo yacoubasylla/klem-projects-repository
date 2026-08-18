@@ -1066,3 +1066,38 @@
   alternatives écartées et de la correction de portée (le mandat de refactor initial ciblait à tort
   `services/core-api`, service KLEM DataSphere sans rapport avec Cantine Connect) :
   `collaboration/history/adr/2026-08-18-payment-strategy-multi-providers-orange-money.md`.
+
+### [2026-08-18] - Connexion parent par OTP (WhatsApp/SMS/Email) et gestion complète des enfants
+
+- **Statut :** Livré / Opérationnel (66/66 tests backend verts, dont 55 existants inchangés)
+- **Fichiers Modifiés :**
+  - Backend, nouveaux : `server-backend/src/main/java/com/klem/cantine/parent/otp/{OtpStore,
+    InMemoryOtpStore,dto/ParentOtpRequestDto,dto/ParentOtpVerifyDto,service/ParentOtpService,
+    controller/ParentOtpController}.java`, `eleve/service/MatriculeGenerator.java`,
+    `eleve/dto/ModifierEnfantRequestDTO.java`, `notification/WhatsAppNotificationSender.java`,
+    `db/migration/V16__matricule_sequences.sql`, tests (`MatriculeGeneratorTest`,
+    `InMemoryOtpStoreTest`, `ParentOtpServiceTest`, cas de propriété dans `EleveServiceTest`).
+  - Backend, modifiés : `eleve/service/EleveService.java` (matricule auto-généré à la création,
+    immuable en modification, + `modifierViaParent`/`desactiverViaParent` avec vérification de
+    propriété), `eleve/dto/{EleveRequestDTO,AjoutEnfantRequestDTO}.java` (matricule retiré),
+    `parent/controller/ParentController.java` (+`PUT`/`DELETE /moi/enfants/{id}`),
+    `parent/dto/ParentResponseDTO.java` (champs étendus pour pré-remplir l'édition + filtre actif),
+    `auth/repository/UtilisateurRepository.java` (+`findByTelephoneAndRoleAndActifTrue`),
+    `notification/NotificationDispatcher.java` (canal WHATSAPP), `common/SecurityConfig.java`
+    (route publique OTP), `application.yml` (config Twilio WhatsApp).
+  - Frontend, nouveau : `client-frontend/src/pages/acces/ParentOtpAccessPage.jsx` (wizard 2 étapes).
+  - Frontend, modifiés : `pages/moi/MesEnfantsPage.jsx` (matricule retiré du formulaire, actions
+    Modifier/Désactiver/QR Code par carte), `pages/auth/LoginPage.jsx` (lien vers l'accès OTP),
+    `App.jsx` (route `/acces-otp`), `services/{authService,parentService}.js`.
+- **Description :** Le mandat demandait un accès parent par OTP donnant un accès direct sans
+  validation admin — réintroduisait un risque de faux comptes déjà explicitement écarté par une
+  décision antérieure (`decision-log.md`). Retenu à la place : l'OTP authentifie un compte PARENT
+  déjà approuvé (recherché par téléphone), un numéro inconnu est redirigé vers la demande d'accès
+  existante — aucune création de compte/enfant à la volée. Ajout d'enfant self-service existait
+  déjà (`POST /parents/moi/enfants`) ; modification et désactivation côté parent sont nouvelles,
+  en étendant `EleveService`/`ParentController` existants plutôt qu'un module `Student` parallèle.
+  Matricule (`E<ANNÉE><RANG 4 chiffres>`) généré automatiquement (upsert atomique PostgreSQL,
+  thread-safe sans verrou applicatif) après confirmation qu'aucun matricule scolaire officiel
+  n'existait à faire coïncider. Détail et alternatives écartées (portée initiale erronée vers
+  `apps/03_cantine_connect`/`services/core-api`, `@kts/ui` vs `@klem/ui`, Redis vs mémoire) :
+  `collaboration/history/adr/2026-08-18-connexion-parent-otp-gestion-enfants.md`.

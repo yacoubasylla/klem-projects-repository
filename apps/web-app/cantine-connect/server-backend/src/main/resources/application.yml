@@ -120,6 +120,9 @@ sms:
     account-sid: ${TWILIO_ACCOUNT_SID:}
     auth-token: ${TWILIO_AUTH_TOKEN:}
     from-number: ${TWILIO_FROM_NUMBER:}
+    # Numéro expéditeur WhatsApp Business Twilio (distinct du SMS from-number) —
+    # voir WhatsAppNotificationSender / connexion parent par OTP.
+    whatsapp-from-number: ${TWILIO_WHATSAPP_FROM_NUMBER:}
 
 # ── JWT ───────────────────────────────────────────────────
 jwt:

@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**", "/api/v1/webhooks/**",
                                  "/api/v2/canteen-payments/webhooks/**", "/actuator/**",
                                  "/api/v1/configurations/FOND_ECRAN_LOGIN", "/uploads/**",
+                                 "/api/v1/parents/otp/**",
                                  "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
             )
