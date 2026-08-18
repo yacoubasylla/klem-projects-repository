@@ -42,7 +42,8 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/demandes-acces").permitAll()
-                .requestMatchers("/api/v1/auth/**", "/api/v1/webhooks/**", "/actuator/**",
+                .requestMatchers("/api/v1/auth/**", "/api/v1/webhooks/**",
+                                 "/api/v2/canteen-payments/webhooks/**", "/actuator/**",
                                  "/api/v1/configurations/FOND_ECRAN_LOGIN", "/uploads/**",
                                  "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
