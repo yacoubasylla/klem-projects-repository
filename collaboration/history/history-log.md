@@ -9,6 +9,21 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-08-18] - Fix du check GitHub « Vercel » systématiquement rouge (projet `klem-repo`)
+- **Statut :** Livré / Opérationnel (déploiement `READY` vérifié en pratique avant fusion)
+- **Fichiers Modifiés :** `vercel.json` (nouveau, racine), `vercel-root-noop/index.html` (nouveau),
+  `.gitignore` (`.env*` ajouté par `vercel link`).
+- **Description :** Le check « Vercel » échouait systématiquement (constaté en erreur sur `main`
+  depuis ≥4 jours, indépendant du code — repéré sur la PR #10). Cause : le projet Vercel
+  `klem-repo` (seul projet rattaché à ce dépôt côté GitHub, `Root Directory: .`) utilisait le
+  Framework Preset Create React App, qui attend un `build/` racine — alors que `pnpm build`
+  (`turbo build`) construit chaque app dans son propre dossier de sortie, et qu'aucune application
+  déployable n'existe à la racine du monorepo (chaque app réelle a déjà son propre projet Vercel
+  dédié : `cantine-connect`, `klem-labs-dashboards`). Fix : `vercel.json` transforme `klem-repo` en
+  déploiement no-op déterministe (page statique expliquant pourquoi), validé par `vercel build` +
+  `vercel deploy --prebuilt` → `readyState: READY`. Détail et alternatives écartées :
+  `collaboration/history/adr/2026-08-18-vercel-klem-repo-noop-deploy.md`.
+
 ### [2026-08-13] - Introduction de `services/billing-service` (Jalon 0 clos, Jalons 1/2 codés)
 - **Statut :** Livré / Opérationnel (code non encore validé par un pilote réel en production)
 - **Fichiers Modifiés :**

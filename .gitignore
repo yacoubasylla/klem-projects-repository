@@ -29,3 +29,4 @@ Thumbs.db
 # reste sur le disque/volume du serveur (ex: server-backend/uploads/, site-klem/web/app/uploads/)
 uploads/
 .vercel
+.env*
