@@ -1146,3 +1146,30 @@
   paramétrage admin permettant de basculer vers SMS. L'email reste envoyé en parallèle,
   indépendamment de ce choix. Détail et alternatives écartées :
   `collaboration/history/adr/2026-08-19-canal-otp-parametrable-whatsapp-sms.md`.
+
+### [2026-08-19] - Correction du formatage E.164 ivoirien + support ContentSid WhatsApp
+
+- **Statut :** Livré / Opérationnel (69/69 tests backend verts, dont un test de non-régression
+  dédié). Bug découvert et corrigé grâce à un test en conditions réelles avec Twilio (le canal
+  paramétrable livré plus tôt dans la journée) — jamais détecté par les tests unitaires
+  précédents, qui ne validaient la logique de formatage que contre des valeurs fictives.
+- **Fichiers Modifiés :**
+  - `notification/{SmsNotificationSender,WhatsAppNotificationSender}.java`,
+    `parent/otp/service/ParentOtpService.java` (le "0" initial d'un numéro ivoirien conservé —
+    il fait partie du numéro d'abonné depuis la réforme de numérotation 2021, ce n'est pas un
+    préfixe de tri à retirer ; l'ancien code produisait `+225554025100` au lieu de
+    `+2250554025100`, un numéro invalide inexistant).
+  - `notification/WhatsAppNotificationSender.java` (support `ContentSid`/`ContentVariables` en
+    plus de `Body` libre — Twilio exige un Content Template pré-créé pour tout message WhatsApp
+    business-initiated, y compris en Sandbox après le "join" : erreur 21654 `ContentSid
+    Required`), `application.yml` (`TWILIO_WHATSAPP_CONTENT_SID`).
+  - Test `ParentOtpServiceTest` : cas existants adaptés au format corrigé + nouveau test de
+    non-régression sur le numéro réel ayant révélé le bug.
+- **Description :** Découvert en testant l'envoi réel du code OTP par WhatsApp avec de vraies
+  clés Twilio (Sandbox) : Twilio rejetait le numéro comme non-reconnu — comparaison avec le
+  numéro affiché dans la Console Twilio a révélé que le "0" initial était supprimé à tort par un
+  formatage E.164 dupliqué dans 3 fichiers, potentiellement affectant aussi les SMS CinetPay/
+  PayDunya déjà en production. Après correction du numéro, nouveau blocage Twilio (template
+  requis) — support `ContentSid` ajouté au code, template lui-même toujours à créer côté Twilio
+  (bloqué par la restriction du compte Trial, en cours de résolution avec le porteur du projet).
+

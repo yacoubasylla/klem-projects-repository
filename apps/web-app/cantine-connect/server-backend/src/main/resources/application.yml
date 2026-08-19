@@ -123,6 +123,9 @@ sms:
     # Numéro expéditeur WhatsApp Business Twilio (distinct du SMS from-number) —
     # voir WhatsAppNotificationSender / connexion parent par OTP.
     whatsapp-from-number: ${TWILIO_WHATSAPP_FROM_NUMBER:}
+    # SID (HX...) du Content Template WhatsApp à variable unique {{1}} — requis par Twilio
+    # pour tout message business-initiated (OTP), y compris en Sandbox après le "join".
+    whatsapp-content-sid: ${TWILIO_WHATSAPP_CONTENT_SID:}
 
 # ── JWT ───────────────────────────────────────────────────
 jwt:
