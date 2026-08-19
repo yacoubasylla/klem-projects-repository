@@ -86,7 +86,7 @@ export default function HomePage() {
         <Typography variant="body2" color="text.secondary">
           Vous êtes parent d'élève ?{' '}
           <Box component={RouterLink} to="/demande-acces" sx={{ color: 'primary.main', fontWeight: 700, textDecoration: 'none' }}>
-            Faites votre demande d'accès →
+            Accédez en tant que parent →
           </Box>
         </Typography>
       </Box>
