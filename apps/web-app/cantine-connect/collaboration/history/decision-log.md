@@ -218,3 +218,11 @@
   - Conserver les deux formulaires en parallèle (`/demande-acces` avec validation ET `/acces-otp` sans) — rejetée, source de confusion et contredit l'instruction pointant explicitement `DemandeAccesPage.jsx`.
 - **Risque assumé explicitement** : perte du contrôle anti-fraude admin (ADR-020/décision antérieure) — décision du porteur du projet, pas une régression silencieuse. Le back-office de validation (`DemandeAccesService`/`AccesController`/`DemandesAccesPage.jsx`) n'est pas supprimé mais devient orphelin (plus appelé par le frontend public).
 - **Fichier ADR** : `adr/2026-08-18-otp-remplace-demande-acces-validation-admin.md`
+
+---
+
+### ADR-022 · Canal OTP parent paramétrable (WhatsApp par défaut, bascule SMS)
+- **Statut** : Accepté — 2026-08-19
+- **Décision** : Le code OTP parent est envoyé par WhatsApp par défaut, avec une nouvelle configuration `PARENT_OTP_CANAL_TELEPHONE` (valeurs `WHATSAPP`/`SMS`, éditable par un ADMIN via `/configuration`) permettant de basculer sur SMS. L'envoi par email reste indépendant de ce choix (toujours tenté en parallèle). Contrairement aux autres notifications (`NotificationDispatcher`), l'envoi de l'OTP n'est plus soumis aux bascules générales `NOTIFICATIONS_SMS_ENABLED`/`NOTIFICATIONS_WHATSAPP_ENABLED` : `ParentOtpService` sélectionne directement le `NotificationSender` du canal configuré (l'OTP est une étape fonctionnelle de connexion, pas une notification optionnelle).
+- **Contexte** : demande explicite d'un paramétrage du canal OTP, WhatsApp par défaut.
+- **Fichier ADR** : `adr/2026-08-19-canal-otp-parametrable-whatsapp-sms.md`

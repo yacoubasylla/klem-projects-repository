@@ -9,6 +9,7 @@ import QrCodeScannerIcon  from '@mui/icons-material/QrCodeScanner'
 import TuneIcon           from '@mui/icons-material/Tune'
 import EmailIcon          from '@mui/icons-material/Email'
 import SmsIcon            from '@mui/icons-material/Sms'
+import WhatsAppIcon       from '@mui/icons-material/WhatsApp'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import WallpaperIcon      from '@mui/icons-material/Wallpaper'
@@ -109,6 +110,11 @@ const TEXT_META = {
 const MODE_PAIEMENT_OPTIONS = [
   { value: 'ABONNEMENT', label: 'Abonnement — accès libre après paiement annuel' },
   { value: 'CREDITS',    label: 'Crédits — le solde est débité à chaque repas' },
+]
+
+const OTP_CANAL_OPTIONS = [
+  { value: 'WHATSAPP', label: 'WhatsApp (par défaut)' },
+  { value: 'SMS',       label: 'SMS' },
 ]
 
 // Ordre d'affichage des catégories + icône d'en-tête de chaque accordéon.
@@ -372,7 +378,6 @@ export default function ConfigurationPage() {
   const renderCategoryContent = (categorie) => {
     switch (categorie) {
       case 'Contrôle d\'accès cantine':
-      case 'Notifications':
         return Object.entries(TOGGLE_META)
           .filter(([, meta]) => meta.category === categorie)
           .map(([cle, meta]) => {
@@ -380,6 +385,50 @@ export default function ConfigurationPage() {
             if (!config) return null
             return <ToggleRow key={cle} config={config} meta={meta} onToggle={handleToggle} saving={saving} />
           })
+
+      case 'Notifications': {
+        const canalOtp = getConfig('PARENT_OTP_CANAL_TELEPHONE')
+        return (
+          <>
+            {canalOtp && (
+              <Paper variant="outlined" sx={{ p: { xs: 1.5, sm: 2.5 }, mb: 2 }}>
+                <Stack direction="row" spacing={2} alignItems="flex-start">
+                  <Avatar sx={{ bgcolor: 'action.hover', color: 'text.secondary', mt: 0.25, flexShrink: 0 }}>
+                    <WhatsAppIcon />
+                  </Avatar>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="subtitle1" fontWeight={600} mb={0.5}>
+                      Canal du code de vérification (OTP) parent
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ maxWidth: { xs: '100%', sm: 520 }, mb: 1.5, wordBreak: 'break-word' }}>
+                      Canal utilisé pour envoyer le code de connexion au numéro du parent
+                      (« Accès Parent »). L'envoi par email reste indépendant de ce choix.
+                    </Typography>
+                    <TextField
+                      select
+                      size="small"
+                      value={canalOtp.valeur}
+                      onChange={(e) => handleSaveText('PARENT_OTP_CANAL_TELEPHONE', e.target.value)}
+                      sx={{ width: { xs: '100%', sm: 360 } }}
+                    >
+                      {OTP_CANAL_OPTIONS.map((o) => (
+                        <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+                      ))}
+                    </TextField>
+                  </Box>
+                </Stack>
+              </Paper>
+            )}
+            {Object.entries(TOGGLE_META)
+              .filter(([, meta]) => meta.category === 'Notifications')
+              .map(([cle, meta]) => {
+                const config = getConfig(cle)
+                if (!config) return null
+                return <ToggleRow key={cle} config={config} meta={meta} onToggle={handleToggle} saving={saving} />
+              })}
+          </>
+        )
+      }
 
       case 'Paiements': {
         const modePaiement = getConfig('MODE_PAIEMENT')

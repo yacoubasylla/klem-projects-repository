@@ -5,10 +5,12 @@ import com.klem.cantine.auth.entity.Role;
 import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.auth.repository.UtilisateurRepository;
 import com.klem.cantine.auth.service.JwtService;
-import com.klem.cantine.notification.NotificationDispatcher;
+import com.klem.cantine.notification.NotificationSender;
+import com.klem.cantine.parametrage.service.ConfigurationService;
 import com.klem.cantine.parent.entity.Parent;
 import com.klem.cantine.parent.otp.OtpStore;
 import com.klem.cantine.parent.repository.ParentRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,13 +37,25 @@ class ParentOtpServiceTest {
     @Mock private UtilisateurRepository utilisateurRepository;
     @Mock private ParentRepository parentRepository;
     @Mock private OtpStore otpStore;
-    @Mock private NotificationDispatcher notificationDispatcher;
+    @Mock private NotificationSender smsSender;
+    @Mock private NotificationSender whatsappSender;
+    @Mock private NotificationSender emailSender;
+    @Mock private ConfigurationService configurationService;
     @Mock private JwtService jwtService;
     @Mock private PasswordEncoder passwordEncoder;
 
+    @BeforeEach
+    void setUp() {
+        lenient().when(smsSender.getCanal()).thenReturn("SMS");
+        lenient().when(whatsappSender.getCanal()).thenReturn("WHATSAPP");
+        lenient().when(emailSender.getCanal()).thenReturn("EMAIL");
+    }
+
     private ParentOtpService service() {
         return new ParentOtpService(
-                utilisateurRepository, parentRepository, otpStore, notificationDispatcher, jwtService, passwordEncoder);
+                utilisateurRepository, parentRepository, otpStore,
+                List.of(smsSender, whatsappSender, emailSender), configurationService,
+                jwtService, passwordEncoder);
     }
 
     private Utilisateur parent(String telephone) {
@@ -50,28 +66,33 @@ class ParentOtpServiceTest {
     }
 
     @Test
-    void envoyerOtp_compteExistant_dispatcheSurLEmailDuCompte() {
+    void envoyerOtp_parDefaut_utiliseWhatsappEtEmail() {
         Utilisateur u = parent("+225700000001");
         when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000001", Role.PARENT))
                 .thenReturn(Optional.of(u));
+        when(configurationService.getValeur(ParentOtpService.CLE_CANAL_TELEPHONE)).thenReturn("WHATSAPP");
 
         service().envoyerOtp("0700000001", "autre@example.com");
 
         var codeCaptor = ArgumentCaptor.forClass(String.class);
         verify(otpStore).enregistrer(eq("+225700000001"), codeCaptor.capture(), eq("autre@example.com"));
         assertThat(codeCaptor.getValue()).matches("\\d{6}");
-        verify(notificationDispatcher).envoyer(eq("awa@example.com"), eq("+225700000001"), anyString(), anyString());
+        verify(whatsappSender).envoyer(eq("+225700000001"), anyString(), anyString());
+        verify(emailSender).envoyer(eq("awa@example.com"), anyString(), anyString());
+        verify(smsSender, never()).envoyer(anyString(), anyString(), anyString());
     }
 
     @Test
-    void envoyerOtp_numeroSansCompte_dispatcheSurLEmailFourni() {
+    void envoyerOtp_canalConfigureEnSms_utiliseSmsPasWhatsapp() {
         when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue(anyString(), eq(Role.PARENT)))
                 .thenReturn(Optional.empty());
+        when(configurationService.getValeur(ParentOtpService.CLE_CANAL_TELEPHONE)).thenReturn("SMS");
 
         service().envoyerOtp("0700000099", "nouveau@example.com");
 
-        verify(otpStore).enregistrer(eq("+225700000099"), anyString(), eq("nouveau@example.com"));
-        verify(notificationDispatcher).envoyer(eq("nouveau@example.com"), eq("+225700000099"), anyString(), anyString());
+        verify(smsSender).envoyer(eq("+225700000099"), anyString(), anyString());
+        verify(whatsappSender, never()).envoyer(anyString(), anyString(), anyString());
+        verify(emailSender).envoyer(eq("nouveau@example.com"), anyString(), anyString());
     }
 
     @Test
