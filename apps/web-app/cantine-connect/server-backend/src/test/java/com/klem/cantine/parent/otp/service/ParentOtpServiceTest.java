@@ -67,17 +67,17 @@ class ParentOtpServiceTest {
 
     @Test
     void envoyerOtp_parDefaut_utiliseWhatsappEtEmail() {
-        Utilisateur u = parent("+225700000001");
-        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000001", Role.PARENT))
+        Utilisateur u = parent("+2250700000001");
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+2250700000001", Role.PARENT))
                 .thenReturn(Optional.of(u));
         when(configurationService.getValeur(ParentOtpService.CLE_CANAL_TELEPHONE)).thenReturn("WHATSAPP");
 
         service().envoyerOtp("0700000001", "autre@example.com");
 
         var codeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(otpStore).enregistrer(eq("+225700000001"), codeCaptor.capture(), eq("autre@example.com"));
+        verify(otpStore).enregistrer(eq("+2250700000001"), codeCaptor.capture(), eq("autre@example.com"));
         assertThat(codeCaptor.getValue()).matches("\\d{6}");
-        verify(whatsappSender).envoyer(eq("+225700000001"), anyString(), anyString());
+        verify(whatsappSender).envoyer(eq("+2250700000001"), anyString(), anyString());
         verify(emailSender).envoyer(eq("awa@example.com"), anyString(), anyString());
         verify(smsSender, never()).envoyer(anyString(), anyString(), anyString());
     }
@@ -90,16 +90,16 @@ class ParentOtpServiceTest {
 
         service().envoyerOtp("0700000099", "nouveau@example.com");
 
-        verify(smsSender).envoyer(eq("+225700000099"), anyString(), anyString());
+        verify(smsSender).envoyer(eq("+2250700000099"), anyString(), anyString());
         verify(whatsappSender, never()).envoyer(anyString(), anyString(), anyString());
         verify(emailSender).envoyer(eq("nouveau@example.com"), anyString(), anyString());
     }
 
     @Test
     void verifierOtp_compteExistant_retourneUnJetonDeSessionSansCreerDeCompte() {
-        Utilisateur u = parent("+225700000001");
-        when(otpStore.verifierEtInvalider("+225700000001", "123456")).thenReturn(Optional.of("awa@example.com"));
-        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000001", Role.PARENT))
+        Utilisateur u = parent("+2250700000001");
+        when(otpStore.verifierEtInvalider("+2250700000001", "123456")).thenReturn(Optional.of("awa@example.com"));
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+2250700000001", Role.PARENT))
                 .thenReturn(Optional.of(u));
         when(jwtService.generateToken(u)).thenReturn("jwt-token");
         when(jwtService.getExpirationMs()).thenReturn(3_600_000L);
@@ -113,9 +113,9 @@ class ParentOtpServiceTest {
 
     @Test
     void verifierOtp_numeroSansCompte_creeLeCompteParentEtLeProfil() {
-        when(otpStore.verifierEtInvalider("+225700000099", "123456"))
+        when(otpStore.verifierEtInvalider("+2250700000099", "123456"))
                 .thenReturn(Optional.of("nouveau@example.com"));
-        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000099", Role.PARENT))
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+2250700000099", Role.PARENT))
                 .thenReturn(Optional.empty());
         when(utilisateurRepository.existsByEmail("nouveau@example.com")).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("hash");
@@ -128,7 +128,7 @@ class ParentOtpServiceTest {
         assertThat(response.token()).isEqualTo("jwt-token");
         var utilisateurCaptor = ArgumentCaptor.forClass(Utilisateur.class);
         verify(utilisateurRepository).save(utilisateurCaptor.capture());
-        assertThat(utilisateurCaptor.getValue().getTelephone()).isEqualTo("+225700000099");
+        assertThat(utilisateurCaptor.getValue().getTelephone()).isEqualTo("+2250700000099");
         assertThat(utilisateurCaptor.getValue().getEmail()).isEqualTo("nouveau@example.com");
         assertThat(utilisateurCaptor.getValue().getRole()).isEqualTo(Role.PARENT);
 
@@ -139,9 +139,9 @@ class ParentOtpServiceTest {
 
     @Test
     void verifierOtp_emailDejaUtiliseParUnAutreCompte_leveIllegalState() {
-        when(otpStore.verifierEtInvalider("+225700000099", "123456"))
+        when(otpStore.verifierEtInvalider("+2250700000099", "123456"))
                 .thenReturn(Optional.of("deja-pris@example.com"));
-        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+225700000099", Role.PARENT))
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue("+2250700000099", Role.PARENT))
                 .thenReturn(Optional.empty());
         when(utilisateurRepository.existsByEmail("deja-pris@example.com")).thenReturn(true);
 
@@ -151,9 +151,26 @@ class ParentOtpServiceTest {
         verify(utilisateurRepository, never()).save(any());
     }
 
+    /**
+     * Régression : le "0" initial d'un numéro ivoirien fait partie du numéro d'abonné depuis la
+     * réforme de numérotation 2021 — le retirer produit un numéro E.164 invalide, rejeté par
+     * Twilio ("No Twilio trial phone number is assigned for messaging to this destination
+     * number") car il ne correspond à aucun numéro réel.
+     */
+    @Test
+    void envoyerOtp_numeroIvoirien_conserveLeZeroInitial() {
+        when(utilisateurRepository.findByTelephoneAndRoleAndActifTrue(anyString(), eq(Role.PARENT)))
+                .thenReturn(Optional.empty());
+        when(configurationService.getValeur(ParentOtpService.CLE_CANAL_TELEPHONE)).thenReturn("WHATSAPP");
+
+        service().envoyerOtp("0554025100", "test@example.com");
+
+        verify(whatsappSender).envoyer(eq("+2250554025100"), anyString(), anyString());
+    }
+
     @Test
     void verifierOtp_codeInvalide_leveIllegalArgument() {
-        when(otpStore.verifierEtInvalider(eq("+225700000001"), anyString())).thenReturn(Optional.empty());
+        when(otpStore.verifierEtInvalider(eq("+2250700000001"), anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service().verifierOtp("0700000001", "000000"))
                 .isInstanceOf(IllegalArgumentException.class);

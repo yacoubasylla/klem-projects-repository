@@ -92,11 +92,15 @@ public class SmsNotificationSender implements NotificationSender {
         }
     }
 
-    /** Numéros locaux ("07XXXXXXXX") convertis en E.164 Côte d'Ivoire (+225...). */
+    /**
+     * Numéros locaux ("0554025100", 10 chiffres depuis la réforme de numérotation 2021)
+     * convertis en E.164 Côte d'Ivoire (+225...) — le "0" initial fait partie du numéro
+     * d'abonné depuis cette réforme, il n'est pas un préfixe de tri à retirer (contrairement à
+     * la plupart des autres pays) : "0554025100" → "+2250554025100", pas "+225554025100".
+     */
     private String auFormatE164(String numero) {
         String nettoye = numero.replaceAll("[\\s-]", "");
         if (nettoye.startsWith("+")) return nettoye;
-        if (nettoye.startsWith("0")) return "+225" + nettoye.substring(1);
         return "+225" + nettoye;
     }
 
