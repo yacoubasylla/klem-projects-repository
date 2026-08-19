@@ -5,7 +5,8 @@ import com.klem.cantine.auth.entity.Role;
 import com.klem.cantine.auth.entity.Utilisateur;
 import com.klem.cantine.auth.repository.UtilisateurRepository;
 import com.klem.cantine.auth.service.JwtService;
-import com.klem.cantine.notification.NotificationDispatcher;
+import com.klem.cantine.notification.NotificationSender;
+import com.klem.cantine.parametrage.service.ConfigurationService;
 import com.klem.cantine.parent.entity.Parent;
 import com.klem.cantine.parent.otp.OtpStore;
 import com.klem.cantine.parent.repository.ParentRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +30,12 @@ import java.util.Optional;
  * <p>
  * Le mot de passe généré à la création n'est jamais communiqué : ce compte n'est destiné qu'à la
  * connexion par OTP (pas de flux "mot de passe oublié" pour lui).
+ * <p>
+ * Canal téléphone (WhatsApp/SMS) paramétrable par un ADMIN via la configuration {@code
+ * PARENT_OTP_CANAL_TELEPHONE} (WhatsApp par défaut) — voir {@link #envoyerOtp}. Contrairement aux
+ * autres notifications ({@code NotificationDispatcher}), l'envoi de l'OTP n'est pas soumis aux
+ * bascules générales {@code NOTIFICATIONS_SMS_ENABLED}/{@code NOTIFICATIONS_WHATSAPP_ENABLED} :
+ * c'est une étape fonctionnelle de connexion, pas une notification optionnelle.
  */
 @Service
 @RequiredArgsConstructor
@@ -35,20 +43,28 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ParentOtpService {
 
+    /** Valeurs possibles de {@code PARENT_OTP_CANAL_TELEPHONE} ; WhatsApp par défaut si absente/invalide. */
+    static final String CLE_CANAL_TELEPHONE = "PARENT_OTP_CANAL_TELEPHONE";
+    private static final String CANAL_SMS = "SMS";
+    private static final String CANAL_WHATSAPP = "WHATSAPP";
+    private static final String CANAL_EMAIL = "EMAIL";
+
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final String ALPHABET_MOT_DE_PASSE = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
 
     private final UtilisateurRepository utilisateurRepository;
     private final ParentRepository parentRepository;
     private final OtpStore otpStore;
-    private final NotificationDispatcher notificationDispatcher;
+    private final List<NotificationSender> notificationSenders;
+    private final ConfigurationService configurationService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Génère et envoie un code à 6 chiffres (valable 5 minutes) par WhatsApp/SMS/Email. Fonctionne
-     * que ce numéro corresponde déjà à un compte parent ou non — l'email fourni est conservé pour
-     * la création du compte à la vérification si besoin (voir {@link #verifierOtp}).
+     * Génère et envoie un code à 6 chiffres (valable 5 minutes) sur le canal téléphone configuré
+     * (WhatsApp par défaut, ou SMS — voir {@code PARENT_OTP_CANAL_TELEPHONE}) et par email.
+     * Fonctionne que ce numéro corresponde déjà à un compte parent ou non — l'email fourni est
+     * conservé pour la création du compte à la vérification si besoin (voir {@link #verifierOtp}).
      */
     public void envoyerOtp(String whatsappNumber, String email) {
         String telephone = normaliser(whatsappNumber);
@@ -63,10 +79,26 @@ public class ParentOtpService {
         String corps = "Votre code de vérification est : " + code
                 + "\n\nValable 5 minutes. Ne le partagez avec personne.";
         String emailDestinataire = compteExistant.map(Utilisateur::getEmail).orElse(emailNormalise);
-        notificationDispatcher.envoyer(emailDestinataire, telephone, sujet, corps);
 
-        log.info("Code OTP envoyé pour le numéro {} (compte {})", telephone,
+        String canalTelephone = resoudreCanalTelephone();
+        envoyerSurCanal(canalTelephone, telephone, sujet, corps);
+        envoyerSurCanal(CANAL_EMAIL, emailDestinataire, sujet, corps);
+
+        log.info("Code OTP envoyé pour le numéro {} par {} (compte {})", telephone, canalTelephone,
                 compteExistant.isPresent() ? "existant" : "à créer");
+    }
+
+    /** WhatsApp par défaut — bascule vers SMS uniquement si explicitement configuré ainsi. */
+    private String resoudreCanalTelephone() {
+        return CANAL_SMS.equalsIgnoreCase(configurationService.getValeur(CLE_CANAL_TELEPHONE))
+                ? CANAL_SMS : CANAL_WHATSAPP;
+    }
+
+    private void envoyerSurCanal(String canal, String destinataire, String sujet, String corps) {
+        notificationSenders.stream()
+                .filter(s -> canal.equals(s.getCanal()))
+                .findFirst()
+                .ifPresent(s -> s.envoyer(destinataire, sujet, corps));
     }
 
     /**

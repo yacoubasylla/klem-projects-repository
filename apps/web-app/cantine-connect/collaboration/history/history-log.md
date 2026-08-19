@@ -1127,3 +1127,22 @@
   projet, pas une régression silencieuse. Le back-office de validation des demandes d'accès
   (`DemandeAccesService`/`AccesController`/`DemandesAccesPage.jsx`) n'est pas supprimé mais devient
   orphelin. Détail complet : `collaboration/history/adr/2026-08-18-otp-remplace-demande-acces-validation-admin.md`.
+
+### [2026-08-19] - Canal OTP parent paramétrable (WhatsApp par défaut, bascule SMS)
+
+- **Statut :** Livré / Opérationnel (68/68 tests backend verts, `npm run lint`/`build` propres,
+  vérifié en local via API réelle : envoi par défaut sur WhatsApp confirmé par les logs, bascule
+  vers SMS confirmée après changement de la configuration)
+- **Fichiers Modifiés :**
+  - Backend : `db/migration/V17__parent_otp_canal_telephone.sql` (nouveau, seed
+    `PARENT_OTP_CANAL_TELEPHONE = 'WHATSAPP'`), `parent/otp/service/ParentOtpService.java`
+    (sélectionne directement le `NotificationSender` du canal configuré au lieu de
+    `NotificationDispatcher` — ne dépend plus de `NOTIFICATIONS_SMS_ENABLED`/
+    `NOTIFICATIONS_WHATSAPP_ENABLED`), test `ParentOtpServiceTest` mis à jour.
+  - Frontend : `pages/configuration/ConfigurationPage.jsx` (nouveau sélecteur « Canal du code de
+    vérification (OTP) parent » dans la catégorie Notifications, même patron visuel que le
+    sélecteur Mode de paiement existant).
+- **Description :** Demande explicite : WhatsApp par défaut pour le code OTP, avec un
+  paramétrage admin permettant de basculer vers SMS. L'email reste envoyé en parallèle,
+  indépendamment de ce choix. Détail et alternatives écartées :
+  `collaboration/history/adr/2026-08-19-canal-otp-parametrable-whatsapp-sms.md`.
