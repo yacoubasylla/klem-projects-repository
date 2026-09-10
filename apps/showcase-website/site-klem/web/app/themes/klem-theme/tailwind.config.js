@@ -22,7 +22,7 @@ export default {
       maxWidth: {
         // Largeur du conteneur de contenu du site (header, footer, sections d'accueil).
         // Les fonds de section restent pleine largeur ; seul le contenu est centré.
-        site: '1200px',
+        site: '1280px',
       },
     },
   },
