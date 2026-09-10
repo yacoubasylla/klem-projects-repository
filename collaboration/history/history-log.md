@@ -9,6 +9,25 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-09-10] - Nouvelle identité visuelle KLEM sur le site vitrine (logo, favicon, couleurs, typo)
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `apps/showcase-website/site-klem/web/app/themes/klem-theme/` :
+  `tailwind.config.js`, `functions.php`, `header.php`, `footer.php`,
+  `template-parts/home/services.php`, `src` (rebuild `dist/`), `assets/favicon.svg`,
+  `assets/favicon-{16,32,48,64,180,192,512}.png` (nouveaux), `assets/site.webmanifest` (nouveau),
+  `assets/svg/klem-{primary,mono-ink,mono-white,symbole-rouge,symbole-marine,symbole-blanc}.svg`.
+- **Description :** Application du kit de marque KLEM 2026 (projet Claude Design « KLEM
+  Technologies page Facebook ») au thème WordPress `klem-theme`. Nouveau symbole : tracé
+  officiel vectorisé (remplace le double chevron improvisé), rouge dégradé `#F7715A → #A3140B`.
+  Palette : rouge `#E42313` (ex `#D6301F`), ajout du bleu acier `#1B446A` (token `klem-steel`),
+  marine `#13294B` inchangé. Typographie de marque Montserrat (ExtraBold/Bold) pour le logo et
+  les titres (`font-heading`), remplace Questrial ; corps de texte Inter inchangé ; Archivo
+  retiré. Wordmark passé en minuscules « klem » (conforme au kit Logo 3D). Jeu de favicons
+  complet (symbole rouge sur carré marine arrondi) : SVG + PNG 16→512, apple-touch 180,
+  `site.webmanifest` (icônes 192/512, `theme-color` marine). Logo Schema.org / JSON-LD repointé
+  sur `favicon-512.png`. `pnpm build` (Vite + Tailwind) OK, `php -l` OK sur tous les fichiers
+  modifiés.
+
 ### [2026-08-18] - Fix du check GitHub « Vercel » systématiquement rouge (projet `klem-repo`)
 - **Statut :** Livré / Opérationnel (déploiement `READY` vérifié en pratique avant fusion)
 - **Fichiers Modifiés :** `vercel.json` (nouveau, racine), `vercel-root-noop/index.html` (nouveau),

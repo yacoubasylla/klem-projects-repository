@@ -1,14 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 44" width="108" height="88" style="overflow:visible;">
-  <g fill="#A5130A">
-    <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z" transform="translate(1.4,1.7)"/>
-    <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z" transform="translate(1.4,1.7)"/>
-  </g>
-  <g fill="#D6301F">
-    <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z"/>
-    <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z"/>
-  </g>
-  <g fill="#F0654F">
-    <path d="M6 0 L18 0 L19.5 2.2 L7.5 2.2 Z"/>
-    <path d="M23 0 L35 0 L36.5 2.2 L24.5 2.2 Z"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4.56 29.47 230.89 182.09" role="img" aria-label="KLEM">
+  <defs>
+    <linearGradient id="klemRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7715A"/>
+      <stop offset="0.24" stop-color="#E3402B"/>
+      <stop offset="0.64" stop-color="#CF2418"/>
+      <stop offset="1" stop-color="#A3140B"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#klemRed)" d="M25.07 99.27L4.56 124.85L35.64 156.99L40.75 159.55L117.36 72.03L121.53 69.98L132.82 80.24L129.15 87.88L51.90 177.57L87.99 210.35L91.75 209.84L113.29 183.83L118.47 180.32L148.66 209.84L152.32 211.56L221.43 134.64L235.45 116.49L202.32 82.19L199.87 81.59L133.21 157.40L123.05 168.38L119.07 170.21L108.18 160.32L110.85 154.56L180.37 72.44L186.97 62.71L150.37 29.47L147.85 30.16L120.86 59.97L117.36 58.61L87.35 29.80Z"/>
 </svg>

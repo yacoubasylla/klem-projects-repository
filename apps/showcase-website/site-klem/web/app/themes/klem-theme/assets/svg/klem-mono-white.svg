@@ -1,10 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 56" width="360" height="56">
-  <g transform="translate(0,5) scale(0.85)">
-    <g fill="#FFFFFF">
-      <path d="M6 0 L18 0 L32 20 L13 40 L1 40 L17 20 Z"/>
-      <path d="M23 0 L35 0 L49 20 L30 40 L18 40 L34 20 Z"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 312 84" width="312" height="84" role="img" aria-label="KLEM Technologies & Services">
+  <g transform="translate(0.55 3.61) scale(0.3185)">
+    <path fill="#FFFFFF" d="M25.07 99.27L4.56 124.85L35.64 156.99L40.75 159.55L117.36 72.03L121.53 69.98L132.82 80.24L129.15 87.88L51.90 177.57L87.99 210.35L91.75 209.84L113.29 183.83L118.47 180.32L148.66 209.84L152.32 211.56L221.43 134.64L235.45 116.49L202.32 82.19L199.87 81.59L133.21 157.40L123.05 168.38L119.07 170.21L108.18 160.32L110.85 154.56L180.37 72.44L186.97 62.71L150.37 29.47L147.85 30.16L120.86 59.97L117.36 58.61L87.35 29.80Z"/>
   </g>
-  <text x="64" y="40" font-family="Archivo, sans-serif" font-weight="800" font-size="46" letter-spacing="-0.9" fill="#FFFFFF">KLEM</text>
-  <text x="65" y="53" font-family="Archivo, sans-serif" font-weight="600" font-size="9" letter-spacing="2.1" fill="#c3c9d6">TECHNOLOGIES &amp; SERVICES</text>
+  <text x="91" y="52" font-family="Montserrat, 'Segoe UI', sans-serif" font-weight="800" font-size="44" letter-spacing="-1.5" fill="#FFFFFF">klem</text>
+  <text x="93" y="66" font-family="Montserrat, 'Segoe UI', sans-serif" font-weight="700" font-size="8.6" letter-spacing="3.1" fill="#C3C9D6">TECHNOLOGIES &amp; SERVICES</text>
 </svg>
