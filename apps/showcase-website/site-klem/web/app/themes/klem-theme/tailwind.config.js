@@ -19,6 +19,11 @@ export default {
         logo: ['Montserrat', 'Archivo', 'sans-serif'],
         heading: ['Montserrat', 'Questrial', 'sans-serif'],
       },
+      maxWidth: {
+        // Largeur du conteneur de contenu du site (header, footer, sections d'accueil).
+        // Les fonds de section restent pleine largeur ; seul le contenu est centré.
+        site: '1280px',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],

@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="pt-24 max-w-7xl mx-auto px-6 py-16">
+<main class="pt-24 max-w-site mx-auto px-6 py-16">
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <article>
             <h1 class="text-3xl font-heading text-klem-blue"><?php the_title(); ?></h1>

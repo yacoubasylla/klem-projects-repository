@@ -4,7 +4,7 @@
     <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-klem-orange/5 pointer-events-none" aria-hidden="true"></div>
     <div class="absolute top-1/3 -left-10 w-64 h-64 rounded-full bg-klem-blue/5 pointer-events-none" aria-hidden="true"></div>
 
-    <div class="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative max-w-site mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 py-12 lg:py-32">
 
             <!-- IMAGE : en premier dans le HTML → haut sur mobile, droite sur desktop -->
@@ -97,7 +97,7 @@
 
     <!-- Bande de statistiques -->
     <div class="relative border-t border-gray-200 bg-gray-50/60">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-site mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <?php
             $hero_stats = [
                 [

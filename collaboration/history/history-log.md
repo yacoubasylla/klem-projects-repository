@@ -9,6 +9,18 @@
 
 [VIDE INITIALEMENT - SE REMPLIRA AU FIL DES SESSIONS]
 
+### [2026-09-10] - Site vitrine : conteneur de contenu centralisé (1280 px) au lieu du plein écran
+- **Statut :** Livré / Opérationnel
+- **Fichiers Modifiés :** `apps/showcase-website/site-klem/web/app/themes/klem-theme/` :
+  `tailwind.config.js` (nouveau `maxWidth.site = 1280px`), `header.php`, `footer.php`,
+  `index.php`, `page-actualites.php`, `template-parts/home/*.php` (16 conteneurs), rebuild `dist/`.
+- **Description :** Le contenu s'affichait sur toute la largeur de l'écran (`max-w-[1600px]`).
+  Passage à un conteneur centralisé de `1280px` (`max-w-site`, aligné sur le `max-w-7xl` déjà
+  utilisé par `index.php`), à la manière de veone.net. Les fonds de section restent pleine
+  largeur (chaque `<section>` porte sa propre classe `bg-*`), seul le bloc de contenu est
+  contraint et centré via `mx-auto`. Le padding latéral responsive existant (`px-4 sm:px-6`,
+  soit 16 px mobile / 24 px ≥ 640 px) est conservé. `pnpm build` OK, `php -l` OK.
+
 ### [2026-09-10] - Nouvelle identité visuelle KLEM sur le site vitrine (logo, favicon, couleurs, typo)
 - **Statut :** Livré / Opérationnel
 - **Fichiers Modifiés :** `apps/showcase-website/site-klem/web/app/themes/klem-theme/` :
