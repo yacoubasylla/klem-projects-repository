@@ -1,4 +1,4 @@
-<section class="relative overflow-hidden bg-white">
+<section class="relative overflow-hidden bg-white pt-20 lg:pt-0">
 
     <!-- Décors circulaires de fond (soft, cohérent avec la section "À Propos") -->
     <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-klem-orange/5 pointer-events-none" aria-hidden="true"></div>
