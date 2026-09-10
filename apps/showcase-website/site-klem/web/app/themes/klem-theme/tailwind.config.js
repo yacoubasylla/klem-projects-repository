@@ -7,14 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        'klem-blue':   '#13294B',   // Bleu KLEM — charte logo Chevron
-        'klem-orange': '#D6301F',   // Alias → Rouge KLEM (aucun orange dans la charte)
-        'klem-red':    '#D6301F',   // Rouge KLEM officiel — assourdi (ex: #E42313, jugé trop vif)
+        'klem-blue':   '#13294B',   // Marine KLEM — couleur d'autorité (fonds, titres)
+        'klem-steel':  '#1B446A',   // Bleu acier KLEM — teinte intermédiaire (dégradés, survols)
+        'klem-red':    '#E42313',   // Rouge KLEM officiel (dégradé #F7715A → #A3140B)
+        'klem-orange': '#E42313',   // Alias historique → Rouge KLEM (aucun orange dans la charte)
         'klem-slate':  '#6B7280',   // Textes secondaires
       },
       fontFamily: {
-        logo: ['Archivo', 'sans-serif'],
-        heading: ['Questrial', 'sans-serif'],
+        // Montserrat = typo de marque (kit 2026). Archivo/Questrial conservés en repli
+        // pour ne pas casser le rendu tant que Montserrat n'est pas chargée.
+        logo: ['Montserrat', 'Archivo', 'sans-serif'],
+        heading: ['Montserrat', 'Questrial', 'sans-serif'],
       },
     },
   },

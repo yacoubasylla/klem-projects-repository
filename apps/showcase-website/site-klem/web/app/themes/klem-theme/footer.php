@@ -38,16 +38,23 @@
 
             <!-- Col 1 : Logo + description + réseaux sociaux (4 colonnes larges) -->
             <div class="lg:col-span-4">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-2 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
-                    <!-- ChevronMark — double chevron 3D (fond sombre) -->
-                    <svg viewBox="0 0 65 56" width="29" height="25" xmlns="http://www.w3.org/2000/svg" aria-label="KLEM — double chevron" style="display:block; flex-shrink:0;">
-                        <polygon points="0,0 22,0 40,28 22,56 0,56 18,28" fill="#D6301F"/>
-                        <polygon points="25,0 47,0 65,28 47,56 25,56 43,28" fill="#D6301F"/>
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex items-center gap-2.5 mb-5 group" aria-label="<?php esc_attr_e('KLEM Technologies & Services — Accueil', 'klem-theme'); ?>">
+                    <!-- Symbole KLEM — tracé officiel vectorisé (kit de marque 2026) -->
+                    <svg viewBox="4.56 29.47 230.89 182.09" width="36" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="block flex-shrink-0">
+                        <defs>
+                            <linearGradient id="klemMarkFooter" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#F7715A"/>
+                                <stop offset="0.24" stop-color="#E3402B"/>
+                                <stop offset="0.64" stop-color="#CF2418"/>
+                                <stop offset="1" stop-color="#A3140B"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#klemMarkFooter)" d="M25.07 99.27L4.56 124.85L35.64 156.99L40.75 159.55L117.36 72.03L121.53 69.98L132.82 80.24L129.15 87.88L51.90 177.57L87.99 210.35L91.75 209.84L113.29 183.83L118.47 180.32L148.66 209.84L152.32 211.56L221.43 134.64L235.45 116.49L202.32 82.19L199.87 81.59L133.21 157.40L123.05 168.38L119.07 170.21L108.18 160.32L110.85 154.56L180.37 72.44L186.97 62.71L150.37 29.47L147.85 30.16L120.86 59.97L117.36 58.61L87.35 29.80Z"/>
                     </svg>
                     <!-- Wordmark -->
-                    <div class="flex flex-col leading-none gap-[2px]">
-                        <span class="font-logo font-extrabold text-[28px] tracking-[-0.02em] leading-none text-white group-hover:text-klem-red transition-colors duration-200"><?php esc_html_e('KLEM', 'klem-theme'); ?></span>
-                        <span class="font-logo font-semibold text-[6px] tracking-[0.2em] text-[#c3c9d6] uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
+                    <div class="flex flex-col leading-none gap-[3px]">
+                        <span class="font-logo font-extrabold text-[28px] tracking-[-0.03em] lowercase leading-none text-white group-hover:text-klem-red transition-colors duration-200"><?php esc_html_e('klem', 'klem-theme'); ?></span>
+                        <span class="font-logo font-bold text-[6.5px] tracking-[0.22em] text-[#c3c9d6] uppercase leading-none"><?php esc_html_e('Technologies & Services', 'klem-theme'); ?></span>
                     </div>
                 </a>
                 <p class="text-white/50 text-sm leading-relaxed mb-7 max-w-xs">

@@ -21,7 +21,7 @@ add_action('after_setup_theme', 'klem_theme_setup');
 function klem_enqueue_fonts(): void {
     wp_enqueue_style(
         'klem-fonts',
-        'https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Questrial&display=swap',
+        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap',
         [],
         null
     );
@@ -29,7 +29,7 @@ function klem_enqueue_fonts(): void {
 add_action('wp_enqueue_scripts', 'klem_enqueue_fonts');
 
 function klem_enqueue_assets(): void {
-    // Archivo chargée via klem_enqueue_fonts()
+    // Polices (Inter + Montserrat) chargées via klem_enqueue_fonts()
     $theme_uri = get_template_directory_uri();
     $theme_dir = get_template_directory();
     $manifest  = $theme_dir . '/dist/.vite/manifest.json';
@@ -471,9 +471,15 @@ add_action('wp_head', 'klem_ga4_tracking', 1);
 
 function klem_add_favicon(): void {
     $uri = get_template_directory_uri();
-    printf('<link rel="icon" type="image/png" sizes="32x32" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));
+    // Symbole rouge sur carré marine arrondi — kit de marque KLEM 2026.
     printf('<link rel="icon" type="image/svg+xml" href="%s">' . "\n", esc_url($uri . '/assets/favicon.svg'));
+    printf('<link rel="icon" type="image/png" sizes="16x16" href="%s">' . "\n", esc_url($uri . '/assets/favicon-16.png'));
+    printf('<link rel="icon" type="image/png" sizes="32x32" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));
+    printf('<link rel="icon" type="image/png" sizes="48x48" href="%s">' . "\n", esc_url($uri . '/assets/favicon-48.png'));
     printf('<link rel="shortcut icon" href="%s">' . "\n", esc_url($uri . '/assets/favicon-32.png'));
+    printf('<link rel="apple-touch-icon" sizes="180x180" href="%s">' . "\n", esc_url($uri . '/assets/favicon-180.png'));
+    printf('<link rel="manifest" href="%s">' . "\n", esc_url($uri . '/assets/site.webmanifest'));
+    printf('<meta name="theme-color" content="%s">' . "\n", '#13294B');
 }
 add_action('wp_head', 'klem_add_favicon', 1);
 
@@ -635,7 +641,7 @@ function klem_seo_structured_data(): void {
         'name'         => 'KLEM Technologies & Services',
         'alternateName' => 'KLEM',
         'url'          => home_url('/'),
-        'logo'         => $theme_uri . '/assets/svg/klem-primary.svg',
+        'logo'         => $theme_uri . '/assets/favicon-512.png',
         'image'        => $theme_uri . '/assets/images/services/service-big-data.jpg',
         'description'  => klem_seo_description(),
         'telephone'    => '+225 07 58 89 24 77',
@@ -716,7 +722,7 @@ function klem_seo_article_schema(): void {
         'publisher'        => [
             '@type' => 'Organization',
             'name'  => 'KLEM Technologies & Services',
-            'logo'  => ['@type' => 'ImageObject', 'url' => $theme_uri . '/assets/svg/klem-primary.svg'],
+            'logo'  => ['@type' => 'ImageObject', 'url' => $theme_uri . '/assets/favicon-512.png'],
         ],
     ];
 
