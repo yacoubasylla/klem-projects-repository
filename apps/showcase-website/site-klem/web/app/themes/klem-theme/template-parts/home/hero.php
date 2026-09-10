@@ -8,7 +8,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 py-12 lg:py-32">
 
             <!-- IMAGE : en premier dans le HTML → haut sur mobile, droite sur desktop -->
-            <div class="lg:col-start-2 lg:row-start-1 lg:self-stretch relative rounded-2xl overflow-hidden bg-cover bg-center lg:[clip-path:polygon(20%_0%,100%_0%,100%_100%,0%_100%)] lg:-ml-6"
+            <div class="lg:col-start-2 lg:row-start-1 lg:self-stretch relative rounded-2xl overflow-hidden bg-cover bg-center [clip-path:inset(0_round_1rem)] lg:[clip-path:polygon(20%_0%,100%_0%,100%_100%,0%_100%)] lg:-ml-6"
                  style="background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-bg.jpg'); ?>'); background-color: #13294B; min-height: 340px;"
                  data-animate data-delay="150"
                  aria-hidden="true">
