@@ -177,13 +177,9 @@ if (chatToggle && chatPanel && chatForm && window.klemChatbotAjax) {
     // d'ouvrir le widget sans dépendre de son ID interne.
     window.addEventListener('klem:open-chat', () => setChatOpen(true));
 
-    // Ouverture automatique à l'arrivée du visiteur (une seule fois par session navigateur)
-    if (!window.sessionStorage.getItem('klemChatAutoOpened')) {
-        window.sessionStorage.setItem('klemChatAutoOpened', '1');
-        window.setTimeout(() => {
-            if (!isChatOpen) setChatOpen(true);
-        }, 4000);
-    }
+    // L'assistant ne s'ouvre jamais de lui-même : la fenêtre de discussion
+    // n'apparaît que sur action explicite du visiteur (clic sur la bulle ou
+    // sur un CTA « Discuter avec l'assistant »).
 
     const scrollChatToBottom = () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
