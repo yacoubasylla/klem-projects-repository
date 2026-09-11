@@ -38,7 +38,7 @@
                         </span>
                         <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Intelligence Artificielle', 'klem-theme'); ?></span>
                     </div>
-                    <p class="text-white font-extrabold text-base leading-snug"><?php esc_html_e('Modèles & Agents IA', 'klem-theme'); ?></p>
+                    <p class="text-white font-extrabold text-base leading-snug"><?php esc_html_e('Modèle · Agent · IA', 'klem-theme'); ?></p>
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('LLM, RAG & Automatisation', 'klem-theme'); ?></p>
                 </div>
 
