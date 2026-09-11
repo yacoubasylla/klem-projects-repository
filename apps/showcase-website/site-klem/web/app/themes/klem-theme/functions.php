@@ -504,7 +504,7 @@ add_action('init', 'klem_disable_emoji');
 
 function klem_seo_description(): string {
     return __(
-        "KLEM Technologies & Services, intégrateur numérique basé à Abidjan : ingénierie Big Data, applications sur-mesure, ERP et infrastructures IT pour l'Afrique de l'Ouest.",
+        "KLEM Technologies & Services (Abidjan) : Intelligence Artificielle Abidjan, Big Data Côte d'Ivoire, Kafka Spark IA, applications sur-mesure et ERP.",
         'klem-theme'
     );
 }
