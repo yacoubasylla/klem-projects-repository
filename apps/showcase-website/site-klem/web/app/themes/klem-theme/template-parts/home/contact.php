@@ -226,7 +226,7 @@
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-klem-orange/40 focus:border-klem-orange transition-colors bg-white"
                             >
                                 <option value="" disabled <?php selected(!$klem_prefill_partnership); ?>><?php esc_html_e('Sélectionnez un sujet', 'klem-theme'); ?></option>
-                                <option value="data"><?php esc_html_e('Ingénierie des Données', 'klem-theme'); ?></option>
+                                <option value="data"><?php esc_html_e('Intelligence Artificielle & Big Data', 'klem-theme'); ?></option>
                                 <option value="apps"><?php esc_html_e('Application Sur-Mesure', 'klem-theme'); ?></option>
                                 <option value="erp"><?php esc_html_e('Intégration ERP / FleetControl', 'klem-theme'); ?></option>
                                 <option value="cantine"><?php esc_html_e('Cantine Connect', 'klem-theme'); ?></option>

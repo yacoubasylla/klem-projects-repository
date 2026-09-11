@@ -20,7 +20,7 @@
         <?php
         /* ── Icônes SVG illustrées — palette 2 couleurs : #13294B + #E42313 ── */
 
-        /* 01 — Ingénierie des Données : cylindre base de données */
+        /* 01 — Intelligence Artificielle & Big Data : cylindre base de données */
         $icon_data = '<svg viewBox="0 0 72 72" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Corps du cylindre -->
   <rect x="8" y="22" width="56" height="32" fill="#EEF3F9"/>
@@ -120,9 +120,9 @@
         $klem_services = [
             [
                 'num'      => '01',
-                'title'    => 'Ingénierie des Données',
-                'desc'     => 'Pipelines Big Data et architectures temps réel (Kafka, Spark) pour transformer vos données en avantage stratégique.',
-                'cta'      => 'Planifier un atelier data',
+                'title'    => 'Intelligence Artificielle & Big Data',
+                'desc'     => "Pipelines Big Data temps réel (Kafka, Spark) et modèles d'IA sur-mesure pour automatiser vos processus et transformer vos données en avantage stratégique.",
+                'cta'      => 'Explorer nos solutions IA & Data',
                 'delay'    => '100',
                 'icon_svg' => $icon_data,
             ],
