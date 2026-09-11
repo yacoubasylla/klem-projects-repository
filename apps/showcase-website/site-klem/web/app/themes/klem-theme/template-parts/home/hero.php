@@ -16,8 +16,8 @@
                 <!-- Overlay léger pour lisibilité des cartes -->
                 <div class="absolute inset-0" style="background-color: rgba(10,20,45,0.45);"></div>
 
-                <!-- Carte 1 : Pipeline Big Data — haut gauche (left ≥ 22% pour passer le clip-path 20%) -->
-                <div class="absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:8%;left:26%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0s;">
+                <!-- Carte 1 : Pipeline Big Data — haut gauche (desktop only, left ≥ 22% pour passer le clip-path 20%) -->
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:8%;left:26%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-klem-orange opacity-75"></span>
@@ -29,8 +29,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('architectures temps réel', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 4 : Intelligence Artificielle — haut droit (desktop only, évite le chevauchement avec la Carte 2) -->
-                <div class="hidden lg:flex lg:flex-col absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:4%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0.7s;">
+                <!-- Carte 4 : Intelligence Artificielle — haut droit (mobile + desktop, évite le chevauchement avec la Carte 2) -->
+                <div class="flex flex-col absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:4%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0.7s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75" style="animation-delay:0.9s"></span>
@@ -42,8 +42,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('LLM, RAG & Automatisation', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 2 : Apps Sur-Mesure — milieu droit (desktop only) -->
-                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:calc(4% + 170px);right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
+                <!-- Carte 2 : Apps Sur-Mesure — milieu droit (mobile + desktop) -->
+                <div class="absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:calc(4% + 170px);right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
@@ -55,8 +55,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('100% sur-mesure', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 3 : Disponibilité — bas gauche (mobile + desktop) -->
-                <div class="absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="bottom:8%;left:12%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:2.6s;">
+                <!-- Carte 3 : Disponibilité — bas gauche (desktop only) -->
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="bottom:8%;left:12%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:2.6s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-delay:0.6s"></span>
