@@ -227,10 +227,10 @@
                             >
                                 <option value="" disabled <?php selected(!$klem_prefill_partnership); ?>><?php esc_html_e('Sélectionnez un sujet', 'klem-theme'); ?></option>
                                 <option value="data"><?php esc_html_e('Intelligence Artificielle & Big Data', 'klem-theme'); ?></option>
-                                <option value="apps"><?php esc_html_e('Application Sur-Mesure', 'klem-theme'); ?></option>
+                                <option value="apps"><?php esc_html_e('Applications Web & Mobiles', 'klem-theme'); ?></option>
                                 <option value="erp"><?php esc_html_e('Intégration ERP / FleetControl', 'klem-theme'); ?></option>
                                 <option value="cantine"><?php esc_html_e('Cantine Connect', 'klem-theme'); ?></option>
-                                <option value="hardware"><?php esc_html_e('Matériel IT & Infrastructure', 'klem-theme'); ?></option>
+                                <option value="hardware"><?php esc_html_e('Infrastructures IT & Cloud', 'klem-theme'); ?></option>
                                 <option value="partenariat" <?php selected($klem_prefill_partnership); ?>><?php esc_html_e('Demande de partenariat', 'klem-theme'); ?></option>
                                 <option value="other"><?php esc_html_e('Autre demande', 'klem-theme'); ?></option>
                             </select>

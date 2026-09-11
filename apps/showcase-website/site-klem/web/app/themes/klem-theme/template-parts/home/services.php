@@ -41,7 +41,7 @@
   <ellipse cx="36" cy="7" rx="14" ry="4.5" fill="#F7F9FC" stroke="#13294B" stroke-width="1.2" opacity="0.45"/>
 </svg>';
 
-        /* 02 — Applications Sur-Mesure : écran + code */
+        /* 02 — Applications Web & Mobiles : écran + code */
         $icon_apps = '<svg viewBox="0 0 72 72" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Écran moniteur -->
   <rect x="4" y="10" width="64" height="44" rx="5" fill="#EEF3F9" stroke="#13294B" stroke-width="2"/>
@@ -93,7 +93,7 @@
   <path d="M46 40 C50 30 54 22 58 16" stroke="#13294B" stroke-width="1.2" stroke-dasharray="3 3" fill="none" opacity="0.4"/>
 </svg>';
 
-        /* 04 — Matériel IT : rack serveur */
+        /* 04 — Infrastructures IT & Cloud : rack serveur */
         $icon_hardware = '<svg viewBox="0 0 72 72" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Oreilles du rack (côtés) -->
   <rect x="3" y="6" width="7" height="60" rx="2.5" fill="#E2EAF4" stroke="#13294B" stroke-width="1.5"/>
@@ -121,32 +121,32 @@
             [
                 'num'      => '01',
                 'title'    => 'Intelligence Artificielle & Big Data',
-                'desc'     => "Pipelines Big Data temps réel (Kafka, Spark) et modèles d'IA sur-mesure pour automatiser vos processus et transformer vos données en avantage stratégique.",
-                'cta'      => 'Explorer nos solutions IA & Data',
+                'desc'     => "Pipelines Big Data en temps réel (Kafka, Spark) et modèles d'IA pour automatiser vos processus métiers et valoriser vos données.",
+                'cta'      => 'Explorer les solutions Data & IA',
                 'delay'    => '100',
                 'icon_svg' => $icon_data,
             ],
             [
                 'num'      => '02',
-                'title'    => 'Applications Sur-Mesure',
-                'desc'     => "Applications web, mobiles et ERP 100 % sur-mesure — comme Cantine Connect, notre solution de paiement pour la restauration scolaire.",
-                'cta'      => 'Discuter de mon application',
+                'title'    => 'Applications Web & Mobiles',
+                'desc'     => "Conception de plateformes sur-mesure à forte valeur ajoutée — à l'image de Cantine Connect, notre solution de gestion de restauration scolaire.",
+                'cta'      => 'Discuter de votre projet applicatif',
                 'delay'    => '200',
                 'icon_svg' => $icon_apps,
             ],
             [
                 'num'      => '03',
                 'title'    => 'Intégration ERP & FleetControl',
-                'desc'     => "Intégration de vos systèmes d'information et déploiement de FleetControl, notre solution de gestion de flotte pour l'Afrique.",
+                'desc'     => "Interconnexion de vos systèmes d'information (ERP) et déploiement de FleetControl, notre plateforme de gestion de flotte automobile.",
                 'cta'      => 'Demander une démo FleetControl',
                 'delay'    => '300',
                 'icon_svg' => $icon_erp,
             ],
             [
                 'num'      => '04',
-                'title'    => 'Matériel IT & Infrastructure',
-                'desc'     => "Serveurs, réseaux, postes de travail : nous déployons des infrastructures IT robustes et évolutives.",
-                'cta'      => 'Obtenir une estimation infra',
+                'title'    => 'Infrastructures IT & Cloud',
+                'desc'     => "Architectures serveurs, réseaux et postes de travail : nous déployons des infrastructures informatiques hybrides, robustes et évolutives.",
+                'cta'      => 'Obtenir un devis infrastructure',
                 'delay'    => '400',
                 'icon_svg' => $icon_hardware,
             ],
