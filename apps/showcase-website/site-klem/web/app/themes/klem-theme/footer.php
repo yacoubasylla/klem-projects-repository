@@ -122,9 +122,9 @@
                     <?php
                     $service_links = [
                         ['label' => 'Intelligence Artificielle & Big Data', 'href' => klem_home_anchor('#services')],
-                        ['label' => 'Applications Sur-Mesure',         'href' => klem_home_anchor('#services')],
+                        ['label' => 'Applications Web & Mobiles',      'href' => klem_home_anchor('#services')],
                         ['label' => 'Intégration ERP & FleetControl',  'href' => klem_home_anchor('#services')],
-                        ['label' => 'Matériel IT & Infrastructure',    'href' => klem_home_anchor('#services')],
+                        ['label' => 'Infrastructures IT & Cloud',      'href' => klem_home_anchor('#services')],
                     ];
                     foreach ($service_links as $link) :
                     ?>
