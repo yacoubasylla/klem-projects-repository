@@ -30,7 +30,7 @@
                 </div>
 
                 <!-- Carte 4 : Intelligence Artificielle — haut droit (desktop only, évite le chevauchement avec la Carte 2) -->
-                <div class="hidden lg:flex lg:flex-col absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:8%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0.7s;">
+                <div class="hidden lg:flex lg:flex-col absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:4%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:0.7s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75" style="animation-delay:0.9s"></span>
@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- Carte 2 : Apps Sur-Mesure — milieu droit (desktop only) -->
-                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:40%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:50%;right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
