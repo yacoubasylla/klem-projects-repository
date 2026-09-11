@@ -38,12 +38,12 @@
                         </span>
                         <span class="text-white/70 text-[10px] font-bold uppercase tracking-wider"><?php esc_html_e('Intelligence Artificielle', 'klem-theme'); ?></span>
                     </div>
-                    <p class="text-white font-extrabold text-base leading-snug"><?php esc_html_e('Modèle · Agent · IA', 'klem-theme'); ?></p>
+                    <p class="text-white font-extrabold text-base leading-snug"><?php esc_html_e('Modèle · Agent', 'klem-theme'); ?></p>
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('LLM, RAG & Automatisation', 'klem-theme'); ?></p>
                 </div>
 
                 <!-- Carte 2 : Apps Sur-Mesure — milieu droit (desktop only) -->
-                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:calc(4% + 150px);right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
+                <div class="hidden lg:block absolute backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="top:calc(4% + 170px);right:5%;width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
