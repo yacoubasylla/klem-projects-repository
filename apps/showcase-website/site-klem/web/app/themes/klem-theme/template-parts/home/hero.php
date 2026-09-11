@@ -42,8 +42,8 @@
                     <p class="text-white/50 text-xs mt-1"><?php esc_html_e('LLM, RAG & Automatisation', 'klem-theme'); ?></p>
                 </div>
 
-                <!-- Carte 2 : Apps Sur-Mesure — bas droit sur mobile, milieu droit sur desktop -->
-                <div class="absolute bottom-[8%] right-[5%] lg:bottom-auto lg:top-[calc(4%_+_170px)] backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
+                <!-- Carte 2 : Apps Sur-Mesure — bas droit (mobile + desktop, symétrique de la Carte 3 en bas gauche) -->
+                <div class="absolute bottom-[8%] right-[5%] backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float" style="width:168px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);animation-delay:1.3s;">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" style="animation-delay:0.3s"></span>
