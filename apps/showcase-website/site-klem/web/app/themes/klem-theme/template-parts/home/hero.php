@@ -73,16 +73,16 @@
             <!-- TEXTE : en second dans le HTML → bas sur mobile, gauche sur desktop -->
             <div class="lg:col-start-1 lg:row-start-1 flex flex-col justify-center">
                 <span class="inline-block w-fit text-klem-orange font-bold tracking-widest text-xs uppercase mb-6 px-4 py-1.5 bg-klem-orange/10 rounded-full" data-animate data-delay="0">
-                    <?php esc_html_e('Intégrateur Numérique · Afrique', 'klem-theme'); ?>
+                    <?php esc_html_e('Intégrateur Numérique & IA · Afrique', 'klem-theme'); ?>
                 </span>
 
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading text-klem-blue leading-tight mb-6" data-animate data-delay="100">
-                    <?php esc_html_e('Des plateformes sur-mesure', 'klem-theme'); ?><br>
+                    <?php esc_html_e('Des plateformes intelligentes & sur-mesure', 'klem-theme'); ?><br>
                     <span class="text-klem-orange"><?php esc_html_e('pour accélérer votre croissance.', 'klem-theme'); ?></span>
                 </h1>
 
                 <p class="text-gray-500 text-base leading-relaxed max-w-md mb-10" data-animate data-delay="200">
-                    <span class="font-medium text-gray-700"><?php esc_html_e('Ingénierie de données, applications, ERP et infrastructures IT :', 'klem-theme'); ?></span>
+                    <span class="font-medium text-gray-700"><?php esc_html_e('Intelligence Artificielle, Big Data, applications sur-mesure, ERP, Cloud et cybersécurité :', 'klem-theme'); ?></span>
                     <?php esc_html_e('nous bâtissons la souveraineté numérique des organisations africaines, du cadrage à la mise en production.', 'klem-theme'); ?>
                 </p>
 
