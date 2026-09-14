@@ -93,7 +93,7 @@
   <path d="M46 40 C50 30 54 22 58 16" stroke="#13294B" stroke-width="1.2" stroke-dasharray="3 3" fill="none" opacity="0.4"/>
 </svg>';
 
-        /* 04 — Infrastructures IT & Cloud : rack serveur */
+        /* 04 — Infrastructures IT, Cloud & Cybersécurité : rack serveur */
         $icon_hardware = '<svg viewBox="0 0 72 72" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Oreilles du rack (côtés) -->
   <rect x="3" y="6" width="7" height="60" rx="2.5" fill="#E2EAF4" stroke="#13294B" stroke-width="1.5"/>
@@ -121,32 +121,32 @@
             [
                 'num'      => '01',
                 'title'    => 'Intelligence Artificielle & Big Data',
-                'desc'     => "Pipelines Big Data en temps réel (Kafka, Spark) et modèles d'IA pour automatiser vos processus métiers et valoriser vos données.",
+                'desc'     => "Pipelines Big Data temps réel (Kafka, Spark) et modèles d'IA pour automatiser vos processus métiers et valoriser vos données.",
                 'cta'      => 'Explorer les solutions Data & IA',
                 'delay'    => '100',
                 'icon_svg' => $icon_data,
             ],
             [
                 'num'      => '02',
-                'title'    => 'Applications Web & Mobiles',
-                'desc'     => "Conception de plateformes sur-mesure à forte valeur ajoutée — à l'image de Cantine Connect, notre solution de gestion de restauration scolaire.",
-                'cta'      => 'Discuter de votre projet applicatif',
+                'title'    => 'Applications & Solutions Propriétaires',
+                'desc'     => "Conception de plateformes web, mobiles et logiciels sur-mesure — tels que Cantine Connect et FleetControl (gestion de flotte).",
+                'cta'      => 'Découvrir nos applications',
                 'delay'    => '200',
                 'icon_svg' => $icon_apps,
             ],
             [
                 'num'      => '03',
-                'title'    => 'Intégration ERP & FleetControl',
-                'desc'     => "Interconnexion de vos systèmes d'information (ERP) et déploiement de FleetControl, notre plateforme de gestion de flotte automobile.",
-                'cta'      => 'Demander une démo FleetControl',
+                'title'    => 'Intégration ERP & Progiciels Métiers',
+                'desc'     => "Intégration, personnalisation et interconnexion de vos ERP d'entreprise pour unifier vos flux de gestion et automatiser vos opérations.",
+                'cta'      => 'Planifier un projet ERP',
                 'delay'    => '300',
                 'icon_svg' => $icon_erp,
             ],
             [
                 'num'      => '04',
-                'title'    => 'Infrastructures IT & Cloud',
-                'desc'     => "Architectures serveurs, réseaux et postes de travail : nous déployons des infrastructures informatiques hybrides, robustes et évolutives.",
-                'cta'      => 'Obtenir un devis infrastructure',
+                'title'    => 'Infrastructures IT, Cloud & Cybersécurité',
+                'desc'     => "Architectures serveurs, réseaux et Cloud : nous déployons et sécurisons vos infrastructures IT (audits de sécurité, protection des données et haute disponibilité).",
+                'cta'      => 'Audit & Devis Infrastructure',
                 'delay'    => '400',
                 'icon_svg' => $icon_hardware,
             ],
